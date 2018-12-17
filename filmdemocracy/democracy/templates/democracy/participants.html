@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Participantes{% endblock %}
+
+{% block pagecontent %}
+<h2>Ranking de películas</h2>
+
+<h3>Participantes</h3>
+
+<p>¿Quién está o va a estar presente?</p>
+
+<form action="{% url 'democracy:vote_results' %}" method="GET">
+{% csrf_token %}
+{% for user in all_users %}
+    <input type="checkbox" name="participants" id="participant{{ forloop.counter }}" value="{{ user.username }}">
+    <label for="participant{{ forloop.counter }}">{{ user.username }}</label><br>
+{% endfor %}
+<p><input type="submit" value="Generar ranking"></p>
+</form>
+
+<a href="{% url 'democracy:film_list' %}">Volver a lista de películas</a>
+{% endblock %}

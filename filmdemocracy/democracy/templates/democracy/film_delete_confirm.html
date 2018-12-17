@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar película{% endblock %}
+
+{% block pagecontent %}
+<h2>{{ film.title }}</h2>
+
+<p>Propuesta por {{ film.proposed_by.username }} el {{ film.pub_date }}</p>
+
+<form method="POST">{% csrf_token %}
+    <p>¿Seguro que quieres eliminar esta película?</p>
+    <input type="submit" value="Confirmar">
+</form>
+
+<p></p>
+
+<form><button formaction="{% url 'democracy:film_detail' film.id %}">Cancelar</button></form>
+{% endblock %}

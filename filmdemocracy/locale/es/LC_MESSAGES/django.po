@@ -1,0 +1,55 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-17 01:54+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: democracy/models.py:36
+msgid "Veto!"
+msgstr "¡Veto!"
+
+#: democracy/models.py:37
+msgid "I've seen it and I don't want to see it again."
+msgstr ""
+
+#: democracy/models.py:38
+msgid "I don't want to see it."
+msgstr ""
+
+#: democracy/models.py:39
+msgid "Meh..."
+msgstr ""
+
+#: democracy/models.py:40
+msgid "I've seen it and I wouldn't mind seeing it again."
+msgstr ""
+
+#: democracy/models.py:41
+msgid "I want to see it."
+msgstr ""
+
+#: democracy/models.py:42
+msgid "I really want to see it."
+msgstr ""
+
+#: democracy/templates/democracy/film_detail.html:20
+msgid "See IMDb page"
+msgstr "Ver ficha IMDb"
+
+#: settings.py:115
+msgid "Spanish"
+msgstr "Español"

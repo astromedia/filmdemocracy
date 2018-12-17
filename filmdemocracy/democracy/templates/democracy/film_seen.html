@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Marcar película como vista{% endblock %}
+
+{% block pagecontent %}
+<h2>{{ film.title }}</h2>
+
+<p>Indica la fecha en la que visteis esta película.</p>
+
+<form method="POST">{% csrf_token %}
+    <p>Fecha visionado: <input type="date" name="seen_date" value="{{ film.seen_date }}"></p>
+    <p><input type="submit" value="Confirmar"></p>
+</form>
+
+<form>
+  <button formaction="{% url 'democracy:film_detail' film.id %}">Cancelar</button>
+</form>
+{% endblock %}

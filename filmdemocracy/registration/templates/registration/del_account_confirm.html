@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar usuario{% endblock %}
+
+{% block pagecontent %}
+<form action="{% url 'registration:del_account' %}" method="POST">
+    {% csrf_token %}
+    <p>¿Seguro que quieres borrar tu cuenta?</p>
+    <input type="submit" value="Confirmar">
+</form>
+
+<form>
+  <button formaction="{% url 'registration:account_info' %}">Cancelar</button>
+</form>
+{% endblock %}

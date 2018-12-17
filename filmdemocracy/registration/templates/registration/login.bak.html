@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'registration/login.css' %}">
+{% endblock %}
+
+{% block title %}Inicio de sesión{% endblock %}
+
+{% block pagecontent %}
+
+  {% if user.is_authenticated %}
+    Ya has iniciado sesión como: {{ user.username }}
+    <p><a href="{% url 'democracy:film_list' %}">Consultar lista de pelis</a></p>
+  {% else %}
+
+  {% if form.errors %}
+    <p>Tu username y tu password no coinciden. Prueba de nuevo.</p>
+  {% endif %}
+
+  {% if next %}
+    {% if user.is_authenticated %}
+      <p>Tu cuenta no tiene acceso a esta página. Para seguir, logueate con una cuenta que tenga acceso.</p>
+    {% else %}
+      <p>Logueate para ver esta página.</p>
+    {% endif %}
+  {% endif %}
+
+
+  <form class="form-signin text-center" method="POST" action="{% url 'registration:login' %}">
+  {% csrf_token %}
+
+
+    <h1 class="h3 mb-3 font-weight-normal">Inicia sesión</h1>
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
+    <!--
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Mantener sesión iniciada
+      </label>
+    </div>
+    -->
+
+    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Iniciar sesión">
+    <input type="hidden" name="next" value="{{ next }}">
+
+    <p></p>
+
+    <div>
+      <a href="{% url 'registration:password_reset' %}">He olvidado mi contraseña...</a>
+    </div>
+
+  </form>
+
+
+  {% endif %}
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultados votación{% endblock %}
+
+{% block pagecontent %}
+<h2>Ranking de películas</h2>
+
+<h3>Resultado votación</h3>
+
+<p>Ordenados de mayor a menor puntuación:</p>
+
+<ul>
+{% for film_results in films_results|dictsortreversed:"points" %}
+    {% if film_results.veto %}
+        <li style="color: red">{{ film_results.title }} (Vetada)</li>
+    {% else %}
+        <li>{{ film_results.title }} : {{ film_results.points }}</li>
+    {% endif %}
+{% endfor %}
+</ul>
+
+<h3>Participantes</h3>
+<ul>
+{% for participant in participants %}
+    <li>{{ participant }}</li>
+{% endfor %}
+</ul>
+
+{% if warnings %}
+<h3>Avisos</h3>
+<ul>
+{% for warning in warnings %}
+    <li>{{ warning }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<a href="{% url 'democracy:film_list' %}">Volver a lista de películas</a>
+{% endblock %}

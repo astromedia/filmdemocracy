@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block title %}Detalles película{% endblock %}
+
+{% block pagecontent %}
+<a href="{% url 'democracy:film_list' %}">Volver a lista de películas</a>
+
+<p></p>
+
+<h2>{{ film.title }}</h2>
+
+<p>Propuesta por {{ film.proposed_by.username }} el {{ film.pub_date }}</p>
+
+{% if film.seen %}
+<p>Vista en sesión el: {{ film.seen_date}}</p>
+{% endif %}
+
+<p><a href="{{ film.imdb_url }}" target="blank">{% trans 'See IMDb page' %}</a></p>
+
+<table>
+    <tr>
+        {% if film.seen %}
+            <td><form>{% csrf_token %}
+                <button formaction="{% url 'democracy:unsee_film' film.id %}" method="post">Devolver a películas propuestas</button>
+            </form></td>
+        {% else %}
+            <td><form><button formaction="{% url 'democracy:film_seen' film.id %}">Marcar como vista en sesión</button></form></td>
+        {% endif %}
+        <td><form><button formaction="{% url 'democracy:film_delete' film.id %}">Eliminar película</button></form></td>
+    </tr>
+</table>
+
+<p><h3>¿Has votado ya?</h3></p>
+
+<form action="{% url 'democracy:vote_film' film.id %}" method="post">
+{% csrf_token %}
+{% for choice, choice_text in vote_choices.items|dictsort:"1.lower" %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice }}">
+    <label for="choice{{ forloop.counter }}">{{ choice_text }}</label><br>
+{% endfor %}
+    <p>
+        <input type="submit" value="Votar">
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    </p>
+</form>
+
+<h3>Votos registrados</h3>
+{% if film.vote_set.all %}
+    <ul>
+    {% for vote in film.vote_set.all %}
+        {% if vote.choice == "veto" %}
+            <li style="color: red">{{ vote.user.username }}: {{ vote.choice }}<br>
+        {% else %}
+            <li>{{ vote.user.username }}: {{ vote.get_choice_display }}
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>¡Nadie ha votado todavía!</p>
+{% endif %}
+
+{% endblock %}

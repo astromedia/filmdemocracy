@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Añadir película{% endblock %}
+
+{% block pagecontent %}
+<h2>Añadir nueva película</h2>
+
+
+<form method="post" action="{% url 'democracy:film_add_new' %}">
+{% csrf_token %}
+
+    {{ form.as_p }}
+
+<p>
+<input type="submit" value="Añadir">
+<input type="hidden" name="next" value="{{ next }}">
+</p>
+</form>
+
+<input type=button value="Volver" onClick="javascript:history.go(-1);">
+{% endblock %}

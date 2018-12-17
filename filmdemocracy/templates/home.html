@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block pagecontent %}
+
+<h2>Inicio</h2>
+{% if user.is_authenticated %}
+    <p>Hola {{ user.username }}.</p>
+    <p><a href="{% url 'democracy:film_list' %}">Consultar lista de películas</a></p>
+    <form>
+        <button formaction="{% url 'democracy:film_add_new' %}">Añadir película</button>
+    </form>
+{% else %}
+    <p>Para entrar, inicia sesión.</p>
+<form>
+  <button formaction="{% url 'registration:login' %}">Iniciar sesión</button>
+</form>
+
+<p></p>
+
+<p>O crea una cuenta nueva.</p>
+<form>
+  <button formaction="{% url 'registration:signup' %}">Crear cuenta</button>
+</form>
+{% endif %}
+{% endblock %}
