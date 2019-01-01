@@ -25,6 +25,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'ze&a-_k75@^%0zp*!-l7ul(pegr8#1)7ykb4=@ih807a4q9nb&'
 
+# OMDb API Key: keep the secret key used in production secret!
+OMDB_API_KEY = '4b213d96'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -105,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -127,8 +130,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOGIN_URL = '/registration/login/'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "local/sent_emails")
+
+
+# Using a custom user model when starting a project
+# https://docs.djangoproject.com/en/2.1/topics/auth/customizing/#extending-the-existing-user-model
+
+AUTH_USER_MODEL = 'registration.User'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "local/media")

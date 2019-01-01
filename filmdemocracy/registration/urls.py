@@ -8,7 +8,19 @@ urlpatterns = [
     path(
         'signup/',
         views.SignUpView.as_view(),
-        name='signup'
+        name='user_signup'
+    ),
+    path(
+        'login/',
+        auth_views.LoginView.as_view(
+            template_name='registration/user_login.html'
+        ),
+        name='user_login'
+    ),
+    path(
+        'logout/',
+        auth_views.LogoutView.as_view(),
+        name='user_logout'
     ),
     path(
         'account_info/',
@@ -16,26 +28,14 @@ urlpatterns = [
         name='account_info'
     ),
     path(
-        'login/',
-        auth_views.LoginView.as_view(
-            template_name='registration/login.html'
-        ),
-        name='login'
+        'account_info_edit/',
+        views.AccountInfoEditView.as_view(),
+        name='account_info_edit'
     ),
     path(
-        'logout/',
-        auth_views.LogoutView.as_view(),
-        name='logout'
-    ),
-    path(
-        'del_account_conf/',
-        views.DelAccountConfirmView.as_view(),
-        name='del_account_conf'
-    ),
-    path(
-        'del_account/',
-        views.del_account,
-        name='del_account'
+        'account_del/',
+        views.account_del,
+        name='account_del'
     ),
     path(
         'password_change/',
@@ -50,7 +50,8 @@ urlpatterns = [
         auth_views.PasswordChangeDoneView.as_view(
             template_name='registration/password_change_done.html'
         ),
-        name='password_change_done'),
+        name='password_change_done'
+    ),
     path(
         'password_reset/',
         auth_views.PasswordResetView.as_view(
@@ -68,7 +69,7 @@ urlpatterns = [
         name='password_reset_done'
     ),
     path(
-        'reset/<uidb64>/<token>/',
+        'password_reset/<uidb64>/<token>/',
         auth_views.PasswordResetConfirmView.as_view(
             success_url='/registration/reset/done/',
             template_name='registration/password_reset_confirm.html'
@@ -76,10 +77,17 @@ urlpatterns = [
         name='password_reset_confirm'
     ),
     path(
-        'reset/done/',
+        'password_reset/complete/',
         auth_views.PasswordResetCompleteView.as_view(
             template_name='registration/password_reset_complete.html'
         ),
         name='password_reset_complete'
+    ),
+    path(
+        'create_club/',
+        views.CreateClubView.as_view(
+            template_name='registration/create_club.html'
+        ),
+        name='create_club'
     ),
 ]

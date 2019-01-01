@@ -1,24 +1,107 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
 
-{% block title %}Información de cuenta{% endblock %}
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'registration/css/registration_base.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Account information' %}{% endblock %}
 
 {% block pagecontent %}
-<h2>Información de la cuenta</h2>
 
-<p>Nombre de usuario: {{ user.username }}</p>
+<h3 class="text-center h3 mb-5 mt-5 font-weight-normal">{% trans 'Account information' %}</h3>
 
-<p>Email: {{ user.email }}</p>
 
-<p>
-<form>
-    <button formaction="{% url 'registration:password_change' %}">Cambiar password</button>
-</form>
-</p>
+{% if not user.profile_image %}
+<div class="alert alert-danger text-center">
+  You don't have a profile picture yet! <a class="ml-3" href="{% url 'registration:account_info_edit' %}">Add one</a>
+</div>
+{% endif %}
 
-<p>
-<form>
-    <button formaction="{% url 'registration:del_account_conf' %}">Borrar cuenta</button>
-</form>
-</p>
+
+<div class="row justify-content-center">
+  <p class="col-6 text-right"><strong>{% trans 'Username' %}</strong></p>
+  <div class="col-6">
+    {{ user.username }}
+  </div>
+</div>
+<div class="row justify-content-center">
+  <p class="col-6 text-right"><strong>{% trans 'Profile picture' %}</strong></p>
+  <div class="col-6">
+    {% if user.profile_image %}
+    <img class="card-img-top border border-secondary shadow-sm" style="width: 10rem;"
+         src="{{ user.profile_image.url }}"
+         alt="user.profile_image not found">
+    {% else %}
+    <img class="card-img-top border border-secondary shadow-sm" style="width: 10rem;"
+         src="{% static 'registration/user_no_profile_image.png' %}"
+         alt="user.profile_image not found">
+    {% endif %}
+  </div>
+</div>
+<div class="row justify-content-center mt-3">
+  <p class="col-6 text-right"><strong>{% trans 'Email' %}</strong></p>
+  <div class="col-6">
+    {{ user.email }}
+  </div>
+</div>
+
+
+<table class="mx-auto mt-5">
+  <tr>
+    <td>
+      <form action="{% url 'registration:account_info_edit' %}" class="text-center">
+        <button type="submit" class="btn btn-sm btn-success mr-1">{% trans 'Edit info' %}</button>
+      </form>
+    </td>
+    <td>
+      <form action="{% url 'registration:password_change' %}" class="text-center">
+        <button type="submit" class="btn btn-sm btn-primary mr-1 ml-1">{% trans 'Change password' %}</button>
+      </form>
+    </td>
+    <td>
+      <button type="button" class="btn btn-sm btn-outline-danger ml-1" data-toggle="modal"
+              data-target="#DeleteModalCenter">
+        {% trans 'Delete account' %}
+      </button>
+
+    </td>
+  </tr>
+</table>
+
+
+
+<!-- Modal delete -->
+<div class="modal fade" id="DeleteModalCenter" tabindex="-1" role="dialog" aria-labelledby="DeleteModalCenterTitle"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeleteModalCenterTitle">{% trans 'Delete account' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{% trans 'Are you sure about this?' %}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">
+          {% trans 'Cancel' %}
+        </button>
+        <form action="{% url 'registration:account_del' %}" class="text-center">
+          {% csrf_token %}
+          <button method="post" type="submit" class="btn btn-danger mr-3">
+            {% trans 'Confirm' %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}

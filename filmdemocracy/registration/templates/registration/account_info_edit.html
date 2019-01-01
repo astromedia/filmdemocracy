@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'registration/css/registration_base.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Edit account information' %}{% endblock %}
+
+{% block pagecontent %}
+
+<h3 class="text-center h3 mb-5 mt-5 font-weight-normal">{% trans 'Account information' %}</h3>
+
+
+{% if form.errors %}
+{% for error in form.non_field_errors %}
+<div class="alert alert-danger text-center">
+  <strong>{{ error|escape }}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+{% for hidden_field in form.hidden_fields %}
+{{ hidden_field }}
+{% endfor %}
+
+<form enctype="multipart/form-data" method="POST" novalidate>
+  {% csrf_token %}
+  <div class="row justify-content-center">
+    <p class="col-6 text-right"><strong>{% trans 'Username' %}</strong></p>
+    <div class="col-6">
+      {{ user.username }}
+    </div>
+  </div>
+  <div class="form-group row justify-content-center">
+    <p class="col-6 text-right"><strong>{% trans 'Profile picture' %}</strong></p>
+    <div class="col-6">
+      {% if user.profile_image %}
+      <img class="card-img-top border border-secondary shadow-sm" style="width: 10rem;"
+           src="{{ user.profile_image.url }}"
+           alt="user.profile_image not found">
+      {% else %}
+      <img class="card-img-top border border-secondary shadow-sm" style="width: 10rem;"
+           src="{% static 'registration/user_no_profile_image.png' %}"
+           alt="user.profile_image not found">
+      {% endif %}
+      <input type="file" class="form-control-file mt-3" name='profile_image'
+             id="profile_image" aria-describedby="profile_imageHelpBlock">
+      <small id="profile_imageHelpBlock" class="form-text text-muted">
+        Please use an image that is 200 x 200 pixels or smaller.
+      </small>
+
+    </div>
+  </div>
+  <div class="form-group row justify-content-center">
+    <p class="col-6 col-form-label text-right"><strong>{% trans 'Email' %}</strong></p>
+    <div class="col-6">
+      <div class="edit-email">
+
+        {% if form.is_bound %}
+        {% if form.email.errors %}
+        {% render_field form.email class="form-control is-invalid" %}
+        {% for error in form.email.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
+        {% else %}
+        {% render_field form.email class="form-control is-valid" %}
+        {% endif %}
+        {% else %}
+        {% render_field form.email class="form-control" %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="text-center mt-5">
+    <button type="submit" class="btn btn-success">{% trans 'Save changes' %}</button>
+  </div>
+</form>
+
+
+<form action="{% url 'registration:account_info' %}" class="text-center mt-3">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+</form>
+
+{% endblock %}

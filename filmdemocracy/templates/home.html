@@ -1,27 +1,44 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
 
-{% block title %}Home{% endblock %}
+{% block styles %}
+{% load static %}
+<!--<link rel="stylesheet" href="{% static 'democracy/css/home.css' %}">-->
+{% endblock %}
+
+{% block title %}{% trans 'Home' %}{% endblock %}
 
 {% block pagecontent %}
 
-<h2>Inicio</h2>
+<h3 class="my-5 display-3 text-center">FilmDemocracy</h3>
+
 {% if user.is_authenticated %}
-    <p>Hola {{ user.username }}.</p>
-    <p><a href="{% url 'democracy:film_list' %}">Consultar lista de películas</a></p>
-    <form>
-        <button formaction="{% url 'democracy:film_add_new' %}">Añadir película</button>
-    </form>
+<p class="text-center">{% trans 'Hi' %} {{ user.username }}.</p>
+<p class="text-center"><a href="{% url 'democracy:candidate_films' %}">{% trans 'Check candidate films' %}</a></p>
+
+
+<p class="text-center">{% trans 'Create a new film club!' %}</p>
+
+<form action="{% url 'registration:create_club' %}" class="text-center">
+  <button type="submit" class="btn btn-lg btn-primary">{% trans 'Create club' %}</button>
+</form>
+
 {% else %}
-    <p>Para entrar, inicia sesión.</p>
-<form>
-  <button formaction="{% url 'registration:login' %}">Iniciar sesión</button>
+
+<p class="text-center">{% trans 'To start, log in.' %}</p>
+
+<form action="{% url 'registration:user_login' %}" class="mb-4 text-center">
+  <button type="submit" class="btn btn-lg btn-success">{% trans 'Log in' %}</button>
 </form>
 
-<p></p>
+<p class="text-center">{% trans 'New here? Create an account.' %}</p>
 
-<p>O crea una cuenta nueva.</p>
-<form>
-  <button formaction="{% url 'registration:signup' %}">Crear cuenta</button>
+<form action="{% url 'registration:user_signup' %}" class="text-center">
+  <button type="submit" class="btn btn-lg btn-primary">{% trans 'Create account' %}</button>
 </form>
+
+
 {% endif %}
 {% endblock %}

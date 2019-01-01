@@ -1,0 +1,52 @@
+{% extends "democracy/film_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block title %}{% trans 'Add FilmAffinity url' %}{% endblock %}
+
+{% block content %}
+
+
+<form class="form-signin text-center mt-5" method="POST" novalidate>
+  {% csrf_token %}
+
+    <h3 class="h3 mb-4 font-weight-normal">{% trans 'Add FilmAffinity url' %}</h3>
+
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
+
+  <div class="form-signin">
+    {% if form.is_bound %}
+    {% if form.faff_url.errors %}
+    {% render_field form.faff_url class="form-control is-invalid" placeholder="FilmAffinity url"  %}
+    {% for error in form.faff_url.errors %}
+    <div class="invalid-feedback">
+      {{ error }}
+    </div>
+    {% endfor %}
+    {% else %}
+    {% render_field form.faff_url class="form-control is-valid" placeholder="FilmAffinity url" %}
+    {% endif %}
+    {% else %}
+    {% render_field form.faff_url class="form-control" placeholder="FilmAffinity url"  %}
+    {% endif %}
+
+  </div>
+
+<div class="mb-2 mt-1"><a href="https://www.filmaffinity.com/" target="blank">
+      <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small></a>
+    </div>
+
+  <input class="btn btn-lg btn-success mt-3 mb-3" type="submit" value="{% trans 'Add' %}">
+  <input type="hidden" name="next" value="{{ next }}">
+
+</form>
+
+
+<form action="{% url 'democracy:film_detail' film.id %}" class="text-center">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+</form>
+
+{% endblock %}

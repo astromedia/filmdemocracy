@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'registration/css/registration_base.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Log in' %}{% endblock %}
+
+{% block pagecontent %}
+
+{% if user.is_authenticated %}
+{% trans 'Your are already logged in as:' %} {{ user.username }}
+{% else %}
+
+{% for hidden_field in form.hidden_fields %}
+{% if hidden_field.errors %}
+<ul>
+  {% for error in hidden_field.errors %}
+  <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{{ hidden_field }}
+{% endfor %}
+
+{% if next %}
+{% if user.is_authenticated %}
+<p>{% trans 'Your account does not have access to this page. To continue, log in to an account with access.' %}</p>
+{% else %}
+<div class="alert alert-danger text-center" role="alert">
+  {% trans 'Log in to see this page.' %}
+</div>
+{% endif %}
+{% endif %}
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+  {% for error in form.non_field_errors %}
+  {{ error }}
+  {% endfor %}
+</div>
+{% endif %}
+
+<h1 class="text-center h3 mb-3 mt-5 font-weight-normal">{% trans 'Log in' %}</h1>
+
+<form class="text-center" method="POST" action="{% url 'registration:user_login' %}" novalidate>
+  {% csrf_token %}
+
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
+
+  <div class="form-signin">
+    {% for field in form %}
+
+    <div class="mt-3">
+      {{ field.label_tag }}
+      {% if form.is_bound %}
+      {% if field.errors %}
+      {% render_field field class="form-control is-invalid" %}
+      {% for error in field.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+      {% else %}
+      {% render_field field class="form-control is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field field class="form-control" %}
+      {% endif %}
+    </div>
+    {% endfor %}
+
+  </div>
+
+  <!--TODO: This button doesn't do anything yet...-->
+  <div class="custom-control custom-checkbox my-3">
+    <input type="checkbox" class="custom-control-input" name="remember_me" id="remember_me" value="remember_user">
+    <label class="custom-control-label" for="remember_me">{% trans 'Remember me' %}</label>
+  </div>
+
+  <input class="btn btn-lg btn-success" type="submit" value="{% trans 'Log in' %}">
+  <input type="hidden" name="next" value="{{ next }}">
+
+  <p></p>
+
+  <div>
+    <a href="{% url 'registration:password_reset' %}">{% trans 'Forgotten password?' %}</a>
+  </div>
+
+</form>
+
+{% endif %}
+
+<form action="{% url 'home' %}" class="text-center mt-3">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Home' %}</button>
+</form>
+
+{% endblock %}

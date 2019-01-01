@@ -1,0 +1,179 @@
+body {
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+  }
+
+.container-base {
+  padding-top: 1.5rem;
+  min-height: 57rem;
+  max-width: 935px;
+  background-color: white;
+  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.65);
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 600px;
+  padding: 2px;
+  margin: auto;
+}
+
+
+/* Navbar top fixed styles
+-------------------------------------------------- */
+/* Show it is fixed to the top */
+body {
+  min-height: 45rem;
+  padding-top: 3.5rem;
+}
+
+.nav-color {
+  background-color: #17202A;
+}
+
+.container-nav {
+  max-width: 935px;
+}
+
+.nav-shadow {
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+}
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 20px; /* Margin bottom by footer height */
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px; /* Set the fixed height of the footer here */
+  line-height: 60px; /* Vertically center the text there */
+  background-color: lightgray;
+}
+
+
+/* Candidate films hover effect
+-------------------------------------------------- */
+
+.hovereffect {
+width:100%;
+height:100%;
+float:left;
+overflow:hidden;
+position:relative;
+text-align:center;
+cursor:default;
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.85);
+}
+
+.hovereffect .overlay {
+width:100%;
+height:100%;
+position:absolute;
+overflow:hidden;
+top:0;
+left:0;
+opacity:0;
+background-color:rgba(0,0,0,0.5);
+-webkit-transition:all .4s ease-in-out;
+transition:all .4s ease-in-out
+}
+
+.hovereffect img {
+display:block;
+position:relative;
+-webkit-transition:all .2s linear;
+transition:all .2s linear;
+}
+
+.hovereffect h2 {
+color:#fff;
+text-align:center;
+position:relative;
+font-size:17px;
+background:rgba(0,0,0,0.6);
+-webkit-transform:translatey(-100px);
+-ms-transform:translatey(-100px);
+transform:translatey(-100px);
+-webkit-transition:all .1s ease-in-out;
+transition:all .1s ease-in-out;
+padding:10px;
+}
+
+.hovereffect a.info {
+text-decoration:none;
+display:inline-block;
+color:#fff;
+border:1px solid #fff;
+background-color:transparent;
+opacity:0;
+filter:alpha(opacity=0);
+-webkit-transition:all .1s ease-in-out;
+transition:all .1s ease-in-out;
+margin:50px 0 0;
+padding:7px 14px;
+}
+
+.hovereffect a.info:hover {
+box-shadow:0 0 5px #fff;
+}
+
+.hovereffect:hover img {
+-ms-transform:scale(1.1);
+-webkit-transform:scale(1.1);
+transform:scale(1.1);
+}
+
+.hovereffect:hover .overlay {
+opacity:1;
+filter:alpha(opacity=100);
+}
+
+.hovereffect:hover h2,.hovereffect:hover a.info {
+opacity:1;
+filter:alpha(opacity=100);
+-ms-transform:translatey(0);
+-webkit-transform:translatey(0);
+transform:translatey(0);
+}
+
+.hovereffect h3 {
+  color: #fff;
+  text-align: center;
+  position: relative;
+  margin: -28px 0 0 0;
+  font-size: 17px;
+    padding: 4px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+
+/* Participants hover effect
+-------------------------------------------------- */
+.hovereffect-participant {
+width:100%;
+height:100%;
+cursor:default;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.hovereffect-participant:hover {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}

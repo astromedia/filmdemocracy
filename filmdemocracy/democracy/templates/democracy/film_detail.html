@@ -1,64 +1,197 @@
-{% extends 'base.html' %}
-
+{% extends "democracy/film_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
 {% load i18n %}
 
-{% block title %}Detalles película{% endblock %}
+{% block title %}{% trans 'Film details' %}{% endblock %}
 
-{% block pagecontent %}
-<a href="{% url 'democracy:film_list' %}">Volver a lista de películas</a>
+{% block content %}
+
+
+{% if film.seen %}
+<div class="alert alert-success text-center">
+  <strong>{% trans 'Seen in session on the:' %} {{ film.seen_date}}</strong>
+</div>
+{% endif %}
+
+<table class="mx-auto mt-3">
+  <tr>
+    <td>
+      <p class="mr-1"></p>
+    </td>
+
+    {% if film.seen %}
+    <td>
+      <form action="{% url 'democracy:unsee_film' film.id %}" class="text-center">
+        {% csrf_token %}
+        <button method="post" type="submit" class="btn btn-sm btn-dark mx-1">
+          {% trans 'Move back to list of candidate films' %}
+        </button>
+      </form>
+    </td>
+
+    {% else %}
+    <td>
+      <form action="{% url 'democracy:film_seen' film.id %}" class="text-center">
+        {% csrf_token %}
+        <button method="post" type="submit" class="btn btn-sm btn-dark mx-1">
+          {% trans 'Mark as already elected' %}
+        </button>
+      </form>
+    </td>
+
+    <td>
+      <button type="button" class="btn btn-sm btn-danger ml-1" data-toggle="modal"
+              data-target="#DeleteModalCenter">
+        {% trans 'Remove from candidate films' %}
+      </button>
+    </td>
+    {% endif %}
+
+  </tr>
+
+</table>
+
+<p class="text-center mt-3"><a href="{% url 'democracy:candidate_films' %}">{% trans 'Go back to candidate films' %}</a>
+</p>
+
+<h3 class="text-center my-3">{% trans 'Did you vote already?' %}</h3>
+
+
+{% for choice, choice_dict in vote_choices.items %}
+<form class="form-signin text-center vote" action="{% url 'democracy:vote_film' film.id %}" method="post">
+  {% csrf_token %}
+
+  {% if choice_dict.choice_karma == 'positive' %}
+  {% if choice_dict.choice_voted %}
+  <label class="btn btn-success btn-block" for="votepositivebutton{{ forloop.counter }}">
+    {{ choice_dict.choice_text }}
+  </label>
+  {% else %}
+  <label class="btn btn-outline-success btn-block black" for="votepositivebutton{{ forloop.counter }}">
+    {{ choice_dict.choice_text }}
+  </label>
+  {% endif %}
+  <input type="submit" class="btn btn-block invisible" name="choice"
+         id="votepositivebutton{{ forloop.counter }}" value="{{ choice_dict.choice }}">
+
+  {% elif choice_dict.choice_karma == 'neutral' %}
+  {% if choice_dict.choice_voted %}
+  <label class="btn btn-secondary btn-block" for="voteneutralbutton{{ forloop.counter }}">
+    {{ choice_dict.choice_text }}
+  </label>
+  {% else %}
+  <label class="btn btn-outline-secondary btn-block black" for="voteneutralbutton{{ forloop.counter }}">
+    {{ choice_dict.choice_text }}
+  </label>
+  {% endif %}
+  <input type="submit" class="btn btn-block invisible" name="choice"
+         id="voteneutralbutton{{ forloop.counter }}" value="{{ choice_dict.choice }}">
+
+  {% elif choice_dict.choice_karma == 'negative' %}
+  {% if choice_dict.choice_voted %}
+  <label class="btn btn-danger btn-block" for="votenegativebutton{{ forloop.counter }}">
+    {{ choice_dict.choice_text }}
+  </label>
+  {% else %}
+  <label class="btn btn-outline-danger btn-block black" for="votenegativebutton{{ forloop.counter }}">
+    {{ choice_dict.choice_text }}
+  </label>
+  {% endif %}
+  <input type="submit" class="btn btn-block invisible" name="choice"
+         id="votenegativebutton{{ forloop.counter }}" value="{{ choice_dict.choice }}">
+
+  {% endif %}
+
+</form>
+
+{% endfor %}
 
 <p></p>
 
-<h2>{{ film.title }}</h2>
+<p class="text-center">
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+          aria-expanded="false" aria-controls="collapseExample">
+    {% trans 'See registered votes' %}
+  </button>
+</p>
 
-<p>Propuesta por {{ film.proposed_by.username }} el {{ film.pub_date }}</p>
+<div class="collapse registered-votes mb-3" id="collapseExample">
+  <div class="card card-body">
 
-{% if film.seen %}
-<p>Vista en sesión el: {{ film.seen_date}}</p>
-{% endif %}
-
-<p><a href="{{ film.imdb_url }}" target="blank">{% trans 'See IMDb page' %}</a></p>
-
-<table>
-    <tr>
-        {% if film.seen %}
-            <td><form>{% csrf_token %}
-                <button formaction="{% url 'democracy:unsee_film' film.id %}" method="post">Devolver a películas propuestas</button>
-            </form></td>
-        {% else %}
-            <td><form><button formaction="{% url 'democracy:film_seen' film.id %}">Marcar como vista en sesión</button></form></td>
-        {% endif %}
-        <td><form><button formaction="{% url 'democracy:film_delete' film.id %}">Eliminar película</button></form></td>
-    </tr>
-</table>
-
-<p><h3>¿Has votado ya?</h3></p>
-
-<form action="{% url 'democracy:vote_film' film.id %}" method="post">
-{% csrf_token %}
-{% for choice, choice_text in vote_choices.items|dictsort:"1.lower" %}
-    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice }}">
-    <label for="choice{{ forloop.counter }}">{{ choice_text }}</label><br>
-{% endfor %}
-    <p>
-        <input type="submit" value="Votar">
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    </p>
-</form>
-
-<h3>Votos registrados</h3>
-{% if film.vote_set.all %}
-    <ul>
+    {% if film.vote_set.all %}
     {% for vote in film.vote_set.all %}
-        {% if vote.choice == "veto" %}
-            <li style="color: red">{{ vote.user.username }}: {{ vote.choice }}<br>
-        {% else %}
-            <li>{{ vote.user.username }}: {{ vote.get_choice_display }}
-        {% endif %}
+    {% if vote.choice == "veto" %}
+    <div class="text-center" style="color: red">
+      <strong>{{ vote.user.username }}</strong>: <strong>{{ vote.get_choice_display }}</strong><br>
+    </div>
+    {% else %}
+    <div class="text-center">
+      <strong>{{ vote.user.username }}</strong>: {{ vote.get_choice_display }}<br>
+    </div>
+    {% endif %}
     {% endfor %}
-    </ul>
-{% else %}
-    <p>¡Nadie ha votado todavía!</p>
-{% endif %}
+    {% else %}
+
+    <div class="text-center">
+      {% trans 'No one has voted yet!' %}
+    </div>
+
+    {% endif %}
+
+  </div>
+</div>
+<div class="invisible mb-3 mt-3"><span>...</span></div>
+
+
+<!-- Modal delete -->
+<div class="modal fade" id="DeleteModalCenter" tabindex="-1" role="dialog" aria-labelledby="DeleteModalCenterTitle"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeleteModalCenterTitle">{% trans 'Remove from candidate films' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{% trans 'Are you sure you want to remove this film from the list?' %}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">
+          {% trans 'Cancel' %}
+        </button>
+        <form action="{% url 'democracy:delete_film' film.id %}" class="text-center">
+          {% csrf_token %}
+          <button method="post" type="submit" class="btn btn-danger mr-3">
+            {% trans 'Confirm' %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal poster -->
+<div class="modal fade" id="PosterModalCenter" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
+        <div class="text-right mb-3">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <br>
+        </div>
+        <div>
+          <img src="{{ film.poster_url }}" alt="poster image not found">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}

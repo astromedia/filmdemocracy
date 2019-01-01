@@ -1,18 +1,45 @@
-{% extends 'base.html' %}
+{% extends "democracy/film_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
 
-{% block title %}Marcar película como vista{% endblock %}
+{% block title %}{% trans 'Mark film as seen' %}{% endblock %}
 
-{% block pagecontent %}
-<h2>{{ film.title }}</h2>
+{% block content %}
 
-<p>Indica la fecha en la que visteis esta película.</p>
 
-<form method="POST">{% csrf_token %}
-    <p>Fecha visionado: <input type="date" name="seen_date" value="{{ film.seen_date }}"></p>
-    <p><input type="submit" value="Confirmar"></p>
+<form class="text-center mt-5" method="POST">
+  {% csrf_token %}
+
+  <h3 class="h3 mb-4 font-weight-normal">{% trans 'Mark film as elected' %}</h3>
+
+  <p>{% trans 'Choose the date on which this film was elected' %}</p>
+
+  {% if form.errors %}
+  {% for field in form %}
+  {% for error in field.errors %}
+  <div class="alert alert-danger text-center">
+    <strong>{{ error|escape }}</strong>
+  </div>
+  {% endfor %}
+  {% endfor %}
+  {% for error in form.non_field_errors %}
+  <div class="alert alert-danger text-center">
+    <strong>{{ error|escape }}</strong>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+
+  <p><input type="date" name="seen_date" value="{{ film.seen_date }}"></p>
+
+  <input class="btn btn-lg btn-dark" type="submit" value="{% trans 'Elected!' %}">
 </form>
 
-<form>
-  <button formaction="{% url 'democracy:film_detail' film.id %}">Cancelar</button>
+<p></p>
+
+<form action="{% url 'democracy:film_detail' film.id %}" class="text-center">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
+
 {% endblock %}

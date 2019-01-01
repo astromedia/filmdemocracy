@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Propose new film' %}{% endblock %}
+
+{% block pagecontent %}
+
+<form class="text-center" action="{% url 'democracy:add_new_film' %}" method="POST" novalidate>
+  {% csrf_token %}
+
+  <div class="container text-center my-5">
+    <h1 class="display-4">{% trans 'Propose new film' %}</h1>
+    <p class="lead text-muted">{% trans 'Make it to the top' %}</p>
+  </div>
+
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
+
+  {% trans 'FilmAffinity url (Optional)' as faffurl %}
+
+  <div class="form-signin">
+
+    {% if form.is_bound %}
+    {% if form.imdb_url.errors %}
+    {% render_field form.imdb_url placeholder="IMDb url" class="form-control is-invalid" %}
+
+    {% for error in form.imdb_url.errors %}
+    <div class="invalid-feedback">
+      {{ error }}
+    </div>
+    {% endfor %}
+    {% else %}
+    {% render_field form.imdb_url placeholder="IMDb url" class="form-control is-valid" %}
+    {% endif %}
+    {% else %}
+    {% render_field form.imdb_url placeholder="IMDb url" class="form-control" %}
+    {% endif %}
+
+    <div class="mb-3 mt-0 ml-2 text-left"><a href="https://www.imdb.com/" target="blank">
+      <small>{% trans 'Open IMDb.com in a new tab' %}</small></a>
+    </div>
+
+    {% if form.is_bound %}
+    {% if form.faff_url.errors %}
+    {% render_field form.faff_url placeholder=faffurl class="form-control is-invalid" %}
+
+    {% for error in form.faff_url.errors %}
+    <div class="invalid-feedback">
+      {{ error }}
+    </div>
+    {% endfor %}
+    {% else %}
+    {% render_field form.faff_url placeholder=faffurl class="form-control is-valid" %}
+    {% endif %}
+    {% else %}
+    {% render_field form.faff_url placeholder=faffurl class="form-control" %}
+    {% endif %}
+
+    <div class="mb-3 mt-0 ml-2 text-left"><a href="https://www.filmaffinity.com/" target="blank">
+      <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small></a>
+    </div>
+
+    <div class="mt-4 mb-3">
+      <input class="btn btn-lg btn-success" type="submit" value="{% trans 'Propose' %}">
+      <input type="hidden" name="next" value="{{ next }}">
+    </div>
+
+  </div>
+
+</form>
+
+<p class="text-center mt-3"><a href="{% url 'democracy:candidate_films' %}">{% trans 'Go back to candidate films' %}</a></p>
+
+
+{% endblock %}

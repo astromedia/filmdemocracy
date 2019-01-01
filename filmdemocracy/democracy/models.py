@@ -1,24 +1,39 @@
-from datetime import datetime
-
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+
+from filmdemocracy.registration.models import User
 
 
 class Film(models.Model):
-    title = models.CharField(default='', max_length=200)
-    imdb_id = models.CharField('IMDb id', default='', max_length=10)
+    id = models.CharField(primary_key=True, unique=True, max_length=6)
+    imdb_id = models.CharField('IMDb id', default='', max_length=9)
+    faff_id = models.CharField('FilmAffinity id', default='', max_length=6)
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     proposed_by = models.ForeignKey(User, on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)
     seen_date = models.DateField('date seen', null=True, blank=True)
+    title = models.CharField(default='', max_length=200)
+    year = models.IntegerField(default=0)
+    rated = models.CharField(default='', max_length=10)
+    duration = models.IntegerField(default=0)
+    director = models.CharField(default='', max_length=100)
+    writer = models.CharField(default='', max_length=200)
+    actors = models.CharField(default='', max_length=300)
+    poster_url = models.URLField(default='', max_length=500)
+    country = models.CharField(default='', max_length=100)
+    language = models.CharField(default='', max_length=20)
+    plot = models.CharField(default='', max_length=1000)
 
     def __str__(self):
-        return f'{self.title}/{self.imdb_id}'
+        return f'{self.title}/{self.id}'
 
     @property
     def imdb_url(self):
         return f'https://www.imdb.com/title/{self.imdb_id}/'
+
+    @property
+    def faff_url(self):
+        return f'https://www.filmaffinity.com/es/film{self.faff_id}.html'
 
 
 class Vote(models.Model):
@@ -33,15 +48,24 @@ class Vote(models.Model):
     YES = 'yes'
     OMG = 'omg'
     vote_choices = (
-        (VETO, _('Veto!')),
-        (SEENNO, _("I've seen it and I don't want to see it again.")),
-        (NO, _("I don't want to see it.")),
-        (MEH, _('Meh...')),
-        (SEENOK, _("I've seen it and I wouldn't mind seeing it again.")),
+        (OMG, _('I really really want to see it.')),
         (YES, _('I want to see it.')),
-        (OMG, _('I really want to see it.')),
+        (SEENOK, _("I've seen it, but I wouldn't mind seeing it again.")),
+        (MEH, _('Meh...')),
+        (NO, _("I don't want to see it.")),
+        (SEENNO, _("I've seen it, and I don't want to see it again.")),
+        (VETO, _('Veto!')),
     )
-    choice = models.CharField(max_length=7, choices=vote_choices, default=MEH)
+    choice = models.CharField(max_length=6, choices=vote_choices)
+
+    @property
+    def vote_karma(self):
+        if self.choice in [self.OMG, self.YES, self.SEENOK]:
+            return 'positive'
+        elif self.choice in [self.MEH]:
+            return 'neutral'
+        elif self.choice in [self.NO, self.SEENNO, self.VETO]:
+            return 'negative'
 
     def __str__(self):
         return f'{self.user}/{self.film}/{self.choice}'

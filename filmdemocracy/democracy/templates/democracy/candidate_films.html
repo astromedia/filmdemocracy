@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load static %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Candidate films' %}{% endblock %}
+
+{% block pagecontent %}
+
+
+  <div class="container text-center my-5">
+    <h1 class="display-4">{% trans 'Candidate films' %}</h1>
+    <p class="lead text-muted">{% trans 'Power to the people!' %}</p>
+    <p>
+      <a href="{% url 'democracy:add_new_film' %}" class="btn btn-success my-2 mx-3">{% trans 'Propose new film' %}</a>
+      <a href="{% url 'democracy:participants' %}" class="btn btn-warning my-2 mx-3">{% trans 'Film elections' %}</a>
+    </p>
+  </div>
+
+
+<div class="album py-4 border bg-light">
+
+    {% if list_of_films %}
+    <div class="row justify-content-center">
+
+      {% for film in list_of_films %}
+
+      {% if not film.film.seen %}
+
+      <div class="col-md-4 align-self-center">
+        <div class="card mx-auto" style="width: 13rem;">
+
+          <div class="hovereffect">
+            <img class="card-img-top border border-secondary" src="{{ film.film.poster_url }}"
+                 alt="user.image not found">
+
+            <div class="overlay">
+              <h2>{{ film.film.title }}</h2>
+              <a class="info" href="{% url 'democracy:film_detail' film.film.id %}">{% trans 'Check info / Vote' %}</a>
+            </div>
+
+            {% if film.voted %}
+            <h3>
+              <div class="media">
+                <div class="media-body ml-5 mr-2">
+                  {% trans 'Voted' %}
+                </div>
+                <img src="{% static 'democracy/svg/check_ok.svg'%}" style="max-height: 17px;"
+                     class="align-self-center mr-3">
+              </div>
+            </h3>
+            {% endif %}
+
+          </div>
+
+        </div>
+      </div>
+
+      {% endif %}
+
+      {% endfor %}
+
+    </div>
+
+    {% else %}
+    <p class="text-center">{% trans 'There are no proposed films...' %}</p>
+    <p class="text-center"><a href="{% url 'democracy:add_new_film' %}" class="btn btn-lg btn-success my-2">
+      {% trans 'Add one!' %}</a></p>
+
+    {% endif %}
+
+
+</div>
+
+<div class="accordion" id="accordionExample">
+
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0 text-center">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne">
+          <strong>{% trans 'Last proposed films' %}</strong>
+        </button>
+      </h2>
+    </div>
+
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+        <ul>
+          {% for film in last_proposed_films %}
+          <li>
+            <a href="{% url 'democracy:film_detail' film.id %}">{{ film.title }}</a>:
+            {% blocktrans with user=film.proposed_by.username date=film.pub_date %}
+            proposed by {{ user }} on the {{ date }}.
+            {% endblocktrans %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0 text-center">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo"
+                aria-expanded="false" aria-controls="collapseTwo">
+          <strong>{% trans 'Last elected films' %}</strong>
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+        <ul>
+          {% for film in last_seen_films %}
+          {% if film.seen %}
+          <li><a href="{% url 'democracy:film_detail' film.id %}">{{ film.title }}</a>:
+            {% blocktrans with date=film.seen_date %}
+            seen on the {{ date }}.
+            {% endblocktrans %}
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div  class="invisible mb-3 mt-3"><span>...</span></div>
+{% endblock %}
