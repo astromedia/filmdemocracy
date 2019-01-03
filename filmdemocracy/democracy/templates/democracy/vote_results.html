@@ -14,38 +14,41 @@
 {% block pagecontent %}
 
 
-
 <div class="container text-center mt-5 mb-2">
-    <h1 class="display-4">{% trans 'Voting results' %}</h1>
-    <p class="lead text-muted">{% trans 'The people have spoken' %}</p>
-  </div>
+  <h1 class="display-4">{% trans 'Voting results' %}</h1>
+  <p class="lead text-muted">{{ club.name }}</p>
+</div>
 
-<p class="text-center mb-5"><a href="{% url 'democracy:candidate_films' %}">{% trans 'Go back to candidate films' %}</a></p>
+<div class="text-center mb-5">
+  <a href="{% url 'democracy:candidate_films' club.id %}">
+    {% trans 'Go back to candidate films' %}
+  </a>
+</div>
 
-
-<p class="text-center"><strong>{% trans 'The people: ' %}</strong>
+<div class="text-center">
+  <strong>{% trans 'The people: ' %}</strong>
   {% for participant in participants %}
   {% if forloop.counter == participants|length %}{{ participant }}{% else %}{{ participant }},{% endif %}
   {% endfor %}
-</p>
+</div>
 
 {% if warnings %}
-  {% for warning in warnings %}
-    <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
-    {% if warning.type  == 'veto' %}
-      {% blocktrans with user=warning.voter film=warning.film %}
-        <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>
-      {% endblocktrans %}
-    {% elif warning.type == 'omg' %}
-      {% blocktrans with user=warning.voter film=warning.film %}
-        Remember that <strong>{{ user }}</strong> really really wants to see <strong>{{ film }}</strong>
-      {% endblocktrans %}
+{% for warning in warnings %}
+<div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+  {% if warning.type == 'veto' %}
+  {% blocktrans with user=warning.voter film=warning.film %}
+  <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>
+  {% endblocktrans %}
+  {% elif warning.type == 'omg' %}
+  {% blocktrans with user=warning.voter film=warning.film %}
+  Remember that <strong>{{ user }}</strong> really really wants to see <strong>{{ film }}</strong>
+  {% endblocktrans %}
   {% endif %}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
-    </button>
-    </div>
-  {% endfor %}
+  </button>
+</div>
+{% endfor %}
 {% endif %}
 
 
@@ -68,31 +71,34 @@
   {% if forloop.counter == 1 %}
   <tr class="table-success">
     <th scope="row" class="text-center">{{ forloop.counter }}</th>
-    <td><a href="{% url 'democracy:film_detail' film_results.id %}">{{ film_results.title }}</a></td>
+    <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
     <td class="text-center">{{ film_results.points }}</td>
 
-  {% elif film_results.veto %}
+    {% elif film_results.veto %}
   <tr class="table-danger">
     <th scope="row" class="text-center">{{ forloop.counter }}</th>
-    <td><a href="{% url 'democracy:film_detail' film_results.id %}">{{ film_results.title }}</a></td>
+    <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
     <td class="text-center">- ∞</td>
 
-  {% else %}
+    {% else %}
   <tr>
     <th scope="row" class="text-center">{{ forloop.counter }}</th>
-    <td><a href="{% url 'democracy:film_detail' film_results.id %}">{{ film_results.title }}</a></td>
+    <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
     <td class="text-center">{{ film_results.points }}</td>
 
-  {% endif %}
-    <td class="text-center">{% for voter in film_results.positive_voters %}
+    {% endif %}
+    <td class="text-center">
+      {% for voter in film_results.positive_voters %}
       {% if forloop.counter == film_results.positive_voters|length %}{{ voter }}{% else %}{{ voter }},{% endif %}
       {% endfor %}
     </td>
-    <td class="text-center">{% for voter in film_results.negative_voters %}
+    <td class="text-center">
+      {% for voter in film_results.negative_voters %}
       {% if forloop.counter == film_results.negative_voters|length %}{{ voter }}{% else %}{{ voter }},{% endif %}
       {% endfor %}
     </td>
-    <td class="text-center">{% for voter in film_results.no_voters %}
+    <td class="text-center">
+      {% for voter in film_results.no_voters %}
       {% if forloop.counter == film_results.no_voters|length %}{{ voter }}{% else %}{{ voter }},{% endif %}
       {% endfor %}
     </td>

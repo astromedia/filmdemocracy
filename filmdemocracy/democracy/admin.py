@@ -12,7 +12,7 @@ class FilmAdmin(admin.ModelAdmin):
     fieldsets = [
         (
             'General info',
-            {'fields': ['title', 'proposed_by', 'seen']}
+            {'fields': ['proposed_by', 'seen']}
         ),
         (
             'Internet databases information',
@@ -27,9 +27,8 @@ class FilmAdmin(admin.ModelAdmin):
         ),
     ]
     inlines = [VoteInLine]
-    list_display = ('title', 'proposed_by', 'pub_date', 'seen')
+    list_display = ('id', 'proposed_by', 'pub_date', 'seen')
     list_filter = ['proposed_by', 'seen']
-    search_fields = ['title']
 
 
 admin.site.register(Film, FilmAdmin)

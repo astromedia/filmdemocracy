@@ -22,7 +22,7 @@
 
     {% if film.seen %}
     <td>
-      <form action="{% url 'democracy:unsee_film' film.id %}" class="text-center">
+      <form action="{% url 'democracy:unsee_film' club.id film.id %}" class="text-center">
         {% csrf_token %}
         <button method="post" type="submit" class="btn btn-sm btn-dark mx-1">
           {% trans 'Move back to list of candidate films' %}
@@ -32,7 +32,7 @@
 
     {% else %}
     <td>
-      <form action="{% url 'democracy:film_seen' film.id %}" class="text-center">
+      <form action="{% url 'democracy:film_seen' club.id film.id %}" class="text-center">
         {% csrf_token %}
         <button method="post" type="submit" class="btn btn-sm btn-dark mx-1">
           {% trans 'Mark as already elected' %}
@@ -52,14 +52,14 @@
 
 </table>
 
-<p class="text-center mt-3"><a href="{% url 'democracy:candidate_films' %}">{% trans 'Go back to candidate films' %}</a>
+<p class="text-center mt-3"><a href="{% url 'democracy:candidate_films' club.id %}">{% trans 'Go back to candidate films' %}</a>
 </p>
 
 <h3 class="text-center my-3">{% trans 'Did you vote already?' %}</h3>
 
 
 {% for choice, choice_dict in vote_choices.items %}
-<form class="form-signin text-center vote" action="{% url 'democracy:vote_film' film.id %}" method="post">
+<form class="form-signin text-center vote" action="{% url 'democracy:vote_film' club.id film.id %}" method="post">
   {% csrf_token %}
 
   {% if choice_dict.choice_karma == 'positive' %}
@@ -162,32 +162,12 @@
         <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form action="{% url 'democracy:delete_film' film.id %}" class="text-center">
+        <form action="{% url 'democracy:delete_film' club.id film.id %}" class="text-center">
           {% csrf_token %}
           <button method="post" type="submit" class="btn btn-danger mr-3">
             {% trans 'Confirm' %}
           </button>
         </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal poster -->
-<div class="modal fade" id="PosterModalCenter" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
-        <div class="text-right mb-3">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <br>
-        </div>
-        <div>
-          <img src="{{ film.poster_url }}" alt="poster image not found">
-        </div>
       </div>
     </div>
   </div>

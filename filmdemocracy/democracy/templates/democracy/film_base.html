@@ -14,7 +14,7 @@
 <div class="jumbotron jumbotron-fluid border-bottom border-secondary bg-light shadow-sm">
 
   <div class="container-fluid container-title pb-2 pt-3 text-light shadow-sm">
-    <h1 class="font-weight-normal text-center">{{ film.title }}</h1>
+    <h1 class="font-weight-normal text-center">{{ film.filmdb.title }}</h1>
   </div>
 
   <div class="container-fluid px-4 pt-4 pb-3">
@@ -23,7 +23,7 @@
 
       <div class="col-sm-3">
         <a href="#">
-          <img class="img-fluid border-top" src="{{ film.poster_url }}" alt="poster image not found"
+          <img class="img-fluid border-top" src="{{ film.filmdb.poster_url }}" alt="poster image not found"
                data-toggle="modal" data-target="#PosterModalCenter">
         </a>
       </div>
@@ -40,17 +40,17 @@
 
         <div class="row mb-2">
           <div class="col-auto">
-            <a href="{{ film.imdb_url }}" target="blank">
+            <a href="{{ film.filmdb.imdb_url }}" target="blank">
               {% trans 'See IMDb page' %}
             </a>
           </div>
           <div class="col-auto">
-            {% if film.faff_id %}
-            <a class="mx-1" href="{{ film.faff_url }}" target="blank">
+            {% if film.filmdb.faff_id %}
+            <a class="mx-1" href="{{ film.filmdb.faff_url }}" target="blank">
               {% trans 'See FilmAffinity page' %}
             </a>
-            {% elif not film.faff_id %}
-            <a href="{% url 'democracy:film_add_faff' film.id %}" class="badge badge-success">
+            {% elif not film.filmdb.faff_id %}
+            <a href="{% url 'democracy:film_add_faff' club.id film.id %}" class="badge badge-success">
               {% trans 'Add FilmAffinity url' %}
             </a>
             {% endif %}
@@ -58,31 +58,51 @@
         </div>
 
         <div class="row mb-3">
-          <div class="col-auto"><strong>{% trans 'Year' %}</strong>: {{ film.year }}</div>
-          <div class="col-auto"><strong>{% trans 'Duration' %}</strong>: {{ film.duration }} min</div>
-          <div class="col-auto"><strong>{% trans 'Rated' %}</strong>: {{ film.rated }}</div>
-          <div class="col-auto"><strong>{% trans 'Country' %}</strong>: {{ film.country }}</div>
+          <div class="col-auto"><strong>{% trans 'Year' %}</strong>: {{ film.filmdb.year }}</div>
+          <div class="col-auto"><strong>{% trans 'Duration' %}</strong>: {{ film.filmdb.duration }} min</div>
+          <div class="col-auto"><strong>{% trans 'Rated' %}</strong>: {{ film.filmdb.rated }}</div>
+          <div class="col-auto"><strong>{% trans 'Country' %}</strong>: {{ film.filmdb.country }}</div>
         </div>
 
-        <p>{{ film.plot }}</p>
+        <p>{{ film.filmdb.plot }}</p>
 
         <table class="table table-sm table-borderless table-details">
           <tr>
             <th class="text-right" scope="row">{% trans 'Director' %}:</th>
-            <td>{{ film.director }}</td>
+            <td>{{ film.filmdb.director }}</td>
           </tr>
           <tr>
             <th class="text-right" scope="row">{% trans 'Writer' %}:</th>
-            <td>{{ film.writer }}</td>
+            <td>{{ film.filmdb.writer }}</td>
           <tr>
             <th class="text-right" scope="row">{% trans 'Actors' %}:</th>
-            <td>{{ film.actors }}</td>
+            <td>{{ film.filmdb.actors }}</td>
           </tr>
         </table>
 
       </div>
     </div>
 
+  </div>
+</div>
+
+
+<!-- Modal poster -->
+<div class="modal fade" id="PosterModalCenter" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
+        <div class="text-right mb-3">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <br>
+        </div>
+        <div>
+          <img src="{{ film.filmdb.poster_url }}" alt="poster image not found">
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

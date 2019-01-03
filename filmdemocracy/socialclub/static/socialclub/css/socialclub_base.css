@@ -51,6 +51,19 @@ body {
   max-width: 330px;
 }
 
-.edit-image {
-  max-width: 330px;
+.form-club-name {
+  max-width: 400px;
+  margin: auto;
+}
+
+.form-club-description {
+  max-width: 400px;
+  max-height: 70px;
+  margin: auto;
+}
+
+.form-club-image-file {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
 }

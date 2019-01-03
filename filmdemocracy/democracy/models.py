@@ -2,16 +2,12 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from filmdemocracy.registration.models import User
+from filmdemocracy.socialclub.models import Club
 
 
-class Film(models.Model):
-    id = models.CharField(primary_key=True, unique=True, max_length=6)
-    imdb_id = models.CharField('IMDb id', default='', max_length=9)
+class FilmDb(models.Model):
+    imdb_id = models.CharField('IMDb id', primary_key=True, max_length=7)
     faff_id = models.CharField('FilmAffinity id', default='', max_length=6)
-    pub_date = models.DateTimeField('date published', auto_now_add=True)
-    proposed_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    seen = models.BooleanField(default=False)
-    seen_date = models.DateField('date seen', null=True, blank=True)
     title = models.CharField(default='', max_length=200)
     year = models.IntegerField(default=0)
     rated = models.CharField(default='', max_length=10)
@@ -25,15 +21,31 @@ class Film(models.Model):
     plot = models.CharField(default='', max_length=1000)
 
     def __str__(self):
-        return f'{self.title}/{self.id}'
+        return f'{self.title}/{self.imdb_id}'
 
     @property
     def imdb_url(self):
-        return f'https://www.imdb.com/title/{self.imdb_id}/'
+        return f'https://www.imdb.com/title/tt{self.imdb_id}/'
 
     @property
     def faff_url(self):
         return f'https://www.filmaffinity.com/es/film{self.faff_id}.html'
+
+
+class Film(models.Model):
+    """
+    Film proposed by user in club. Obtains info from FilmDb.
+    """
+    id = models.CharField(primary_key=True, max_length=12)  # 5(club)+7(imdb)
+    proposed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    filmdb = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField('date published', auto_now_add=True)
+    seen = models.BooleanField(default=False)
+    seen_date = models.DateField('date seen', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.id}|{self.filmdb.title}'
 
 
 class Vote(models.Model):

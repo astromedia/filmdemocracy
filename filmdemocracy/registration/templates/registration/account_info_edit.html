@@ -47,10 +47,14 @@
            src="{% static 'registration/user_no_profile_image.png' %}"
            alt="user.profile_image not found">
       {% endif %}
-      <input type="file" class="form-control-file mt-3" name='profile_image'
-             id="profile_image" aria-describedby="profile_imageHelpBlock">
+
+      <div class="custom-file edit-image mt-3">
+      <input id="inputGroupFile" type="file" name='profile_image' class="custom-file-input">
+      <label class="custom-file-label" for="inputGroupFile">Choose file</label>
+      </div>
+
       <small id="profile_imageHelpBlock" class="form-text text-muted">
-        Please use an image that is 200 x 200 pixels or smaller.
+        <!--Please use an image that is 200 x 200 pixels or smaller.-->
       </small>
 
     </div>
@@ -88,5 +92,21 @@
 <form action="{% url 'registration:account_info' %}" class="text-center mt-3">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
+
+
+<!--https://github.com/Johann-S/bs-custom-file-input-->
+<script src="{% static 'socialclub/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
+<script>
+      document.addEventListener('DOMContentLoaded', function() {
+        bsCustomFileInput.init()
+
+        var btn = document.getElementById('btnResetForm')
+        var form = document.querySelector('form')
+        btn.addEventListener('click', function() {
+          form.reset()
+        })
+      });
+
+</script>
 
 {% endblock %}

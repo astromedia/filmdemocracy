@@ -8,10 +8,10 @@
 {% block content %}
 
 
-<form class="form-signin text-center mt-5" method="POST" novalidate>
-  {% csrf_token %}
+<h3 class="h3 mb-4 mt-5 font-weight-normal text-center">{% trans 'Add FilmAffinity url' %}</h3>
 
-    <h3 class="h3 mb-4 font-weight-normal">{% trans 'Add FilmAffinity url' %}</h3>
+<form class="form-signin text-center" method="POST" novalidate>
+  {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}
   {{ hidden_field }}
@@ -45,7 +45,7 @@
 </form>
 
 
-<form action="{% url 'democracy:film_detail' film.id %}" class="text-center">
+<form action="{% url 'democracy:film_detail' club.id film.id %}" class="text-center">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 

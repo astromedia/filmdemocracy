@@ -1,11 +1,34 @@
 from django import forms
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from django.shortcuts import get_object_or_404
 
-from filmdemocracy.democracy.models import Film
+from filmdemocracy.democracy.models import Film, FilmDb
+
+
+def process_imdb_url(form):
+    """
+    Validate that the url is a valid IMDb url and return IMDb id.
+    """
+    imdb_url = form.cleaned_data['imdb_url']
+    try:
+        if 'imdb' not in imdb_url:
+            raise ValueError
+        url_list = imdb_url.split('/')
+        title_position = url_list.index('title')
+        imdb_key = url_list[title_position + 1]
+        if 'tt' not in imdb_key or len(imdb_key) is not 9:
+            raise ValueError
+        else:
+            return imdb_key.replace('tt', '')
+    except ValueError:
+        raise forms.ValidationError(_("Invalid IMDb url."))
 
 
 def process_faff_url(form):
-    """Validate that the url is a valid FAff url, and return FAff id."""
+    """
+    Validate that the url is a valid FAff url, and return FAff id.
+    """
     try:
         faff_url = form.cleaned_data['faff_url']
         if 'filmaffinity' not in faff_url:
@@ -21,17 +44,21 @@ def process_faff_url(form):
         else:
             return filmaff_key
     except ValueError:
-        raise forms.ValidationError(f"Invalid FilmAffinity url")
+        raise forms.ValidationError(_("Invalid FilmAffinity url."))
 
 
 class FilmAddNewForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.club_id = kwargs.pop('club_id', None)
+        super(FilmAddNewForm, self).__init__(*args, **kwargs)
+
     imdb_url = forms.CharField(
         max_length=200,
-        help_text='IMDb url',
+        help_text=_('IMDb url'),
     )
     faff_url = forms.CharField(
         max_length=200,
-        help_text='FilmAffinity url',
+        help_text=_('FilmAffinity url'),
         required=False,
     )
 
@@ -40,34 +67,14 @@ class FilmAddNewForm(forms.ModelForm):
         fields = ['imdb_url', 'faff_url']
 
     def clean_imdb_url(self):
-        """
-        Validate that the url is a valid IMDb url,
-        that a movie with that IMDb key does not exist,
-        and return IMDb id.
-        """
-        imdb_url = self.cleaned_data['imdb_url']
-        try:
-            if 'imdb' not in imdb_url:
-                raise ValueError
-            url_list = imdb_url.split('/')
-            title_position = url_list.index('title')
-            imdb_key = url_list[title_position + 1]
-            if 'tt' not in imdb_key or len(imdb_key) is not 9:
-                raise ValueError
-            else:
-                films_imdb_ids = Film.objects.values_list('imdb_id')
-                if imdb_key in films_imdb_ids:
-                    raise KeyError
-                else:
-                    return imdb_key
-        except ValueError:
+        imdb_key = process_imdb_url(self)
+        film_id = f'{int(self.club_id):05d}{int(imdb_key):07d}'
+        if Film.objects.filter(pk=film_id):
             raise forms.ValidationError(
-                f"Invalid IMDb url"
+                _("That movie is already proposed!")
             )
-        except KeyError:
-            raise forms.ValidationError(
-                f"A movie with that IMDb key is already proposed!"
-            )
+        else:
+            return imdb_key
 
     def clean_faff_url(self):
         if self.cleaned_data['faff_url']:
@@ -80,11 +87,11 @@ class FilmAddNewForm(forms.ModelForm):
 class FilmAddFilmAffForm(forms.ModelForm):
     faff_url = forms.CharField(
         max_length=200,
-        help_text='FilmAffinity url',
+        help_text=_('FilmAffinity url'),
     )
 
     class Meta:
-        model = Film
+        model = FilmDb
         fields = ['faff_url']
 
     def clean_faff_url(self):
@@ -93,6 +100,9 @@ class FilmAddFilmAffForm(forms.ModelForm):
 
 
 class FilmSeenForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.film_id = kwargs.pop('film_id', None)
+        super(FilmSeenForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = Film
@@ -100,14 +110,14 @@ class FilmSeenForm(forms.ModelForm):
 
     def clean_seen_date(self):
         seen_date = self.cleaned_data['seen_date']
-        film = self.instance
+        film = get_object_or_404(Film, pk=self.film_id)
         if seen_date < film.pub_date.date():
             raise forms.ValidationError(
-                "You can't see films before they are proposed!"
+                _("You can't see films before they are proposed!")
             )
         elif seen_date > timezone.now().date():
             raise forms.ValidationError(
-                "You can't see films in the future!"
+                _("You can't see films in the future!")
             )
         else:
             return seen_date

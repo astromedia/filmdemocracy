@@ -12,12 +12,12 @@
 
 {% block pagecontent %}
 
-<form class="text-center" action="{% url 'democracy:add_new_film' %}" method="POST" novalidate>
+<form class="text-center" method="POST" novalidate>
   {% csrf_token %}
 
   <div class="container text-center my-5">
     <h1 class="display-4">{% trans 'Propose new film' %}</h1>
-    <p class="lead text-muted">{% trans 'Make it to the top' %}</p>
+    <p class="lead text-muted">{{ club.name }}</p>
   </div>
 
   {% for hidden_field in form.hidden_fields %}
@@ -77,7 +77,7 @@
 
 </form>
 
-<p class="text-center mt-3"><a href="{% url 'democracy:candidate_films' %}">{% trans 'Go back to candidate films' %}</a></p>
+<p class="text-center mt-3"><a href="{% url 'democracy:candidate_films' club.id %}">{% trans 'Go back to candidate films' %}</a></p>
 
 
 {% endblock %}

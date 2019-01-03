@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'socialclub/css/socialclub_base.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Create new club' %}{% endblock %}
+
+{% block pagecontent %}
+
+<h3 class="text-center h3 mt-5 mb-3 font-weight-normal">{% trans 'Create new club' %}</h3>
+
+<form class="text-center" method="POST" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
+
+  <div class="form-club-name mt-5 mb-3">
+    {{ form.name.label_tag }}
+    {% if form.is_bound %}
+    {% if form.name.errors %}
+    {% render_field form.name class="form-control is-invalid" %}
+    {% for error in form.name.errors %}
+    <div class="invalid-feedback">
+      {{ error }}
+    </div>
+    {% endfor %}
+    {% else %}
+    {% render_field form.name class="form-control is-valid" %}
+    {% endif %}
+    {% else %}
+    {% render_field form.name class="form-control" %}
+    {% endif %}
+  </div>
+
+  <div class="mb-2">
+    {{ form.short_description.label_tag }}
+    {% if form.is_bound %}
+    {% if form.short_description.errors %}
+    {% render_field form.short_description class="form-control form-club-description is-invalid" %}
+    {% for error in form.short_description.errors %}
+    <div class="invalid-feedback">
+      {{ error }}
+    </div>
+    {% endfor %}
+    {% else %}
+    {% render_field form.short_description class="form-control form-club-description is-valid" %}
+    {% endif %}
+    {% else %}
+    {% render_field form.short_description class="form-control form-club-description" %}
+    {% endif %}
+    <small id="descriptionHelpBlock" class="form-text text-muted">
+      Maximum of 100 characters.
+    </small>
+  </div>
+
+  <div class="form-club-image-file mt-3">
+    {% trans 'Club logo:' %}<br>
+
+    <img class="mt-2" style="width: 10rem;"
+         src="{% static 'socialclub/club_no_image.png' %}"
+         alt="club.image not found">
+
+
+    <div class="custom-file mt-3">
+      <input id="inputGroupFile" type="file" name='image' class="custom-file-input">
+      <label class="custom-file-label" for="inputGroupFile">Choose file</label>
+    </div>
+
+    <small id="imageHelpBlock" class="form-text text-muted">
+      <!--Please use an image that is 200 x 200 pixels or smaller.-->
+    </small>
+  </div>
+
+  <input class="btn btn-lg btn-primary mt-5" type="submit" value="{% trans 'Create club' %}">
+  <input type="hidden" name="next" value="{{ next }}">
+
+</form>
+
+<form action="{% url 'home' %}" class="text-center mt-3">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+</form>
+
+
+<!--https://github.com/Johann-S/bs-custom-file-input-->
+<script src="{% static 'socialclub/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
+<script>
+      document.addEventListener('DOMContentLoaded', function() {
+        bsCustomFileInput.init()
+
+        var btn = document.getElementById('btnResetForm')
+        var form = document.querySelector('form')
+        btn.addEventListener('click', function() {
+          form.reset()
+        })
+      });
+
+</script>
+{% endblock %}

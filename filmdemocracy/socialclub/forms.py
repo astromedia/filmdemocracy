@@ -1,28 +1,20 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.files.images import get_image_dimensions
 
-from filmdemocracy.registration.models import User
+from filmdemocracy.socialclub.models import Club
 
 
-class SignupForm(UserCreationForm):
-
-    class Meta(UserCreationForm):
-        model = User
-        fields = ('email', 'username', 'password1', 'password2')
-
-
-class AccountInfoEditForm(UserChangeForm):
+class CreateClubForm(forms.ModelForm):
 
     class Meta:
-        model = User
-        fields = ['profile_image', 'email']
+        model = Club
+        fields = ['name', 'image', 'short_description']
 
-    def clean_profile_image(self):
-        profile_image = self.cleaned_data['profile_image']
+    def clean_image(self):
+        image = self.cleaned_data['image']
 
         # try:
-        #     w, h = get_image_dimensions(profile_image)
+        #     w, h = get_image_dimensions(image)
         #
         #     # validate dimensions
         #     max_width = max_height = 200
@@ -32,13 +24,13 @@ class AccountInfoEditForm(UserChangeForm):
         #             '%s x %s pixels or smaller.' % (max_width, max_height))
         #
         #     # validate content type
-        #     main, sub = profile_image.content_type.split('/')
+        #     main, sub = image.content_type.split('/')
         #     if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
         #         raise forms.ValidationError(u'Please use a JPEG, '
         #                                     'GIF or PNG image.')
         #
         #     # validate file size
-        #     if len(profile_image) > (200 * 1024):
+        #     if len(image) > (200 * 1024):
         #         raise forms.ValidationError(
         #             u'Avatar file size may not exceed 200k.')
         #
@@ -49,4 +41,4 @@ class AccountInfoEditForm(UserChangeForm):
         #     """
         #     pass
 
-        return profile_image
+        return image

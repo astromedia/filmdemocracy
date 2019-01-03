@@ -7,91 +7,99 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.shortcuts import get_object_or_404
-from filmdemocracy.registration.models import User
 
-from filmdemocracy.democracy.forms import FilmAddNewForm, FilmAddFilmAffForm
-from filmdemocracy.democracy.forms import FilmSeenForm
-from filmdemocracy.democracy.models import Film, Vote
+from filmdemocracy.registration.models import User
+from filmdemocracy.democracy.models import FilmDb, Film, Vote
+from filmdemocracy.socialclub.models import Club
+from filmdemocracy.democracy import forms
 from filmdemocracy.settings import OMDB_API_KEY
 
 
 @method_decorator(login_required, name='dispatch')
 class CandidateFilmsView(generic.TemplateView):
+    # TODO: change to ListView?
     template_name = 'democracy/candidate_films.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        films = Film.objects.all().order_by('title')
-        list_of_films = []
-        for film in films:
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club_films = Film.objects.all().filter(club_id=club.id)
+        candidate_films = []
+        for film in club_films.filter(seen=False):
             film_voters = [vote.user.username for vote in film.vote_set.all()]
-            list_of_films.append({
+            candidate_films.append({
                 'film': film,
                 'voted': self.request.user.username in film_voters
             })
-        context['list_of_films'] = list_of_films
-        context['last_proposed_films'] = Film.objects.all().order_by('-pub_date')
-        context['last_seen_films'] = Film.objects.all().order_by('-seen_date')
+        context['club'] = club
+        context['candidate_films'] = candidate_films
+        context['films_last_pub'] = club_films.order_by('-pub_date')
+        context['films_last_seen'] = club_films.order_by('-seen_date')
         return context
 
 
 @method_decorator(login_required, name='dispatch')
 class AddNewFilmView(generic.FormView):
-    form_class = FilmAddNewForm
+    form_class = forms.FilmAddNewForm
     template_name = 'democracy/add_new_film.html'
 
-    def get_success_url(self):
-        return reverse('democracy:candidate_films')
+    def get_form_kwargs(self):
+        kwargs = super(AddNewFilmView, self).get_form_kwargs()
+        kwargs.update({'club_id': self.kwargs['club_id']})
+        return kwargs
 
-    @staticmethod
-    def random_id_generator():
-        """
-        Random id generator, that picks an integer in the [1, 999999] range
-        among the free ones (i.e., not found in the DB).
-        return: new_id: new id number not existing in the database
-        """
-        if len(Film.objects.all()) == 999999:
-            raise Exception('All possible id numbers are picked!')
-        else:
-            filmids = Film.objects.values_list('id')
-            free_ids = [i for i in range(1, 999999) if i not in filmids]
-            new_id = random.choice(free_ids)
-        return new_id
+    def get_success_url(self):
+        return reverse_lazy(
+            'democracy:candidate_films',
+            kwargs={'club_id': self.kwargs['club_id']}
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        return context
 
     def form_valid(self, form):
-        new_id = self.random_id_generator()
         imdb_id = form.cleaned_data['imdb_url']
-        omdb_api_url = f'http://www.omdbapi.com/?i={imdb_id}' \
-            f'&apikey={OMDB_API_KEY}'
-        response = requests.get(omdb_api_url)
-        omdb_data = response.json()
+        filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_id)
+        if created:
+            omdb_api_url = f'http://www.omdbapi.com/?i=tt{imdb_id}' \
+                f'&apikey={OMDB_API_KEY}'
+            response = requests.get(omdb_api_url)
+            omdb_data = response.json()
+            filmdb.faff_id = form.cleaned_data['faff_url']
+            filmdb.title = omdb_data['Title']
+            filmdb.year = omdb_data['Year']
+            filmdb.director = omdb_data['Director']
+            filmdb.writer = omdb_data['Writer']
+            filmdb.actors = omdb_data['Actors']
+            filmdb.poster_url = omdb_data['Poster']
+            filmdb.duration = int(omdb_data['Runtime'].replace('min', ''))
+            filmdb.language = omdb_data['Language']
+            filmdb.rated = omdb_data['Rated']
+            filmdb.country = omdb_data['Country']
+            filmdb.plot = omdb_data['Plot']
+            filmdb.save()
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         Film.objects.create(
-            id=new_id,
-            imdb_id=imdb_id,
-            faff_id=form.cleaned_data['faff_url'],
+            id=f'{int(club.id):05d}{int(imdb_id):07d}',
             proposed_by=self.request.user,
-            title=omdb_data['Title'],
-            director=omdb_data['Director'],
-            writer=omdb_data['Writer'],
-            actors=omdb_data['Actors'],
-            poster_url=omdb_data['Poster'],
-            year=omdb_data['Year'],
-            duration=int(omdb_data['Runtime'].replace('min', '')),
-            language=omdb_data['Language'],
-            rated=omdb_data['Rated'],
-            country=omdb_data['Country'],
-            plot=omdb_data['Plot'],
+            club=club,
+            filmdb=filmdb,
         )
         return super().form_valid(form)
 
 
 @method_decorator(login_required, name='dispatch')
-class FilmDetailView(generic.DetailView):
+class FilmDetailView(generic.TemplateView):
     model = Film
     template_name = 'democracy/film_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        film = get_object_or_404(Film, pk=self.kwargs['film_id'])
+        context['film'] = film
+        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
 
         def choice_meta(vote_choice):
             vote_meta_dict = {
@@ -115,8 +123,10 @@ class FilmDetailView(generic.DetailView):
                 'choice_voted': False,
             }
         try:
-            user_vote = Vote.objects.get(user=self.request.user,
-                                         film=self.kwargs['pk'])
+            user_vote = Vote.objects.get(
+                user=self.request.user,
+                film=film,
+            )
             choice_dict[user_vote.choice]['choice_voted'] = True
         except Vote.DoesNotExist:
             pass
@@ -124,7 +134,7 @@ class FilmDetailView(generic.DetailView):
         return context
 
 
-def vote_film(request, film_id):
+def vote_film(request, club_id, film_id):
     film = get_object_or_404(Film, pk=film_id)
     user_vote, _ = Vote.objects.get_or_create(
         user=request.user,
@@ -132,46 +142,85 @@ def vote_film(request, film_id):
     )
     user_vote.choice = request.POST['choice']
     user_vote.save()
-    return HttpResponseRedirect(reverse('democracy:candidate_films'))
+    return HttpResponseRedirect(
+        reverse('democracy:candidate_films', kwargs={'club_id': club_id}))
 
 
 @method_decorator(login_required, name='dispatch')
-class FilmAddFilmAffView(generic.UpdateView):
-    model = Film
-    form_class = FilmAddFilmAffForm
+class FilmAddFilmAffView(generic.FormView):
+    form_class = forms.FilmAddFilmAffForm
     template_name = 'democracy/film_add_faff.html'
-    success_url = reverse_lazy('democracy:candidate_films')
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'democracy:film_detail',
+            kwargs={'club_id': self.kwargs['club_id'],
+                    'film_id': self.kwargs['film_id']}
+        )
 
     def form_valid(self, form):
-        form.instance.faff_id = form.cleaned_data['faff_url']
+        imdb_id = str(self.kwargs['film_id'])[5:]
+        filmdb = get_object_or_404(FilmDb, imdb_id=imdb_id)
+        filmdb.faff_id = form.cleaned_data['faff_url']
+        filmdb.save()
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['film'] = get_object_or_404(Film, pk=self.kwargs['film_id'])
+        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
-class FilmSeenView(generic.UpdateView):
-    model = Film
-    form_class = FilmSeenForm
+class FilmSeenView(generic.FormView):
+    form_class = forms.FilmSeenForm
     template_name = 'democracy/film_seen.html'
-    success_url = reverse_lazy('democracy:candidate_films')
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'democracy:film_detail',
+            kwargs={'club_id': self.kwargs['club_id'],
+                    'film_id': self.kwargs['film_id']}
+        )
+
+    def get_form_kwargs(self):
+        kwargs = super(FilmSeenView, self).get_form_kwargs()
+        kwargs.update({'film_id': self.kwargs['film_id']})
+        return kwargs
 
     def form_valid(self, form):
-        form.instance.seen = True
+        film = get_object_or_404(Film, id=self.kwargs['film_id'])
+        film.seen_date = form.cleaned_data['seen_date']
+        film.seen = True
+        film.save()
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['film'] = get_object_or_404(Film, pk=self.kwargs['film_id'])
+        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        return context
 
-def unsee_film(request, film_id):
+
+def unsee_film(request, club_id, film_id):
     film = get_object_or_404(Film, pk=film_id)
     film.seen = False
     film.seen_date = None
     film.save()
-    return HttpResponseRedirect(reverse(
-        'democracy:film_detail', kwargs={'pk': film_id}))
+    return HttpResponseRedirect(reverse_lazy(
+            'democracy:film_detail',
+            kwargs={'club_id': club_id,
+                    'film_id': film_id}
+    ))
 
 
-def delete_film(request, film_id):
+def delete_film(request, club_id, film_id):
     film = get_object_or_404(Film, pk=film_id)
     film.delete()
-    return HttpResponseRedirect(reverse('democracy:candidate_films'))
+    return HttpResponseRedirect(
+        reverse('democracy:candidate_films', kwargs={'club_id': club_id})
+    )
 
 
 @method_decorator(login_required, name='dispatch')
@@ -180,11 +229,13 @@ class ParticipantsView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        all_users = User.objects.filter(
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['club'] = club
+        club_users = club.users.filter(
             is_superuser=False,
             is_active=True,
         )
-        context['all_users'] = all_users
+        context['club_users'] = club_users
         return context
 
 
@@ -253,11 +304,13 @@ class VoteResultsView(generic.TemplateView):
         films_results = []
         films_warnings = []
         participants = self.request.GET.getlist('participants')
-        for film in Film.objects.filter(seen=False):
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club_films = Film.objects.all().filter(club_id=club.id)
+        for film in club_films.filter(seen=False):
             voters_info, warnings, points, veto = process(film, participants)
             films_results.append({
                 'id': film.id,
-                'title': film.title,
+                'title': film.filmdb.title,
                 'positive_voters': voters_info[0],
                 'negative_voters': voters_info[1],
                 'no_voters': voters_info[2],
@@ -265,6 +318,7 @@ class VoteResultsView(generic.TemplateView):
                 'veto': veto,
                 })
             films_warnings.extend(warnings)
+        context['club'] = club
         context['films_results'] = films_results
         context['warnings'] = films_warnings
         context['participants'] = participants

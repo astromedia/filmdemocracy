@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 
 from filmdemocracy.registration import views
 
+
 app_name = 'registration'
 urlpatterns = [
     path(
@@ -82,12 +83,5 @@ urlpatterns = [
             template_name='registration/password_reset_complete.html'
         ),
         name='password_reset_complete'
-    ),
-    path(
-        'create_club/',
-        views.CreateClubView.as_view(
-            template_name='registration/create_club.html'
-        ),
-        name='create_club'
     ),
 ]
