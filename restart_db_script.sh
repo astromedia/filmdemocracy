@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_DIR=/home/pablo/Proyectos/filmdemocracy
+PROJECT_DIR=$(pwd)
 
 rm $PROJECT_DIR/local/db.sqlite3
 rm -rf $PROJECT_DIR/local/media
@@ -15,6 +15,6 @@ python manage.py sqlmigrate registration 0001
 python manage.py sqlmigrate socialclub 0001
 python manage.py migrate
 
-python manage.py shell < create_mock_database.py
+python manage.py shell < create_mock_db.py
 
 exit 0

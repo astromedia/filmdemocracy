@@ -6,7 +6,18 @@ from filmdemocracy.socialclub.models import Club
 from filmdemocracy.democracy.models import Film
 
 
-names = ['Pablo', 'Naranjo', 'Timi', 'Carla', 'Ricardo', 'Txan', 'Juanra', 'Andrea']
+names = [
+    'Pablo',
+    'Naranjo',
+    'Timi',
+    'Carla',
+    'Ricardo',
+    'Txan',
+    'Juanra',
+    'Andrea',
+    'Diego',
+    'Cris',
+]
 
 for name in names:
     User.objects.create_user(
@@ -17,13 +28,16 @@ for name in names:
 
 user_creator = User.objects.filter(email='pablo@gmail.com')[0]
 
-club_names = ['CCM', 'Trabajo']
+club_names = [
+    'CCM',
+    'Trabajo',
+]
 
 for club_name in club_names:
     club = Club.objects.create(
         id=random.choice(range(1, 99999)),
         name=club_name,
-        short_description="I'm basically a mock club.",
+        short_description="I'm basically a mock club, yes.",
         admin_user=user_creator,
     )
     club.users.add(user_creator)

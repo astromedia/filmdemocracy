@@ -119,7 +119,3 @@ dmypy.json
 
 # Local stuff...
 /local
-
-# Reboot database utilities
-restart_db_script.sh
-create_mock_database.py
