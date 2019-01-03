@@ -79,10 +79,12 @@
   </div>
 
   {% else %}
-  <p class="text-center">{% trans 'There are no candidate films...' %}</p>
-  <p class="text-center"><a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-lg btn-success my-2">
-    {% trans 'Propose one!' %}</a></p>
 
+  <div class="alert alert-warning text-center mt-3">
+    <strong>{% trans 'There are no candidate films...' %}</strong>
+    <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-success ml-3 my-2">
+    {% trans 'Propose one!' %}</a>
+  </div>
   {% endif %}
 
 </div>

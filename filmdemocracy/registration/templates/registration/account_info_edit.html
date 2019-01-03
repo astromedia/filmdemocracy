@@ -12,9 +12,6 @@
 
 {% block pagecontent %}
 
-<h3 class="text-center h3 mb-5 mt-5 font-weight-normal">{% trans 'Account information' %}</h3>
-
-
 {% if form.errors %}
 {% for error in form.non_field_errors %}
 <div class="alert alert-danger text-center">
@@ -26,6 +23,8 @@
 {% for hidden_field in form.hidden_fields %}
 {{ hidden_field }}
 {% endfor %}
+
+<h3 class="text-center h3 font-weight-normal">{% trans 'Account information' %}</h3>
 
 <form enctype="multipart/form-data" method="POST" novalidate>
   {% csrf_token %}

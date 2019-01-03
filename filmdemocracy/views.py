@@ -12,3 +12,9 @@ class HomeView(generic.TemplateView):
         if self.request.user.is_authenticated:
             context['user_clubs'] = self.request.user.club_set.all()
         return context
+
+
+class TermsAndConditionsView(generic.TemplateView):
+    model = Club
+    template_name = 'terms_and_conditions.html'
+

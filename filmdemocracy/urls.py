@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from filmdemocracy.views import HomeView
+from filmdemocracy import views
 
 
 urlpatterns = [
@@ -40,8 +40,13 @@ urlpatterns = [
     ),
     path(
         '',
-        HomeView.as_view(),
+        views.HomeView.as_view(),
         name='home'
+    ),
+    path(
+        'terms_and_conditions/',
+        views.TermsAndConditionsView.as_view(),
+        name='terms_and_conditions'
     ),
 ]
 

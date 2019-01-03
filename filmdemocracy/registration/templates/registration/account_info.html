@@ -12,14 +12,14 @@
 
 {% block pagecontent %}
 
-<h3 class="text-center h3 mb-5 mt-5 font-weight-normal">{% trans 'Account information' %}</h3>
-
-
 {% if not user.profile_image %}
-<div class="alert alert-danger text-center">
-  You don't have a profile picture yet! <a class="ml-3" href="{% url 'registration:account_info_edit' %}">Add one</a>
+<div class="alert alert-warning text-center">
+  <strong>{% trans "You don't have a profile picture yet!" %}</strong>
+  <a class="ml-3" href="{% url 'registration:account_info_edit' %}">{% trans 'Complete your profile' %}</a>
 </div>
 {% endif %}
+
+<h3 class="text-center h3 font-weight-normal">{% trans 'Account information' %}</h3>
 
 
 <div class="row justify-content-center">
