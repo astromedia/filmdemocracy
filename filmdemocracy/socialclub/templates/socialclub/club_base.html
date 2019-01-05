@@ -30,6 +30,12 @@
     {% endif %}
   </div>
 
+  <div class="text-center mt-5 mb-1">
+    <a href="{% url 'democracy:candidate_films' club.id %}">
+      {% trans 'Check club candidate films' %}
+    </a>
+  </div>
+
 </div>
 
 {% if user in club_admins %}
@@ -42,8 +48,13 @@
         <strong>{% trans "Club admin utilities:" %}</strong>
       </td>
       <td>
-        <form action="{% url 'socialclub:edit_club' club.id %}" class="text-center">
-          <button type="submit" class="btn btn-sm btn-primary ml-3 mr-1">{% trans 'Edit club info' %}</button>
+        <form action="{% url 'socialclub:edit_club_info' club.id %}" class="text-center">
+          <button type="submit" class="btn btn-sm btn-primary ml-3 mr-1">{% trans 'Edit info' %}</button>
+        </form>
+      </td>
+      <td>
+        <form action="{% url 'socialclub:edit_club_description' club.id %}" class="text-center">
+          <button type="submit" class="btn btn-sm btn-primary ml-3 mr-1">{% trans 'Edit description' %}</button>
         </form>
       </td>
       <td>
@@ -104,7 +115,6 @@
   <strong>{{ error_msg }}</strong>
 </div>
 {% endif %}
-
 
 
 <!-- START MODAL CLUB LOGO -->

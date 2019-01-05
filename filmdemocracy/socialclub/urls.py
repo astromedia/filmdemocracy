@@ -13,11 +13,18 @@ urlpatterns = [
         name='create_club'
     ),
     path(
-        'club/<int:pk>/edit/',
-        views.EditClubView.as_view(
-            template_name='socialclub/edit_club.html'
+        'club/<int:pk>/edit_info/',
+        views.EditClubInfoView.as_view(
+            template_name='socialclub/edit_club_info.html'
         ),
-        name='edit_club'
+        name='edit_club_info'
+    ),
+    path(
+        'club/<int:pk>/edit_description/',
+        views.EditClubDescriptionView.as_view(
+            template_name='socialclub/edit_club_description.html'
+        ),
+        name='edit_club_description'
     ),
     path(
         'club/<int:pk>/',

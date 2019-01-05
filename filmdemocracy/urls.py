@@ -17,6 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
 
 from filmdemocracy import views
 
@@ -48,6 +49,7 @@ urlpatterns = [
         views.TermsAndConditionsView.as_view(),
         name='terms_and_conditions'
     ),
+    url(r'^markdownx/', include('markdownx.urls')),
 ]
 
 if settings.DEBUG:

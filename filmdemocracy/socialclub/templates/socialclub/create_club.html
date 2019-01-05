@@ -12,7 +12,6 @@
 
 {% block pagecontent %}
 
-
 <!--START ERRORS-->
 {% for hidden_field in form.hidden_fields %}
 {% if hidden_field.errors %}
@@ -112,6 +111,11 @@
 
   </div>
 
+  <div class="text-center mt-n2 mb-3 text-muted">
+  {% trans '( You will be able to add more details of your club later. )' %}
+  </a>
+</div>
+
   <input class="btn btn-lg btn-primary mt-2" type="submit" value="{% trans 'Create club' %}">
   <input type="hidden" name="next" value="{{ next }}">
 
@@ -134,6 +138,5 @@
           form.reset()
         })
       });
-
 </script>
 {% endblock %}

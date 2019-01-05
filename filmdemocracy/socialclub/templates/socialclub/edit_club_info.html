@@ -114,30 +114,6 @@
       </div>
     </div>
 
-    <div class="form-signin">
-      <div class="mt-3">
-        {{ form.long_description.label_tag }}
-        {% if form.is_bound %}
-        {% if form.long_description.errors %}
-        {% render_field form.long_description class="form-control form-long-description is-invalid" %}
-
-        {% else %}
-        {% render_field form.long_description class="form-control form-long-description is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.long_description class="form-control form-long-description" %}
-        {% endif %}
-        <small class="form-text text-muted">
-          Maximum of 1000 characters.
-        </small>
-        {% for error in form.long_description.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-
   </div>
 
   <input class="btn btn-primary mt-2" type="submit" value="{% trans 'Save changes' %}">
@@ -162,7 +138,5 @@
           form.reset()
         })
       });
-
-
 </script>
 {% endblock %}

@@ -8,17 +8,11 @@
 {% block content %}
 
 
-<div class="text-center my-5">
-  <a href="{% url 'democracy:candidate_films' club.id %}">
-    {% trans 'Check club candidate films' %}
-  </a>
+<div class="markdownx-view">
+  {{ club.formatted_long_description|safe }}
 </div>
 
 
-<div class="text-center my-5">
-  {% trans 'Club description' %}
-  {{ club.long_description }}
-</div>
 
 <div class="album pt-4 border bg-light">
   <div class="container-fluid">

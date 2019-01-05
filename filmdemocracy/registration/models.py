@@ -14,6 +14,7 @@ class User(AbstractUser):
         _('email'),
         unique=True,
     )
+    # TODO: Input image validation
     profile_image = models.ImageField(
         _('user profile image'),
         upload_to=get_profile_image_path,

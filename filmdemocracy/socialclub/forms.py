@@ -1,5 +1,4 @@
 from django import forms
-from django.core.files.images import get_image_dimensions
 
 from filmdemocracy.socialclub.models import Club
 from filmdemocracy.registration.models import User
