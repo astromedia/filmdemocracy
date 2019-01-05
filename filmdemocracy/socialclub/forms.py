@@ -2,43 +2,51 @@ from django import forms
 from django.core.files.images import get_image_dimensions
 
 from filmdemocracy.socialclub.models import Club
+from filmdemocracy.registration.models import User
 
 
 class CreateClubForm(forms.ModelForm):
 
     class Meta:
         model = Club
-        fields = ['name', 'image', 'short_description']
+        fields = ['name', 'logo', 'short_description']
 
-    def clean_image(self):
-        image = self.cleaned_data['image']
+    def clean_logo(self):
+        logo = self.cleaned_data['logo']
+        return logo
 
-        # try:
-        #     w, h = get_image_dimensions(image)
-        #
-        #     # validate dimensions
-        #     max_width = max_height = 200
-        #     if w > max_width or h > max_height:
-        #         raise forms.ValidationError(
-        #             u'Please use an image that is '
-        #             '%s x %s pixels or smaller.' % (max_width, max_height))
-        #
-        #     # validate content type
-        #     main, sub = image.content_type.split('/')
-        #     if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
-        #         raise forms.ValidationError(u'Please use a JPEG, '
-        #                                     'GIF or PNG image.')
-        #
-        #     # validate file size
-        #     if len(image) > (200 * 1024):
-        #         raise forms.ValidationError(
-        #             u'Avatar file size may not exceed 200k.')
-        #
-        # except AttributeError:
-        #     """
-        #     Handles case when we are updating the user profile
-        #     and do not supply a new avatar
-        #     """
-        #     pass
 
-        return image
+class KickMembersForm(forms.ModelForm):
+    members = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        queryset=User.objects.filter(pk=0),
+        required=False
+    )
+
+    class Meta:
+        model = Club
+        fields = ['members']
+
+    def __init__(self, *args, **kwargs):
+        club_members = kwargs.pop('club_members', None)
+        super(KickMembersForm, self).__init__(*args, **kwargs)
+        self.fields['members'].queryset = club_members
+
+
+class PromoteMembersToAdminForm(forms.ModelForm):
+    members = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        queryset=User.objects.filter(pk=0),
+        required=False
+    )
+
+    class Meta:
+        model = Club
+        fields = ['members']
+
+    def __init__(self, *args, **kwargs):
+        club_members = kwargs.pop('club_members', None)
+        super(PromoteMembersToAdminForm, self).__init__(*args, **kwargs)
+        self.fields['members'].queryset = club_members
+
+

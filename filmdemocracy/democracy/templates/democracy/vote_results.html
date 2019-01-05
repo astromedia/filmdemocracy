@@ -14,9 +14,9 @@
 {% block pagecontent %}
 
 
-<div class="container text-center mt-5 mb-2">
+<div class="container text-center mt-5 mb-4">
   <h1 class="display-4">{% trans 'Voting results' %}</h1>
-  <p class="lead text-muted">{{ club.name }}</p>
+  <a href="{% url 'socialclub:club_detail' club.id %}" class="card-link lead"><strong>{{ club.name }}</strong></a>
 </div>
 
 <div class="text-center mb-5">

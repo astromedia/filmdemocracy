@@ -12,7 +12,6 @@ class SignupForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = User
         fields = ('email', 'username', 'password1', 'password2',)
-        exclude = ('agree_terms',)
 
     def clean_agree_terms(self):
         agree_terms = self.cleaned_data['agree_terms']

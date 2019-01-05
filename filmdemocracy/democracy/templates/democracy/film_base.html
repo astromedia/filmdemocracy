@@ -87,9 +87,9 @@
 </div>
 
 
-<!-- Modal poster -->
+<!-- START MODAL POSTER -->
 <div class="modal fade" id="PosterModalCenter" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
         <div class="text-right mb-3">
@@ -99,12 +99,13 @@
           <br>
         </div>
         <div>
-          <img src="{{ film.filmdb.poster_url }}" alt="poster image not found">
+          <img class="club-logo-modal" src="{{ film.filmdb.poster_url }}" alt="poster image not found">
         </div>
       </div>
     </div>
   </div>
 </div>
+<!-- END MODAL POSTER -->
 
 {% block content %}
 {% endblock %}

@@ -54,16 +54,16 @@
   <tr>
     <td>
       <form action="{% url 'registration:account_info_edit' %}" class="text-center">
-        <button type="submit" class="btn btn-sm btn-success mr-1">{% trans 'Edit info' %}</button>
+        <button type="submit" class="btn btn-success mr-1">{% trans 'Edit info' %}</button>
       </form>
     </td>
     <td>
       <form action="{% url 'registration:password_change' %}" class="text-center">
-        <button type="submit" class="btn btn-sm btn-primary mr-1 ml-1">{% trans 'Change password' %}</button>
+        <button type="submit" class="btn btn-primary mr-1 ml-1">{% trans 'Change password' %}</button>
       </form>
     </td>
     <td>
-      <button type="button" class="btn btn-sm btn-outline-danger ml-1" data-toggle="modal"
+      <button type="button" class="btn btn-outline-danger ml-1" data-toggle="modal"
               data-target="#DeleteModalCenter">
         {% trans 'Delete account' %}
       </button>
@@ -74,7 +74,7 @@
 
 
 
-<!-- Modal delete -->
+<!-- MODAL DELETE -->
 <div class="modal fade" id="DeleteModalCenter" tabindex="-1" role="dialog" aria-labelledby="DeleteModalCenterTitle"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -89,12 +89,12 @@
         <p>{% trans 'Are you sure about this?' %}</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
         <form action="{% url 'registration:account_del' %}" class="text-center">
           {% csrf_token %}
-          <button method="post" type="submit" class="btn btn-danger mr-3">
+          <button method="post" type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
           </button>
         </form>

@@ -1,0 +1,100 @@
+{% extends "socialclub/club_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block title %}{% trans 'Club info' %}{% endblock %}
+
+{% block content %}
+
+
+<div class="text-center my-5">
+  <a href="{% url 'democracy:candidate_films' club.id %}">
+    {% trans 'Check club candidate films' %}
+  </a>
+</div>
+
+
+<div class="text-center my-5">
+  {% trans 'Club description' %}
+  {{ club.long_description }}
+</div>
+
+<div class="album pt-4 border bg-light">
+  <div class="container-fluid">
+
+    <div class="row mt-4 justify-content-center">
+
+      {% for user in club_members %}
+
+      <div class="col-auto">
+        <div class="card mb-4 shadow-sm" style="width: 8rem;">
+
+          {% if user.member.profile_image %}
+          <img class="card-img-top border border-secondary member-shadow"
+               src="{{ user.member.profile_image.url }}"
+               alt="user.profile_image not found">
+          {% else %}
+          <img class="card-img-top border border-secondary member-shadow"
+               src="{% static 'registration/user_no_profile_image.png' %}"
+               alt="user.profile_image not found">
+          {% endif %}
+
+          <div class="text-center p-1">
+            {{ user.member.username }}
+          </div>
+
+        </div>
+      </div>
+
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+
+<!--<form action="{% url 'home' %}" class="text-center my-3">-->
+  <!--<button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Home' %}</button>-->
+<!--</form>-->
+
+
+<div class="text-center my-5">
+  <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+          data-target="#LeaveModalCenter">
+    {% trans 'Leave club' %}
+  </button>
+</div>
+
+
+<!-- START MODAL LEAVE -->
+<div class="modal fade" id="LeaveModalCenter" tabindex="-1" role="dialog" aria-labelledby="LeaveModalCenterTitle"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="LeaveModalCenterTitle">{% trans 'Leave club' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{% trans 'Are you sure about this?' %}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          {% trans 'Cancel' %}
+        </button>
+        <form method="post" action="{% url 'socialclub:leave_club' club.id %}" class="text-center">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger mr-3">
+            {% trans 'Confirm' %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END MODAL LEAVE -->
+
+{% endblock %}

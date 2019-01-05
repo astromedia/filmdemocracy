@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'socialclub/css/club_base.css' %}">
+<link rel="stylesheet" href="{% static 'socialclub/css/socialclub_base.css' %}">
+{% endblock %}
+
+{% block pagecontent %}
+
+
+<div class="container-fluid container-club-banner pb-4 pt-4 shadow">
+
+  <p class="lead text-center name mt-2 mb-1"><strong>{{ club.name }}</strong></p>
+  <p class="lead text-muted text-center short-description">{{ club.short_description }}</p>
+
+  <div class="text-center mt-4 mb-3">
+    {% if club.logo %}
+    <a href="#">
+      <img class="club-logo-shadow rounded" style="width: 15rem;"
+           src="{{ club.logo.url }}" alt="club.logo not found"
+           data-toggle="modal" data-target="#ClubLogoModalCenter">
+    </a>
+    {% else %}
+    <img class="club-logo-shadow rounded" style="width: 15rem;"
+         src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+    {% endif %}
+  </div>
+
+</div>
+
+{% if user in club_admins %}
+
+<div class="alert alert-success text-center">
+
+  <table class="mx-auto">
+    <tr>
+      <td>
+        <strong>{% trans "Club admin utilities:" %}</strong>
+      </td>
+      <td>
+        <form action="{% url 'socialclub:edit_club' club.id %}" class="text-center">
+          <button type="submit" class="btn btn-sm btn-primary ml-3 mr-1">{% trans 'Edit club info' %}</button>
+        </form>
+      </td>
+      <td>
+        <form action="{% url 'socialclub:promote_members_to_admin' club.id %}" class="text-center">
+          <button type="submit" class="btn btn-sm btn-success ml-3 mr-1">{% trans 'Promote members to admin' %}</button>
+        </form>
+      </td>
+      <td>
+        <form action="{% url 'socialclub:kick_members' club.id %}" class="text-center">
+          <button type="submit" class="btn btn-sm btn-danger ml-3 mr-1">{% trans 'Kick members' %}</button>
+        </form>
+      </td>
+      <td>
+        <button type="button" class="btn btn-sm btn-outline-danger ml-3" data-toggle="modal"
+                data-target="#SelfdemoteModalCenter">
+          {% trans 'Self-demote' %}
+        </button>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+<!-- START MODAL SELFDEMOTE -->
+<div class="modal fade" id="SelfdemoteModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="SelfdemoteModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SelfdemoteModalCenterTitle">{% trans 'Self-demote' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{% trans "Are you sure you don't want to be an admin anymore?" %}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          {% trans 'Cancel' %}
+        </button>
+        <form method="post" action="{% url 'socialclub:selfdemote' club.id %}" class="text-center">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger mr-3">
+            {% trans 'Confirm' %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END MODAL SELFDEMOTE -->
+
+{% endif %}
+
+{% if error_msg %}
+<div class="alert alert-danger text-center mt-n3">
+  <strong>{{ error_msg }}</strong>
+</div>
+{% endif %}
+
+
+
+<!-- START MODAL CLUB LOGO -->
+{% if club.logo %}
+<div class="modal fade" id="ClubLogoModalCenter" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
+        <div class="text-right mb-3">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <br>
+        </div>
+        <div>
+          <img class="club-logo-modal" src="{{ club.logo.url }}" alt="poster image not found">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<!-- END MODAL CLUB LOGO -->
+
+
+{% block content %}
+{% endblock %}
+
+{% endblock %}

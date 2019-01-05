@@ -32,26 +32,25 @@
 
         <div class="hovereffect-club">
           <a href="{% url 'democracy:candidate_films' club.id %}">
-            {% if club.image %}
-            <img class="card-img-top border border-secondary"
-                 src="{{ club.image.url }}"
-                 alt="club.image not found">
+            {% if club.logo %}
+            <img class="card-img-top rounded border border-secondary"
+                 src="{{ club.logo.url }}"
+                 alt="club.logo not found">
             {% else %}
-            <img class="card-img-top border border-secondary"
-                 src="{% static 'socialclub/club_no_image.png' %}"
-                 alt="club.image not found">
+            <img class="card-img-top rounded border border-secondary"
+                 src="{% static 'socialclub/club_no_logo.png' %}"
+                 alt="club.logo not found">
             {% endif %}
           </a>
         </div>
 
         <div class="card-body">
-          <h5 class="card-title text-center">{{ club.name }}</h5>
-          <p class="card-text">
+          <h5 class="card-title text-center">
+            <a href="{% url 'socialclub:club_detail' club.id %}" class="card-link">{{ club.name }}</a>
+          </h5>
+          <p class="card-text text-center">
             <small>{{ club.short_description }}</small>
           </p>
-          <div class="text-center">
-            <a href="#" class="card-link">Club info</a>
-          </div>
         </div>
 
       </div>

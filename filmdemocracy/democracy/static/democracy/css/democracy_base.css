@@ -13,9 +13,9 @@ body {
   padding-top: 1.5rem;
   padding-bottom: 3rem;
   min-height: 57rem;
-  max-width: 935px;
+  max-width: 908px;
   background-color: white;
-  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.65);
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.65);
   padding-right: 0;
   padding-left: 0;
 }
@@ -41,7 +41,7 @@ body {
 }
 
 .container-nav {
-  max-width: 935px;
+  max-width: 908px;
 }
 
 .nav-shadow {
@@ -205,7 +205,7 @@ filter:alpha(opacity=100);
 transform:translatey(0);
 }
 
-.hovereffect h3 {
+.hovereffect alert {
   color: #fff;
   text-align: center;
   position: relative;

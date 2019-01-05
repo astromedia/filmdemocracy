@@ -6,8 +6,8 @@ from django.db import models
 from filmdemocracy.registration.models import User
 
 
-def get_club_image_path(instance, filename):
-    return os.path.join('club_images', str(instance.id), filename)
+def get_club_logo_path(instance, filename):
+    return os.path.join('club_logos', str(instance.id), filename)
 
 
 class Club(models.Model):
@@ -17,23 +17,22 @@ class Club(models.Model):
         _('Short club description'),
         max_length=100,
     )
-    club_rules = models.TextField(
-        _('Club rules (optional)'),
+    long_description = models.TextField(
+        _('Long club description / rules (optional)'),
         default='',
-        max_length=324,
+        max_length=1000,
         blank=True,
         null=True
     )
-    image = models.ImageField(
-        _('club image'),
-        upload_to=get_club_image_path,
+    logo = models.ImageField(
+        _('club logo'),
+        upload_to=get_club_logo_path,
         blank=True,
         null=True
     )
-    admin_user = models.ForeignKey(
+    admin_users = models.ManyToManyField(
         User,
-        related_name='admin_user',
-        on_delete=models.PROTECT
+        related_name='admin_users',
     )
     users = models.ManyToManyField(User)
 

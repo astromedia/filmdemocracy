@@ -4,15 +4,37 @@ from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views import generic
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.utils.translation import gettext_lazy as _
 
 from filmdemocracy.socialclub.models import Club
 from filmdemocracy.socialclub import forms
 
 
+def get_club_context(view_request, club_id, context):
+    club = get_object_or_404(Club, pk=club_id)
+    context['club'] = club
+    club_users = club.users.filter(
+        is_superuser=False,
+        is_active=True,
+    )
+    club_admins = club.admin_users.all()
+    context['club_admins'] = club_admins
+    club_members = []
+    for member in club_users:
+        club_members.append({
+            'member': member,
+            'is_admin': member in club_admins,
+        })
+    context['club_members'] = club_members
+    context['user'] = view_request.user
+    return context
+
+
 @method_decorator(login_required, name='dispatch')
 class CreateClubView(generic.FormView):
     form_class = forms.CreateClubForm
-    template_name = 'socialclub/create_club.html'
 
     def get_success_url(self):
         return reverse('home')
@@ -32,14 +54,148 @@ class CreateClubView(generic.FormView):
             return f'{random.choice(free_ids):05d}'
 
     def form_valid(self, form):
-        new_id = self.random_id_generator()
-        new_group = Club.objects.create(
-            id=new_id,
+        new_club = Club.objects.create(
+            id=self.random_id_generator(),
             name=form.cleaned_data['name'],
             short_description=form.cleaned_data['short_description'],
-            image=form.cleaned_data['image'],
-            admin_user=self.request.user,
+            logo=form.cleaned_data['logo'],
         )
-        new_group.users.add(self.request.user)
-        new_group.save()
+        new_club.admin_users.add(self.request.user)
+        new_club.users.add(self.request.user)
+        new_club.save()
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class ClubDetailView(generic.DetailView):
+    model = Club
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = get_club_context(self.request, self.kwargs['pk'], context)
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class EditClubView(generic.UpdateView):
+    model = Club
+    fields = ['name', 'logo', 'short_description', 'long_description']
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'socialclub:club_detail',
+            kwargs={'pk': self.kwargs['pk']}
+        )
+
+
+def leave_club(request, club_id):
+    context = {}
+    context = get_club_context(request, club_id, context)
+    club = context['club']
+    club_admins = context['club_admins']
+    user = request.user
+    if user in club_admins:
+        if len(club_admins) == 1:
+            context['error_msg'] = _("You must promote other club member "
+                                     "to admin before leaving the club.")
+            return render(request, 'socialclub/club_detail.html', context)
+        else:
+            club.admin_users.remove(user)
+    club.users.remove(user)
+    club.save()
+    # TODO: messages.success(request, 'You have successfully left the club.')
+    return HttpResponseRedirect(reverse('home'))
+
+
+def selfdemote(request, club_id):
+    context = {}
+    context = get_club_context(request, club_id, context)
+    club = context['club']
+    club_admins = context['club_admins']
+    user = request.user
+    if user in club_admins:
+        if len(club_admins) == 1:
+            context['error_msg'] = _("You must promote other club member "
+                                     "to admin before demoting yourself.")
+            return render(request, 'socialclub/club_detail.html', context)
+        else:
+            club.admin_users.remove(user)
+    club.save()
+    # TODO: messages.success(request, 'You have successfully left the club.')
+    return HttpResponseRedirect(reverse_lazy(
+            'socialclub:club_detail',
+            kwargs={'pk': club_id}
+        ))
+
+
+@method_decorator(login_required, name='dispatch')
+class KickMembersView(generic.FormView):
+    form_class = forms.KickMembersForm
+
+    def get_form_kwargs(self):
+        kwargs = super(KickMembersView, self).get_form_kwargs()
+        club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        club_users = club.users.filter(
+            is_superuser=False,
+            is_active=True,
+        )
+        club_members = club_users.exclude(pk=self.request.user.id)
+        kwargs.update({'club_members': club_members})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'socialclub:club_detail',
+            kwargs={'pk': self.kwargs['pk']}
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = get_club_context(self.request, self.kwargs['pk'], context)
+        return context
+
+    def form_valid(self, form):
+        club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        club_admins = club.admin_users.all()
+        kicked_members = form.cleaned_data['members']
+        for member in kicked_members:
+            if member in club_admins:
+                club.admin_users.remove(member)
+            club.users.remove(member)
+        club.save()
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class PromoteMembersToAdminView(generic.FormView):
+    form_class = forms.PromoteMembersToAdminForm
+
+    def get_form_kwargs(self):
+        kwargs = super(PromoteMembersToAdminView, self).get_form_kwargs()
+        club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        club_users = club.users.filter(
+            is_superuser=False,
+            is_active=True,
+        )
+        club_members = club_users.exclude(pk=self.request.user.id)
+        kwargs.update({'club_members': club_members})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'socialclub:club_detail',
+            kwargs={'pk': self.kwargs['pk']}
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = get_club_context(self.request, self.kwargs['pk'], context)
+        return context
+
+    def form_valid(self, form):
+        club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        promoted_members = form.cleaned_data['members']
+        for member in promoted_members:
+            club.admin_users.add(member)
+        club.save()
         return super().form_valid(form)

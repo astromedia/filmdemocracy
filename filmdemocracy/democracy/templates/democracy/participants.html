@@ -13,9 +13,9 @@
 
 {% block pagecontent %}
 
-<div class="container text-center mt-5">
+<div class="container text-center mt-5 mb-2">
   <h1 class="display-4">{% trans 'Film elections' %}</h1>
-  <p class="lead text-muted">{{ club.name }}</p>
+  <a href="{% url 'socialclub:club_detail' club.id %}" class="card-link lead"><strong>{{ club.name }}</strong></a>
 </div>
 
 
@@ -27,15 +27,15 @@
   </div>
 
   <div class="album pt-4 border bg-light">
-    <div class="container">
+    <div class="container-fluid">
 
       <p class="text-center">{% trans 'Who is present? Click on their picture and count their votes.' %}</p>
 
-      <div class="row mt-4 justify-content-center">
+      <div class="row mt-4 mx-4 justify-content-center">
 
         {% for user in club_users %}
 
-        <div class="col-md-3">
+        <div class="col-auto">
           <div class="card mb-4 shadow-sm mx-auto" style="width: 10rem;">
 
             <label for="participants{{ forloop.counter }}">
@@ -59,10 +59,8 @@
                 {{ user.username }}</label>
             </div>
 
-
           </div>
         </div>
-
 
         {% endfor %}
 
@@ -73,7 +71,7 @@
 
 </form>
 
-  <div class="text-center my-4"><a href="{% url 'democracy:candidate_films' club.id %}">
-    {% trans 'Go back to candidate films' %}</a></div>
+<div class="text-center my-4"><a href="{% url 'democracy:candidate_films' club.id %}">
+  {% trans 'Go back to candidate films' %}</a></div>
 
 {% endblock %}
