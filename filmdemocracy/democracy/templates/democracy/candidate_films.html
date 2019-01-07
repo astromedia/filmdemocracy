@@ -1,57 +1,61 @@
-{% extends "base.html" %}
+{% extends "democracy/club_films_base.html" %}
 {% load static %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% block styles %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">
-{% endblock %}
-
 {% block title %}{% trans 'Candidate films' %}{% endblock %}
 
-{% block pagecontent %}
+{% block content %}
 
-<div class="container text-center my-5">
-  <h1 class="display-4">{% trans 'Candidate films' %}</h1>
-  <a href="{% url 'socialclub:club_detail' club.id %}" class="card-link lead"><strong>{{ club.name }}</strong></a>
 
-  <div class="row justify-content-center my-3">
-    <div class="col text-right">
-      <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-success my-1 mx-3">
+<!--START: HEADER-->
+<div class="text-center my-5">
+  <h4 class="display-4">{% trans 'Candidate films' %}</h4>
+
+  <div class="row justify-content-center my-4">
+    <div class="col-md-auto">
+      <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-sm btn-success my-2 mx-auto">
         {% trans 'Propose new film' %}
       </a>
     </div>
-    <div class="col text-left">
-      <a href="{% url 'democracy:participants' club.id %}" class="btn btn-warning my-1 mx-3">
-        {% trans 'Film elections' %}
+    <div class="col-md-auto">
+      <a href="{% url 'democracy:participants' club.id %}" class="btn btn-sm btn-warning my-2 mx-auto">
+        {% trans 'Generate film ranking' %}
+      </a>
+    </div>
+    <div class="col-md-auto">
+      <a href="{% url 'democracy:film_seen_selection' club.id %}" class="btn btn-sm btn-primary my-2 mx-auto">
+        {% trans 'Mark film as seen by club' %}
       </a>
     </div>
   </div>
-</div>
 
-<div class="album py-4 border bg-light">
+</div>
+<!--END: HEADER-->
+
+
+<!--START: FILM PANEL-->
+<div class="album py-4 border">
 
   {% if candidate_films %}
+
   <div class="row justify-content-center">
 
     {% for candidate in candidate_films|dictsort:"film.filmdb.title" %}
 
-    <div class="col-md-4 align-self-center">
+    <div class="col-md-4 align-self-center my-3">
       <div class="card mx-auto" style="width: 13rem;">
 
-        <div class="hovereffect">
-          <img class="card-img-top border border-secondary" src="{{ candidate.film.filmdb.poster_url }}"
-               alt="film.poster not found">
+        <div class="hovereffect-film">
+          <a class="film-link" href="{% url 'democracy:film_detail' club.id candidate.film.id %}">
+            <img class="card-img-top border border-secondary" src="{{ candidate.film.filmdb.poster_url }}"
+                 alt="film.poster not found">
 
-          <div class="overlay">
-            <h2>{{ candidate.film.filmdb.title }}</h2>
-            <a class="info" href="{% url 'democracy:film_detail' club.id candidate.film.id %}">
-              {% trans 'Check info / Vote' %}
-            </a>
-          </div>
-
+            <div class="overlay">
+              <h2>{{ candidate.film.filmdb.title }}</h2>
+            </div>
+          </a>
           {% if candidate.voted %}
           <h3>
             <div class="media">
@@ -78,13 +82,17 @@
   <div class="alert alert-warning text-center mt-3">
     <strong>{% trans 'There are no candidate films...' %}</strong>
     <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-success ml-3">
-    {% trans 'Propose one!' %}</a>
+      {% trans 'Propose one!' %}</a>
   </div>
+
   {% endif %}
 
 </div>
+<!--END: FILM PANEL-->
 
-<div class="accordion" id="accordionExample">
+
+<!--START: FILM ACCORDION-->
+<div class="accordion shadow" id="accordionExample">
 
   <div class="card">
     <div class="card-header" id="headingOne">
@@ -98,16 +106,26 @@
 
     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
       <div class="card-body">
+
+        {% if films_last_pub %}
         <ul>
           {% for film in films_last_pub %}
           <li>
-            <a href="{% url 'democracy:film_detail' club.id film.id %}">{{ film.filmdb.title }}</a>:
+            <a href="{% url 'democracy:film_detail' club.id film.id %}">
+              <strong>{{ film.filmdb.title }}</strong>
+            </a>:
             {% blocktrans with user=film.proposed_by.username date=film.pub_date %}
             proposed by {{ user }} on the {{ date }}.
             {% endblocktrans %}
           </li>
           {% endfor %}
         </ul>
+        {% else %}
+        <div class="text-center">
+          {% trans 'No films proposed yet...' %}
+        </div>
+        {% endif %}
+
       </div>
     </div>
   </div>
@@ -117,16 +135,20 @@
       <h2 class="mb-0 text-center">
         <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo"
                 aria-expanded="false" aria-controls="collapseTwo">
-          <strong>{% trans 'Last elected films' %}</strong>
+          <strong>{% trans 'Last seen films' %}</strong>
         </button>
       </h2>
     </div>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
       <div class="card-body">
+
+        {% if films_last_seen %}
         <ul>
           {% for film in films_last_seen %}
           {% if film.seen %}
-          <li><a href="{% url 'democracy:film_detail' club.id film.id %}">{{ film.filmdb.title }}</a>:
+          <li><a href="{% url 'democracy:film_detail' club.id film.id %}">
+            <strong>{{ film.filmdb.title }}</strong>
+          </a>:
             {% blocktrans with date=film.seen_date %}
             seen on the {{ date }}.
             {% endblocktrans %}
@@ -134,14 +156,18 @@
           {% endif %}
           {% endfor %}
         </ul>
+        {% else %}
+        <div class="text-center">
+          {% trans 'No films seen yet...' %}
+        </div>
+        {% endif %}
+
       </div>
     </div>
   </div>
 
 </div>
+<!--END: FILM ACCORDION-->
 
-<div class="text-center my-4">
-<a href="{% url 'home' %}">{% trans 'Go back to club selection' %}</a>
-</div>
 
 {% endblock %}

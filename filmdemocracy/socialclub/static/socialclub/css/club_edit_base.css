@@ -1,0 +1,85 @@
+
+/* General page styles
+-------------------------------------------------- */
+.container-base {
+  background-color: #fafafa;
+}
+
+
+/* Form styles
+-------------------------------------------------- */
+.form-inputs {
+  margin-top: -40px;
+  margin-bottom: 30px;
+}
+
+.form-signin {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: -20px;
+}
+
+.form-signin .invalid-feedback{
+  width: 100%;
+  max-width: 430px;
+  padding: 5px;
+  margin-top: 0px;
+  margin-bottom: -29px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.h3 {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.form-name {
+  max-width: 330px;
+  margin: auto;
+}
+
+.form-short-description {
+  width: 100%;
+  max-width: 750px;
+  margin: auto;
+}
+
+.form-club-image-file {
+  max-width: 430px;
+  width: 100%;
+  margin: auto;
+}
+
+.form-club-panel {
+  max-width: 830px;
+  min-height: 450px;
+  margin: auto;
+  padding: auto;
+}
+
+.markdownx-preview {
+  max-width: 800px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: auto;
+}
+
+.markdownx-view {
+  max-width: 800px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: auto;
+}

@@ -1,4 +1,3 @@
-import random
 import requests
 
 from django.http import HttpResponseRedirect
@@ -8,7 +7,6 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.shortcuts import get_object_or_404
 
-from filmdemocracy.registration.models import User
 from filmdemocracy.democracy.models import FilmDb, Film, Vote
 from filmdemocracy.socialclub.models import Club
 from filmdemocracy.democracy import forms
@@ -34,7 +32,22 @@ class CandidateFilmsView(generic.TemplateView):
         context['club'] = club
         context['candidate_films'] = candidate_films
         context['films_last_pub'] = club_films.order_by('-pub_date')
-        context['films_last_seen'] = club_films.order_by('-seen_date')
+        last_seen = Film.objects.all().filter(club_id=club.id, seen=True)
+        context['films_last_seen'] = last_seen.order_by('-seen_date')
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class FilmSeenSelectionView(generic.TemplateView):
+    # TODO: change to ListView?
+    template_name = 'democracy/film_seen_selection.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['club'] = club
+        club_films = Film.objects.all().filter(club_id=club.id)
+        context['candidate_films'] = club_films.filter(seen=False)
         return context
 
 
@@ -136,9 +149,11 @@ class FilmDetailView(generic.TemplateView):
 
 def vote_film(request, club_id, film_id):
     film = get_object_or_404(Film, pk=film_id)
+    club = get_object_or_404(Club, pk=club_id)
     user_vote, _ = Vote.objects.get_or_create(
         user=request.user,
         film=film,
+        club=club,
     )
     user_vote.choice = request.POST['choice']
     user_vote.save()
@@ -187,11 +202,20 @@ class FilmSeenView(generic.FormView):
     def get_form_kwargs(self):
         kwargs = super(FilmSeenView, self).get_form_kwargs()
         kwargs.update({'film_id': self.kwargs['film_id']})
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club_members = club.users.filter(
+            is_superuser=False,
+            is_active=True,
+        )
+        kwargs.update({'club_members': club_members})
         return kwargs
 
     def form_valid(self, form):
         film = get_object_or_404(Film, id=self.kwargs['film_id'])
         film.seen_date = form.cleaned_data['seen_date']
+        members = form.cleaned_data['members']
+        for member in members:
+            film.seen_by.add(member)
         film.seen = True
         film.save()
         return super().form_valid(form)
@@ -199,7 +223,13 @@ class FilmSeenView(generic.FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['film'] = get_object_or_404(Film, pk=self.kwargs['film_id'])
-        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['club'] = club
+        club_members = club.users.filter(
+            is_superuser=False,
+            is_active=True,
+        )
+        context['club_members'] = club_members
         return context
 
 
@@ -231,11 +261,11 @@ class ParticipantsView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
-        club_users = club.users.filter(
+        club_members = club.users.filter(
             is_superuser=False,
             is_active=True,
         )
-        context['club_users'] = club_users
+        context['club_members'] = club_members
         return context
 
 
@@ -268,14 +298,14 @@ class VoteResultsView(generic.TemplateView):
                     if vote.choice == Vote.VETO:
                         warnings.append({
                             'type': Vote.VETO,
-                            'film': film.title,
+                            'film': film.filmdb.title,
                             'voter': voter,
                         })
                 elif voter not in participants:
                     if vote.choice == Vote.OMG:
                         warnings.append({
                             'type': Vote.OMG,
-                            'film': film.title,
+                            'film': film.filmdb.title,
                             'voter': voter,
                         })
             voters_info = (positive_voters, negative_voters, no_voters)

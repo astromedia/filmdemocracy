@@ -1,62 +1,68 @@
-{% extends "base.html" %}
+{% extends "filmdemocracy_base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/film_base.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">
 {% endblock %}
 
 {% block pagecontent %}
 
 
-<div class="jumbotron jumbotron-fluid border-bottom border-secondary bg-light shadow-sm">
+<!--START: FILM BANNER-->
+<div class="container-fluid container-film-banner dark2-bg light2-style shadow">
 
-  <div class="container-fluid container-title pb-2 pt-3 text-light shadow-sm">
-    <h1 class="font-weight-normal text-center">{{ film.filmdb.title }}</h1>
-  </div>
+  <!--TITLE-->
+  <h1 class="film-title text-center light3-style">{{ film.filmdb.title }}</h1>
 
-  <div class="container-fluid px-4 pt-4 pb-3">
+  <hr class="mx-auto">
+
+  <div class="container container-film-data">
 
     <div class="row">
 
-      <div class="col-sm-3">
-        <a href="#">
-          <img class="img-fluid border-top" src="{{ film.filmdb.poster_url }}" alt="poster image not found"
-               data-toggle="modal" data-target="#PosterModalCenter">
-        </a>
+      <!--POSTER-->
+      <div class="col-md-3 text-center mb-4 align-self-center">
+        <img class="img film-poster" src="{{ film.filmdb.poster_url }}" alt="poster image not found"
+             data-toggle="modal" data-target="#PosterModalCenter">
       </div>
 
-
+      <!--START: INFO-->
       <div class="col-md-9">
 
-        <div class="mb-2 text-muted">
+        <!--PROPOSED BY-->
+        <div class="mb-2">
           {% blocktrans with name=film.proposed_by.username date=film.pub_date %}
           <strong>Proposed by:</strong> {{ name }}, the {{ date }}
           {% endblocktrans %}
         </div>
 
-
+        <!--DATABASE LINKS-->
         <div class="row mb-2">
+
           <div class="col-auto">
-            <a href="{{ film.filmdb.imdb_url }}" target="blank">
-              {% trans 'See IMDb page' %}
+            <a href="{{ film.filmdb.imdb_url }}" class="seagreen-link" target="blank">
+              {% trans 'IMDb page' %}
             </a>
           </div>
+
           <div class="col-auto">
             {% if film.filmdb.faff_id %}
-            <a class="mx-1" href="{{ film.filmdb.faff_url }}" target="blank">
-              {% trans 'See FilmAffinity page' %}
+            <a class="mx-1 seagreen-link" href="{{ film.filmdb.faff_url }}" target="blank">
+              {% trans 'FilmAffinity page' %}
             </a>
             {% elif not film.filmdb.faff_id %}
-            <a href="{% url 'democracy:film_add_faff' club.id film.id %}" class="badge badge-success">
+            <a href="{% url 'democracy:film_add_faff' club.id film.id %}" class="badge badge-dark">
               {% trans 'Add FilmAffinity url' %}
             </a>
             {% endif %}
           </div>
+
         </div>
 
+        <!--MISC INFO-->
         <div class="row mb-3">
           <div class="col-auto"><strong>{% trans 'Year' %}</strong>: {{ film.filmdb.year }}</div>
           <div class="col-auto"><strong>{% trans 'Duration' %}</strong>: {{ film.filmdb.duration }} min</div>
@@ -64,8 +70,11 @@
           <div class="col-auto"><strong>{% trans 'Country' %}</strong>: {{ film.filmdb.country }}</div>
         </div>
 
-        <p>{{ film.filmdb.plot }}</p>
+        <!--PLOT-->
+        <p class="text-justify"><em>{{ film.filmdb.plot }}</em></p>
 
+
+        <!--DIRECTOR, WRITER, ACTOR-->
         <table class="table table-sm table-borderless table-details">
           <tr>
             <th class="text-right" scope="row">{% trans 'Director' %}:</th>
@@ -81,10 +90,14 @@
         </table>
 
       </div>
+      <!--END: INFO-->
+
+
     </div>
 
   </div>
 </div>
+<!--END: FILM BANNER-->
 
 
 <!-- START MODAL POSTER -->
@@ -107,7 +120,9 @@
 </div>
 <!-- END MODAL POSTER -->
 
+
 {% block content %}
 {% endblock %}
+
 
 {% endblock %}

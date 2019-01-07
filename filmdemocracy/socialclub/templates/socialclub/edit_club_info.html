@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "filmdemocracy_base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'socialclub/css/socialclub_base.css' %}">
+<link rel="stylesheet" href="{% static 'socialclub/css/club_edit_base.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Edit club info' %}{% endblock %}
@@ -13,7 +13,7 @@
 {% block pagecontent %}
 
 
-<!--START ERRORS-->
+<!--START: ERRORS-->
 {% for hidden_field in form.hidden_fields %}
 {% if hidden_field.errors %}
 <ul>
@@ -32,100 +32,109 @@
 </div>
 {% endfor %}
 {% endif %}
-<!--END ERRORS-->
+<!--END: ERRORS-->
 
-<h1 class="text-center h3 font-weight-normal">{% trans 'Edit club info' %}</h1>
 
-<form enctype="multipart/form-data" class="text-center" method="POST" novalidate>
-  {% csrf_token %}
+<!--START: EDIT CLUB FORM-->
+<div class="text-center">
+  <h3 class="h3 font-weight-normal">{% trans 'Edit club info' %}</h3>
 
-  {% for hidden_field in form.hidden_fields %}
-  {{ hidden_field }}
-  {% endfor %}
+  <form enctype="multipart/form-data" method="POST" novalidate>
+    {% csrf_token %}
 
-  <div class="form-inputs">
+    {% for hidden_field in form.hidden_fields %}
+    {{ hidden_field }}
+    {% endfor %}
 
-    <div class="form-signin">
-      <div class="mt-3">
-        {{ form.name.label_tag }}
-        {% if form.is_bound %}
-        {% if form.name.errors %}
-        {% render_field form.name class="form-control form-name is-invalid" %}
-        {% for error in form.name.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
-        {% else %}
-        {% render_field form.name class="form-control form-name is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.name class="form-control form-name" %}
-        {% endif %}
-      </div>
-    </div>
+    <div class="form-inputs">
 
-    <div class="form-signin">
-      <div class="mt-3">
-        <div class="form-club-image-file mt-3">
-          {% trans 'Club logo:' %}<br>
-
-          {% if club.logo %}
-          <img class="club-logo-shadow rounded" style="width: 10rem;"
-               src="{{ club.logo.url }}" alt="club.logo not found">
+      <div class="form-signin">
+        <div class="mt-3">
+          {{ form.name.label_tag }}
+          {% if form.is_bound %}
+          {% if form.name.errors %}
+          {% render_field form.name class="form-control form-name is-invalid" %}
           {% else %}
-          <img class="club-logo-shadow rounded" style="width: 10rem;"
-               src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+          {% render_field form.name class="form-control form-name is-valid" %}
           {% endif %}
-
-          <div class="custom-file mt-3">
-            <input id="inputGroupFile" type="file" name='logo' value='logo'  class="custom-file-input">
-            <label class="custom-file-label" for="inputGroupFile">Choose file</label>
-          </div>
-
-          <small id="imageHelpBlock" class="form-text text-muted">
-            <!--Please use an image that is 200 x 200 pixels or smaller.-->
+          {% else %}
+          {% render_field form.name class="form-control form-name" %}
+          {% endif %}
+          <small class="form-text text-muted">
+            {% trans 'Maximum of 25 characters.' %}
           </small>
+          {% for error in form.name.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+          {% endfor %}
         </div>
       </div>
-    </div>
 
-    <div class="form-signin">
-      <div class="mt-3">
-        {{ form.short_description.label_tag }}
-        {% if form.is_bound %}
-        {% if form.short_description.errors %}
-        {% render_field form.short_description class="form-control form-short-description is-invalid" %}
+      <div class="form-signin">
+        <div class="mt-3">
+          <div class="form-club-image-file mt-3">
+            {% trans 'Club logo:' %}<br>
 
-        {% else %}
-        {% render_field form.short_description class="form-control form-short-description is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.short_description class="form-control form-short-description" %}
-        {% endif %}
-        <small class="form-text text-muted">
-          Maximum of 100 characters.
-        </small>
-        {% for error in form.short_description.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
+            {% if club.logo %}
+            <img class="rounded mt-2" style="width: 10rem;"
+                 src="{{ club.logo.url }}" alt="club.logo not found">
+            {% else %}
+            <img class="rounded mt-2" style="width: 10rem;"
+                 src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+            {% endif %}
+
+            <div class="custom-file mt-3">
+              <input id="inputGroupFile" type="file" name='logo' value='logo' class="custom-file-input">
+              <label class="custom-file-label" for="inputGroupFile">Choose file</label>
+            </div>
+
+            <small id="imageHelpBlock" class="form-text text-muted">
+              <!--Please use an image that is 200 x 200 pixels or smaller.-->
+            </small>
+          </div>
         </div>
-        {% endfor %}
       </div>
+
+      <div class="form-signin">
+        <div class="mt-3">
+          {{ form.short_description.label_tag }}
+          {% if form.is_bound %}
+          {% if form.short_description.errors %}
+          {% render_field form.short_description class="form-control form-short-description is-invalid" %}
+          {% else %}
+          {% render_field form.short_description class="form-control form-short-description is-valid" %}
+          {% endif %}
+          {% else %}
+          {% render_field form.short_description class="form-control form-short-description" %}
+          {% endif %}
+          <small class="form-text text-muted">
+            {% trans 'Maximum of 100 characters.' %}
+          </small>
+          {% for error in form.short_description.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
     </div>
 
-  </div>
+    <input class="btn btn-primary mt-2" type="submit" value="{% trans 'Save changes' %}">
+    <input type="hidden" name="next" value="{{ next }}">
 
-  <input class="btn btn-primary mt-2" type="submit" value="{% trans 'Save changes' %}">
-  <input type="hidden" name="next" value="{{ next }}">
+  </form>
+</div>
+<!--END: EDIT CLUB FORM-->
 
-</form>
 
 <form action="{% url 'socialclub:club_detail' club.id %}" class="text-center mt-3">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 
 
+<!--START: FILE FORM SCRIPT-->
 <!--https://github.com/Johann-S/bs-custom-file-input-->
 <script src="{% static 'socialclub/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
 <script>
@@ -139,4 +148,7 @@
         })
       });
 </script>
+<!--END: FILE FORM SCRIPT-->
+
+
 {% endblock %}

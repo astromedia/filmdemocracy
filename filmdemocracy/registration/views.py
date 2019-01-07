@@ -13,12 +13,15 @@ class SignUpView(generic.CreateView):
     template_name = 'registration/user_signup.html'
 
 
-def account_del(request):
+def account_delete(request):
     user = request.user
     user.is_active = False
     user.save()
-    # TODO: messages.success(request, 'Usuario desactivado con éxito.')
-    return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('registration:account_delete_done'))
+
+
+class AccountDeletedView(generic.TemplateView):
+    pass
 
 
 @method_decorator(login_required, name='dispatch')

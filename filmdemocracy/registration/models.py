@@ -10,9 +10,22 @@ def get_profile_image_path(instance, filename):
 
 
 class User(AbstractUser):
+    # TODO: Add country field: https://pypi.org/project/django-countries/
     email = models.EmailField(
         _('email'),
         unique=True,
+    )
+    first_name = models.CharField(
+        _('first name'),
+        max_length=30,
+        null=True,
+        blank=True,
+    )
+    last_name = models.CharField(
+        _('last name'),
+        max_length=150,
+        null=True,
+        blank=True,
     )
     # TODO: Input image validation
     profile_image = models.ImageField(

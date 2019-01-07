@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.shortcuts import get_object_or_404
 
 from filmdemocracy.democracy.models import Film, FilmDb
+from filmdemocracy.registration.models import User
 
 
 def process_imdb_url(form):
@@ -68,7 +69,7 @@ class FilmAddNewForm(forms.ModelForm):
 
     def clean_imdb_url(self):
         imdb_key = process_imdb_url(self)
-        film_id = f'{int(self.club_id):05d}{int(imdb_key):07d}'
+        film_id = f'{self.club_id}{imdb_key}'
         if Film.objects.filter(pk=film_id):
             raise forms.ValidationError(
                 _("That movie is already proposed!")
@@ -100,16 +101,28 @@ class FilmAddFilmAffForm(forms.ModelForm):
 
 
 class FilmSeenForm(forms.ModelForm):
+    members = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        queryset=User.objects.filter(pk=0),
+        required=False,
+    )
+
     def __init__(self, *args, **kwargs):
         self.film_id = kwargs.pop('film_id', None)
+        club_members = kwargs.pop('club_members', None)
         super(FilmSeenForm, self).__init__(*args, **kwargs)
+        self.fields['members'].queryset = club_members
 
     class Meta:
         model = Film
-        fields = ['seen_date']
+        fields = ['seen_date', 'members']
 
     def clean_seen_date(self):
         seen_date = self.cleaned_data['seen_date']
+        if not seen_date:
+            raise forms.ValidationError(
+                _("You must set a date.")
+            )
         film = get_object_or_404(Film, pk=self.film_id)
         if seen_date < film.pub_date.date():
             raise forms.ValidationError(
@@ -121,3 +134,12 @@ class FilmSeenForm(forms.ModelForm):
             )
         else:
             return seen_date
+
+    def clean_members(self):
+        members = self.cleaned_data['members']
+        if not members:
+            raise forms.ValidationError(
+                _("Someone must have seen it... right?")
+            )
+        else:
+            return members

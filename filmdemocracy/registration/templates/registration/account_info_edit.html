@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "filmdemocracy_base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -12,6 +12,19 @@
 
 {% block pagecontent %}
 
+
+<!--START ERRORS-->
+{% for hidden_field in form.hidden_fields %}
+{% if hidden_field.errors %}
+<ul>
+  {% for error in hidden_field.errors %}
+  <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{{ hidden_field }}
+{% endfor %}
+
 {% if form.errors %}
 {% for error in form.non_field_errors %}
 <div class="alert alert-danger text-center">
@@ -19,78 +32,106 @@
 </div>
 {% endfor %}
 {% endif %}
+<!--END ERRORS-->
 
-{% for hidden_field in form.hidden_fields %}
-{{ hidden_field }}
-{% endfor %}
 
-<h3 class="text-center h3 font-weight-normal">{% trans 'Account information' %}</h3>
+<!--START: ACCOUNT INFO FORM-->
+<div>
+  <form enctype="multipart/form-data" method="POST" novalidate>
+    {% csrf_token %}
+    <h3 class="h3 text-center font-weight-normal">{% trans 'Account information' %}</h3>
 
-<form enctype="multipart/form-data" method="POST" novalidate>
-  {% csrf_token %}
-  <div class="row justify-content-center">
-    <p class="col-6 text-right"><strong>{% trans 'Username' %}</strong></p>
-    <div class="col-6">
-      {{ user.username }}
+    <!--USERNAME-->
+    <div class="row justify-content-center mt-3">
+      <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
+      <div class="col-6">{{ user.username }}</div>
     </div>
-  </div>
-  <div class="form-group row justify-content-center">
-    <p class="col-6 text-right"><strong>{% trans 'Profile picture' %}</strong></p>
-    <div class="col-6">
-      {% if user.profile_image %}
-      <img class="card-img-top border border-secondary shadow-sm" style="width: 10rem;"
-           src="{{ user.profile_image.url }}"
-           alt="user.profile_image not found">
-      {% else %}
-      <img class="card-img-top border border-secondary shadow-sm" style="width: 10rem;"
-           src="{% static 'registration/user_no_profile_image.png' %}"
-           alt="user.profile_image not found">
-      {% endif %}
 
-      <div class="custom-file edit-image mt-3">
-      <input id="inputGroupFile" type="file" name='profile_image' class="custom-file-input">
-      <label class="custom-file-label" for="inputGroupFile">Choose file</label>
-      </div>
-
-      <small id="profile_imageHelpBlock" class="form-text text-muted">
-        <!--Please use an image that is 200 x 200 pixels or smaller.-->
-      </small>
-
-    </div>
-  </div>
-  <div class="form-group row justify-content-center">
-    <p class="col-6 col-form-label text-right"><strong>{% trans 'Email' %}</strong></p>
-    <div class="col-6">
-      <div class="edit-email">
-
-        {% if form.is_bound %}
-        {% if form.email.errors %}
-        {% render_field form.email class="form-control is-invalid" %}
-        {% for error in form.email.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
+    <!--PICTURE-->
+    <div class="row justify-content-center mt-3">
+      <div class="col-6 text-right"><strong>{% trans 'Profile picture' %}</strong></div>
+      <div class="col-6">
+        {% if user.profile_image %}
+        <img class="user-profile-image zoom-in-cursor" style="width: 10rem;"
+             src="{{ user.profile_image.url }}"
+             alt="user.profile_image not found"
+             data-toggle="modal" data-target="#UserImageModalCenter">
+        {% else %}
+        <img class="user-profile-image" style="width: 10rem;"
+             src="{% static 'registration/user_no_profile_image.png' %}"
+             alt="user.profile_image not found">
+        {% endif %}
+        <div class="custom-file edit-profile-image mt-3">
+          <input id="inputGroupFile" type="file" name='profile_image' class="custom-file-input">
+          <label class="custom-file-label" for="inputGroupFile">Choose file</label>
         </div>
-        {% endfor %}
-        {% else %}
-        {% render_field form.email class="form-control is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.email class="form-control" %}
-        {% endif %}
+        <small id="profile_imageHelpBlock" class="form-text text-muted">
+          <!--Please use an image that is 200 x 200 pixels or smaller.-->
+        </small>
       </div>
     </div>
-  </div>
 
+    <!--EMAIL-->
+    <div class="row justify-content-center mt-3 form-group">
+      <div class="col-6 text-right col-form-label"><strong>{% trans 'Email' %}</strong></div>
+      <div class="col-6">
+        <div class="edit-profile-email">
+          {% if form.is_bound %}
+          {% if form.email.errors %}
+          {% render_field form.email class="form-control is-invalid" %}
+          {% for error in form.email.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+          {% endfor %}
+          {% else %}
+          {% render_field form.email class="form-control is-valid" %}
+          {% endif %}
+          {% else %}
+          {% render_field form.email class="form-control" %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
 
-  <div class="text-center mt-5">
-    <button type="submit" class="btn btn-success">{% trans 'Save changes' %}</button>
-  </div>
-</form>
+    <div class="text-center mt-5">
+      <button type="submit" class="btn btn-success">{% trans 'Save changes' %}</button>
+    </div>
+
+  </form>
+</div>
+<!--END: ACCOUNT INFO FORM-->
+
 
 <form action="{% url 'registration:account_info' %}" class="text-center mt-3">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 
+
+<!-- START MODAL IMAGE -->
+{% if user.profile_image %}
+<div class="modal fade" id="UserImageModalCenter" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
+        <div class="text-right mb-3">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <br>
+        </div>
+        <div>
+          <img src="{{ user.profile_image.url }}" alt="user.profile_image not found">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<!-- END MODAL IMAGE -->
+
+
+<!--START: FILE FORM SCRIPT-->
 <!--https://github.com/Johann-S/bs-custom-file-input-->
 <script src="{% static 'socialclub/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
 <script>
@@ -103,7 +144,8 @@
           form.reset()
         })
       });
-
 </script>
+<!--END: FILE FORM SCRIPT-->
+
 
 {% endblock %}

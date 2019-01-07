@@ -1,0 +1,39 @@
+{% extends "filmdemocracy_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">
+<link rel="stylesheet" href="{% static 'socialclub/css/socialclub_base.css' %}">
+{% endblock %}
+
+{% block pagecontent %}
+
+
+<!--START: CLUB BANNER-->
+<div class="container-fluid container-club-banner text-center shadow">
+
+  <!--LOGO-->
+  <div class="mx-auto">
+    <a href="{% url 'socialclub:club_detail' club.id %}">
+      {% if club.logo %}
+      <img class="logo-small club-logo-small-shadow rounded"
+           src="{{ club.logo.url }}" alt="club.logo not found">
+      {% else %}
+      <img class="logo-small club-logo-small-shadow rounded"
+           src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+      {% endif %}
+    </a>
+  </div>
+
+</div>
+<!--END: CLUB BANNER-->
+
+
+{% block content %}
+{% endblock %}
+
+
+{% endblock %}

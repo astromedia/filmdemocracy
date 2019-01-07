@@ -1,17 +1,27 @@
-body {
-  height: 100%;
+/* General page styles
+-------------------------------------------------- */
+.container-base {
+  background-color: #fafafa;
 }
 
-body {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-align: center;
-  align-items: center;
-  padding-top: 40px;
+.h3 {
+  padding-top: 100px;
   padding-bottom: 40px;
-  background-color: #f5f5f5;
 }
 
+
+/* Members detail image
+-------------------------------------------------- */
+.user-profile-image {
+  width: 11rem;
+  border: 2px solid black;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+
+/* Form styles
+-------------------------------------------------- */
 .form-inputs {
   margin-top: -40px;
   margin-bottom: 30px;
@@ -21,6 +31,7 @@ body {
   width: 100%;
   max-width: 330px;
   padding: 15px;
+  margin: auto;
   margin-bottom: -20px;
 }
 
@@ -44,25 +55,26 @@ body {
   z-index: 2;
 }
 
-.h3 {
-  padding-top: 100px;
-  padding-bottom: 40px;
+.edit-profile-email {
+  max-width: 330px;
 }
 
-.alert-warning {
-  margin-top: 10px;
-  margin-bottom: -60px;
+.edit-profile-image {
+  max-width: 330px;
 }
 
+
+/* Messages styles
+-------------------------------------------------- */
 .alert-danger {
-  margin-top: 10px;
-  margin-bottom: -60px;
+  margin-top: -25px;
+  margin-bottom: -33px;
+  padding-top: 20px;
 }
 
-.edit-email {
-  max-width: 330px;
+.warning-profile {
+  margin-top: -25px;
+  margin-bottom: -33px;
+  padding-top: 20px;
 }
 
-.edit-image {
-  max-width: 330px;
-}

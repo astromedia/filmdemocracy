@@ -1,83 +1,99 @@
-{% extends "base.html" %}
+{% extends "democracy/club_films_base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% block styles %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">
-{% endblock %}
-
 {% block title %}{% trans 'Propose new film' %}{% endblock %}
 
-{% block pagecontent %}
+{% block content %}
 
-<form class="text-center" method="POST" novalidate>
-  {% csrf_token %}
 
-  <div class="container text-center my-5">
-    <h1 class="display-4">{% trans 'Propose new film' %}</h1>
-  <a href="{% url 'socialclub:club_detail' club.id %}" class="card-link lead"><strong>{{ club.name }}</strong></a>
-  </div>
+{% trans 'FilmAffinity url (Optional)' as faffurl %}
 
-  {% for hidden_field in form.hidden_fields %}
-  {{ hidden_field }}
-  {% endfor %}
 
-  {% trans 'FilmAffinity url (Optional)' as faffurl %}
+<!--START: HEADER-->
+<div class="text-center my-5">
+  <h1 class="display-4">{% trans 'Propose new film' %}</h1>
+</div>
+<!--START: HEADER-->
 
-  <div class="form-signin">
 
-    {% if form.is_bound %}
-    {% if form.imdb_url.errors %}
-    {% render_field form.imdb_url placeholder="IMDb url" class="form-control is-invalid" %}
+<!--START: ADD NEW FILM FORM-->
+<div class="text-center mt-5">
+  <form class="text-center" method="POST" novalidate>
+    {% csrf_token %}
 
-    {% for error in form.imdb_url.errors %}
-    <div class="invalid-feedback">
-      {{ error }}
-    </div>
+    {% for hidden_field in form.hidden_fields %}
+    {{ hidden_field }}
     {% endfor %}
-    {% else %}
-    {% render_field form.imdb_url placeholder="IMDb url" class="form-control is-valid" %}
-    {% endif %}
-    {% else %}
-    {% render_field form.imdb_url placeholder="IMDb url" class="form-control" %}
-    {% endif %}
 
-    <div class="mb-3 mt-0 ml-2 text-left"><a href="https://www.imdb.com/" target="blank">
-      <small>{% trans 'Open IMDb.com in a new tab' %}</small></a>
+    <div class="form-inputs mt-2">
+
+      <!--START: IMDB URL-->
+      <div class="form-signin">
+        {% if form.is_bound %}
+        {% if form.imdb_url.errors %}
+        {% render_field form.imdb_url placeholder="IMDb url" class="form-control is-invalid" %}
+        {% for error in form.imdb_url.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
+        {% else %}
+        {% render_field form.imdb_url placeholder="IMDb url" class="form-control is-valid" %}
+        {% endif %}
+        {% else %}
+        {% render_field form.imdb_url placeholder="IMDb url" class="form-control" %}
+        {% endif %}
+
+        <div class="mb-3 mt-0 ml-2 text-left">
+          <a href="https://www.imdb.com/" target="blank">
+            <small>{% trans 'Open IMDb.com in a new tab' %}</small>
+          </a>
+        </div>
+
+      </div>
+      <!--END: IMDB URL-->
+
+      <!--START: FILMAFFINITY URL-->
+      <div class="form-signin">
+        {% if form.is_bound %}
+        {% if form.faff_url.errors %}
+        {% render_field form.faff_url placeholder=faffurl class="form-control is-invalid" %}
+        {% for error in form.faff_url.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
+        {% else %}
+        {% render_field form.faff_url placeholder=faffurl class="form-control is-valid" %}
+        {% endif %}
+        {% else %}
+        {% render_field form.faff_url placeholder=faffurl class="form-control" %}
+        {% endif %}
+
+        <div class="mb-3 mt-0 ml-2 text-left">
+          <a href="https://www.filmaffinity.com/" target="blank">
+            <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>
+          </a>
+        </div>
+
+      </div>
+      <!--END: FILMAFFINITY URL-->
+
     </div>
 
-    {% if form.is_bound %}
-    {% if form.faff_url.errors %}
-    {% render_field form.faff_url placeholder=faffurl class="form-control is-invalid" %}
+    <input class="btn btn-lg btn-success mt-3" type="submit" value="{% trans 'Propose' %}">
+    <input type="hidden" name="next" value="{{ next }}">
 
-    {% for error in form.faff_url.errors %}
-    <div class="invalid-feedback">
-      {{ error }}
-    </div>
-    {% endfor %}
-    {% else %}
-    {% render_field form.faff_url placeholder=faffurl class="form-control is-valid" %}
-    {% endif %}
-    {% else %}
-    {% render_field form.faff_url placeholder=faffurl class="form-control" %}
-    {% endif %}
+  </form>
+</div>
+<!--END: ADD NEW FILM FORM-->
 
-    <div class="mb-3 mt-0 ml-2 text-left"><a href="https://www.filmaffinity.com/" target="blank">
-      <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small></a>
-    </div>
 
-    <div class="mt-4 mb-3">
-      <input class="btn btn-lg btn-success" type="submit" value="{% trans 'Propose' %}">
-      <input type="hidden" name="next" value="{{ next }}">
-    </div>
-
-  </div>
-
+<form action="{% url 'democracy:candidate_films' club.id %}" class="text-center mt-4">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
-
-<p class="text-center mt-3"><a href="{% url 'democracy:candidate_films' club.id %}">{% trans 'Go back to candidate films' %}</a></p>
 
 
 {% endblock %}

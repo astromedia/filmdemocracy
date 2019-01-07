@@ -9,6 +9,8 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.translation import gettext_lazy as _
 
 from filmdemocracy.socialclub.models import Club
+from filmdemocracy.registration.models import User
+from filmdemocracy.democracy.models import Film, Vote
 from filmdemocracy.socialclub import forms
 
 
@@ -77,6 +79,31 @@ class ClubDetailView(generic.DetailView):
 
 
 @method_decorator(login_required, name='dispatch')
+class ClubMemberDetailView(generic.DetailView):
+    model = User
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = get_club_context(
+            self.request,
+            self.kwargs['club_id'],
+            context
+        )
+        club = context['club']
+        member = get_object_or_404(User, pk=self.kwargs['pk'])
+        context['member'] = member
+        films = Film.objects.all().filter(club_id=club.id, seen=False)
+        club_votes = member.vote_set.filter(club_id=club.id)
+        context['num_of_votes'] = club_votes.count()
+        member_votes = [vote for vote in club_votes if vote.film in films]
+        context['member_votes'] = member_votes
+        member_films = member.seen_by.filter(club_id=club.id)
+        context['member_films'] = member_films
+        context['num_of_films_seen'] = member_films.count()
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
 class EditClubInfoView(generic.UpdateView):
     model = Club
     fields = ['name', 'logo', 'short_description']
@@ -89,9 +116,9 @@ class EditClubInfoView(generic.UpdateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class EditClubDescriptionView(generic.UpdateView):
+class EditClubPanelView(generic.UpdateView):
     model = Club
-    fields = ['club_description']
+    fields = ['club_panel']
 
     def get_success_url(self):
         return reverse_lazy(
@@ -115,7 +142,7 @@ def leave_club(request, club_id):
             club.admin_users.remove(user)
     club.users.remove(user)
     club.save()
-    # TODO: messages.success(request, 'You have successfully left the club.')
+    # TODO: 'You have successfully left the club.'
     return HttpResponseRedirect(reverse('home'))
 
 
@@ -127,13 +154,14 @@ def selfdemote(request, club_id):
     user = request.user
     if user in club_admins:
         if len(club_admins) == 1:
-            context['error_msg'] = _("You must promote other club member "
-                                     "to admin before demoting yourself.")
+            context['warning_message'] =\
+                _("You must promote other club member "
+                  "to admin before demoting yourself.")
             return render(request, 'socialclub/club_detail.html', context)
         else:
             club.admin_users.remove(user)
     club.save()
-    # TODO: messages.success(request, 'You have successfully left the club.')
+    # TODO: 'You have successfully demoted yourself.'
     return HttpResponseRedirect(reverse_lazy(
             'socialclub:club_detail',
             kwargs={'pk': club_id}

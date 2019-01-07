@@ -1,0 +1,141 @@
+/* General page styles
+-------------------------------------------------- */
+body {
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #bababc;
+  }
+
+.container-base {
+  padding-top: 1.5rem;
+  padding-bottom: 3rem;
+  min-height: 57rem;
+  max-width: 908px;
+  background-color: white;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.65);
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.btn {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.btn-lg {
+  font-size: 17px;
+}
+
+.btn-sm {
+  font-size: 13px;
+}
+
+.seagreen-link {
+  color: SeaGreen;
+}
+
+.seagreen-link:hover {
+  color: LightSeaGreen;
+  text-decoration: none;
+}
+
+.zoom-in-cursor {
+  cursor: zoom-in;
+}
+
+/* Webpage colors
+-------------------------------------------------- */
+.dark1-bg {
+  background-color: #bababc;
+}
+
+.dark1-style {
+  color: #bababc;
+}
+
+.dark2-bg {
+  background-color: #121317;
+}
+
+.dark2-style {
+  color: #121317;
+}
+
+.light1-bg {
+  background-color: #d1d1d1;
+}
+
+.light1-style {
+  color: #d1d1d1;
+}
+
+.light2-bg {
+  background-color: #A9A9A9;
+}
+
+.light2-style {
+  color: #A9A9A9;
+}
+
+.light3-bg {
+  background-color: lightgray;
+}
+
+.light3-style {
+  color: lightgray;
+}
+
+.success-light-style {
+  color: #44cb5d;
+}
+
+.success-dark-style {
+  color: #2dc14d;
+}
+
+
+/* Navbar top fixed styles
+-------------------------------------------------- */
+body {
+  min-height: 45rem;
+  padding-top: 3.5rem;
+}
+
+.nav-color {
+  background-color: #07080a;
+}
+
+.container-nav {
+  max-width: 908px;
+}
+
+.nav-shadow {
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+}
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 20px; /* Margin bottom by footer height */
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px; /* Set the fixed height of the footer here */
+  line-height: 60px; /* Vertically center the text there */
+  background-color: lightgray;
+}

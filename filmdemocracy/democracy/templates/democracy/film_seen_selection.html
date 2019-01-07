@@ -1,0 +1,68 @@
+{% extends "democracy/club_films_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block title %}{% trans 'Select seen film' %}{% endblock %}
+
+{% block content %}
+
+
+<!--START: HEADER-->
+<div class="text-center my-5">
+  <h4 class="display-4">{% trans 'Mark film as seen by club' %}</h4>
+  <h5 class="text-center my-5">{% trans 'Which film has been seen?' %}</h5>
+</div>
+<!--END: HEADER-->
+
+
+<!--START: FILM PANEL-->
+<div class="album py-4 border shadow">
+
+  {% if candidate_films %}
+
+  <div class="row justify-content-center">
+
+    {% for film in candidate_films|dictsort:"filmdb.title" %}
+
+    <div class="col-md-4 align-self-center my-3">
+      <div class="card mx-auto" style="width: 13rem;">
+
+        <div class="hovereffect-film">
+          <a href="{% url 'democracy:film_seen' club.id film.id %}">
+            <img class="card-img-top border border-secondary" src="{{ film.filmdb.poster_url }}"
+                 alt="film.poster not found">
+
+            <div class="overlay">
+              <h2>{{ film.filmdb.title }}</h2>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    {% endfor %}
+
+  </div>
+
+  {% else %}
+
+  <div class="alert alert-warning text-center mt-3">
+    <strong>{% trans 'There are no candidate films...' %}</strong>
+    <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-success ml-3">
+      {% trans 'Propose one!' %}</a>
+  </div>
+
+  {% endif %}
+
+</div>
+<!--END: FILM PANEL-->
+
+
+<form action="{% url 'democracy:candidate_films' club.id %}" class="text-center mt-5">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+</form>
+
+
+{% endblock %}

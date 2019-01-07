@@ -13,45 +13,52 @@ urlpatterns = [
         name='create_club'
     ),
     path(
-        'club/<int:pk>/edit_info/',
+        'club/<str:pk>/edit_info/',
         views.EditClubInfoView.as_view(
             template_name='socialclub/edit_club_info.html'
         ),
         name='edit_club_info'
     ),
     path(
-        'club/<int:pk>/edit_description/',
-        views.EditClubDescriptionView.as_view(
-            template_name='socialclub/edit_club_description.html'
+        'club/<str:pk>/edit_panel/',
+        views.EditClubPanelView.as_view(
+            template_name='socialclub/edit_club_panel.html'
         ),
-        name='edit_club_description'
+        name='edit_club_panel'
     ),
     path(
-        'club/<int:pk>/',
+        'club/<str:pk>/',
         views.ClubDetailView.as_view(
             template_name='socialclub/club_detail.html'
         ),
         name='club_detail'
     ),
     path(
-        'club/<int:club_id>/leave_club/',
+        'club/<str:club_id>/member/<str:pk>',
+        views.ClubMemberDetailView.as_view(
+            template_name='socialclub/club_member_detail.html'
+        ),
+        name='club_member_detail'
+    ),
+    path(
+        'club/<str:club_id>/leave_club/',
         views.leave_club,
         name='leave_club'
     ),
     path(
-        'club/<int:club_id>/selfdemote/',
+        'club/<str:club_id>/selfdemote/',
         views.selfdemote,
         name='selfdemote'
     ),
     path(
-        'club/<int:pk>/kick_members/',
+        'club/<str:pk>/kick_members/',
         views.KickMembersView.as_view(
             template_name='socialclub/kick_members.html'
         ),
         name='kick_members'
     ),
     path(
-        'club/<int:pk>/promote_members_to_admin/',
+        'club/<str:pk>/promote_members_to_admin/',
         views.PromoteMembersToAdminView.as_view(
             template_name='socialclub/promote_members_to_admin.html'
         ),

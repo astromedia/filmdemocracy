@@ -1,40 +1,36 @@
-{% extends "base.html" %}
+{% extends "democracy/club_films_base.html" %}
 {% load static %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% block styles %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">
-{% endblock %}
-
 {% block title %}{% trans 'Voting results' %}{% endblock %}
 
-{% block pagecontent %}
+{% block content %}
 
 
-<div class="container text-center mt-5 mb-4">
-  <h1 class="display-4">{% trans 'Voting results' %}</h1>
-  <a href="{% url 'socialclub:club_detail' club.id %}" class="card-link lead"><strong>{{ club.name }}</strong></a>
+<!--START: HEADER-->
+<div class="text-center my-5">
+  <h4 class="display-4 my-4">{% trans 'Voting results' %}</h4>
+  <a href="{% url 'democracy:candidate_films' club.id %}">{% trans 'Go back to candidate films' %}</a>
 </div>
+<!--END: HEADER-->
 
-<div class="text-center mb-5">
-  <a href="{% url 'democracy:candidate_films' club.id %}">
-    {% trans 'Go back to candidate films' %}
-  </a>
-</div>
 
+<!--START: PARTICIPANTS-->
 <div class="text-center">
-  <strong>{% trans 'The people: ' %}</strong>
+  <strong>{% trans 'Participants: ' %}</strong>
   {% for participant in participants %}
   {% if forloop.counter == participants|length %}{{ participant }}{% else %}{{ participant }},{% endif %}
   {% endfor %}
 </div>
+<!--END: PARTICIPANTS-->
 
+
+<!--START: WARNINGS-->
 {% if warnings %}
 {% for warning in warnings %}
-<div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+<div class="alert alert-warning alert-dismissible fade show text-center my-2" role="alert">
   {% if warning.type == 'veto' %}
   {% blocktrans with user=warning.voter film=warning.film %}
   <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>
@@ -50,8 +46,10 @@
 </div>
 {% endfor %}
 {% endif %}
+<!--END: WARNINGS-->
 
 
+<!--START: VOTING RESULTS-->
 <table class="table table-hover mt-3">
   <thead>
   <tr>
@@ -107,5 +105,7 @@
   {% endfor %}
   </tbody>
 </table>
+<!--END: VOTING RESULTS-->
+
 
 {% endblock %}

@@ -42,6 +42,7 @@ class Film(models.Model):
     filmdb = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     seen = models.BooleanField(default=False)
+    seen_by = models.ManyToManyField(User, related_name='seen_by')
     seen_date = models.DateField('date seen', null=True, blank=True)
 
     def __str__(self):
@@ -51,6 +52,7 @@ class Film(models.Model):
 class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
     vote_date = models.DateTimeField('date of vote', auto_now_add=True)
     VETO = 'veto'
     SEENNO = 'seenno'
@@ -80,4 +82,4 @@ class Vote(models.Model):
             return 'negative'
 
     def __str__(self):
-        return f'{self.user}/{self.film}/{self.choice}'
+        return f'{self.user}/{self.film.filmdb.title}/{self.choice}'

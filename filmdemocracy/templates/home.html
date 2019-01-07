@@ -1,88 +1,91 @@
-{% extends "base.html" %}
+{% extends "filmdemocracy_base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
 {% block styles %}
 {% load static %}
-<!--<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">-->
+<link rel="stylesheet" href="{% static 'democracy/css/home.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Home' %}{% endblock %}
 
 {% block pagecontent %}
 
+
+<!--START: WEBPAGE INTRO-->
 <div class="container text-center my-5">
-  <h3 class="display-3 text-center">FilmDemocracy</h3>
-  <p class="lead text-muted">{% trans 'Power to the people!' %}</p>
+  <h3 class="display-3 webpage-title light1-style">FilmDemocracy</h3>
+  <p class="lead text-muted webpage-subtitle">{% trans 'Power to the people!' %}</p>
 </div>
+<!--END: WEBPAGE INTRO-->
+
 
 {% if user.is_authenticated %}
 
-<div class="album pt-4 mb-5 border bg-light">
 
-  <p class="text-center">{% trans 'Your clubs:' %}</p>
+<!--START: CREATE NEW GROUP-->
+<div class="text-center mb-5">
+  <form action="{% url 'socialclub:create_club' %}">
+    <button type="submit" class="btn btn-success home-btn">{% trans 'Create new club' %}</button>
+  </form>
+</div>
+<!--END: CREATE NEW GROUP-->
 
-  <div class="row mt-4 justify-content-center">
 
-    {% for club in user_clubs %}
+<!--START: CLUB PANEL-->
 
-    <div class="col-md-4 align-self-center">
-      <div class="card mb-4 shadow-sm mx-auto" style="width: 15rem;">
+<h4 class="lead text-center yourclubs-title light1-style">{% trans 'Your clubs' %}</h4>
 
-        <div class="hovereffect-club">
-          <a href="{% url 'democracy:candidate_films' club.id %}">
-            {% if club.logo %}
-            <img class="card-img-top rounded border border-secondary"
-                 src="{{ club.logo.url }}"
-                 alt="club.logo not found">
-            {% else %}
-            <img class="card-img-top rounded border border-secondary"
-                 src="{% static 'socialclub/club_no_logo.png' %}"
-                 alt="club.logo not found">
-            {% endif %}
-          </a>
-        </div>
+<hr class="mx-auto">
 
-        <div class="card-body">
-          <h5 class="card-title text-center">
-            <a href="{% url 'socialclub:club_detail' club.id %}" class="card-link">{{ club.name }}</a>
-          </h5>
-          <p class="card-text text-center">
-            <small>{{ club.short_description }}</small>
-          </p>
-        </div>
+<div class="row mt-4 px-5 justify-content-center">
 
-      </div>
+  {% for club in user_clubs %}
+
+  <div class="col-auto mx-auto align-self-center mb-4">
+    <div class="hovereffect-logo-club rounded">
+      <a href="{% url 'socialclub:club_detail' club.id %}">
+        {% if club.logo %}
+        <!--<img class="club-logo"-->
+        <!--src="{{ club.logo.url }}" alt="club.logo not found">-->
+        {% else %}
+        <img class="club-logo"
+             src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+        {% endif %}
+      </a>
     </div>
-
-    {% endfor %}
-
   </div>
 
+  {% endfor %}
+
 </div>
+<!--END: CLUB PANEL-->
 
-
-<p class="text-center">{% trans 'Create a new film club!' %}</p>
-
-<form action="{% url 'socialclub:create_club' %}" class="text-center">
-  <button type="submit" class="btn btn-lg btn-primary">{% trans 'Create new club' %}</button>
-</form>
 
 {% else %}
 
-<p class="text-center">{% trans 'To start, log in.' %}</p>
 
-<form action="{% url 'registration:user_login' %}" class="mb-4 text-center">
-  <button type="submit" class="btn btn-lg btn-success">{% trans 'Log in' %}</button>
-</form>
+<!--START: LOGIN / SIGNIN-->
+<div class="text-center">
 
-<p class="text-center">{% trans 'New here? Create an account.' %}</p>
+  <p class="lead misc-text light1-style">{% trans 'To start, log in.' %}</p>
 
-<form action="{% url 'registration:user_signup' %}" class="text-center">
-  <button type="submit" class="btn btn-lg btn-primary">{% trans 'Create account' %}</button>
-</form>
+  <form action="{% url 'registration:user_login' %}">
+    <button type="submit" class="btn home-btn btn-success mb-5">{% trans 'Log in' %}</button>
+  </form>
+
+  <p class="lead misc-text light1-style">{% trans 'New here? Create an account!' %}</p>
+
+  <form action="{% url 'registration:user_signup' %}">
+    <button type="submit" class="btn home-btn btn-primary">{% trans 'Create account' %}</button>
+  </form>
+
+</div>
+<!--END: LOGIN / SIGNIN-->
 
 
 {% endif %}
+
+
 {% endblock %}

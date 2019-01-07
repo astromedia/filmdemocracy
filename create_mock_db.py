@@ -44,30 +44,31 @@ club_names = [
 lore_100 = "Lorem ipsum dolor sit amet consectetur adipiscing elit, " \
            "praesent sem sed tristique tincidunt sociis."
 
-mock_club_description = "## A sample club description written in markdown" \
-                        "\r\n" \
-                        "\r\n---" \
-                        "\r\n" \
-                        "\r\n#### Point 1: Here is some text. " \
-                        "\r\nHello world, I'm a cinema club... " \
-                        "\r\n" \
-                        "\r\n#### Point 2: And here is a list to consider: " \
-                        "\r\n1. Item #1" \
-                        "\r\n2. Item #2" \
-                        "\r\n3. Item #3" \
-                        "\r\n" \
-                        "\r\n#### Point 3: And here is an unordered list to consider:" \
-                        "\r\n- Item 1" \
-                        "\r\n- Item 2" \
-                        "\r\n- Item 3"
+mock_club_panel = "## A sample club panel written in markdown" \
+                  "\r\n" \
+                  "\r\n---" \
+                  "\r\n" \
+                  "\r\n#### Point 1: Here is some text. " \
+                  "\r\nHello world, I'm a cinema club... " \
+                  "\r\n" \
+                  "\r\n#### Point 2: And here is a list to consider: " \
+                  "\r\n1. Item #1" \
+                  "\r\n2. Item #2" \
+                  "\r\n3. Item #3" \
+                  "\r\n" \
+                  "\r\n#### Point 3: And here is an unordered list to consider:" \
+                  "\r\n- Item 1" \
+                  "\r\n- Item 2" \
+                  "\r\n- Item 3"
 
 
 for club_name in club_names:
+    club_id = random.choice(range(1, 99999))
     club = Club.objects.create(
-        id=random.choice(range(1, 99999)),
+        id=f'{club_id:05d}',
         name=club_name,
         short_description=lore_100,
-        club_description=mock_club_description,
+        club_panel=mock_club_panel,
     )
     club.admin_users.add(user_creator)
     club.users.add(user_creator)

@@ -8,60 +8,79 @@
 {% block content %}
 
 
-<div class="markdownx-view">
-  {{ club.formatted_long_description|safe }}
+<!--LINK TO FILM PANEL-->
+<div>
+  <form action="{% url 'democracy:candidate_films' club.id %}" class="text-center">
+    <button type="submit" class="btn btn-success candidate-films-link">
+      {% trans 'Vote candidate films' %}
+    </button>
+  </form>
 </div>
 
 
+<!--START: CLUB DESCRIPTION-->
+<div class="markdownx-view">
+  {{ club.formatted_club_panel|safe }}
+</div>
+<!--END: CLUB DESCRIPTION-->
 
-<div class="album pt-4 border bg-light">
-  <div class="container-fluid">
 
-    <div class="row mt-4 justify-content-center">
+<!--START: CLUB MEMBERS PANEL-->
 
-      {% for user in club_members %}
+<!--PICTURES-->
+<div class="album club-members-panel shadow">
+  <div class="container-fluid pb-3 pt-2 mb-n5 dark2-bg">
 
-      <div class="col-auto">
-        <div class="card mb-4 shadow-sm" style="width: 8rem;">
+    <h4 class="lead text-center club-members-title light1-style">{% trans 'Club members' %}</h4>
 
-          {% if user.member.profile_image %}
-          <img class="card-img-top border border-secondary member-shadow"
-               src="{{ user.member.profile_image.url }}"
-               alt="user.profile_image not found">
-          {% else %}
-          <img class="card-img-top border border-secondary member-shadow"
-               src="{% static 'registration/user_no_profile_image.png' %}"
-               alt="user.profile_image not found">
-          {% endif %}
+    <hr class="mx-auto">
 
-          <div class="text-center p-1">
-            {{ user.member.username }}
+    <div class="row justify-content-center">
+
+      {% for member in club_members %}
+      <div class="col-auto mt-4">
+        <div class="card border-0 dark2-bg" style="width: 8rem;">
+
+
+          <a href="{% url 'socialclub:club_member_detail' club.id member.member.id %}">
+            <div class="hovereffect-member">
+              {% if member.member.profile_image %}
+              <img class="card-img-top"
+                   src="{{ member.member.profile_image.url }}"
+                   alt="user.profile_image not found">
+              {% else %}
+              <img class="card-img-top"
+                   src="{% static 'registration/user_no_profile_image.png' %}"
+                   alt="user.profile_image not found">
+              {% endif %}
+            </div>
+          </a>
+
+          <div class="text-center p-1 light1-style dark2-bg">
+            {{ member.member.username }}
           </div>
 
         </div>
       </div>
-
       {% endfor %}
 
     </div>
+
+    <!--LEAVE BUTTON-->
+    <div class="text-center my-5">
+      <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+              data-target="#LeaveModalCenter">
+        {% trans 'Leave club' %}
+      </button>
+    </div>
+
+
   </div>
 </div>
+<!--END: CLUB MEMBERS PANEL-->
 
 
-<!--<form action="{% url 'home' %}" class="text-center my-3">-->
-  <!--<button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Home' %}</button>-->
-<!--</form>-->
-
-
-<div class="text-center my-5">
-  <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
-          data-target="#LeaveModalCenter">
-    {% trans 'Leave club' %}
-  </button>
-</div>
-
-
-<!-- START MODAL LEAVE -->
+<!--START: MODAL LEAVE-->
 <div class="modal fade" id="LeaveModalCenter" tabindex="-1" role="dialog" aria-labelledby="LeaveModalCenterTitle"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -73,7 +92,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>{% trans 'Are you sure about this?' %}</p>
+        {% trans 'Are you sure about this?' %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -89,6 +108,7 @@
     </div>
   </div>
 </div>
-<!-- END MODAL LEAVE -->
+<!--END: MODAL LEAVE-->
+
 
 {% endblock %}

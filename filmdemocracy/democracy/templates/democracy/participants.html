@@ -1,62 +1,57 @@
-{% extends "base.html" %}
+{% extends "democracy/club_films_base.html" %}
 {% load static %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% block styles %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/democracy_base.css' %}">
-{% endblock %}
-
 {% block title %}{% trans 'Participants' %}{% endblock %}
 
-{% block pagecontent %}
-
-<div class="container text-center mt-5 mb-2">
-  <h1 class="display-4">{% trans 'Film elections' %}</h1>
-  <a href="{% url 'socialclub:club_detail' club.id %}" class="card-link lead"><strong>{{ club.name }}</strong></a>
-</div>
+{% block content %}
 
 
 <form action="{% url 'democracy:vote_results' club.id %}" method="GET">
   {% csrf_token %}
 
-  <div class="text-center">
-    <input type="submit" class="btn btn-lg btn-warning my-2 mb-5" value="{% trans 'Count votes' %}">
-  </div>
 
+  <!--START: HEADER-->
+  <div class="text-center my-5">
+    <h4 class="display-4">{% trans 'Generate film ranking' %}</h4>
+    <h5 class="text-center my-5">{% trans 'Who is present? Click on their picture and count their votes.' %}</h5>
+  </div>
+  <!--END: HEADER-->
+
+
+  <!--START: PARTICIPANTS-->
   <div class="album pt-4 border bg-light">
     <div class="container-fluid">
 
-      <p class="text-center">{% trans 'Who is present? Click on their picture and count their votes.' %}</p>
-
       <div class="row mt-4 mx-4 justify-content-center">
 
-        {% for user in club_users %}
+        {% for member in club_members %}
 
         <div class="col-auto">
-          <div class="card mb-4 shadow-sm mx-auto" style="width: 10rem;">
+          <div class="card mb-4 shadow-sm mx-auto" style="width: 8rem;">
 
             <label for="participants{{ forloop.counter }}">
               <div class="hovereffect-participant">
-                {% if user.profile_image %}
+                {% if member.profile_image %}
                 <img class="card-img-top border border-secondary"
-                     src="{{ user.profile_image.url }}"
-                     alt="user.profile_image not found">
+                     src="{{ member.profile_image.url }}"
+                     alt="member.profile_image not found">
                 {% else %}
                 <img class="card-img-top border border-secondary"
                      src="{% static 'registration/user_no_profile_image.png' %}"
-                     alt="user.profile_image not found">
+                     alt="member.profile_image not found">
                 {% endif %}
               </div>
             </label>
 
             <div class="custom-control custom-checkbox mx-auto mb-1">
               <input type="checkbox" class="custom-control-input" name="participants"
-                     id="participants{{ forloop.counter }}" value="{{ user.username }}">
+                     id="participants{{ forloop.counter }}" value="{{ member.username }}">
               <label class="custom-control-label mr-4" for="participants{{ forloop.counter }}">
-                {{ user.username }}</label>
+                {{ member.username }}
+              </label>
             </div>
 
           </div>
@@ -68,10 +63,21 @@
 
     </div>
   </div>
+  <!--END: PARTICIPANTS-->
+
+
+  <div class="row justify-content-center mt-5">
+    <div class="col-auto">
+      <input type="submit" class="btn btn-lg btn-warning" value="{% trans 'Count votes' %}">
+    </div>
+  </div>
 
 </form>
 
-<div class="text-center my-4"><a href="{% url 'democracy:candidate_films' club.id %}">
-  {% trans 'Go back to candidate films' %}</a></div>
+
+<form action="{% url 'democracy:candidate_films' club.id %}" class="text-center mt-4">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+</form>
+
 
 {% endblock %}

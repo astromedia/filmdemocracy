@@ -1,0 +1,141 @@
+{% extends "socialclub/club_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block title %}{% trans 'Club member info' %}{% endblock %}
+
+{% block content %}
+
+
+<div>
+  <h3 class="text-center h4 mt-5 mb-4 font-weight-normal">{{ member.username }}</h3>
+</div>
+
+<div class="text-center">
+  {% if member.profile_image %}
+    <img class="member-profile-image zoom-in-cursor"
+         src="{{ member.profile_image.url }}" alt="member.profile_image not found"
+         data-toggle="modal" data-target="#MemberImageModalCenter">
+  {% else %}
+  <img class="member-profile-image"
+       src="{% static 'registration/user_no_profile_image.png' %}" alt="member.profile_image not found">
+  {% endif %}
+</div>
+
+
+<div class="text-center mt-4 mb-3">
+  Joined club on the TODO???
+</div>
+
+<div class="text-center">
+  Number of voted films: <strong>{{ num_of_votes }}</strong>
+</div>
+
+<div class="text-center mb-n3">
+  Number of films seen: <strong>{{ num_of_films_seen }}</strong>
+</div>
+
+
+<!--START: SEEN FILMS-->
+<div>
+  <h5 class="text-center mt-5 mb-2 font-weight-normal">
+    Films seen with club:
+  </h5>
+</div>
+
+
+{% if member_films %}
+
+
+{% for film in member_films %}
+<div class="text-center">
+  <a href="{% url 'democracy:film_detail' club.id film.id %}" style="color: black;">
+    <strong>{{ film.filmdb.title }}</strong></a>
+</div>
+{% endfor %}
+
+
+{% else %}
+
+
+<div class="text-center">
+  {% trans "This member hasn't seen any film with the club yet!" %}
+</div>
+
+
+{% endif %}
+<!--END: SEEN FILMS-->
+
+
+<!--START: REGISTERED VOTES-->
+<div>
+  <h5 class="text-center mt-5 mb-4 font-weight-normal">
+    Registered votes on candidate films:
+  </h5>
+</div>
+
+{% if member_votes %}
+
+
+{% for vote in member_votes %}
+<div class="row mt-n3 justify-content-center">
+  <div class="col-6 text-right">
+    <a href="{% url 'democracy:film_detail' club.id vote.film.id %}" style="color: black;">
+      <strong>{{ vote.film.filmdb.title }}</strong></a>
+  </div>
+  <div class="col-6">
+
+    {% if vote.vote_karma == 'positive' %}
+    <p class="text-success">{{ vote.get_choice_display }}</p>
+    {% elif vote.vote_karma == 'neutral' %}
+    <p class="text-secondary">{{ vote.get_choice_display }}</p>
+    {% elif vote.vote_karma == 'negative' %}
+    <p class="text-danger">
+      {% if vote.choice == "veto" %}
+      <strong>{{ vote.get_choice_display }}</strong>
+      {% else %}
+      {{ vote.get_choice_display }}
+    </p>
+    {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+
+
+{% else %}
+
+
+<div class="text-center mt-n3">
+  {% trans "This member hasn't voted any candidate film yet!" %}
+</div>
+
+
+{% endif %}
+<!--END: REGISTERED VOTES-->
+
+
+<!-- START MODAL IMAGE -->
+{% if member.profile_image %}
+<div class="modal fade" id="MemberImageModalCenter" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
+        <div class="text-right mb-3">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <br>
+        </div>
+        <div>
+          <img src="{{ member.profile_image.url }}" alt="member.profile_image not found">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<!-- END MODAL IMAGE -->
+
+{% endblock %}

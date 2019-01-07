@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "filmdemocracy_base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -12,69 +12,100 @@
 
 {% block pagecontent %}
 
+
+<!--START: NO IMAGE MSG-->
 {% if not user.profile_image %}
-<div class="alert alert-warning text-center">
+<div class="alert alert-warning warning-profile text-center">
   <strong>{% trans "You don't have a profile picture yet!" %}</strong>
   <a class="ml-3" href="{% url 'registration:account_info_edit' %}">{% trans 'Complete your profile' %}</a>
 </div>
 {% endif %}
+<!--END: NO IMAGE MSG-->
 
-<h3 class="text-center h3 font-weight-normal">{% trans 'Account information' %}</h3>
+
+<!--START: ACCOUNT INFO-->
+<div>
+  <h3 class="h3 text-center font-weight-normal">{% trans 'Account information' %}</h3>
+
+  <!--USERNAME-->
+  <div class="row justify-content-center mt-3">
+    <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
+    <div class="col-6">{{ user.username }}</div>
+  </div>
+
+  <!--PICTURE-->
+  <div class="row justify-content-center mt-3">
+    <div class="col-6 text-right"><strong>{% trans 'Profile picture' %}</strong></div>
+    <div class="col-6">
+      {% if user.profile_image %}
+      <img class="user-profile-image zoom-in-cursor" style="width: 10rem;"
+           src="{{ user.profile_image.url }}"
+           alt="user.profile_image not found"
+           data-toggle="modal" data-target="#UserImageModalCenter">
+      {% else %}
+      <img class="user-profile-image" style="width: 10rem;"
+           src="{% static 'registration/user_no_profile_image.png' %}"
+           alt="user.profile_image not found">
+      {% endif %}
+    </div>
+  </div>
+
+  <!--EMAIL-->
+  <div class="row justify-content-center mt-3">
+    <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
+    <div class="col-6">{{ user.email }}</div>
+  </div>
+
+</div>
+<!--END: ACCOUNT INFO-->
 
 
-<div class="row justify-content-center">
-  <p class="col-6 text-right"><strong>{% trans 'Username' %}</strong></p>
-  <div class="col-6">
-    {{ user.username }}
+<!--START: ACCOUNT OPTIONS-->
+<div class="row justify-content-center mt-5">
+  <div class="col-sm-auto text-center my-2">
+    <form action="{% url 'registration:account_info_edit' %}">
+      <button type="submit" class="btn btn-sm btn-success">{% trans 'Edit info' %}</button>
+    </form>
+  </div>
+  <div class="col-sm-auto text-center my-2">
+    <form action="{% url 'registration:password_change' %}">
+      <button type="submit" class="btn btn-sm btn-primary">{% trans 'Change password' %}</button>
+    </form>
+  </div>
+  <div class="col-sm-auto text-center my-2">
+    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+            data-target="#DeleteModalCenter">
+      {% trans 'Delete account' %}
+    </button>
   </div>
 </div>
-<div class="row justify-content-center">
-  <p class="col-6 text-right"><strong>{% trans 'Profile picture' %}</strong></p>
-  <div class="col-6">
-    {% if user.profile_image %}
-    <img class="card-img-top border border-secondary shadow-sm" style="width: 10rem;"
-         src="{{ user.profile_image.url }}"
-         alt="user.profile_image not found">
-    {% else %}
-    <img class="card-img-top border border-secondary shadow-sm" style="width: 10rem;"
-         src="{% static 'registration/user_no_profile_image.png' %}"
-         alt="user.profile_image not found">
-    {% endif %}
+<!--START: ACCOUNT OPTIONS-->
+
+
+<!-- START MODAL IMAGE -->
+{% if user.profile_image %}
+<div class="modal fade" id="UserImageModalCenter" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
+        <div class="text-right mb-3">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <br>
+        </div>
+        <div>
+          <img src="{{ user.profile_image.url }}" alt="user.profile_image not found">
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div class="row justify-content-center mt-3">
-  <p class="col-6 text-right"><strong>{% trans 'Email' %}</strong></p>
-  <div class="col-6">
-    {{ user.email }}
-  </div>
-</div>
+{% endif %}
+<!-- END MODAL IMAGE -->
 
 
-<table class="mx-auto mt-5">
-  <tr>
-    <td>
-      <form action="{% url 'registration:account_info_edit' %}" class="text-center">
-        <button type="submit" class="btn btn-success mr-1">{% trans 'Edit info' %}</button>
-      </form>
-    </td>
-    <td>
-      <form action="{% url 'registration:password_change' %}" class="text-center">
-        <button type="submit" class="btn btn-primary mr-1 ml-1">{% trans 'Change password' %}</button>
-      </form>
-    </td>
-    <td>
-      <button type="button" class="btn btn-outline-danger ml-1" data-toggle="modal"
-              data-target="#DeleteModalCenter">
-        {% trans 'Delete account' %}
-      </button>
-
-    </td>
-  </tr>
-</table>
-
-
-
-<!-- MODAL DELETE -->
+<!--START: MODAL DELETE -->
 <div class="modal fade" id="DeleteModalCenter" tabindex="-1" role="dialog" aria-labelledby="DeleteModalCenterTitle"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -86,13 +117,13 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>{% trans 'Are you sure about this?' %}</p>
+        {% trans 'Are you sure about this?' %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form action="{% url 'registration:account_del' %}" class="text-center">
+        <form action="{% url 'registration:account_delete' %}" class="text-center">
           {% csrf_token %}
           <button method="post" type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
@@ -102,6 +133,6 @@
     </div>
   </div>
 </div>
-
+<!--END: MODAL DELETE -->
 
 {% endblock %}

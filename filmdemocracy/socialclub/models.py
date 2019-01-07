@@ -14,13 +14,13 @@ def get_club_logo_path(instance, filename):
 
 class Club(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5)
-    name = models.CharField('Club name', max_length=40)
-    short_description = models.TextField(
+    name = models.CharField('Club name', max_length=25)
+    short_description = models.CharField(
         _('Short club description'),
         max_length=100,
     )
-    club_description = MarkdownxField(
-        _('Club description / rules (optional)'),
+    club_panel = MarkdownxField(
+        _('Club panel: description, rules, etc. (optional)'),
         max_length=1000,
         default='',
         blank=True,
@@ -43,5 +43,5 @@ class Club(models.Model):
         return f"{self.id}|{self.name}"
 
     @property
-    def formatted_long_description(self):
-        return markdownify(str(self.club_description))
+    def formatted_club_panel(self):
+        return markdownify(str(self.club_panel))

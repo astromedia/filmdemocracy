@@ -47,5 +47,3 @@ class PromoteMembersToAdminForm(forms.ModelForm):
         club_members = kwargs.pop('club_members', None)
         super(PromoteMembersToAdminForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = club_members
-
-
