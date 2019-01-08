@@ -47,8 +47,8 @@
     <div class="hovereffect-logo-club rounded">
       <a href="{% url 'socialclub:club_detail' club.id %}">
         {% if club.logo %}
-        <!--<img class="club-logo"-->
-        <!--src="{{ club.logo.url }}" alt="club.logo not found">-->
+        <img class="club-logo"
+        src="{{ club.logo.url }}" alt="club.logo not found">
         {% else %}
         <img class="club-logo"
              src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">

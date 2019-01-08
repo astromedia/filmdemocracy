@@ -2,6 +2,7 @@ from django import forms
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import get_object_or_404
+from django.contrib.admin.widgets import AdminDateWidget
 
 from filmdemocracy.democracy.models import Film, FilmDb
 from filmdemocracy.registration.models import User
@@ -112,6 +113,7 @@ class FilmSeenForm(forms.ModelForm):
         club_members = kwargs.pop('club_members', None)
         super(FilmSeenForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = club_members
+        self.fields['seen_date'].widget = AdminDateWidget()
 
     class Meta:
         model = Film
