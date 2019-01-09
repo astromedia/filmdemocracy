@@ -15,9 +15,19 @@
 
 <!--START: NO IMAGE MSG-->
 {% if not user.profile_image %}
-<div class="alert alert-warning warning-profile text-center">
-  <strong>{% trans "You don't have a profile picture yet!" %}</strong>
-  <a class="ml-3" href="{% url 'registration:account_info_edit' %}">{% trans 'Complete your profile' %}</a>
+<div class="alert alert-warning warning-profile text-center alert-dismissible fade show" role="alert">
+  <div class="row justify-content-center">
+    <div class="col-md-auto">
+      <strong>{% trans "You don't have a profile picture yet!" %}</strong>
+    </div>
+    <div class="col-md-auto">
+      <a class="ml-3" href="{% url 'registration:account_info_edit' %}">{% trans 'Complete your profile' %}</a>
+    </div>
+
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 </div>
 {% endif %}
 <!--END: NO IMAGE MSG-->
@@ -27,31 +37,28 @@
 <div>
   <h3 class="h3 text-center font-weight-normal">{% trans 'Account information' %}</h3>
 
+  <!--PICTURE-->
+  <div class="text-center mb-4">
+    {% if user.profile_image %}
+    <img class="user-profile-image zoom-in-cursor" style="width: 10rem;"
+         src="{{ user.profile_image.url }}"
+         alt="user.profile_image not found"
+         data-toggle="modal" data-target="#UserImageModalCenter">
+    {% else %}
+    <img class="user-profile-image" style="width: 10rem;"
+         src="{% static 'registration/user_no_profile_image.png' %}"
+         alt="user.profile_image not found">
+    {% endif %}
+  </div>
+
   <!--USERNAME-->
-  <div class="row justify-content-center mt-3">
+  <div class="row justify-content-center mt-2">
     <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
     <div class="col-6">{{ user.username }}</div>
   </div>
 
-  <!--PICTURE-->
-  <div class="row justify-content-center mt-3">
-    <div class="col-6 text-right"><strong>{% trans 'Profile picture' %}</strong></div>
-    <div class="col-6">
-      {% if user.profile_image %}
-      <img class="user-profile-image zoom-in-cursor" style="width: 10rem;"
-           src="{{ user.profile_image.url }}"
-           alt="user.profile_image not found"
-           data-toggle="modal" data-target="#UserImageModalCenter">
-      {% else %}
-      <img class="user-profile-image" style="width: 10rem;"
-           src="{% static 'registration/user_no_profile_image.png' %}"
-           alt="user.profile_image not found">
-      {% endif %}
-    </div>
-  </div>
-
   <!--EMAIL-->
-  <div class="row justify-content-center mt-3">
+  <div class="row justify-content-center mt-2">
     <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
     <div class="col-6">{{ user.email }}</div>
   </div>
@@ -64,16 +71,16 @@
 <div class="row justify-content-center mt-5">
   <div class="col-sm-auto text-center my-2">
     <form action="{% url 'registration:account_info_edit' %}">
-      <button type="submit" class="btn btn-sm btn-success">{% trans 'Edit info' %}</button>
+      <button type="submit" class="btn btn-sm btn-block btn-success">{% trans 'Edit info' %}</button>
     </form>
   </div>
   <div class="col-sm-auto text-center my-2">
     <form action="{% url 'registration:password_change' %}">
-      <button type="submit" class="btn btn-sm btn-primary">{% trans 'Change password' %}</button>
+      <button type="submit" class="btn btn-sm btn-block btn-primary">{% trans 'Change password' %}</button>
     </form>
   </div>
   <div class="col-sm-auto text-center my-2">
-    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+    <button type="button" class="btn btn-sm btn-block btn-outline-danger" data-toggle="modal"
             data-target="#DeleteModalCenter">
       {% trans 'Delete account' %}
     </button>
@@ -120,7 +127,7 @@
         {% trans 'Are you sure about this?' %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
         <form action="{% url 'registration:account_delete' %}" class="text-center">

@@ -8,21 +8,90 @@
 {% block content %}
 
 
-<!--LINK TO FILM PANEL-->
-<div>
-  <form action="{% url 'democracy:candidate_films' club.id %}" class="text-center">
-    <button type="submit" class="btn btn-success candidate-films-link">
-      {% trans 'Vote candidate films' %}
-    </button>
-  </form>
-</div>
-
-
 <!--START: CLUB DESCRIPTION-->
 <div class="markdownx-view">
   {{ club.formatted_club_panel|safe }}
 </div>
 <!--END: CLUB DESCRIPTION-->
+
+
+<!--START: FILM ACCORDION-->
+<div class="accordion mb-0" id="accordionExample">
+
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0 text-center">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne">
+          <strong>{% trans 'Last proposed films' %}</strong>
+        </button>
+      </h2>
+    </div>
+
+    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+
+        {% if films_last_pub %}
+        <ul>
+          {% for film in films_last_pub %}
+          <li>
+            <a href="{% url 'democracy:film_detail' club.id film.id %}">
+              <strong>{{ film.filmdb.title }}</strong>
+            </a>:
+            {% blocktrans with user=film.proposed_by.username date=film.pub_date %}
+            proposed by {{ user }} on the {{ date }}.
+            {% endblocktrans %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="text-center">
+          {% trans 'No films proposed yet...' %}
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0 text-center">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo"
+                aria-expanded="false" aria-controls="collapseTwo">
+          <strong>{% trans 'Last seen films' %}</strong>
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+
+        {% if films_last_seen %}
+        <ul>
+          {% for film in films_last_seen %}
+          {% if film.seen %}
+          <li><a href="{% url 'democracy:film_detail' club.id film.id %}">
+            <strong>{{ film.filmdb.title }}</strong>
+          </a>:
+            {% blocktrans with date=film.seen_date %}
+            seen on the {{ date }}.
+            {% endblocktrans %}
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+        {% else %}
+        <div class="text-center">
+          {% trans 'No films seen yet...' %}
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+</div>
+<!--END: FILM ACCORDION-->
 
 
 <!--START: CLUB MEMBERS PANEL-->
@@ -95,7 +164,7 @@
         {% trans 'Are you sure about this?' %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
         <form method="post" action="{% url 'socialclub:leave_club' club.id %}" class="text-center">

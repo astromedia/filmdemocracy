@@ -13,44 +13,55 @@
 
 <!--START: ADMIN UTILS-->
 {% if user in club_admins %}
-<div class="container-fluid admin-utils dark2-bg">
+<div class="container-fluid admin-utils text-center dark2-bg">
+  <a class="seagreen-link" data-toggle="collapse" href="#collapseAdmin" role="button" aria-expanded="false"
+     aria-controls="collapseAdmin">
+    {% trans 'Club admin utilities' %}
+  </a>
 
-  <div class="row justify-content-center">
-    <div class="col-md-auto">
-      <form action="{% url 'socialclub:edit_club_info' club.id %}" class="text-center my-2">
-        <button type="submit" class="btn btn-sm btn-outline-primary">
-          {% trans 'Edit club info' %}
-        </button>
-      </form>
-    </div>
-    <div class="col-md-auto">
-      <form action="{% url 'socialclub:edit_club_panel' club.id %}" class="text-center my-2">
-        <button type="submit" class="btn btn-sm btn-outline-primary">
-          {% trans 'Edit club panel' %}
-        </button>
-      </form>
-    </div>
-    <div class="col-md-auto">
-      <form action="{% url 'socialclub:promote_members_to_admin' club.id %}" class="text-center my-2">
-        <button type="submit" class="btn btn-sm btn-outline-success">
-          {% trans 'Promote members to admin' %}
-        </button>
-      </form>
-    </div>
-    <div class="col-md-auto">
-      <form action="{% url 'socialclub:kick_members' club.id %}" class="text-center my-2">
-        <button type="submit" class="btn btn-sm btn-outline-danger">
-          {% trans 'Kick members' %}
-        </button>
-      </form>
-    </div>
-    <div class="col-md-auto text-center my-2">
-      <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
-              data-target="#SelfdemoteModalCenter">
-        {% trans 'Self-demote' %}
-      </button>
-    </div>
+  <div id="collapseAdmin" class="collapse">
+    <div class="card-body mt-n2 dark2-bg">
 
+      <div class="row justify-content-center">
+
+        <div class="col-md-auto">
+          <form action="{% url 'socialclub:edit_club_info' club.id %}" class="text-center my-2">
+            <button type="submit" class="btn btn-sm btn-block btn-outline-primary">
+              {% trans 'Edit club info' %}
+            </button>
+          </form>
+        </div>
+        <div class="col-md-auto">
+          <form action="{% url 'socialclub:edit_club_panel' club.id %}" class="text-center my-2">
+            <button type="submit" class="btn btn-sm btn-block btn-outline-primary">
+              {% trans 'Edit club panel' %}
+            </button>
+          </form>
+        </div>
+        <div class="col-md-auto">
+          <form action="{% url 'socialclub:promote_members_to_admin' club.id %}" class="text-center my-2">
+            <button type="submit" class="btn btn-sm btn-block btn-outline-success">
+              {% trans 'Promote members' %}
+            </button>
+          </form>
+        </div>
+        <div class="col-md-auto">
+          <form action="{% url 'socialclub:kick_members' club.id %}" class="text-center my-2">
+            <button type="submit" class="btn btn-sm btn-block btn-outline-danger">
+              {% trans 'Kick members' %}
+            </button>
+          </form>
+        </div>
+        <div class="col-md-auto text-center my-2">
+          <button type="button" class="btn btn-sm btn-block btn-outline-danger" data-toggle="modal"
+                  data-target="#SelfdemoteModalCenter">
+            {% trans 'Self-demote' %}
+          </button>
+        </div>
+
+
+      </div>
+    </div>
   </div>
 </div>
 {% endif %}
@@ -64,7 +75,7 @@
   <div class="lead text-center name"><strong>{{ club.name }}</strong></div>
 
   <!--SHORT DESCRIPTION-->
-  <div class="lead short-description">{{ club.short_description }}</div>
+  <div class="lead text-muted short-description">{{ club.short_description }}</div>
 
   <!--LOGO-->
   <div class="mx-auto">
@@ -78,6 +89,18 @@
       {% endif %}
     </a>
   </div>
+
+
+  <!--START: LINK TO FILM PANEL-->
+<div>
+  <form action="{% url 'democracy:candidate_films' club.id %}" class="text-center">
+    <button type="submit" class="btn btn-block btn-candidate-films">
+      {% trans 'Candidate films' %}
+    </button>
+  </form>
+</div>
+<!--END: LINK TO FILM PANEL-->
+
 
 </div>
 <!--END: CLUB BANNER-->
@@ -95,10 +118,10 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>{% trans "Are you sure you don't want to be an admin anymore?" %}</p>
+        {% trans "Are you sure you don't want to be an admin anymore?" %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
         <form method="post" action="{% url 'socialclub:selfdemote' club.id %}" class="text-center">
@@ -118,18 +141,30 @@
 <!--START: NO LOGO MSG-->
 {% if user in club_admins %}
 {% if not club.logo %}
-<div class="alert alert-warning text-center">
-  <strong>{% trans "Your club doesn't have a logo yet!" %}</strong>
-  <a class="ml-3" href="{% url 'socialclub:edit_club_info' club.id %}">{% trans 'Complete club info' %}</a>
+<div class="alert alert-warning text-center alert-dismissible fade show mt-4 club-message" role="alert">
+  <div class="row justify-content-center">
+    <div class="col-md-auto">
+      <strong>{% trans "Your club doesn't have a logo yet!" %}</strong>
+    </div>
+    <div class="col-md-auto">
+      <a class="ml-3" href="{% url 'socialclub:edit_club_info' club.id %}">{% trans 'Complete club info' %}</a>
+    </div>
+  </div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 {% endif %}
 {% endif %}
 <!--END: NO LOGO MSG-->
 
 
-{% if error_msg %}
-<div class="alert alert-danger text-center mt-n3">
-  <strong>{{ error_msg }}</strong>
+{% if warning_message %}
+<div class="alert alert-danger text-center mt-4 alert-dismissible fade show" role="alert">
+  <strong>{{ warning_message }}</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 {% endif %}
 

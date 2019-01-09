@@ -19,6 +19,11 @@
 <!--END: SEEN DATE (FILM SEEN)-->
 
 
+<div class="text-center mt-4"><a href="{% url 'democracy:candidate_films' club.id %}">
+  {% trans 'Go back to candidate films' %}</a>
+</div>
+
+
 <!--START: VOTES (FILM NOT SEEN)-->
 {% if not film.seen %}
 
@@ -26,7 +31,7 @@
 
 {% for choice, choice_dict in vote_choices.items %}
 <div class="text-center">
-  <form class="vote-form" action="{% url 'democracy:vote_film' club.id film.id %}" method="post">
+  <form action="{% url 'democracy:vote_film' club.id film.id %}" method="post">
     {% csrf_token %}
 
     <!--POSITIVE BUTTON-->
@@ -36,7 +41,7 @@
       {{ choice_dict.choice_text }}
     </label>
     {% else %}
-    <label class="btn btn-outline-success btn-block vote-btn black" for="vote_{{ forloop.counter }}">
+    <label class="btn btn-outline-success btn-block vote-btn success-bg black" for="vote_{{ forloop.counter }}">
       {{ choice_dict.choice_text }}
     </label>
     {% endif %}
@@ -48,7 +53,7 @@
       {{ choice_dict.choice_text }}
     </label>
     {% else %}
-    <label class="btn btn-outline-secondary btn-block vote-btn black" for="vote_{{ forloop.counter }}">
+    <label class="btn btn-outline-secondary btn-block vote-btn secondary-bg black" for="vote_{{ forloop.counter }}">
       {{ choice_dict.choice_text }}
     </label>
     {% endif %}
@@ -60,7 +65,7 @@
       {{ choice_dict.choice_text }}
     </label>
     {% else %}
-    <label class="btn btn-outline-danger btn-block vote-btn black" for="vote_{{ forloop.counter }}">
+    <label class="btn btn-outline-danger btn-block vote-btn danger-bg black" for="vote_{{ forloop.counter }}">
       {{ choice_dict.choice_text }}
     </label>
     {% endif %}
@@ -118,52 +123,54 @@
 <!--END: SEEN BY (FILM NOT SEEN)-->
 
 
-<div class="text-center mt-4"><a href="{% url 'democracy:candidate_films' club.id %}">
-  {% trans 'Go back to candidate films' %}</a>
+<!--START: REGISTERED VOTES-->
+<div class="registered-votes">
+  <h5 class="text-center mt-5 mb-2 font-weight-normal">
+    Registered votes on film:
+  </h5>
+<hr class="text-center mt-n1 mb-3">
 </div>
 
+{% if film.vote_set.all %}
 
-<!--START: FILM ACCORDION-->
-<div class="accordion shadow my-4" id="FilmAccordion">
 
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h2 class="mb-0 text-center">
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
-                aria-expanded="true" aria-controls="collapseOne">
-          <strong>{% trans 'Registered votes' %}</strong>
-        </button>
-      </h2>
-    </div>
-
-    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#FilmAccordion">
-      <div class="card-body">
-
-          {% if film.vote_set.all %}
-          {% for vote in film.vote_set.all %}
-          {% if vote.choice == "veto" %}
-          <div class="text-center" style="color: red">
-            <strong>{{ vote.user.username }}</strong>: <strong>{{ vote.get_choice_display }}</strong><br>
-          </div>
-          {% else %}
-          <div class="text-center">
-            <strong>{{ vote.user.username }}</strong>: {{ vote.get_choice_display }}<br>
-          </div>
-          {% endif %}
-          {% endfor %}
-          {% else %}
-
-          <div class="text-center">
-            {% trans 'No one has voted yet!' %}
-          </div>
-          {% endif %}
-
-      </div>
-    </div>
+{% for vote in film.vote_set.all %}
+<div class="row justify-content-center mb-5">
+  <div class="col-6 text-right">
+    <a href="{% url 'socialclub:club_member_detail' club.id vote.user.id %}" style="color: black;">
+      <strong>{{ vote.user.username }}:</strong>
+    </a>
   </div>
+  <div class="col-6">
 
+    {% if vote.vote_karma == 'positive' %}
+    <p class="text-success">{{ vote.get_choice_display }}</p>
+    {% elif vote.vote_karma == 'neutral' %}
+    <p class="text-secondary">{{ vote.get_choice_display }}</p>
+    {% elif vote.vote_karma == 'negative' %}
+    <p class="text-danger">
+      {% if vote.choice == "veto" %}
+      <strong>{{ vote.get_choice_display }}</strong>
+      {% else %}
+      {{ vote.get_choice_display }}
+    </p>
+    {% endif %}
+    {% endif %}
+  </div>
 </div>
-<!--END: FILM ACCORDION-->
+{% endfor %}
+
+
+{% else %}
+
+
+<div class="text-center mt-n3">
+  {% trans 'No one has voted this film yet!' %}
+</div>
+
+
+{% endif %}
+<!--END: REGISTERED VOTES-->
 
 
 <!--START: FILM OPTIONS-->

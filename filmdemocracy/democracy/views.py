@@ -21,6 +21,7 @@ class CandidateFilmsView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['club'] = club
         club_films = Film.objects.all().filter(club_id=club.id)
         candidate_films = []
         for film in club_films.filter(seen=False):
@@ -29,11 +30,7 @@ class CandidateFilmsView(generic.TemplateView):
                 'film': film,
                 'voted': self.request.user.username in film_voters
             })
-        context['club'] = club
         context['candidate_films'] = candidate_films
-        context['films_last_pub'] = club_films.order_by('-pub_date')
-        last_seen = Film.objects.all().filter(club_id=club.id, seen=True)
-        context['films_last_seen'] = last_seen.order_by('-seen_date')
         return context
 
 

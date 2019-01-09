@@ -74,7 +74,12 @@ class ClubDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = get_club_context(self.request, self.kwargs['pk'], context)
+        club_id = self.kwargs['pk']
+        context = get_club_context(self.request, club_id, context)
+        club_films = Film.objects.all().filter(club_id=club_id)
+        context['films_last_pub'] = club_films.order_by('-pub_date')
+        last_seen = Film.objects.all().filter(club_id=club_id, seen=True)
+        context['films_last_seen'] = last_seen.order_by('-seen_date')
         return context
 
 
@@ -135,8 +140,9 @@ def leave_club(request, club_id):
     user = request.user
     if user in club_admins:
         if len(club_admins) == 1:
-            context['error_msg'] = _("You must promote other club member "
-                                     "to admin before leaving the club.")
+            context['warning_message'] = \
+                _("You must promote other club member "
+                  "to admin before leaving the club.")
             return render(request, 'socialclub/club_detail.html', context)
         else:
             club.admin_users.remove(user)

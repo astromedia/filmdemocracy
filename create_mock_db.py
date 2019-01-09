@@ -8,6 +8,7 @@ from filmdemocracy.democracy.models import Film
 
 names = [
     'Pablo',
+    'Alba',
     'Naranjo',
     'Timi',
     'Carla',

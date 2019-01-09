@@ -128,11 +128,11 @@ class FilmSeenForm(forms.ModelForm):
         film = get_object_or_404(Film, pk=self.film_id)
         if seen_date < film.pub_date.date():
             raise forms.ValidationError(
-                _("You can't see films before they are proposed!")
+                _("You can't see films before they were proposed!")
             )
         elif seen_date > timezone.now().date():
             raise forms.ValidationError(
-                _("You can't see films in the future!")
+                _("Time travel is not possible (yet).")
             )
         else:
             return seen_date

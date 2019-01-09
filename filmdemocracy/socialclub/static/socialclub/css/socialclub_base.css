@@ -1,7 +1,17 @@
+
 /* General page styles
 -------------------------------------------------- */
+body {
+}
+
 .container-base {
   background-color: #fafafa;
+}
+
+.btn-block {
+  min-width: 125px;
+  max-width: 250px;
+  margin: auto;
 }
 
 
@@ -9,10 +19,11 @@
 -------------------------------------------------- */
 
 .admin-utils {
-  margin-top: -25px;
-  margin-bottom: 24px;
   padding-top: 20px;
   padding-bottom: 10px;
+  margin-top: -25px;
+  margin-bottom: 23px;
+  text-transform: uppercase;
 }
 
 .container-club-banner {
@@ -53,15 +64,31 @@
   box-shadow: 0px 0px 15px #fff;
 }
 
-.candidate-films-link {
-  font-size: 15px;
+.btn-candidate-films {
+  font-size: 20px;
   text-transform: uppercase;
-  margin-top: 30px;
+  margin-top: 10px;
   margin-bottom: 10px;
+  color: seagreen;
+  border: 0px solid gray;
+  font-weight: bold;
+  border: 2px solid #121317;
+
+}
+
+.btn-candidate-films:hover {
+  color: lightseagreen;
+    border: 2px solid #121317;
+}
+
+.btn-candidate-films:focus {
+  color: lightseagreen;
+  border: 2px solid #121317;
+  box-shadow: 0 0 0 #121317;
 }
 
 .markdownx-view {
-  max-width: 800px;
+  max-width: 90%;
   margin-top: 40px;
   margin-bottom: 40px;
   margin-left: auto;
@@ -93,8 +120,19 @@
   margin-bottom: 10px;
 }
 
-/* Members detail image
+.club-message {
+  margin-bottom: -10px;
+}
+
+
+/* Members detail
 -------------------------------------------------- */
+.member-detail hr {
+  max-width: 350px;
+  color: #bbbbbb;
+  background-color: #bbbbbb;
+}
+
 .member-profile-image {
   width: 11rem;
   border: 2px solid black;
@@ -111,7 +149,6 @@ margin-bottom: 0px;
 padding: 0px;
 }
 
-
 .hovereffect-member {
 border-radius: 5px;
 border: 3px solid black;
@@ -125,10 +162,9 @@ cursor:pointer;
 }
 
 .hovereffect-member:hover {
-border: 3px solid #44cb5d;
+border: 3px solid LightSeaGreen;
 border-radius: 5px;
 }
-
 
 
 /* Members image promote hover effect

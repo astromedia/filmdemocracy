@@ -36,8 +36,8 @@
 
 
 <!--START: CREATE CLUB FORM-->
-<div class="text-center">
-  <h3 class="h3 font-weight-normal">{% trans 'Create new club' %}</h3>
+<div>
+  <h3 class="h3 font-weight-normal text-center">{% trans 'Create new club' %}</h3>
 
   <form enctype="multipart/form-data" method="POST" novalidate>
     {% csrf_token %}
@@ -48,7 +48,7 @@
 
     <div class="form-inputs">
 
-      <div class="form-signin">
+      <div class="form-signin text-center">
         <div class="mt-3">
           {{ form.name.label_tag }}
           {% if form.is_bound %}
@@ -74,11 +74,13 @@
       <div class="form-signin">
         <div class="mt-3">
           <div class="form-club-image-file mt-3">
-            {% trans 'Club logo:' %}<br>
-
-            <img class="rounded mt-2" style="width: 10rem;"
-                 src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
-
+            <div class="text-center">
+              {% trans 'Club logo:' %}<br>
+            </div>
+            <div class="text-center">
+              <img class="rounded mt-2" style="width: 10rem;"
+                   src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+            </div>
             <div class="custom-file mt-3">
               <input id="inputGroupFile" type="file" name='logo' value='logo' class="custom-file-input">
               <label class="custom-file-label" for="inputGroupFile">Choose file</label>
@@ -91,7 +93,7 @@
         </div>
       </div>
 
-      <div class="form-signin">
+      <div class="form-signin text-center">
         <div class="mt-3">
           {{ form.short_description.label_tag }}
           {% if form.is_bound %}
@@ -120,15 +122,17 @@
       {% trans 'You will be able to add more details of your club later.' %}
     </div>
 
-    <input class="btn btn-lg btn-primary mt-2" type="submit" value="{% trans 'Create club' %}">
-    <input type="hidden" name="next" value="{{ next }}">
+    <div class="text-center">
+
+      <input class="btn btn-lg btn-primary mt-2" type="submit" value="{% trans 'Create club' %}">
+      <input type="hidden" name="next" value="{{ next }}">
 
   </form>
 </div>
 <!--END: CREATE CLUB FORM-->
 
 
-<form action="{% url 'home' %}" class="text-center mt-3">
+<form action="{% url 'home' %}" class="text-center mt-5">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 
@@ -146,6 +150,7 @@
           form.reset()
         })
       });
+
 </script>
 <!--END: FILE FORM SCRIPT-->
 

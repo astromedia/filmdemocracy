@@ -36,8 +36,8 @@
 
 
 <!--START: EDIT CLUB FORM-->
-<div class="text-center">
-  <h3 class="h3 font-weight-normal">{% trans 'Edit club info' %}</h3>
+<div>
+  <h3 class="h3 font-weight-normal text-center">{% trans 'Edit club info' %}</h3>
 
   <form enctype="multipart/form-data" method="POST" novalidate>
     {% csrf_token %}
@@ -48,7 +48,7 @@
 
     <div class="form-inputs">
 
-      <div class="form-signin">
+      <div class="form-signin text-center">
         <div class="mt-3">
           {{ form.name.label_tag }}
           {% if form.is_bound %}
@@ -74,15 +74,18 @@
       <div class="form-signin">
         <div class="mt-3">
           <div class="form-club-image-file mt-3">
-            {% trans 'Club logo:' %}<br>
-
-            {% if club.logo %}
-            <img class="rounded mt-2" style="width: 10rem;"
-                 src="{{ club.logo.url }}" alt="club.logo not found">
-            {% else %}
-            <img class="rounded mt-2" style="width: 10rem;"
-                 src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
-            {% endif %}
+            <div class="text-center">
+              {% trans 'Club logo:' %}
+            </div>
+            <div class="text-center">
+              {% if club.logo %}
+              <img class="rounded mt-2" style="width: 10rem;"
+                   src="{{ club.logo.url }}" alt="club.logo not found">
+              {% else %}
+              <img class="rounded mt-2" style="width: 10rem;"
+                   src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+              {% endif %}
+            </div>
 
             <div class="custom-file mt-3">
               <input id="inputGroupFile" type="file" name='logo' value='logo' class="custom-file-input">
@@ -96,7 +99,7 @@
         </div>
       </div>
 
-      <div class="form-signin">
+      <div class="form-signin text-center">
         <div class="mt-3">
           {{ form.short_description.label_tag }}
           {% if form.is_bound %}
@@ -121,15 +124,17 @@
 
     </div>
 
-    <input class="btn btn-primary mt-2" type="submit" value="{% trans 'Save changes' %}">
-    <input type="hidden" name="next" value="{{ next }}">
+    <div class="text-center">
+      <input class="btn btn-primary mt-2" type="submit" value="{% trans 'Save changes' %}">
+      <input type="hidden" name="next" value="{{ next }}">
+    </div>
 
   </form>
 </div>
 <!--END: EDIT CLUB FORM-->
 
 
-<form action="{% url 'socialclub:club_detail' club.id %}" class="text-center mt-3">
+<form action="{% url 'socialclub:club_detail' club.id %}" class="text-center mt-5">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 
@@ -147,6 +152,9 @@
           form.reset()
         })
       });
+
+
+
 </script>
 <!--END: FILE FORM SCRIPT-->
 

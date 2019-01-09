@@ -33,7 +33,9 @@
 <nav class="navbar navbar-expand-md navbar-dark nav-color fixed-top nav-shadow">
   <div class="container container-nav">
 
-    <a class="navbar-brand" href="{% url 'home' %}">FilmDemocracy</a>
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img height="24" src="{% static 'democracy/svg/webname_greengray.svg'%}">
+    </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -105,7 +107,7 @@
 
 
 <!--START: NAVBAR-->
-<footer class="footer border-top">
+<footer class="footer">
   <div class="container text-center">
     <span class="text-muted">© 2019</span>
   </div>

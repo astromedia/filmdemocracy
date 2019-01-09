@@ -10,7 +10,7 @@
 
 
 <!--START: HEADER-->
-<div class="text-center my-5">
+<div class="text-center my-5 mx-3">
   <h4 class="display-4 my-4">{% trans 'Voting results' %}</h4>
   <a href="{% url 'democracy:candidate_films' club.id %}">{% trans 'Go back to candidate films' %}</a>
 </div>
@@ -18,7 +18,7 @@
 
 
 <!--START: PARTICIPANTS-->
-<div class="text-center">
+<div class="text-center mx-3">
   <strong>{% trans 'Participants: ' %}</strong>
   {% for participant in participants %}
   {% if forloop.counter == participants|length %}{{ participant }}{% else %}{{ participant }},{% endif %}
@@ -53,7 +53,6 @@
 <table class="table table-hover mt-3">
   <thead>
   <tr>
-    <th scope="col" class="text-center">#</th>
     <th scope="col">{% trans 'Film' %}</th>
     <th scope="col" class="text-center">{% trans 'Score' %}</th>
     <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}">
@@ -68,19 +67,16 @@
 
   {% if forloop.counter == 1 %}
   <tr class="table-success">
-    <th scope="row" class="text-center">{{ forloop.counter }}</th>
     <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
     <td class="text-center">{{ film_results.points }}</td>
 
     {% elif film_results.veto %}
   <tr class="table-danger">
-    <th scope="row" class="text-center">{{ forloop.counter }}</th>
     <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
     <td class="text-center">- ∞</td>
 
     {% else %}
   <tr>
-    <th scope="row" class="text-center">{{ forloop.counter }}</th>
     <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
     <td class="text-center">{{ film_results.points }}</td>
 

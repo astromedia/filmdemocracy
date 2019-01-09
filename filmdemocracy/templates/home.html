@@ -14,8 +14,13 @@
 
 
 <!--START: WEBPAGE INTRO-->
-<div class="container text-center my-5">
-  <h3 class="display-3 webpage-title light1-style">FilmDemocracy</h3>
+<div class="container-fluid text-center mb-5">
+  <div>
+    <img class="webpage-logo" src="{% static 'democracy/svg/urna_glow.svg'%}">
+  </div>
+  <div>
+  <img class="webpage-title" src="{% static 'democracy/svg/webname_greengray.svg'%}">
+  </div>
   <p class="lead text-muted webpage-subtitle">{% trans 'Power to the people!' %}</p>
 </div>
 <!--END: WEBPAGE INTRO-->
@@ -24,25 +29,16 @@
 {% if user.is_authenticated %}
 
 
-<!--START: CREATE NEW GROUP-->
-<div class="text-center mb-5">
-  <form action="{% url 'socialclub:create_club' %}">
-    <button type="submit" class="btn btn-success home-btn">{% trans 'Create new club' %}</button>
-  </form>
-</div>
-<!--END: CREATE NEW GROUP-->
-
-
 <!--START: CLUB PANEL-->
-
-<h4 class="lead text-center yourclubs-title light1-style">{% trans 'Your clubs' %}</h4>
+<h4 class="lead text-muted text-center yourclubs-title">{% trans 'Your clubs' %}</h4>
 
 <hr class="mx-auto">
 
-<div class="row mt-4 px-5 justify-content-center">
+<div class="row mt-5 px-5 justify-content-center">
 
   {% for club in user_clubs %}
 
+  <!--TODO: clubs with no logo should have a title on hover-->
   <div class="col-auto mx-auto align-self-center mb-4">
     <div class="hovereffect-logo-club rounded">
       <a href="{% url 'socialclub:club_detail' club.id %}">
@@ -60,7 +56,18 @@
   {% endfor %}
 
 </div>
+
+<hr class="mx-auto">
 <!--END: CLUB PANEL-->
+
+
+<!--START: CREATE NEW GROUP-->
+<div class="text-center mt-5">
+  <form action="{% url 'socialclub:create_club' %}">
+    <button type="submit" class="btn btn-success">{% trans 'Create new club' %}</button>
+  </form>
+</div>
+<!--END: CREATE NEW GROUP-->
 
 
 {% else %}
@@ -72,13 +79,13 @@
   <p class="lead misc-text light1-style">{% trans 'To start, log in.' %}</p>
 
   <form action="{% url 'registration:user_login' %}">
-    <button type="submit" class="btn home-btn btn-success mb-5">{% trans 'Log in' %}</button>
+    <button type="submit" class="btn btn-block btn-success mb-5">{% trans 'Log in' %}</button>
   </form>
 
   <p class="lead misc-text light1-style">{% trans 'New here? Create an account!' %}</p>
 
   <form action="{% url 'registration:user_signup' %}">
-    <button type="submit" class="btn home-btn btn-primary">{% trans 'Create account' %}</button>
+    <button type="submit" class="btn btn-block btn-primary">{% trans 'Create account' %}</button>
   </form>
 
 </div>

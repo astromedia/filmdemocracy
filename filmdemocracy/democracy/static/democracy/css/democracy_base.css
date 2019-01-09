@@ -1,7 +1,32 @@
 
+/* General page styles
+-------------------------------------------------- */
+body {
+}
+
+
+/* Club banner
+-------------------------------------------------- */
+.container-club-banner .logo-small {
+  width: 150px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.club-logo-small-shadow {
+  border: 2px solid black;
+  box-shadow: 0px 0px 15px #fff;
+}
+
+.container-club-banner {
+  margin-top: -24px;
+  padding: 10px;
+  background-color: #121317;
+}
+
+
 /* New film form
 -------------------------------------------------- */
-
 .form-inputs {
   margin-top: -40px;
   margin-bottom: 30px;
@@ -40,6 +65,11 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.85);
 }
 
+.btn-block {
+  min-width: 200px;
+  max-width: 250px;
+  margin: auto;
+}
 
 
 /* Candidate films album
@@ -162,6 +192,12 @@ hr {
   margin-bottom: 25px;
 }
 
+.registered-votes hr {
+  max-width: 300px;
+  color: #bbbbbb;
+  background-color: #bbbbbb;
+}
+
 .container-film-data {
   max-width: 95%;
   font-size: 15px;
@@ -180,15 +216,24 @@ hr {
   margin-left: auto;
 }
 
-.vote-form {
-  max-width: 400px;
-  margin: auto;
-}
-
 .vote-btn {
   text-transform: initial;
+  max-width: 350px;
   font-weight: normal;
-  margin-top: 2px;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.success-bg {
+  background-color: rgb(162, 250, 169)
+}
+
+.secondary-bg {
+  background-color: lightgray
+}
+
+.danger-bg {
+  background-color: #ffadbc
 }
 
 .btn-link:hover {

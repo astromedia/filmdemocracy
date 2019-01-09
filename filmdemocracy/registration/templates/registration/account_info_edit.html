@@ -41,16 +41,10 @@
     {% csrf_token %}
     <h3 class="h3 text-center font-weight-normal">{% trans 'Account information' %}</h3>
 
-    <!--USERNAME-->
-    <div class="row justify-content-center mt-3">
-      <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
-      <div class="col-6">{{ user.username }}</div>
-    </div>
-
     <!--PICTURE-->
-    <div class="row justify-content-center mt-3">
-      <div class="col-6 text-right"><strong>{% trans 'Profile picture' %}</strong></div>
-      <div class="col-6">
+    <div class="mb-4">
+
+      <div class="text-center">
         {% if user.profile_image %}
         <img class="user-profile-image zoom-in-cursor" style="width: 10rem;"
              src="{{ user.profile_image.url }}"
@@ -61,7 +55,10 @@
              src="{% static 'registration/user_no_profile_image.png' %}"
              alt="user.profile_image not found">
         {% endif %}
-        <div class="custom-file edit-profile-image mt-3">
+      </div>
+
+      <div class="text-center">
+        <div class="text-left custom-file edit-profile-image mt-3">
           <input id="inputGroupFile" type="file" name='profile_image' class="custom-file-input">
           <label class="custom-file-label" for="inputGroupFile">Choose file</label>
         </div>
@@ -69,10 +66,17 @@
           <!--Please use an image that is 200 x 200 pixels or smaller.-->
         </small>
       </div>
+
+    </div>
+
+    <!--USERNAME-->
+    <div class="row justify-content-center mt-2">
+      <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
+      <div class="col-6">{{ user.username }}</div>
     </div>
 
     <!--EMAIL-->
-    <div class="row justify-content-center mt-3 form-group">
+    <div class="row justify-content-center mt-2 form-group mx-1">
       <div class="col-6 text-right col-form-label"><strong>{% trans 'Email' %}</strong></div>
       <div class="col-6">
         <div class="edit-profile-email">
@@ -103,7 +107,7 @@
 <!--END: ACCOUNT INFO FORM-->
 
 
-<form action="{% url 'registration:account_info' %}" class="text-center mt-3">
+<form action="{% url 'registration:account_info' %}" class="text-center mt-5">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 
@@ -144,6 +148,8 @@
           form.reset()
         })
       });
+
+
 </script>
 <!--END: FILE FORM SCRIPT-->
 

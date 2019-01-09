@@ -100,14 +100,15 @@
 
     <!--TODO: This button doesn't do anything yet...-->
     <div class="custom-control custom-checkbox mt-3">
-      <input type="checkbox" class="custom-control-input" name="remember_me" id="remember_me" value="remember_user">
+      <input type="checkbox" class="custom-control-input" name="remember_me" id="remember_me" checked
+             value="remember_user">
       <label class="custom-control-label" for="remember_me">{% trans 'Remember me' %}</label>
     </div>
 
     <input class="btn btn-lg btn-success mt-3" type="submit" value="{% trans 'Log in' %}">
     <input type="hidden" name="next" value="{{ next }}">
 
-    <div class="my-2">
+    <div class="my-3">
       <a href="{% url 'registration:password_reset' %}">{% trans 'Forgotten password?' %}</a>
     </div>
 
@@ -120,7 +121,7 @@
 {% endif %}
 
 
-<form action="{% url 'home' %}" class="text-center mt-3">
+<form action="{% url 'home' %}" class="text-center mt-5">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Home' %}</button>
 </form>
 
