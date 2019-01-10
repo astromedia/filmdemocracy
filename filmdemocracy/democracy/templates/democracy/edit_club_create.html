@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'socialclub/css/club_edit_base.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/edit_club.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Create new club' %}{% endblock %}
@@ -79,7 +79,7 @@
             </div>
             <div class="text-center">
               <img class="rounded mt-2" style="width: 10rem;"
-                   src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+                   src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
             </div>
             <div class="custom-file mt-3">
               <input id="inputGroupFile" type="file" name='logo' value='logo' class="custom-file-input">
@@ -139,7 +139,7 @@
 
 <!--START: FILE FORM SCRIPT-->
 <!--https://github.com/Johann-S/bs-custom-file-input-->
-<script src="{% static 'socialclub/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'democracy/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
 <script>
       document.addEventListener('DOMContentLoaded', function() {
         bsCustomFileInput.init()

@@ -31,7 +31,7 @@ OMDB_API_KEY = '4b213d96'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -39,7 +39,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'filmdemocracy.registration',
     'filmdemocracy.democracy',
-    'filmdemocracy.socialclub',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

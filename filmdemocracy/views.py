@@ -1,11 +1,7 @@
 from django.views import generic
 
-from filmdemocracy.socialclub.models import Club
-
 
 class HomeView(generic.TemplateView):
-    model = Club
-    template_name = 'home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -15,6 +11,4 @@ class HomeView(generic.TemplateView):
 
 
 class TermsAndConditionsView(generic.TemplateView):
-    model = Club
-    template_name = 'terms_and_conditions.html'
-
+    pass

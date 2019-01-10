@@ -1,11 +1,56 @@
 from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.shortcuts import get_object_or_404
-from django.contrib.admin.widgets import AdminDateWidget
 
-from filmdemocracy.democracy.models import Film, FilmDb
+from filmdemocracy.democracy.models import Film, FilmDb, Club
 from filmdemocracy.registration.models import User
+
+
+class CreateClubForm(forms.ModelForm):
+
+    class Meta:
+        model = Club
+        fields = ['name', 'logo', 'short_description']
+
+    def clean_logo(self):
+        logo = self.cleaned_data['logo']
+        return logo
+
+
+class KickMembersForm(forms.ModelForm):
+    members = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        queryset=User.objects.filter(pk=0),
+        required=False
+    )
+
+    class Meta:
+        model = Club
+        fields = ['members']
+
+    def __init__(self, *args, **kwargs):
+        kickable_members = kwargs.pop('kickable_members', None)
+        super(KickMembersForm, self).__init__(*args, **kwargs)
+        self.fields['members'].queryset = kickable_members
+
+
+class PromoteMembersForm(forms.ModelForm):
+    members = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        queryset=User.objects.filter(pk=0),
+        required=False
+    )
+
+    class Meta:
+        model = Club
+        fields = ['members']
+
+    def __init__(self, *args, **kwargs):
+        promotable_members = kwargs.pop('promotable_members', None)
+        super(PromoteMembersForm, self).__init__(*args, **kwargs)
+        self.fields['members'].queryset = promotable_members
 
 
 def process_imdb_url(form):
@@ -50,10 +95,6 @@ def process_faff_url(form):
 
 
 class FilmAddNewForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        self.club_id = kwargs.pop('club_id', None)
-        super(FilmAddNewForm, self).__init__(*args, **kwargs)
-
     imdb_url = forms.CharField(
         max_length=200,
         help_text=_('IMDb url'),
@@ -67,6 +108,10 @@ class FilmAddNewForm(forms.ModelForm):
     class Meta:
         model = Film
         fields = ['imdb_url', 'faff_url']
+
+    def __init__(self, *args, **kwargs):
+        self.club_id = kwargs.pop('club_id', None)
+        super(FilmAddNewForm, self).__init__(*args, **kwargs)
 
     def clean_imdb_url(self):
         imdb_key = process_imdb_url(self)
@@ -108,16 +153,16 @@ class FilmSeenForm(forms.ModelForm):
         required=False,
     )
 
+    class Meta:
+        model = Film
+        fields = ['seen_date', 'members']
+
     def __init__(self, *args, **kwargs):
         self.film_id = kwargs.pop('film_id', None)
         club_members = kwargs.pop('club_members', None)
         super(FilmSeenForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = club_members
         self.fields['seen_date'].widget = AdminDateWidget()
-
-    class Meta:
-        model = Film
-        fields = ['seen_date', 'members']
 
     def clean_seen_date(self):
         seen_date = self.cleaned_data['seen_date']
@@ -132,7 +177,7 @@ class FilmSeenForm(forms.ModelForm):
             )
         elif seen_date > timezone.now().date():
             raise forms.ValidationError(
-                _("Time travel is not possible (yet).")
+                _("Time travelling to the future is not possible (yet).")
             )
         else:
             return seen_date

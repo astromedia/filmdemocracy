@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'socialclub/css/socialclub_base.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/club.css' %}">
 {% endblock %}
 
 {% block pagecontent %}
@@ -25,28 +25,28 @@
       <div class="row justify-content-center">
 
         <div class="col-md-auto">
-          <form action="{% url 'socialclub:edit_club_info' club.id %}" class="text-center my-2">
+          <form action="{% url 'democracy:edit_club_info' club.id %}" class="text-center my-2">
             <button type="submit" class="btn btn-sm btn-block btn-outline-primary">
               {% trans 'Edit club info' %}
             </button>
           </form>
         </div>
         <div class="col-md-auto">
-          <form action="{% url 'socialclub:edit_club_panel' club.id %}" class="text-center my-2">
+          <form action="{% url 'democracy:edit_club_panel' club.id %}" class="text-center my-2">
             <button type="submit" class="btn btn-sm btn-block btn-outline-primary">
               {% trans 'Edit club panel' %}
             </button>
           </form>
         </div>
         <div class="col-md-auto">
-          <form action="{% url 'socialclub:promote_members_to_admin' club.id %}" class="text-center my-2">
+          <form action="{% url 'democracy:promote_members' club.id %}" class="text-center my-2">
             <button type="submit" class="btn btn-sm btn-block btn-outline-success">
               {% trans 'Promote members' %}
             </button>
           </form>
         </div>
         <div class="col-md-auto">
-          <form action="{% url 'socialclub:kick_members' club.id %}" class="text-center my-2">
+          <form action="{% url 'democracy:kick_members' club.id %}" class="text-center my-2">
             <button type="submit" class="btn btn-sm btn-block btn-outline-danger">
               {% trans 'Kick members' %}
             </button>
@@ -54,7 +54,7 @@
         </div>
         <div class="col-md-auto text-center my-2">
           <button type="button" class="btn btn-sm btn-block btn-outline-danger" data-toggle="modal"
-                  data-target="#SelfdemoteModalCenter">
+                  data-target="#self_demoteModalCenter">
             {% trans 'Self-demote' %}
           </button>
         </div>
@@ -79,13 +79,13 @@
 
   <!--LOGO-->
   <div class="mx-auto">
-    <a href="{% url 'socialclub:club_detail' club.id %}">
+    <a href="{% url 'democracy:club_detail' club.id %}">
       {% if club.logo %}
       <img class="logo club-logo-shadow rounded"
            src="{{ club.logo.url }}" alt="club.logo not found">
       {% else %}
       <img class="logo club-logo-shadow rounded"
-           src="{% static 'socialclub/club_no_logo.png' %}" alt="club.logo not found">
+           src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
       {% endif %}
     </a>
   </div>
@@ -105,14 +105,14 @@
 </div>
 <!--END: CLUB BANNER-->
 
-<!-- START: MODAL SELFDEMOTE -->
+<!-- START: MODAL SELF-DEMOTE -->
 {% if user in club_admins %}
-<div class="modal fade" id="SelfdemoteModalCenter" tabindex="-1" role="dialog"
-     aria-labelledby="SelfdemoteModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="self_demoteModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="self_demoteModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="SelfdemoteModalCenterTitle">{% trans 'Self-demote' %}</h5>
+        <h5 class="modal-title" id="self_demoteModalCenterTitle">{% trans 'Self-demote' %}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -124,7 +124,7 @@
         <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form method="post" action="{% url 'socialclub:selfdemote' club.id %}" class="text-center">
+        <form method="post" action="{% url 'democracy:self_demote' club.id %}" class="text-center">
           {% csrf_token %}
           <button type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
@@ -135,7 +135,7 @@
   </div>
 </div>
 {% endif %}
-<!-- END: MODAL SELFDEMOTE -->
+<!-- END: MODAL SELF-DEMOTE -->
 
 
 <!--START: NO LOGO MSG-->
@@ -147,7 +147,7 @@
       <strong>{% trans "Your club doesn't have a logo yet!" %}</strong>
     </div>
     <div class="col-md-auto">
-      <a class="ml-3" href="{% url 'socialclub:edit_club_info' club.id %}">{% trans 'Complete club info' %}</a>
+      <a class="ml-3" href="{% url 'democracy:edit_club_info' club.id %}">{% trans 'Complete club info' %}</a>
     </div>
   </div>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">

@@ -14,10 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from django.conf.urls import url
 
 from filmdemocracy import views
 
@@ -28,25 +28,25 @@ urlpatterns = [
         admin.site.urls
     ),
     path(
-        'democracy/',
-        include('filmdemocracy.democracy.urls')
-    ),
-    path(
         'registration/',
         include('filmdemocracy.registration.urls')
     ),
     path(
-        'socialclub/',
-        include('filmdemocracy.socialclub.urls')
+        'democracy/',
+        include('filmdemocracy.democracy.urls')
     ),
     path(
         '',
-        views.HomeView.as_view(),
+        views.HomeView.as_view(
+            template_name='home.html'
+        ),
         name='home'
     ),
     path(
         'terms_and_conditions/',
-        views.TermsAndConditionsView.as_view(),
+        views.TermsAndConditionsView.as_view(
+            template_name='terms_and_conditions.html'
+        ),
         name='terms_and_conditions'
     ),
     url(r'^markdownx/', include('markdownx.urls')),

@@ -1,5 +1,5 @@
-from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
 from filmdemocracy.registration import views
 
@@ -8,7 +8,9 @@ app_name = 'registration'
 urlpatterns = [
     path(
         'signup/',
-        views.SignUpView.as_view(),
+        views.SignUpView.as_view(
+            template_name='registration/user_signup.html'
+        ),
         name='user_signup'
     ),
     path(
@@ -25,12 +27,16 @@ urlpatterns = [
     ),
     path(
         'account_info/',
-        views.AccountInfoView.as_view(),
+        views.AccountInfoView.as_view(
+            template_name='registration/account_info.html'
+        ),
         name='account_info'
     ),
     path(
-        'account_info_edit/',
-        views.AccountInfoEditView.as_view(),
+        'account_info/edit/',
+        views.AccountInfoEditView.as_view(
+            template_name='registration/account_info_edit.html'
+        ),
         name='account_info_edit'
     ),
     path(
@@ -39,7 +45,7 @@ urlpatterns = [
         name='account_delete'
     ),
     path(
-        'account_delete_done/',
+        'account_delete/done/',
         views.AccountDeletedView.as_view(
             template_name='registration/account_delete_done.html'
         ),

@@ -1,0 +1,102 @@
+{% extends "democracy/candidate_films_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block title %}{% trans 'Mark film as seen' %}{% endblock %}
+
+{% block content %}
+
+
+{% if form.errors %}
+{% for field in form %}
+{% for error in field.errors %}
+<div class="alert alert-danger text-center">
+  <strong>{{ error|escape }}</strong>
+</div>
+{% endfor %}
+{% endfor %}
+{% for error in form.non_field_errors %}
+<div class="alert alert-danger text-center">
+  <strong>{{ error|escape }}</strong>
+</div>
+{% endfor %}
+{% endif %}
+
+
+<!--START: HEADER-->
+<div class="text-center my-5">
+  <h4 class="display-4">{% trans 'Mark film as seen by club' %}</h4>
+</div>
+<!--END: HEADER-->
+
+
+<div class="text-center">
+  <img class="card-img-top film-seen border border-secondary" src="{{ film.filmdb.poster_url }}"
+       alt="film.poster not found">
+</div>
+
+
+<!--START: FILM SEEN FORM-->
+<div class="text-center">
+  <form class="mt-5" method="POST">
+    {% csrf_token %}
+
+    <!--DATE-->
+    <h5 class="text-center my-5">{% trans 'When was this film seen?' %}</h5>
+
+    <div class="mt-4">
+      <input type="date" name="seen_date" value="seen_date">
+    </div>
+
+    <!--MEMBERS-->
+    <h5 class="text-center my-5">{% trans 'Who were there?' %}</h5>
+
+    <div class="container-fluid">
+      <div class="row mt-4 justify-content-center">
+
+        {% for member in club_members %}
+        <div class="col-auto">
+          <div class="card mb-4 shadow-sm" style="width: 8rem;">
+
+            <label for="member_{{ forloop.counter }}">
+              <div class="hovereffect-participant">
+                {% if member.profile_image %}
+                <img class="card-img-top border border-secondary member-shadow"
+                     src="{{ member.profile_image.url }}"
+                     alt="member.profile_image not found">
+                {% else %}
+                <img class="card-img-top border border-secondary member-shadow"
+                     src="{% static 'registration/user_no_profile_image.png' %}"
+                     alt="member.profile_image not found">
+                {% endif %}
+              </div>
+            </label>
+
+            <div class="custom-control custom-checkbox mx-auto mb-1">
+              <input type="checkbox" class="custom-control-input" name="members"
+                     id="member_{{ forloop.counter }}" value="{{ member.pk }}">
+              <label class="custom-control-label mr-4" for="member_{{ forloop.counter }}">
+                {{ member.username }}</label>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+
+    <input class="btn btn-lg btn-success mt-5" type="submit" value="{% trans 'Seen!' %}">
+
+  </form>
+</div>
+<!--END: FILM SEEN FORM-->
+
+
+<form action="{% url 'democracy:candidate_films' club.id %}" class="text-center mt-5">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+</form>
+
+
+{% endblock %}

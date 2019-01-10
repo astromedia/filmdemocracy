@@ -1,8 +1,8 @@
 import os
 
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 def get_profile_image_path(instance, filename):
@@ -27,7 +27,6 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
-    # TODO: Input image validation
     profile_image = models.ImageField(
         _('user profile image'),
         upload_to=get_profile_image_path,

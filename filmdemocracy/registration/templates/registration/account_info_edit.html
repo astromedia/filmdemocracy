@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'registration/css/registration_base.css' %}">
+<link rel="stylesheet" href="{% static 'registration/css/registration.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Edit account information' %}{% endblock %}
@@ -137,7 +137,7 @@
 
 <!--START: FILE FORM SCRIPT-->
 <!--https://github.com/Johann-S/bs-custom-file-input-->
-<script src="{% static 'socialclub/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'democracy/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
 <script>
       document.addEventListener('DOMContentLoaded', function() {
         bsCustomFileInput.init()

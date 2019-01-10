@@ -97,7 +97,7 @@
     <div class="col-auto">
       <div class="card mb-4 shadow-sm" style="width: 8rem;">
 
-        <a href="{% url 'socialclub:club_member_detail' club.id member.id %}">
+        <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
           {% if member.profile_image %}
           <img class="card-img-top border border-secondary member-shadow"
                src="{{ member.profile_image.url }}"
@@ -137,7 +137,7 @@
 {% for vote in film.vote_set.all %}
 <div class="row justify-content-center mb-5">
   <div class="col-6 text-right">
-    <a href="{% url 'socialclub:club_member_detail' club.id vote.user.id %}" style="color: black;">
+    <a href="{% url 'democracy:club_member_detail' club.id vote.user.id %}" style="color: black;">
       <strong>{{ vote.user.username }}:</strong>
     </a>
   </div>
@@ -164,7 +164,7 @@
 {% else %}
 
 
-<div class="text-center mt-n3">
+<div class="text-center mt-n3 mb-5">
   {% trans 'No one has voted this film yet!' %}
 </div>
 

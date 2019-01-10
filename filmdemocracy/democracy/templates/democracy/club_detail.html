@@ -1,4 +1,4 @@
-{% extends "socialclub/club_base.html" %}
+{% extends "democracy/club_base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -10,7 +10,7 @@
 
 <!--START: CLUB DESCRIPTION-->
 <div class="markdownx-view">
-  {{ club.formatted_club_panel|safe }}
+  {{ club.formatted_panel|safe }}
 </div>
 <!--END: CLUB DESCRIPTION-->
 
@@ -111,22 +111,22 @@
         <div class="card border-0 dark2-bg" style="width: 8rem;">
 
 
-          <a href="{% url 'socialclub:club_member_detail' club.id member.member.id %}">
+          <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
             <div class="hovereffect-member">
-              {% if member.member.profile_image %}
+              {% if member.profile_image %}
               <img class="card-img-top"
-                   src="{{ member.member.profile_image.url }}"
-                   alt="user.profile_image not found">
+                   src="{{ member.profile_image.url }}"
+                   alt="member.profile_image not found">
               {% else %}
               <img class="card-img-top"
                    src="{% static 'registration/user_no_profile_image.png' %}"
-                   alt="user.profile_image not found">
+                   alt="member.profile_image not found">
               {% endif %}
             </div>
           </a>
 
           <div class="text-center p-1 light1-style dark2-bg">
-            {{ member.member.username }}
+            {{ member.username }}
           </div>
 
         </div>
@@ -167,7 +167,7 @@
         <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form method="post" action="{% url 'socialclub:leave_club' club.id %}" class="text-center">
+        <form method="post" action="{% url 'democracy:leave_club' club.id %}" class="text-center">
           {% csrf_token %}
           <button type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
