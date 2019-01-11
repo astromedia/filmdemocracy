@@ -2,7 +2,8 @@ import requests
 import random
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
@@ -15,12 +16,27 @@ from filmdemocracy.registration.models import User
 from filmdemocracy.settings import OMDB_API_KEY
 
 
-def get_club_context(view_request, club_id, context):
+def user_is_club_member_check(request, club_id):
+    user = request.user
+    club = get_object_or_404(Club, pk=club_id)
+    club_members = club.members.filter(is_active=True)
+    return user in club_members
+
+
+def user_is_club_admin_check(request, club_id):
+    user = request.user
+    club = get_object_or_404(Club, pk=club_id)
+    club_members = club.members.filter(is_active=True)
+    club_admins = club.admin_members.filter(is_active=True)
+    return user in club_members and user in club_admins
+
+
+def add_club_context(request, context, club_id):
     club = get_object_or_404(Club, pk=club_id)
     context['club'] = club
     context['club_members'] = club.members.filter(is_active=True)
-    context['club_admins'] = club.admin_members.all()
-    context['user'] = view_request.user
+    context['club_admins'] = club.admin_members.filter(is_active=True)
+    context['user'] = request.user
     return context
 
 
@@ -29,6 +45,7 @@ class CreateClubView(generic.FormView):
     form_class = forms.CreateClubForm
 
     def get_success_url(self):
+        # TODO: redirect to club view
         return reverse('home')
 
     @staticmethod
@@ -46,29 +63,11 @@ class CreateClubView(generic.FormView):
             return f'{random.choice(free_ids):05d}'
 
     def form_valid(self, form):
-        default_club_panel = _(
-            "## A sample club panel written in markdown"
-            "\r\n"
-            "\r\n---"
-            "\r\n"
-            "\r\n#### Point 1: Here is some text. "
-            "\r\nHello world, I'm a cinema club... "
-            "\r\n"
-            "\r\n#### Point 2: And here is a list to consider: "
-            "\r\n1. Item #1"
-            "\r\n2. Item #2"
-            "\r\n3. Item #3"
-            "\r\n"
-            "\r\n#### Point 3: And here is an unordered list to consider:"
-            "\r\n- Item 1"
-            "\r\n- Item 2"
-            "\r\n- Item 3"
-        )
+
         new_club = Club.objects.create(
             id=self.random_id_generator(),
             name=form.cleaned_data['name'],
             short_description=form.cleaned_data['short_description'],
-            panel=default_club_panel,
             logo=form.cleaned_data['logo'],
         )
         new_club.admin_users.add(self.request.user)
@@ -78,13 +77,17 @@ class CreateClubView(generic.FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ClubDetailView(generic.DetailView):
+class ClubDetailView(UserPassesTestMixin, generic.DetailView):
     model = Club
+    pk_url_kwarg = 'club_id'
+
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club_id = self.kwargs['pk']
-        context = get_club_context(self.request, club_id, context)
+        club_id = self.kwargs['club_id']
+        context = add_club_context(self.request, context, club_id)
         club_films = Film.objects.all().filter(club_id=club_id)
         context['films_last_pub'] = club_films.order_by('-pub_date')
         last_seen = club_films.filter(seen=True)
@@ -93,15 +96,19 @@ class ClubDetailView(generic.DetailView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ClubMemberDetailView(generic.DetailView):
+class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
     model = User
+    pk_url_kwarg = 'user_id'
+
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club_id = self.kwargs['club_id']
-        context = get_club_context(self.request, club_id, context)
+        context = add_club_context(self.request, context, club_id)
         club = context['club']
-        member = get_object_or_404(User, pk=self.kwargs['pk'])
+        member = get_object_or_404(User, pk=self.kwargs['user_id'])
         context['member'] = member
         all_votes = member.vote_set.filter(club_id=club.id)
         context['num_of_votes'] = all_votes.count()
@@ -115,32 +122,43 @@ class ClubMemberDetailView(generic.DetailView):
 
 
 @method_decorator(login_required, name='dispatch')
-class EditClubInfoView(generic.UpdateView):
+class EditClubInfoView(UserPassesTestMixin, generic.UpdateView):
     model = Club
+    pk_url_kwarg = 'club_id'
     fields = ['name', 'logo', 'short_description']
+    
+    def test_func(self):
+        return user_is_club_admin_check(self.request, self.kwargs['club_id'])
 
     def get_success_url(self):
         return reverse_lazy(
             'democracy:club_detail',
-            kwargs={'pk': self.kwargs['pk']}
+            kwargs={'club_id': self.kwargs['club_id']}
         )
 
 
 @method_decorator(login_required, name='dispatch')
-class EditClubPanelView(generic.UpdateView):
+class EditClubPanelView(UserPassesTestMixin, generic.UpdateView):
     model = Club
+    pk_url_kwarg = 'club_id'
     fields = ['panel']
 
+    def test_func(self):
+        return user_is_club_admin_check(self.request, self.kwargs['club_id'])
+    
     def get_success_url(self):
         return reverse_lazy(
             'democracy:club_detail',
-            kwargs={'pk': self.kwargs['pk']}
+            kwargs={'club_id': self.kwargs['club_id']}
         )
 
 
+@login_required
 def leave_club(request, club_id):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
     context = {}
-    context = get_club_context(request, club_id, context)
+    context = add_club_context(request, context, club_id)
     club = context['club']
     club_admins = context['club_admins']
     user = request.user
@@ -158,9 +176,12 @@ def leave_club(request, club_id):
     return HttpResponseRedirect(reverse('home'))
 
 
+@login_required
 def self_demote(request, club_id):
+    if not user_is_club_admin_check(request, club_id):
+        return HttpResponseForbidden()
     context = {}
-    context = get_club_context(request, club_id, context)
+    context = add_club_context(request, context, club_id)
     club = context['club']
     club_admins = context['club_admins']
     user = request.user
@@ -176,17 +197,20 @@ def self_demote(request, club_id):
     # TODO: Message: 'You have successfully demoted yourself.'
     return HttpResponseRedirect(reverse_lazy(
             'democracy:club_detail',
-            kwargs={'pk': club_id}
+            kwargs={'club_id': club.id}
         ))
 
 
 @method_decorator(login_required, name='dispatch')
-class KickMembersView(generic.FormView):
+class KickMembersView(UserPassesTestMixin, generic.FormView):
     form_class = forms.KickMembersForm
+    
+    def test_func(self):
+        return user_is_club_admin_check(self.request, self.kwargs['club_id'])
 
     def get_form_kwargs(self):
         kwargs = super(KickMembersView, self).get_form_kwargs()
-        club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_members = club.members.filter(is_active=True)
         kickable_members = club_members.exclude(pk=self.request.user.id)
         kwargs.update({'kickable_members': kickable_members})
@@ -195,16 +219,17 @@ class KickMembersView(generic.FormView):
     def get_success_url(self):
         return reverse_lazy(
             'democracy:club_detail',
-            kwargs={'pk': self.kwargs['pk']}
+            kwargs={'club_id': self.kwargs['club_id']}
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = get_club_context(self.request, self.kwargs['pk'], context)
+        club_id = self.kwargs['club_id']
+        context = add_club_context(self.request, context, club_id)
         return context
 
     def form_valid(self, form):
-        club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_admins = club.admin_members.all()
         kicked_members = form.cleaned_data['members']
         for member in kicked_members:
@@ -216,12 +241,15 @@ class KickMembersView(generic.FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class PromoteMembersView(generic.FormView):
+class PromoteMembersView(UserPassesTestMixin, generic.FormView):
     form_class = forms.PromoteMembersForm
+    
+    def test_func(self):
+        return user_is_club_admin_check(self.request, self.kwargs['club_id'])
 
     def get_form_kwargs(self):
         kwargs = super(PromoteMembersView, self).get_form_kwargs()
-        club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_members = club.members.filter(is_active=True)
         promotable_members = club_members.exclude(pk=self.request.user.id)
         kwargs.update({'promotable_members': promotable_members})
@@ -230,16 +258,17 @@ class PromoteMembersView(generic.FormView):
     def get_success_url(self):
         return reverse_lazy(
             'democracy:club_detail',
-            kwargs={'pk': self.kwargs['pk']}
+            kwargs={'club_id': self.kwargs['club_id']}
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = get_club_context(self.request, self.kwargs['pk'], context)
+        club_id = self.kwargs['club_id']
+        context = add_club_context(self.request, context, club_id)
         return context
 
     def form_valid(self, form):
-        club = get_object_or_404(Club, pk=self.kwargs['pk'])
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         promoted_members = form.cleaned_data['members']
         for member in promoted_members:
             club.admin_members.add(member)
@@ -248,8 +277,11 @@ class PromoteMembersView(generic.FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class CandidateFilmsView(generic.TemplateView):
+class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
     # TODO: change to ListView?
+    
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -268,9 +300,12 @@ class CandidateFilmsView(generic.TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class FilmSeenSelectionView(generic.TemplateView):
+class FilmSeenSelectionView(UserPassesTestMixin, generic.TemplateView):
     # TODO: change to ListView?
 
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
@@ -281,9 +316,12 @@ class FilmSeenSelectionView(generic.TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class AddNewFilmView(generic.FormView):
+class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmAddNewForm
 
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+    
     def get_form_kwargs(self):
         kwargs = super(AddNewFilmView, self).get_form_kwargs()
         kwargs.update({'club_id': self.kwargs['club_id']})
@@ -332,10 +370,13 @@ class AddNewFilmView(generic.FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class FilmDetailView(generic.TemplateView):
+class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
     # TODO: Change to DetailView?
     model = Film
 
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
@@ -375,7 +416,10 @@ class FilmDetailView(generic.TemplateView):
         return context
 
 
+@login_required
 def vote_film(request, club_id, film_id):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     club = get_object_or_404(Club, pk=club_id)
     user_vote, _ = Vote.objects.get_or_create(
@@ -392,9 +436,12 @@ def vote_film(request, club_id, film_id):
 
 
 @method_decorator(login_required, name='dispatch')
-class FilmAddFilmAffView(generic.FormView):
+class FilmAddFilmAffView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmAddFilmAffForm
 
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+    
     def get_success_url(self):
         return reverse_lazy(
             'democracy:film_detail',
@@ -417,9 +464,12 @@ class FilmAddFilmAffView(generic.FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class FilmSeenView(generic.FormView):
+class FilmSeenView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmSeenForm
 
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+    
     def get_success_url(self):
         return reverse_lazy(
             'democracy:film_detail',
@@ -453,7 +503,10 @@ class FilmSeenView(generic.FormView):
         return context
 
 
+@login_required
 def unsee_film(request, club_id, film_id):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     film.seen = False
     film.seen_date = None
@@ -464,7 +517,10 @@ def unsee_film(request, club_id, film_id):
     ))
 
 
+@login_required
 def delete_film(request, club_id, film_id):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     film.delete()
     return HttpResponseRedirect(reverse(
@@ -474,8 +530,11 @@ def delete_film(request, club_id, film_id):
 
 
 @method_decorator(login_required, name='dispatch')
-class ParticipantsView(generic.TemplateView):
+class ParticipantsView(UserPassesTestMixin, generic.TemplateView):
 
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
@@ -485,8 +544,11 @@ class ParticipantsView(generic.TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class VoteResultsView(generic.TemplateView):
+class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
 
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 

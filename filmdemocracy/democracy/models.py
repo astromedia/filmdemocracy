@@ -19,10 +19,28 @@ class Club(models.Model):
         _('Short club description'),
         max_length=100,
     )
+    default_panel = _(
+        "## A sample club panel written in markdown"
+        "\r\n"
+        "\r\n---"
+        "\r\n"
+        "\r\n#### Point 1: Here is some text. "
+        "\r\nHello world, I'm a cinema club... "
+        "\r\n"
+        "\r\n#### Point 2: And here is a list to consider: "
+        "\r\n1. Item #1"
+        "\r\n2. Item #2"
+        "\r\n3. Item #3"
+        "\r\n"
+        "\r\n#### Point 3: And here is an unordered list to consider:"
+        "\r\n- Item 1"
+        "\r\n- Item 2"
+        "\r\n- Item 3"
+    )
     panel = MarkdownxField(
         _('Club panel: description, rules, etc. (optional)'),
         max_length=1000,
-        default='',
+        default=default_panel,
         blank=True,
         null=True
     )

@@ -13,28 +13,28 @@ urlpatterns = [
         name='create_club'
     ),
     path(
-        'club/<str:pk>/edit_info/',
+        'club/<str:club_id>/edit_info/',
         views.EditClubInfoView.as_view(
             template_name='democracy/edit_club_info.html'
         ),
         name='edit_club_info'
     ),
     path(
-        'club/<str:pk>/edit_panel/',
+        'club/<str:club_id>/edit_panel/',
         views.EditClubPanelView.as_view(
             template_name='democracy/edit_club_panel.html'
         ),
         name='edit_club_panel'
     ),
     path(
-        'club/<str:pk>/',
+        'club/<str:club_id>/',
         views.ClubDetailView.as_view(
             template_name='democracy/club_detail.html'
         ),
         name='club_detail'
     ),
     path(
-        'club/<str:club_id>/member/<str:pk>',
+        'club/<str:club_id>/member/<str:user_id>',
         views.ClubMemberDetailView.as_view(
             template_name='democracy/club_member_detail.html'
         ),
@@ -51,14 +51,14 @@ urlpatterns = [
         name='self_demote'
     ),
     path(
-        'club/<str:pk>/kick_members/',
+        'club/<str:club_id>/kick_members/',
         views.KickMembersView.as_view(
             template_name='democracy/club_kick_members.html'
         ),
         name='kick_members'
     ),
     path(
-        'club/<str:pk>/promote_members/',
+        'club/<str:club_id>/promote_members/',
         views.PromoteMembersView.as_view(
             template_name='democracy/club_promote_members.html'
         ),

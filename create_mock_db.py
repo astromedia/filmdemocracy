@@ -7,17 +7,17 @@ from filmdemocracy.democracy.models import Film, Club
 
 names = [
     'Pablo',
+    'Ricardo',
     'Alba',
     'Naranjo',
     'Timi',
     'Carla',
-    'Ricardo',
     'Txan',
     'Juanra',
     'Andrea',
     'Diego',
     'Cris',
-    'Javi 1',
+    'Javi',
     'Javi 2',
     'Jose',
     'Pedro',
@@ -33,7 +33,10 @@ for name in names:
         f'pass'
     )
 
-user_creator = User.objects.filter(email='pablo@gmail.com')[0]
+user_creators = [
+    User.objects.filter(email='pablo@gmail.com')[0],
+    User.objects.filter(email='ricardo@gmail.com')[0],
+    ]
 
 club_names = [
     'CCM',
@@ -62,7 +65,7 @@ mock_club_panel = "## A sample club panel written in markdown" \
                   "\r\n- Item 3"
 
 
-for club_name in club_names:
+for i, club_name in enumerate(club_names):
     club_id = random.choice(range(1, 99999))
     club = Club.objects.create(
         id=f'{club_id:05d}',
@@ -70,9 +73,9 @@ for club_name in club_names:
         short_description=lore_100,
         panel=mock_club_panel,
     )
-    club.admin_members.add(user_creator)
-    club.members.add(user_creator)
-    for name in random.sample(names[1:], 12):
+    club.admin_members.add(user_creators[i])
+    club.members.add(user_creators[i])
+    for name in random.sample(names[2:], 12):
         user = User.objects.filter(email=f'{name.lower()}@gmail.com')[0]
         club.members.add(user)
     club.save()
