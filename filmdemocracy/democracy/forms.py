@@ -1,10 +1,14 @@
 from django import forms
-from django.contrib.admin.widgets import AdminDateWidget
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives
+from django.template import loader
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
-from filmdemocracy.democracy.models import Film, FilmDb, Club
+from filmdemocracy.democracy.models import Film, FilmDb, Club, Meeting
 from filmdemocracy.registration.models import User
 
 
@@ -162,7 +166,6 @@ class FilmSeenForm(forms.ModelForm):
         club_members = kwargs.pop('club_members', None)
         super(FilmSeenForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = club_members
-        self.fields['seen_date'].widget = AdminDateWidget()
 
     def clean_seen_date(self):
         seen_date = self.cleaned_data['seen_date']
@@ -190,3 +193,93 @@ class FilmSeenForm(forms.ModelForm):
             )
         else:
             return members
+
+
+class InviteNewMemberForm(forms.Form):
+    email = forms.EmailField(label=_("Email"), max_length=254)
+    invitation_text = forms.CharField(
+        max_length=200,
+        widget=forms.Textarea,
+        help_text=_('Send message with email (Optional)'),
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.club_id = kwargs.pop('club_id', None)
+        super(InviteNewMemberForm, self).__init__(*args, **kwargs)
+
+    def send_mail(self, subject_template_name, email_template_name,
+                  html_email_template_name, context, from_email, to_email):
+        subject = loader.render_to_string(subject_template_name, context)
+        # Email subject *must not* contain newlines:
+        # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
+        subject = ''.join(subject.splitlines())
+        body = loader.render_to_string(email_template_name, context)
+        email_message = EmailMultiAlternatives(subject, body, from_email, [to_email])
+        if html_email_template_name is not None:
+            html_email = loader.render_to_string(html_email_template_name, context)
+            email_message.attach_alternative(html_email, 'text/html')
+        email_message.send()
+
+    def save(self, domain_override=None,
+             subject_template_name='democracy/invite_new_member_subject.txt',
+             email_template_name='democracy/invite_new_member_email.html',
+             html_email_template_name=None,
+             extra_email_context=None,
+             use_https=False, from_email=None, request=None):
+        user = request.user
+        email = self.cleaned_data["email"]
+        invitation_text = self.cleaned_data["invitation_text"]
+        club = get_object_or_404(Club, pk=self.club_id)
+        if not domain_override:
+            current_site = get_current_site(request)
+            site_name = current_site.name
+            domain = current_site.domain
+        else:
+            site_name = domain = domain_override
+        context = {
+            'user': user,
+            'club': club,
+            'email': email,
+            'invitation_text': invitation_text,
+            'domain': domain,
+            'site_name': site_name,
+            'uinviterid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+            'uclubid': urlsafe_base64_encode(force_bytes(club.pk)).decode(),
+            'uemail': urlsafe_base64_encode(force_bytes(email)).decode(),
+            'protocol': 'https' if use_https else 'http',
+            **(extra_email_context or {}),
+        }
+        self.send_mail(subject_template_name, email_template_name,
+                       html_email_template_name, context, from_email, email)
+
+
+class InviteNewMemberConfirmForm(forms.Form):
+    pass
+
+
+class MeetingsForm(forms.ModelForm):
+
+    class Meta:
+        model = Meeting
+        fields = ['name', 'description', 'place', 'date', 'time_start', 'time_end']
+
+    def clean_date(self):
+        date = self.cleaned_data['date']
+        if date < timezone.now().date():
+            raise forms.ValidationError(
+                _("No much sense on planning now a meeting on the past, sorry.")
+            )
+        return date
+
+    def clean_time_start(self):
+        time_start = self.cleaned_data['time_start']
+        if time_start:
+            date = self.cleaned_data['date']
+            if date == timezone.now().date():
+                time_start = self.cleaned_data['time_start']
+                if time_start < timezone.now().time():
+                    raise forms.ValidationError(
+                        _("Meetings can't start before they are proposed, sorry.")
+                    )
+        return self.cleaned_data['time_start']

@@ -65,6 +65,28 @@ class Club(models.Model):
         return markdownify(str(self.panel))
 
 
+class Meeting(models.Model):
+    id = models.CharField(primary_key=True, unique=True, max_length=9)  # 5(club)+4
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    name = models.CharField(
+        _('Name'),
+        default='Club meeting',
+        max_length=50,
+    )
+    description = models.CharField(
+        _('Description'),
+        default='',
+        max_length=100,
+    )
+    organizer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    place = models.CharField(_('Place'), default='', max_length=100)
+    date = models.DateField(_('Date'))
+    time_start = models.TimeField(_('Start time (Optional)'), null=True, blank=True)
+    time_end = models.TimeField(_('End time (Optional)'), null=True, blank=True)
+    members_yes = models.ManyToManyField(User, related_name='members_yes')
+    members_maybe = models.ManyToManyField(User, related_name='members_maybe')
+
+
 class FilmDb(models.Model):
     imdb_id = models.CharField('IMDb id', primary_key=True, max_length=7)
     faff_id = models.CharField('FilmAffinity id', default='', max_length=6)
@@ -96,8 +118,8 @@ class Film(models.Model):
     """
     Film proposed by user in club. Obtains info from FilmDb.
     """
-    id = models.CharField(primary_key=True, max_length=12)  # 5(club)+7(imdb)
-    proposed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    id = models.CharField(primary_key=True, unique=True, max_length=12)  # 5(club)+7(imdb)
+    proposed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     filmdb = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
     pub_date = models.DateTimeField('date published', auto_now_add=True)

@@ -1,4 +1,4 @@
-{% extends "filmdemocracy_base.html" %}
+{% extends "base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -75,27 +75,48 @@
     {% endfor %}
 
     <div class="form-inputs ">
-      {% for field in form %}
-      <div class="form-signin">
-        <div class="mt-3">
-          {{ field.label_tag }}
-          {% if form.is_bound %}
-          {% if field.errors %}
-          {% render_field field class="form-control is-invalid" %}
-          {% for error in field.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
-          {% endfor %}
-          {% else %}
-          {% render_field field class="form-control is-valid" %}
-          {% endif %}
-          {% else %}
-          {% render_field field class="form-control" %}
-          {% endif %}
+
+      <div class="form-inputfield mt-3">
+        <p class="mb-1">
+          {% trans 'Email:' %}
+        </p>
+        {% if form.is_bound %}
+        {% if form.username.errors %}
+        {% render_field form.username class="form-control is-invalid" %}
+        {% for error in form.username.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
         </div>
+        {% endfor %}
+        {% else %}
+        {% render_field form.username class="form-control is-valid" %}
+        {% endif %}
+        {% else %}
+        {% render_field form.username class="form-control" %}
+        {% endif %}
       </div>
-      {% endfor %}
+
+      <div class="form-inputfield mt-3">
+        <p class="mb-1">
+          {% trans 'Password' %}
+          (<a href="{% url 'registration:password_reset' %}">{% trans 'Forgotten password?' %}</a>):
+        </p>
+        {% if form.is_bound %}
+        {% if field.errors %}
+        {% render_field form.password class="form-control is-invalid" %}
+        {% for error in form.password.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
+        {% else %}
+        {% render_field form.password class="form-control is-valid" %}
+        {% endif %}
+        {% else %}
+        {% render_field form.password class="form-control" %}
+        {% endif %}
+      </div>
+
     </div>
 
     <!--TODO: This button doesn't do anything yet...-->
@@ -109,7 +130,7 @@
     <input type="hidden" name="next" value="{{ next }}">
 
     <div class="my-3">
-      <a href="{% url 'registration:password_reset' %}">{% trans 'Forgotten password?' %}</a>
+      <a href="{% url 'registration:user_signup' %}">{% trans 'Create account' %}</a>
     </div>
 
   </form>

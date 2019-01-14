@@ -5,6 +5,13 @@ body {
 }
 
 
+.date-field {
+  max-width: 300px;
+  margin: auto;
+  padding-left: 60px;
+  text-align:center;
+}
+
 /* Club banner
 -------------------------------------------------- */
 .container-club-banner .logo-small {
@@ -32,7 +39,7 @@ body {
   margin-bottom: 30px;
 }
 
-.form-signin {
+.form-inputfield {
   width: 100%;
   max-width: 600px;
   padding: 15px;
@@ -40,7 +47,7 @@ body {
   margin-bottom: -20px;
 }
 
-.form-signin .invalid-feedback{
+.form-inputfield .invalid-feedback{
   width: 100%;
   max-width: 600px;
   padding: 5px;
@@ -48,7 +55,7 @@ body {
   margin-bottom: -29px;
 }
 
-.form-signin .form-control {
+.form-inputfield .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;
@@ -56,7 +63,7 @@ body {
   font-size: 16px;
 }
 
-.form-signin .form-control:focus {
+.form-inputfield .form-control:focus {
   z-index: 2;
 }
 

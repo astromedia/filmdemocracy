@@ -1,7 +1,12 @@
-{% extends "democracy/candidate_films_base.html" %}
+{% extends "democracy/base_club_banner.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
+{% endblock %}
 
 {% block title %}{% trans 'Select seen film' %}{% endblock %}
 

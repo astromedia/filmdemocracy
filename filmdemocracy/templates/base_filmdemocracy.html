@@ -10,15 +10,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{% block title %}FilmDemocracy{% endblock %}</title>
-
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
         crossorigin="anonymous">
 
-
-  <!-- Custom styles for this template -->
+  <!-- General FilmDemocracy website style -->
   <link rel="stylesheet" type="text/css" href="{% static 'democracy/css/filmdemocracy.css' %}">
 
   <!-- Custom styles for child templates -->
@@ -30,8 +27,8 @@
 
 
 <!--START: NAVBAR-->
-<nav class="navbar navbar-expand-md navbar-dark nav-color fixed-top nav-shadow">
-  <div class="container container-nav">
+<nav class="navbar navbar-expand-md navbar-dark navbar-color fixed-top navbar-shadow">
+  <div class="container navbar-container">
 
     <a class="navbar-brand" href="{% url 'home' %}">
       <img height="24" src="{% static 'democracy/svg/webname_greengray.svg'%}">

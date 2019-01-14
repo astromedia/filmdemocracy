@@ -16,13 +16,13 @@ body {
   margin-bottom: 30px;
 }
 
-.form-signin {
+.form-inputfield {
   width: 100%;
   padding: 15px;
   margin-bottom: -20px;
 }
 
-.form-signin .invalid-feedback{
+.form-inputfield .invalid-feedback{
   width: 100%;
   max-width: 430px;
   padding: 5px;
@@ -32,7 +32,7 @@ body {
   margin-right: auto;
 }
 
-.form-signin .form-control {
+.form-inputfield .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;

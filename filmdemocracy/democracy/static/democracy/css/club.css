@@ -8,7 +8,7 @@ body {
   background-color: #fafafa;
 }
 
-.btn-block {
+.btn-admin-utils {
   min-width: 125px;
   max-width: 250px;
   margin: auto;
@@ -43,7 +43,7 @@ body {
 }
 
 .container-club-banner .logo {
-  width: 250px;
+  width: 200px;
   margin-top: 25px;
   margin-bottom: 20px;
 }
@@ -64,8 +64,9 @@ body {
   box-shadow: 0px 0px 15px #fff;
 }
 
-.btn-candidate-films {
-  font-size: 20px;
+.btn-club-options {
+  min-width: 240px;
+  font-size: 17px;
   text-transform: uppercase;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -76,16 +77,17 @@ body {
 
 }
 
-.btn-candidate-films:hover {
+.btn-club-options:hover {
   color: lightseagreen;
-    border: 2px solid #121317;
+  border: 2px solid #121317;
 }
 
-.btn-candidate-films:focus {
+.btn-club-options:focus {
   color: lightseagreen;
   border: 2px solid #121317;
   box-shadow: 0 0 0 #121317;
 }
+
 
 .markdownx-view {
   max-width: 90%;
@@ -112,7 +114,7 @@ body {
   z-index: 1;
 }
 
-.container-fluid hr {
+.club-members-panel hr {
   max-width: 70%;
   color: #505050;
   background-color: #505050;
@@ -228,4 +230,80 @@ transition:all .4s ease-in-out
 .hovereffect-member-kick:hover .overlay {
 opacity:1;
 filter:alpha(opacity=100);
+}
+
+
+
+/* New member invitation
+-------------------------------------------------- */
+.form-inputs {
+  margin-top: -40px;
+  margin-bottom: 30px;
+}
+
+.form-inputfield {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: -20px;
+}
+
+.form-email {
+  max-width: 400px;
+  margin: auto;
+}
+
+.form-invitation-text {
+  max-width: 600px;
+  max-height: 150px;
+  margin: auto;
+}
+
+.form-inputfield .invalid-feedback{
+  width: 100%;
+  max-width: 430px;
+  padding: 5px;
+  margin-top: 0px;
+  margin-bottom: -29px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-inputfield .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+
+/* Club meeting style
+-------------------------------------------------- */
+.meeting-card {
+  padding-bottom: -15px;
+}
+
+.meeting-header {
+  margin-top: -10px;
+  margin-bottom: -15px;
+}
+
+.btn-meeting-assistance {
+  min-width: 155px;
+  max-width: 250px;
+  margin: auto;
+}
+
+.btn-meeting-edit {
+  min-width: 70px;
+  max-width: 250px;
+  margin: auto;
+}
+
+.club-meetings-title-hr {
+  max-width: 70%;
+  color: #505050;
+  background-color: #505050;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }

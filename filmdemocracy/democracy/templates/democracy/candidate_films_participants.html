@@ -1,8 +1,13 @@
-{% extends "democracy/candidate_films_base.html" %}
+{% extends "democracy/base_club_banner.html" %}
 {% load static %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
+{% endblock %}
 
 {% block title %}{% trans 'Participants' %}{% endblock %}
 

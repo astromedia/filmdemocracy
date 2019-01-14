@@ -1,0 +1,34 @@
+{% extends "democracy/base_club_banner.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/club.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/invite_new_member.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Invitation email sent' %}{% endblock %}
+
+{% block content %}
+
+
+<div class="text-center">
+  <h5 class="font-weight-normal h5 my-5">{% trans 'Invitation email sent' %}</h5>
+
+  <div class="alert alert-success px-5 mb-5" role="alert">
+    <strong>
+      {% trans 'An invitation email has been sent.' %}
+    </strong>
+  </div>
+
+</div>
+
+
+<form action="{% url 'democracy:club_detail' club.id %}" class="text-center mt-5">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Go back to club' %}</button>
+</form>
+
+
+{% endblock %}

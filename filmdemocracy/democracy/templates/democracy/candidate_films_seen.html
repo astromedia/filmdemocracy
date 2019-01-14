@@ -1,7 +1,12 @@
-{% extends "democracy/candidate_films_base.html" %}
+{% extends "democracy/base_club_banner.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
+{% endblock %}
 
 {% block title %}{% trans 'Mark film as seen' %}{% endblock %}
 
@@ -45,9 +50,24 @@
     <!--DATE-->
     <h5 class="text-center my-5">{% trans 'When was this film seen?' %}</h5>
 
-    <div class="mt-4">
-      <input type="date" name="seen_date" value="seen_date">
-    </div>
+
+    <div>
+        {% if form.is_bound %}
+        {% if form.seen_date.errors %}
+        {% render_field form.seen_date class="form-control date-field is-invalid" type="date" %}
+        {% for error in form.seen_date.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
+        {% else %}
+        {% render_field form.seen_date class="form-control date-field is-valid" type="date" %}
+        {% endif %}
+        {% else %}
+        {% render_field form.seen_date class="form-control date-field" type="date" %}
+        {% endif %}
+      </div>
+
 
     <!--MEMBERS-->
     <h5 class="text-center my-5">{% trans 'Who were there?' %}</h5>
@@ -97,6 +117,15 @@
 <form action="{% url 'democracy:candidate_films' club.id %}" class="text-center mt-5">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
+
+
+<script type="text/javascript">
+  $(function(){
+    $(".dateinput").datepicker();
+  });
+
+
+</script>
 
 
 {% endblock %}

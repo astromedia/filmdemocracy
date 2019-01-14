@@ -2,7 +2,6 @@ from django.urls import path
 
 from filmdemocracy.democracy import views
 
-
 app_name = 'democracy'
 urlpatterns = [
     path(
@@ -134,5 +133,64 @@ urlpatterns = [
         '<str:club_id>/film/<str:film_id>/unsee_film/',
         views.unsee_film,
         name='unsee_film'
+    ),
+    path(
+        'club/<str:club_id>/invite_new_member/',
+        views.InviteNewMemberView.as_view(
+            template_name='democracy/invite_new_member.html'
+        ),
+        name='invite_new_member'
+    ),
+    path(
+        'club/<str:club_id>/invite_new_member/done/',
+        views.InviteNewMemberDoneView.as_view(
+            template_name='democracy/invite_new_member_done.html'
+        ),
+        name='invite_new_member_done'
+    ),
+    path(
+        'invitation_link/<uinviteridb64>/<uemailb64>/<uclubidb64>/',
+        views.InviteNewMemberConfirmView.as_view(
+            template_name='democracy/invite_new_member_confirm.html'
+        ),
+        name='invite_new_member_confirm'
+    ),
+    path(
+        'club/<str:club_id>/invite_new_member/complete/',
+        views.InviteNewMemberCompleteView.as_view(
+            template_name='democracy/invite_new_member_complete.html'
+        ),
+        name='invite_new_member_complete'
+    ),
+    path(
+        'club/<str:club_id>/meetings/organize_new/',
+        views.MeetingsNewView.as_view(
+            template_name='democracy/meetings_new.html'
+        ),
+        name='meetings_new'
+    ),
+    path(
+        'club/<str:club_id>/meetings/<str:meeting_id>/assistance/',
+        views.meeting_assistance,
+        name='meeting_assistance'
+    ),
+    path(
+        'club/<str:club_id>/meetings/<str:meeting_id>/delete/',
+        views.delete_meeting,
+        name='delete_meeting'
+    ),
+    path(
+        'club/<str:club_id>/meetings/<str:meeting_id>/edit/',
+        views.MeetingsEditView.as_view(
+            template_name='democracy/meetings_edit.html'
+        ),
+        name='meetings_edit'
+    ),
+    path(
+        'club/<str:club_id>/meetings/list/',
+        views.MeetingsListView.as_view(
+            template_name='democracy/meetings_list.html'
+        ),
+        name='meetings_list'
     ),
 ]

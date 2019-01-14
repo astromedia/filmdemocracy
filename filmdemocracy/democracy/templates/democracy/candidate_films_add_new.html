@@ -1,7 +1,12 @@
-{% extends "democracy/candidate_films_base.html" %}
+{% extends "democracy/base_club_banner.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
+{% endblock %}
 
 {% block title %}{% trans 'Propose new film' %}{% endblock %}
 
@@ -30,7 +35,7 @@
     <div class="form-inputs mt-2">
 
       <!--START: IMDB URL-->
-      <div class="form-signin">
+      <div class="form-inputfield">
         {% if form.is_bound %}
         {% if form.imdb_url.errors %}
         {% render_field form.imdb_url placeholder="IMDb url" class="form-control is-invalid" %}
@@ -56,7 +61,7 @@
       <!--END: IMDB URL-->
 
       <!--START: FILMAFFINITY URL-->
-      <div class="form-signin">
+      <div class="form-inputfield">
         {% if form.is_bound %}
         {% if form.faff_url.errors %}
         {% render_field form.faff_url placeholder=faffurl class="form-control is-invalid" %}

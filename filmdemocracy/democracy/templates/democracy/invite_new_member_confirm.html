@@ -1,0 +1,60 @@
+{% extends "base_filmdemocracy.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/club.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/invite_new_member.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Club invitation' %}{% endblock %}
+
+{% block pagecontent %}
+
+
+{% if validlink %}
+
+<div class="text-center">
+  <h3 class="h3 font-weight-normal">{% trans 'Join club' %}</h3>
+
+  <p>
+    {% trans 'You have been invited to join the club: ' %}<strong>{{ club.name }}</strong>
+  </p>
+  <form method="POST" novalidate>
+    {% csrf_token %}
+
+    <input class="btn btn-success mt-3" type="submit" value="{% trans 'Accept invitation' %}">
+
+  </form>
+
+</div>
+
+
+<form action="{% url 'home' %}" class="text-center mt-5">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+</form>
+
+
+{% else %}
+
+
+<!--START: INVALID INVITATION LINK-->
+<div class="alert alert-danger text-center" role="alert">
+  <strong>
+    {% trans 'Sorry, this invitation link is either not active anymore, or not valid for you.' %}
+  </strong>
+</div>
+
+
+<form action="{% url 'home' %}" class="text-center mt-5">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Home' %}</button>
+</form>
+<!--END: INVALID INVITATION LINK-->
+
+
+{% endif %}
+
+
+{% endblock %}

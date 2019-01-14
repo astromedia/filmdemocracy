@@ -1,8 +1,13 @@
-{% extends "democracy/candidate_films_base.html" %}
+{% extends "democracy/base_club_banner.html" %}
 {% load static %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
+{% endblock %}
 
 {% block title %}{% trans 'Voting results' %}{% endblock %}
 
@@ -55,11 +60,9 @@
   <tr>
     <th scope="col">{% trans 'Film' %}</th>
     <th scope="col" class="text-center">{% trans 'Score' %}</th>
-    <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}">
-    </th>
-    <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/thumbsdown.svg'%}">
-    </th>
-    <th scope="col" class="text-center">{% trans "Didn't vote" %}</th>
+    <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}"></th>
+    <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/thumbsdown.svg'%}"></th>
+    <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/question.svg'%}"></th>
   </tr>
   </thead>
   <tbody>

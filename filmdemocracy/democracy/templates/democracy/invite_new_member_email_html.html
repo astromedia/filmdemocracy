@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<p>{{ user.username }} {% trans 'invited you to join the FilmDemocracy club named:' %} "{{ club.name }}".</p>
+
+<p>{% if invitation_text %}{{ invitation_text }}{% endif %}</p>
+
+<p>{% trans 'Follow the link below to join the club:' %}</p>
+
+<p>{{ protocol}}://{{ domain }}{% url 'democracy:invite_new_member_confirm' uinviteridb64=uinviterid uemailb64=uemail uclubidb64=uclubid %}</p>

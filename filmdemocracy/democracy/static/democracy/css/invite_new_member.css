@@ -20,16 +20,6 @@ body {
 }
 
 
-/* Members detail image
--------------------------------------------------- */
-.user-profile-image {
-  width: 11rem;
-  border: 2px solid black;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
-}
-
-
 /* Form styles
 -------------------------------------------------- */
 .form-inputs {
@@ -63,26 +53,4 @@ body {
 
 .form-inputfield .form-control:focus {
   z-index: 2;
-}
-
-.edit-profile-email {
-  max-width: 330px;
-}
-
-.edit-profile-image {
-  max-width: 400px;
-  margin: auto;
-}
-
-
-/* Messages styles
--------------------------------------------------- */
-.alert-danger {
-  margin-bottom: -50px;
-
-}
-
-.warning-profile {
-  margin-bottom: -50px;
-
 }
