@@ -26,26 +26,26 @@ urlpatterns = [
         name='user_logout'
     ),
     path(
-        'account_info/',
+        'account/info/',
         views.AccountInfoView.as_view(
             template_name='registration/account_info.html'
         ),
         name='account_info'
     ),
     path(
-        'account_info/edit/',
+        'account/info/edit/',
         views.AccountInfoEditView.as_view(
             template_name='registration/account_info_edit.html'
         ),
         name='account_info_edit'
     ),
     path(
-        'account_delete/',
+        'account/delete/',
         views.account_delete,
         name='account_delete'
     ),
     path(
-        'account_delete/done/',
+        'account/delete/done/',
         views.AccountDeletedView.as_view(
             template_name='registration/account_delete_done.html'
         ),

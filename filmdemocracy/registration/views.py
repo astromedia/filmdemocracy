@@ -12,6 +12,7 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy('registration:user_login')
 
 
+@login_required
 def account_delete(request):
     user = request.user
     user.is_active = False

@@ -13,15 +13,15 @@
 {% block pagecontent %}
 
 
-<!--START: NO IMAGE MSG-->
+<!--START: NO IMAGE MESSAGE-->
 {% if not user.profile_image %}
-<div class="alert alert-warning warning-profile text-center alert-dismissible fade show" role="alert">
+<div class="alert alert-warning text-center alert-dismissible fade show" role="alert">
   <div class="row justify-content-center">
     <div class="col-md-auto">
       <strong>{% trans "You don't have a profile picture yet!" %}</strong>
     </div>
     <div class="col-md-auto">
-      <a class="ml-3" href="{% url 'registration:account_info_edit' %}">{% trans 'Complete your profile' %}</a>
+      <a href="{% url 'registration:account_info_edit' %}">{% trans 'Complete your profile' %}</a>
     </div>
 
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -30,7 +30,7 @@
   </div>
 </div>
 {% endif %}
-<!--END: NO IMAGE MSG-->
+<!--END: NO IMAGE MESSAGE-->
 
 
 <!--START: ACCOUNT INFO-->
@@ -71,16 +71,20 @@
 <div class="row justify-content-center mt-5">
   <div class="col-sm-auto text-center my-2">
     <form action="{% url 'registration:account_info_edit' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-success">{% trans 'Edit info' %}</button>
+      <button type="submit" class="btn btn-sm btn-block btn-profile btn-success">
+        {% trans 'Edit info' %}
+      </button>
     </form>
   </div>
   <div class="col-sm-auto text-center my-2">
     <form action="{% url 'registration:password_change' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-primary">{% trans 'Change password' %}</button>
+      <button type="submit" class="btn btn-sm btn-block btn-profile btn-primary">
+        {% trans 'Change password' %}
+      </button>
     </form>
   </div>
   <div class="col-sm-auto text-center my-2">
-    <button type="button" class="btn btn-sm btn-block btn-outline-danger" data-toggle="modal"
+    <button type="button" class="btn btn-sm btn-block btn-profile btn-outline-danger" data-toggle="modal"
             data-target="#DeleteModalCenter">
       {% trans 'Delete account' %}
     </button>

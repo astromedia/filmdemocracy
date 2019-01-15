@@ -15,34 +15,30 @@ def get_club_logo_path(instance, filename):
 class Club(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5)
     name = models.CharField('Club name', max_length=25)
-    short_description = models.CharField(
-        _('Short club description'),
-        max_length=100,
-    )
-    default_panel = _(
-        "## A sample club panel written in markdown"
-        "\r\n"
-        "\r\n---"
-        "\r\n"
-        "\r\n#### Point 1: Here is some text. "
-        "\r\nHello world, I'm a cinema club... "
-        "\r\n"
-        "\r\n#### Point 2: And here is a list to consider: "
-        "\r\n1. Item #1"
-        "\r\n2. Item #2"
-        "\r\n3. Item #3"
-        "\r\n"
-        "\r\n#### Point 3: And here is an unordered list to consider:"
-        "\r\n- Item 1"
-        "\r\n- Item 2"
-        "\r\n- Item 3"
-    )
+    short_description = models.CharField(_('Short description'), max_length=100)
     panel = MarkdownxField(
         _('Club panel: description, rules, etc. (optional)'),
         max_length=1000,
-        default=default_panel,
+        default=_(
+            "## A sample club panel written in markdown"
+            "\r\n"
+            "\r\n---"
+            "\r\n"
+            "\r\n#### Point 1: Here is some text. "
+            "\r\nHello world, I'm a cinema club... "
+            "\r\n"
+            "\r\n#### Point 2: And here is a list to consider: "
+            "\r\n1. Item #1"
+            "\r\n2. Item #2"
+            "\r\n3. Item #3"
+            "\r\n"
+            "\r\n#### Point 3: And here is an unordered list to consider:"
+            "\r\n- Item 1"
+            "\r\n- Item 2"
+            "\r\n- Item 3"
+        ),
         blank=True,
-        null=True
+        null=True,
     )
     # TODO: Input image validation.
     logo = models.ImageField(
@@ -51,11 +47,8 @@ class Club(models.Model):
         blank=True,
         null=True,
     )
-    admin_members = models.ManyToManyField(
-        User,
-        related_name='admin_members',
-    )
     members = models.ManyToManyField(User)
+    admin_members = models.ManyToManyField(User, related_name='admin_members')
 
     def __str__(self):
         return f"{self.id}|{self.name}"
@@ -68,16 +61,8 @@ class Club(models.Model):
 class Meeting(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=9)  # 5(club)+4
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    name = models.CharField(
-        _('Name'),
-        default='Club meeting',
-        max_length=50,
-    )
-    description = models.CharField(
-        _('Description'),
-        default='',
-        max_length=100,
-    )
+    name = models.CharField(_('Name'), default='Club meeting', max_length=50)
+    description = models.CharField(_('Description'), default='', max_length=100)
     organizer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     place = models.CharField(_('Place'), default='', max_length=100)
     date = models.DateField(_('Date'))
@@ -85,6 +70,9 @@ class Meeting(models.Model):
     time_end = models.TimeField(_('End time (Optional)'), null=True, blank=True)
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')
+
+    def __str__(self):
+        return f'{self.id}|{self.name}'
 
 
 class FilmDb(models.Model):
@@ -103,7 +91,7 @@ class FilmDb(models.Model):
     plot = models.CharField(default='', max_length=1000)
 
     def __str__(self):
-        return f'{self.title}/{self.imdb_id}'
+        return f'{self.imdb_id}|{self.title}'
 
     @property
     def imdb_url(self):
@@ -164,4 +152,4 @@ class Vote(models.Model):
             return 'negative'
 
     def __str__(self):
-        return f'{self.user}/{self.film.filmdb.title}/{self.choice}'
+        return f'{self.user}|{self.film.filmdb.title}|{self.choice}'

@@ -4,6 +4,7 @@ PROJECT_DIR=$(pwd)
 
 rm $PROJECT_DIR/local/db.sqlite3
 rm -rf $PROJECT_DIR/local/media
+rm -rf $PROJECT_DIR/local/sent_emails
 rm -rf $PROJECT_DIR/filmdemocracy/static
 rm -rf $PROJECT_DIR/filmdemocracy/registration/migrations
 rm -rf $PROJECT_DIR/filmdemocracy/democracy/migrations

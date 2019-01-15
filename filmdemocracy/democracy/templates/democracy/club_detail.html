@@ -54,7 +54,7 @@
         </div>
         <div class="col-md-auto text-center my-2">
           <button type="button" class="btn btn-sm btn-block btn-outline-danger btn-admin-utils" data-toggle="modal"
-                  data-target="#self_demoteModalCenter">
+                  data-target="#self_demoteModal">
             {% trans 'Self-demote' %}
           </button>
         </div>
@@ -97,7 +97,7 @@
     <div class="col-md-auto">
       <form action="{% url 'democracy:meetings_new' club.id %}" class="text-center my-2">
         <button type="submit" class="btn btn-block btn-club-options">
-        {% trans 'Organize meeting' %}
+          {% trans 'Organize meeting' %}
         </button>
       </form>
     </div>
@@ -115,7 +115,7 @@
     <div class="col-md-auto">
       <form action="{% url 'democracy:meetings_list' club.id %}" class="text-center my-2">
         <button type="submit" class="btn btn-block btn-club-options">
-        {% trans 'Programmed meetings' %}
+          {% trans 'Programmed meetings' %}
         </button>
       </form>
     </div>
@@ -279,11 +279,10 @@
       <!--DELETE BUTTON-->
       {% if user == meeting.organizer or user in club_admins%}
       <div class="col-sm-auto ml-auto mt-1 mb-2">
-        <form action="{% url 'democracy:delete_meeting' club.id meeting.id %}" method="POST">
-          {% csrf_token %}
-          <input class="btn btn-sm btn-block btn-outline-danger btn-meeting-edit" type="submit"
-                 value="{% trans 'Delete' %}">
-        </form>
+        <button type="button" class="btn btn-sm btn-block btn-outline-danger btn-meeting-edit" data-toggle="modal"
+                data-target="#DeleteMeetingModal">
+          {% trans 'Delete' %}
+        </button>
       </div>
       {% endif %}
 
@@ -304,6 +303,37 @@
   </div>
 </div>
 <!--END: MEETING CARD-->
+
+
+<!--START: MODAL DELETE MEETING-->
+<div class="modal fade" id="DeleteMeetingModal" tabindex="-1" role="dialog" aria-labelledby="DeleteMeetingModalTitle"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeleteMeetingModalTitle">{% trans 'Delete meeting' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% trans 'Are you sure about this?' %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
+          {% trans 'Cancel' %}
+        </button>
+        <form method="POST" action="{% url 'democracy:delete_meeting' club.id meeting.id %}" class="text-center">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger mr-3">
+            {% trans 'Confirm' %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END: MODAL DELETE MEETING-->
 
 
 {% endfor %}
@@ -450,7 +480,7 @@
     <!--LEAVE BUTTON-->
     <div class="text-center my-5">
       <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
-              data-target="#LeaveModalCenter">
+              data-target="#LeaveModal">
         {% trans 'Leave club' %}
       </button>
     </div>
@@ -463,12 +493,12 @@
 
 <!-- START: MODAL SELF-DEMOTE -->
 {% if user in club_admins %}
-<div class="modal fade" id="self_demoteModalCenter" tabindex="-1" role="dialog"
-     aria-labelledby="self_demoteModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="self_demoteModal" tabindex="-1" role="dialog"
+     aria-labelledby="self_demoteModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="self_demoteModalCenterTitle">{% trans 'Self-demote' %}</h5>
+        <h5 class="modal-title" id="self_demoteModalTitle">{% trans 'Self-demote' %}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -480,7 +510,7 @@
         <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form method="post" action="{% url 'democracy:self_demote' club.id %}" class="text-center">
+        <form method="POST" action="{% url 'democracy:self_demote' club.id %}" class="text-center">
           {% csrf_token %}
           <button type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
@@ -495,12 +525,12 @@
 
 
 <!--START: MODAL LEAVE-->
-<div class="modal fade" id="LeaveModalCenter" tabindex="-1" role="dialog" aria-labelledby="LeaveModalCenterTitle"
+<div class="modal fade" id="LeaveModal" tabindex="-1" role="dialog" aria-labelledby="LeaveModalTitle"
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="LeaveModalCenterTitle">{% trans 'Leave club' %}</h5>
+        <h5 class="modal-title" id="LeaveModalTitle">{% trans 'Leave club' %}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -512,7 +542,7 @@
         <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form method="post" action="{% url 'democracy:leave_club' club.id %}" class="text-center">
+        <form method="POST" action="{% url 'democracy:leave_club' club.id %}" class="text-center">
           {% csrf_token %}
           <button type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
