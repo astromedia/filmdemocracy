@@ -35,74 +35,79 @@
 <!--END ERRORS-->
 
 
+<h3 class="h3">{% trans 'Account information' %}</h3>
+
+
 <!--START: ACCOUNT INFO FORM-->
-<form class="form-profile" enctype="multipart/form-data" method="POST" novalidate>
+<form class="form-registration form-profile" enctype="multipart/form-data" method="POST" novalidate>
   {% csrf_token %}
-  <h3 class="h3 text-center font-weight-normal">{% trans 'Account information' %}</h3>
 
-  <!--PICTURE-->
-  <div class="mb-4">
+  <div class="form-inputs">
 
-    <div class="text-center">
-      {% if user.profile_image %}
-      <img class="user-profile-image zoom-in-cursor" style="width: 10rem;"
-           src="{{ user.profile_image.url }}"
-           alt="user.profile_image not found"
-           data-toggle="modal" data-target="#UserImageModalCenter">
-      {% else %}
-      <img class="user-profile-image" style="width: 10rem;"
-           src="{% static 'registration/user_no_profile_image.png' %}"
-           alt="user.profile_image not found">
-      {% endif %}
-    </div>
+    <!--PICTURE-->
+    <div class="form-input-field">
 
-    <div class="text-center">
-      <div class="text-left custom-file edit-profile-image mt-3">
-        <input id="inputGroupFile" type="file" name='profile_image' class="custom-file-input">
-        <label class="custom-file-label" for="inputGroupFile">Choose file</label>
+      <div class="profile-picture">
+        {% if user.profile_image %}
+        <img class="zoom-in-cursor" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
+             data-toggle="modal" data-target="#UserImageModalCenter">
+        {% else %}
+        <img src="{% static 'registration/user_no_profile_image.png' %}"
+             alt="user.profile_image not found">
+        {% endif %}
       </div>
-      <small id="profile_imageHelpBlock" class="form-text text-muted">
-        <!--Please use an image that is 200 x 200 pixels or smaller.-->
-      </small>
-    </div>
 
-  </div>
-
-  <!--USERNAME-->
-  <div class="row justify-content-center mt-2">
-    <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
-    <div class="col-6">{{ user.username }}</div>
-  </div>
-
-  <!--EMAIL-->
-  <div class="row justify-content-center mt-2 form-group mx-1">
-    <div class="col-6 text-right col-form-label"><strong>{% trans 'Email' %}</strong></div>
-    <div class="col-6">
-      <div class="edit-email">
-        {% if form.is_bound %}
-        {% if form.email.errors %}
-        {% render_field form.email class="form-control is-invalid" %}
-        {% for error in form.email.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
+      <div class="form-picture">
+        <div class="custom-file">
+          <input id="inputGroupFile" type="file" name='profile_image' class="custom-file-input">
+          <label class="custom-file-label" for="inputGroupFile">Choose file</label>
         </div>
-        {% endfor %}
-        {% else %}
-        {% render_field form.email class="form-control is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.email class="form-control" %}
-        {% endif %}
       </div>
+
     </div>
+
+    <!--USERNAME-->
+    <div class="form-input-field">
+
+      <div class="row justify-content-center">
+        <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
+        <div class="col-6">{{ user.username }}</div>
+      </div>
+
+    </div>
+
+    <!--EMAIL-->
+    <div class="form-input-field">
+
+      <div class="row justify-content-center form-group">
+        <div class="col-6 text-right col-form-label"><strong>{% trans 'Email' %}</strong></div>
+        <div class="col-6">
+          <div class="form-email">
+            {% if form.is_bound %}
+            {% if form.email.errors %}
+            {% render_field form.email class="form-control is-invalid" %}
+            {% for error in form.email.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.email class="form-control is-valid" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.email class="form-control" %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 
-  <div class="text-center mt-5">
-    <button type="submit" class="btn btn-success">{% trans 'Save changes' %}</button>
-  </div>
+  <input class="btn btn-block btn-success" type="submit" value="{% trans 'Save changes' %}">
 
 </form>
-
 <!--END: ACCOUNT INFO FORM-->
 
 
@@ -147,9 +152,6 @@
           form.reset()
         })
       });
-
-
-
 </script>
 <!--END: FILE FORM SCRIPT-->
 

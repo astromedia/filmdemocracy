@@ -64,85 +64,85 @@
 
 
 <!--START: LOG IN FORM-->
-<div class="text-center">
-  <h3 class="h3 font-weight-normal">{% trans 'Log in' %}</h3>
+<h3 class="h3 font-weight-normal">{% trans 'Log in' %}</h3>
 
-  <form method="POST" novalidate>
-    {% csrf_token %}
+<form class="form-registration" method="POST" novalidate>
+  {% csrf_token %}
 
-    {% for hidden_field in form.hidden_fields %}
-    {{ hidden_field }}
-    {% endfor %}
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
 
-    <div class="form-inputs ">
+  <div class="form-inputs">
 
-      <div class="form-inputfield mt-3">
-        <p class="mb-1">
-          {% trans 'Email:' %}
-        </p>
-        {% if form.is_bound %}
-        {% if form.username.errors %}
-        {% render_field form.username class="form-control is-invalid" %}
-        {% for error in form.username.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
-        {% else %}
-        {% render_field form.username class="form-control is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.username class="form-control" %}
-        {% endif %}
+    <div class="form-input-field">
+      <div class="label">
+        {{ form.username.label_tag }}
       </div>
-
-      <div class="form-inputfield mt-3">
-        <p class="mb-1">
-          {% trans 'Password' %}
-          (<a href="{% url 'registration:password_reset' %}">{% trans 'Forgotten password?' %}</a>):
-        </p>
-        {% if form.is_bound %}
-        {% if field.errors %}
-        {% render_field form.password class="form-control is-invalid" %}
-        {% for error in form.password.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
-        {% else %}
-        {% render_field form.password class="form-control is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.password class="form-control" %}
-        {% endif %}
+      {% if form.is_bound %}
+      {% if form.username.errors %}
+      {% render_field form.username class="form-control is-invalid" %}
+      {% for error in form.username.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
       </div>
+      {% endfor %}
+      {% else %}
+      {% render_field form.username class="form-control is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.username class="form-control" %}
+      {% endif %}
+    </div>
 
+    <div class="form-input-field">
+      <div class="label">
+        {{ form.password.label_tag }}
+        (<a href="{% url 'registration:password_reset' %}">{% trans 'Forgotten password?' %}</a>)
+      </div>
+      {% if form.is_bound %}
+      {% if field.errors %}
+      {% render_field form.password class="form-control is-invalid" %}
+      {% for error in form.password.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+      {% else %}
+      {% render_field form.password class="form-control is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.password class="form-control" %}
+      {% endif %}
     </div>
 
     <!--TODO: This button doesn't do anything yet...-->
-    <div class="custom-control custom-checkbox mt-3">
-      <input type="checkbox" class="custom-control-input" name="remember_me" id="remember_me" checked
-             value="remember_user">
-      <label class="custom-control-label" for="remember_me">{% trans 'Remember me' %}</label>
+    <div class="form-input-field">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" name="remember_me" id="remember_me" checked
+               value="remember_user">
+        <label class="custom-control-label" for="remember_me">{% trans 'Remember me' %}</label>
+      </div>
     </div>
 
-    <input class="btn btn-lg btn-block btn-success mt-3" type="submit" value="{% trans 'Log in' %}">
-    <input type="hidden" name="next" value="{{ next }}">
+  </div>
 
-    <div class="my-3">
-      <a href="{% url 'registration:user_signup' %}">{% trans 'Create account' %}</a>
-    </div>
+  <input class="btn btn-lg btn-block btn-success" type="submit" value="{% trans 'Log in' %}">
+  <input type="hidden" name="next" value="{{ next }}">
 
-  </form>
-
-</div>
+</form>
 <!--END: LOG IN FORM-->
+
+
+<div class="text-center mt-3">
+  <a href="{% url 'registration:user_signup' %}">{% trans 'Create account' %}</a>
+</div>
 
 
 {% endif %}
 
 
-<form action="{% url 'home' %}" class="text-center mt-5">
+<form class="btn-cancel" action="{% url 'home' %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Home' %}</button>
 </form>
 

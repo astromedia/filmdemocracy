@@ -13,7 +13,7 @@
 {% block pagecontent %}
 
 
-<!--START: NO IMAGE MESSAGE-->
+<!--START: NO PROFILE IMAGE MESSAGE-->
 {% if not user.profile_image %}
 <div class="alert alert-warning text-center alert-dismissible fade show" role="alert">
   <div class="row justify-content-center">
@@ -30,65 +30,66 @@
   </div>
 </div>
 {% endif %}
-<!--END: NO IMAGE MESSAGE-->
+<!--END: NO PROFILE IMAGE MESSAGE-->
+
+
+<h3 class="h3">{% trans 'Account information' %}</h3>
 
 
 <!--START: ACCOUNT INFO-->
-<div>
-  <h3 class="h3 text-center font-weight-normal">{% trans 'Account information' %}</h3>
 
-  <!--PICTURE-->
-  <div class="text-center mb-4">
-    {% if user.profile_image %}
-    <img class="user-profile-image zoom-in-cursor" style="width: 10rem;"
-         src="{{ user.profile_image.url }}"
-         alt="user.profile_image not found"
-         data-toggle="modal" data-target="#UserImageModalCenter">
-    {% else %}
-    <img class="user-profile-image" style="width: 10rem;"
-         src="{% static 'registration/user_no_profile_image.png' %}"
-         alt="user.profile_image not found">
-    {% endif %}
-  </div>
-
-  <!--USERNAME-->
-  <div class="row justify-content-center mt-2">
-    <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
-    <div class="col-6">{{ user.username }}</div>
-  </div>
-
-  <!--EMAIL-->
-  <div class="row justify-content-center mt-2">
-    <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
-    <div class="col-6">{{ user.email }}</div>
-  </div>
-
+<!--PICTURE-->
+<div class="profile-picture">
+  {% if user.profile_image %}
+  <img class="zoom-in-cursor" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
+       data-toggle="modal" data-target="#UserImageModalCenter">
+  {% else %}
+  <img src="{% static 'registration/user_no_profile_image.png' %}"
+       alt="user.profile_image not found">
+  {% endif %}
 </div>
+
+<!--USERNAME-->
+<div class="row justify-content-center mt-2">
+  <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
+  <div class="col-6">{{ user.username }}</div>
+</div>
+
+<!--EMAIL-->
+<div class="row justify-content-center mt-2">
+  <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
+  <div class="col-6">{{ user.email }}</div>
+</div>
+
 <!--END: ACCOUNT INFO-->
 
 
 <!--START: ACCOUNT OPTIONS-->
 <div class="row justify-content-center mt-5">
+
   <div class="col-sm-auto text-center my-2">
     <form action="{% url 'registration:account_info_edit' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-profile btn-success">
-        {% trans 'Edit info' %}
+      <button type="submit" class="btn btn-sm btn-block btn-primary btn-profile">
+        {% trans 'Edit profile' %}
       </button>
     </form>
   </div>
+
   <div class="col-sm-auto text-center my-2">
     <form action="{% url 'registration:password_change' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-profile btn-primary">
+      <button type="submit" class="btn btn-sm btn-block btn-primary btn-profile">
         {% trans 'Change password' %}
       </button>
     </form>
   </div>
+
   <div class="col-sm-auto text-center my-2">
-    <button type="button" class="btn btn-sm btn-block btn-profile btn-outline-danger" data-toggle="modal"
+    <button type="button" class="btn btn-sm btn-block btn-outline-danger btn-profile" data-toggle="modal"
             data-target="#DeleteModalCenter">
       {% trans 'Delete account' %}
     </button>
   </div>
+
 </div>
 <!--START: ACCOUNT OPTIONS-->
 

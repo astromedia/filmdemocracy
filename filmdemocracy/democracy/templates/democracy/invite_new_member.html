@@ -32,7 +32,7 @@
     <div class="form-inputs mt-2">
 
       <!--START: NEW MEMBER EMAIL-->
-      <div class="form-inputfield mt-3">
+      <div class="form-input-field mt-3">
         {% trans 'Send invitation to:' %}
         {% if form.is_bound %}
         {% if form.email.errors %}
@@ -52,7 +52,7 @@
       <!--END: NEW MEMBER EMAIL-->
 
       <!--START: INVITATION TEXT-->
-      <div class="form-inputfield mt-3">
+      <div class="form-input-field mt-3">
         {% trans 'Send message with invitation (Optional):' %}
         {% if form.is_bound %}
         {% if form.invitation_text.errors %}

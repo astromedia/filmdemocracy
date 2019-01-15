@@ -32,7 +32,7 @@
     <div class="form-inputs mt-2">
 
       <!--NAME-->
-      <div class="form-inputfield mt-3">
+      <div class="form-input-field mt-3">
         {{ form.name.label_tag }}
         {% if form.is_bound %}
         {% if form.name.errors %}
@@ -51,7 +51,7 @@
       </div>
 
       <!--DESCRIPTION-->
-      <div class="form-inputfield mt-3">
+      <div class="form-input-field mt-3">
         {{ form.description.label_tag }}
         {% if form.is_bound %}
         {% if form.description.errors %}
@@ -70,7 +70,7 @@
       </div>
 
       <!--PLACE-->
-      <div class="form-inputfield mt-3">
+      <div class="form-input-field mt-3">
         {{ form.place.label_tag }}
         {% if form.is_bound %}
         {% if form.place.errors %}
@@ -93,7 +93,7 @@
 
         <!--DATE-->
         <div class="col-md-4 mt-3 mb-3">
-          <div class="form-inputfield">
+          <div class="form-input-field">
             {{ form.date.label_tag }}
             {% if form.is_bound %}
             {% if form.date.errors %}
@@ -114,7 +114,7 @@
 
         <!--START TIME-->
         <div class="col-md-4 mt-3 mb-3">
-          <div class="form-inputfield">
+          <div class="form-input-field">
             {{ form.time_start.label_tag }}
             {% if form.is_bound %}
             {% if form.time_start.errors %}
@@ -135,7 +135,7 @@
 
         <!--END TIME-->
         <div class="col-md-4 mt-3 mb-3">
-          <div class="form-inputfield">
+          <div class="form-input-field">
             {{ form.time_end.label_tag }}
             {% if form.is_bound %}
             {% if form.time_end.errors %}

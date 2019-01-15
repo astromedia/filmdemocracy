@@ -45,58 +45,61 @@
 
 
 <!--START: SIGN UP FORM-->
-<div class="text-center">
-  <h3 class="h3 font-weight-normal">{% trans 'Create new account' %}</h3>
+<h3 class="h3">{% trans 'Create new account' %}</h3>
 
-  <form method="POST" novalidate>
-    {% csrf_token %}
+<form class="form-registration" method="POST" novalidate>
+  {% csrf_token %}
 
-    {% for hidden_field in form.hidden_fields %}
-    {{ hidden_field }}
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
+
+  <div class="form-inputs">
+
+    {% for field in form %}
+    {% if field.label != 'agree_terms' %}
+    <div class="form-input-field">
+      <div class="label">
+      {{ field.label_tag }}
+      </div>
+      {% if form.is_bound %}
+      {% if field.errors %}
+      {% render_field field class="form-control is-invalid" %}
+      {% for error in field.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+      {% else %}
+      {% render_field field class="form-control is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field field class="form-control" %}
+      {% endif %}
+    </div>
+    {% endif %}
     {% endfor %}
 
-    <div class="form-inputs">
-      {% for field in form %}
-      {% if field.label != 'agree_terms' %}
-      <div class="form-inputfield mt-3">
-          {{ field.label_tag }}
-          {% if form.is_bound %}
-          {% if field.errors %}
-          {% render_field field class="form-control is-invalid" %}
-          {% for error in field.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
-          {% endfor %}
-          {% else %}
-          {% render_field field class="form-control is-valid" %}
-          {% endif %}
-          {% else %}
-          {% render_field field class="form-control" %}
-          {% endif %}
+    <div class="form-input-field">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" name="agree_terms" id="agree_terms" value="agree_terms">
+        <label class="custom-control-label" for="agree_terms">
+          {% trans 'Agree to' %}
+          <a href="{% url 'terms_and_conditions' %}" target="blank">{% trans 'terms and conditions' %}</a>
+        </label>
       </div>
-      {% endif %}
-      {% endfor %}
     </div>
 
-    <div class="custom-control custom-checkbox mt-3">
-      <input type="checkbox" class="custom-control-input" name="agree_terms" id="agree_terms" value="agree_terms">
-      <label class="custom-control-label" for="agree_terms">
-        {% trans 'Agree to' %}
-        <a href="{% url 'terms_and_conditions' %}" target="blank">{% trans 'terms and conditions' %}</a>
-      </label>
-    </div>
+  </div>
 
-    <input class="btn btn-lg btn-block btn-primary mt-3" type="submit" value="{% trans 'Create account' %}">
-    <input type="hidden" name="next" value="{{ next }}">
+  <input class="btn btn-lg btn-block btn-primary" type="submit" value="{% trans 'Create account' %}">
+  <input type="hidden" name="next" value="{{ next }}">
 
-  </form>
-
-</div>
+</form>
 <!--END: SIGN UP IN FORM-->
 
 
-<form action="{% url 'home' %}" class="text-center mt-5">
+<form class="btn-cancel" action="{% url 'home' %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 

@@ -241,7 +241,7 @@ filter:alpha(opacity=100);
   margin-bottom: 30px;
 }
 
-.form-inputfield {
+.form-input-field {
   width: 100%;
   padding: 15px;
   margin-bottom: -20px;
@@ -258,7 +258,7 @@ filter:alpha(opacity=100);
   margin: auto;
 }
 
-.form-inputfield .invalid-feedback{
+.form-input-field .invalid-feedback{
   width: 100%;
   max-width: 430px;
   padding: 5px;
@@ -268,7 +268,7 @@ filter:alpha(opacity=100);
   margin-right: auto;
 }
 
-.form-inputfield .form-control {
+.form-input-field .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;

@@ -48,7 +48,7 @@
 
     <div class="form-inputs">
 
-      <div class="form-inputfield text-center mt-3">
+      <div class="form-input-field text-center mt-3">
           {{ form.name.label_tag }}
           {% if form.is_bound %}
           {% if form.name.errors %}
@@ -69,7 +69,7 @@
           {% endfor %}
       </div>
 
-      <div class="form-inputfield mt-3">
+      <div class="form-input-field mt-3">
           <div class="form-club-image-file mt-3">
             <div class="text-center">
               {% trans 'Club logo:' %}
@@ -95,7 +95,7 @@
           </div>
       </div>
 
-      <div class="form-inputfield text-center mt-3">
+      <div class="form-input-field text-center mt-3">
           {{ form.short_description.label_tag }}
           {% if form.is_bound %}
           {% if form.short_description.errors %}

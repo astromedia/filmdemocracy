@@ -119,3 +119,7 @@ dmypy.json
 
 # Local stuff...
 /local
+sass_watch.sh
+compile_sass.sh
+/sass
+

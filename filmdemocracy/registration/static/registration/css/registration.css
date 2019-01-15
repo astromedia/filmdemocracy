@@ -9,34 +9,42 @@ body {
 }
 
 .h3 {
-  padding-top: 100px;
-  padding-bottom: 40px;
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 20px;
   font-weight: normal;
 }
 
+.btn-cancel {
+  text-align: center;
+  margin-top: 50px;
+}
 
-/* Form styles
+
+/* Registration (Login, Signup, Password change, Password Reset) styles
 -------------------------------------------------- */
-form .btn-block {
-  min-width: 180px;
-  max-width: 280px;
-  margin: auto;
+.form-registration {
+  text-align: center;
 }
 
-.form-inputs {
-  margin-top: -40px;
-  margin-bottom: 30px;
+.form-registration .form-inputs {
+  margin-bottom: 10px;
 }
 
-.form-inputs .form-inputfield {
+.form-registration .form-inputs .form-input-field {
   width: 100%;
   max-width: 330px;
-  padding: 15px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin: auto;
-  margin-bottom: -20px;
 }
 
-.form-inputs .form-inputfield .invalid-feedback{
+.form-registration .form-inputs .form-input-field .label {
+}
+
+.form-registration .form-inputs .form-input-field .invalid-feedback{
   width: 100%;
   max-width: 330px;
   padding: 5px;
@@ -44,7 +52,7 @@ form .btn-block {
   margin-bottom: -29px;
 }
 
-.form-inputs .form-inputfield .form-control {
+.form-registration .form-inputs .form-input-field .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;
@@ -52,31 +60,50 @@ form .btn-block {
   font-size: 16px;
 }
 
-.form-inputs .form-inputfield .form-control:focus {
+.form-registration .form-inputs .form-input-field .form-control:focus {
   z-index: 2;
 }
 
+.form-registration .btn-block {
+  max-width: 225px;
+  margin: auto;
+  margin-top: 20px;
+}
 
-/* Account info
+
+/* Account styles
 -------------------------------------------------- */
+.profile-picture {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.profile-picture img {
+  width: 11rem;
+  border: 2px solid rgba(0, 0, 0, 0.75);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 .btn-profile {
   min-width: 180px;
-  max-width: 280px;
+  max-width: 250px;
   margin: auto;
 }
 
-.user-profile-image {
-  width: 11rem;
-  border: 2px solid black;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+.form-profile {
+  text-align: left;
 }
 
-.form-profile .edit-profile-image {
+.form-profile .form-inputs .form-input-field {
+  max-width: 95%;
+}
+
+.form-profile .form-inputs .form-input-field .form-picture {
   max-width: 400px;
   margin: auto;
 }
 
-.form-profile .edit-email {
+.form-profile .form-inputs .form-input-field .form-email {
   max-width: 330px;
 }
