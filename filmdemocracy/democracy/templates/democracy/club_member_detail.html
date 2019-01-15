@@ -17,7 +17,7 @@
   <h3 class="text-center h4 mt-5 mb-4 font-weight-normal">{{ member.username }}</h3>
 </div>
 
-<div class="text-center">
+<div class="text-center mb-4">
   {% if member.profile_image %}
   <img class="member-profile-image zoom-in-cursor"
        src="{{ member.profile_image.url }}" alt="member.profile_image not found"
@@ -29,16 +29,37 @@
 </div>
 
 
-<div class="text-center mt-4 mb-3">
-  Joined club on the TODO???
+<!--ADMIN-->
+{% if member in club_admins %}
+<div class="alert alert-success text-center mx-auto my-3 admin_member border border-secondary" style="max-width: 100px;">
+  <strong>club admin</strong>
+</div>
+{% endif %}
+
+<!--EMAIL-->
+{% if member.public_email %}
+<div class="row justify-content-center mt-2">
+  <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
+  <div class="col-6">{{ member.email }}</div>
+</div>
+{% endif %}
+
+<!--JOINED CLUB-->
+<div class="row justify-content-center mt-2">
+  <div class="col-6 text-right"><strong>{% trans 'Joined club:' %}</strong></div>
+  <div class="col-6">{{ club_member_info.joined_date }}</div>
 </div>
 
-<div class="text-center">
-  Number of voted films: <strong>{{ num_of_votes }}</strong>
+<!--VOTED FILMS-->
+<div class="row justify-content-center mt-2">
+  <div class="col-6 text-right"><strong>{% trans 'Number of voted films:' %}</strong></div>
+  <div class="col-6">{{ num_of_votes }}</div>
 </div>
 
-<div class="text-center mb-n3">
-  Number of films seen: <strong>{{ num_of_films_seen }}</strong>
+<!--SEEN FILMS-->
+<div class="row justify-content-center mt-2">
+  <div class="col-6 text-right"><strong>{% trans 'Number of films seen:' %}</strong></div>
+  <div class="col-6">{{ num_of_films_seen }}</div>
 </div>
 
 

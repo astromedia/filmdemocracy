@@ -4,6 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import generic
 
+from filmdemocracy.democracy.models import ClubMemberInfo
 from filmdemocracy.registration import forms
 
 

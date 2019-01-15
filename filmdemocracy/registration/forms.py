@@ -27,4 +27,4 @@ class AccountInfoEditForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ['profile_image', 'email']
+        fields = ['profile_image', 'email', 'public_email']

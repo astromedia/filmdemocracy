@@ -17,7 +17,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, FilmDb, Film, Vote, Meeting
+from filmdemocracy.democracy.models import Club, ClubMemberInfo, Meeting
+from filmdemocracy.democracy.models import FilmDb, Film, Vote
 from filmdemocracy.registration.models import User
 from filmdemocracy.settings import OMDB_API_KEY
 
@@ -77,15 +78,21 @@ class CreateClubView(generic.FormView):
             return f'{random.choice(free_ids):05d}'
 
     def form_valid(self, form):
+        user = self.request.user
         new_club = Club.objects.create(
             id=self.random_id_generator(),
             name=form.cleaned_data['name'],
             short_description=form.cleaned_data['short_description'],
             logo=form.cleaned_data['logo'],
         )
-        new_club.admin_members.add(self.request.user)
-        new_club.members.add(self.request.user)
+        new_club.admin_members.add(user)
+        new_club.members.add(user)
         new_club.save()
+        club_member_info = ClubMemberInfo.objects.create(
+            club=new_club,
+            member=user,
+        )
+        club_member_info.save()
         return super().form_valid(form)
 
 
@@ -131,6 +138,12 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
         club = context['club']
         member = get_object_or_404(User, pk=self.kwargs['user_id'])
         context['member'] = member
+        club_member_info = get_object_or_404(
+            ClubMemberInfo,
+            club=club,
+            member=member,
+        )
+        context['club_member_info'] = club_member_info
         all_votes = member.vote_set.filter(club_id=club.id)
         context['num_of_votes'] = all_votes.count()
         club_films = Film.objects.all().filter(club_id=club.id, seen=False)
@@ -193,6 +206,12 @@ def leave_club(request, club_id):
             club.admin_members.remove(user)
     club.members.remove(user)
     club.save()
+    club_member_info = get_object_or_404(
+        ClubMemberInfo,
+        club=club,
+        member=user,
+    )
+    club_member_info.delete()
     # TODO: Message: 'You have successfully left the club.'
     return HttpResponseRedirect(reverse('home'))
 
@@ -257,6 +276,12 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
             if member in club_admins:
                 club.admin_members.remove(member)
             club.members.remove(member)
+            club_member_info = get_object_or_404(
+                ClubMemberInfo,
+                club=club,
+                member=member,
+            )
+            club_member_info.delete()
         club.save()
         return super().form_valid(form)
 
@@ -764,6 +789,11 @@ class InviteNewMemberConfirmView(generic.FormView):
         if user not in club_members:
             club.members.add(self.request.user)
             club.save()
+            club_member_info = ClubMemberInfo.objects.create(
+                club=club,
+                member=user,
+            )
+            club_member_info.save()
         return super().form_valid(form)
 
     def get_success_url(self):

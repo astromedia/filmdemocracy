@@ -105,5 +105,13 @@ body {
 }
 
 .form-profile .form-inputs .form-input-field .form-email {
-  max-width: 330px;
+  max-width: 310px;
+}
+
+.form-profile .form-inputs .form-input-field .form-first-name {
+  max-width: 310px;
+}
+
+.form-profile .form-inputs .form-input-field .form-last-name {
+  max-width: 310px;
 }

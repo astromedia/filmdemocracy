@@ -2,7 +2,7 @@ import random
 import requests
 
 from filmdemocracy.registration.models import User
-from filmdemocracy.democracy.models import Film, Club
+from filmdemocracy.democracy.models import Film, Club, ClubMemberInfo
 
 
 names = [
@@ -75,9 +75,19 @@ for i, club_name in enumerate(club_names):
     )
     club.admin_members.add(user_creators[i])
     club.members.add(user_creators[i])
+    club_member_info = ClubMemberInfo.objects.create(
+        club=club,
+        member=user_creators[i],
+    )
+    club_member_info.save()
     for name in random.sample(names[2:], 12):
         user = User.objects.filter(email=f'{name.lower()}@gmail.com')[0]
         club.members.add(user)
+        club_member_info = ClubMemberInfo.objects.create(
+            club=club,
+            member=user,
+        )
+        club_member_info.save()
     club.save()
 
 

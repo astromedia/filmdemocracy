@@ -58,6 +58,15 @@ class Club(models.Model):
         return markdownify(str(self.panel))
 
 
+class ClubMemberInfo(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    joined_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.member}|{self.club}'
+
+
 class Meeting(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=9)  # 5(club)+4
     club = models.ForeignKey(Club, on_delete=models.CASCADE)

@@ -61,6 +61,30 @@
   <div class="col-6">{{ user.email }}</div>
 </div>
 
+<!--PUBLIC EMAIL-->
+<div class="row justify-content-center mt-2">
+  <div class="col-6 text-right"><strong>{% trans 'Public email in clubs' %}</strong></div>
+  <div class="col-6">
+    {% if user.public_email %}
+    {% trans 'Yes' %}
+    {% elif not user.public_email %}
+    {% trans 'No' %}
+    {% endif %}
+  </div>
+</div>
+
+<!--FIRST NAME-->
+<!--<div class="row justify-content-center mt-2">-->
+<!--<div class="col-6 text-right"><strong>{% trans 'First name' %}</strong></div>-->
+<!--<div class="col-6">{% if user.first_name %}{{ user.first_name }}{% else %}-{% endif %}</div>-->
+<!--</div>-->
+
+<!--LAST NAME-->
+<!--<div class="row justify-content-center mt-2">-->
+<!--<div class="col-6 text-right"><strong>{% trans 'Last name' %}</strong></div>-->
+<!--<div class="col-6">{% if user.last_name %}}{{ user.last_name }}{% else %}-{% endif %}</div>-->
+<!--</div>-->
+
 <!--END: ACCOUNT INFO-->
 
 

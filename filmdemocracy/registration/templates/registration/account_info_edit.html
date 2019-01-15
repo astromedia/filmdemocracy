@@ -69,7 +69,7 @@
     <!--USERNAME-->
     <div class="form-input-field">
 
-      <div class="row justify-content-center">
+      <div class="row">
         <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
         <div class="col-6">{{ user.username }}</div>
       </div>
@@ -79,8 +79,8 @@
     <!--EMAIL-->
     <div class="form-input-field">
 
-      <div class="row justify-content-center form-group">
-        <div class="col-6 text-right col-form-label"><strong>{% trans 'Email' %}</strong></div>
+      <div class="row align-items-center">
+        <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
         <div class="col-6">
           <div class="form-email">
             {% if form.is_bound %}
@@ -102,6 +102,83 @@
       </div>
 
     </div>
+
+    <!--PUBLIC EMAIL-->
+    <div class="form-input-field">
+
+      <div class="row align-items-center">
+        <div class="col-6 text-right">
+          <strong>{% trans 'Public email in clubs' %}</strong>
+        </div>
+        <div class="col-6">
+          <div class="custom-control custom-switch">
+            {% if user.public_email %}
+            <input type="checkbox" class="custom-control-input" name="public_email" id="public_email"
+                   value="public_email" checked>
+            {% elif not user.public_email %}
+            <input type="checkbox" class="custom-control-input" name="public_email" id="public_email"
+                   value="public_email">
+            {% endif %}
+            <label class="custom-control-label" for="public_email"></label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!--FIRST NAME-->
+    <!--<div class="form-input-field">-->
+
+    <!--<div class="row align-items-center">-->
+    <!--<div class="col-6 text-right"><strong>{% trans 'First name' %}</strong></div>-->
+    <!--<div class="col-6">-->
+    <!--<div class="form-first-name">-->
+    <!--{% if form.is_bound %}-->
+    <!--{% if form.first_name.errors %}-->
+    <!--{% render_field form.first_name class="form-control is-invalid" %}-->
+    <!--{% for error in form.first_name.errors %}-->
+    <!--<div class="invalid-feedback">-->
+    <!--{{ error }}-->
+    <!--</div>-->
+    <!--{% endfor %}-->
+    <!--{% else %}-->
+    <!--{% render_field form.first_name class="form-control is-valid" %}-->
+    <!--{% endif %}-->
+    <!--{% else %}-->
+    <!--{% render_field form.first_name class="form-control" %}-->
+    <!--{% endif %}-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--</div>-->
+
+    <!--LAST NAME-->
+    <!--<div class="form-input-field">-->
+
+    <!--<div class="row align-items-center">-->
+    <!--<div class="col-6 text-right"><strong>{% trans 'Last name' %}</strong></div>-->
+    <!--<div class="col-6">-->
+    <!--<div class="form-last-name">-->
+    <!--{% if form.is_bound %}-->
+    <!--{% if form.last_name.errors %}-->
+    <!--{% render_field form.last_name class="form-control is-invalid" %}-->
+    <!--{% for error in form.last_name.errors %}-->
+    <!--<div class="invalid-feedback">-->
+    <!--{{ error }}-->
+    <!--</div>-->
+    <!--{% endfor %}-->
+    <!--{% else %}-->
+    <!--{% render_field form.last_name class="form-control is-valid" %}-->
+    <!--{% endif %}-->
+    <!--{% else %}-->
+    <!--{% render_field form.last_name class="form-control" %}-->
+    <!--{% endif %}-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--</div>-->
 
   </div>
 
@@ -152,6 +229,10 @@
           form.reset()
         })
       });
+
+
+
+
 </script>
 <!--END: FILE FORM SCRIPT-->
 
