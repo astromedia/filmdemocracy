@@ -1,16 +1,17 @@
-{% extends "base_filmdemocracy.html" %}
+{% extends "democracy/base_club_banner.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/edit_club.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Edit club panel' %}{% endblock %}
 
-{% block pagecontent %}
+{% block content %}
 
 
 {{ form.media }}
@@ -39,49 +40,48 @@
 
 
 <!--START: EDIT CLUB DESCRIPTION FORM-->
-<div>
-  <h3 class="text-center h3 font-weight-normal">{% trans 'Edit club panel' %}</h3>
+<h3 class="h3">{% trans 'Edit club panel' %}</h3>
 
-  <div class="text-center text-muted mt-n4 mb-4">
-    {% trans 'This field supports markdown syntax. New to Markdown?' %}
-    <a href=https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="blank">
-      {% trans 'Check this!' %}
-    </a>
+<div class="text-center text-muted mb-4">
+  {% trans 'This field supports markdown syntax. New to Markdown?' %}
+  <a href=https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="blank">
+    {% trans 'Check this!' %}
+  </a>
+</div>
+
+<form class="form-edit-club" method="POST" novalidate>
+  {% csrf_token %}
+
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
+
+  <!--PANEL-->
+  {% if form.is_bound %}
+  {% if form.panel.errors %}
+  {% render_field form.panel class="form-control form-club-panel is-invalid" %}
+  {% else %}
+  {% render_field form.panel class="form-control form-club-panel is-valid" %}
+  {% endif %}
+  {% else %}
+  {% render_field form.panel class="form-control form-club-panel" %}
+  {% endif %}
+  {% for error in form.panel.errors %}
+  <div class="invalid-feedback">
+    {{ error }}
   </div>
+  {% endfor %}
 
-  <form method="POST" novalidate>
-    {% csrf_token %}
-
-    {% for hidden_field in form.hidden_fields %}
-    {{ hidden_field }}
-    {% endfor %}
-    {% if form.is_bound %}
-    {% if form.panel.errors %}
-    {% render_field form.panel class="form-control form-club-panel is-invalid" %}
-    {% else %}
-    {% render_field form.panel class="form-control form-club-panel is-valid" %}
-    {% endif %}
-    {% else %}
-    {% render_field form.panel class="form-control form-club-panel" %}
-    {% endif %}
-    {% for error in form.panel.errors %}
-    <div class="invalid-feedback">
-      {{ error }}
-    </div>
-    {% endfor %}
-
-
+  <div class="form-preview">
     <small class="text-center form-text text-muted">
       {% trans 'Panel preview' %}
     </small>
     <hr>
+  </div>
 
-    <div class="text-center mt-3">
-      <input class="text-center btn btn-primary mt-2" type="submit" value="{% trans 'Save changes' %}">
-    </div>
+  <input class="btn btn-block btn-primary" type="submit" value="{% trans 'Save changes' %}">
 
-  </form>
-</div>
+</form>
 <!--START: EDIT CLUB DESCRIPTION FORM-->
 
 

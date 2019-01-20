@@ -1,0 +1,208 @@
+/* General page styles
+-------------------------------------------------- */
+body {
+}
+
+.container-base {
+  background-color: #fafafa;
+}
+
+
+/* Club banner
+-------------------------------------------------- */
+.club-banner {
+  text-align: center;
+  margin-top: -24px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 30px;
+  background-color: #121317;
+}
+
+.club-banner .name {
+  font-size: 25px;
+  color: #d1d1d1;
+}
+
+.club-banner .short-description {
+  font-size: 19px;
+  color: #d1d1d1;
+}
+
+.club-banner .club-panel {
+  margin-top: 25px;
+}
+
+.club-banner .logo {
+  margin: auto;
+}
+
+.club-banner .logo img {
+  border: 2px solid black;
+  border-radius: 5px;
+  box-shadow: 0 0px 10px #fff;
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.club-banner .btn-club-links {
+  min-width: 240px;
+  font-size: 17px;
+  margin: auto;
+  color: seagreen;
+  font-weight: bold;
+  border: 0px solid seagreen;
+}
+
+.club-banner .btn-club-links:hover {
+  color: lightseagreen;
+  text-decoration: none;
+  border: 0px solid lightseagreen;
+}
+
+.club-banner .admin-utils {
+  text-transform: uppercase;
+  margin: auto;
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+
+.club-banner .admin-utils .admin-buttons {
+  margin-top: -5px;
+  margin-bottom: -20px;
+}
+
+.club-banner .admin-utils .admin-buttons .btn-util {
+  min-width: 140px;
+  max-width: 300px;
+  margin: auto;
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+
+
+/* Club messages
+-------------------------------------------------- */
+.club-message {
+  margin-bottom: -10px;
+}
+
+
+/* Club meetings panel
+-------------------------------------------------- */
+.meetings .h3 {
+  text-transform: uppercase;
+  margin-top: 30px;
+  margin-bottom: -10px;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.meetings hr {
+  max-width: 350px;
+  color: gray;
+  background-color: gray;
+  margin-bottom: 20px;
+}
+
+
+/* Club markdown panel
+-------------------------------------------------- */
+.markdownx-view {
+  max-width: 90%;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: auto;
+}
+
+
+/* General albums
+-------------------------------------------------- */
+.album {
+  background-color: #121317;
+}
+
+.album .h3 {
+  color: darkgray;
+  text-transform: uppercase;
+  padding-top: 30px;
+  margin-bottom: -10px;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.album hr {
+  max-width: 350px;
+  color: darkgray;
+  background-color: darkgray;
+  margin-bottom: 20px;
+}
+
+
+/* Proposed / Seen films album
+-------------------------------------------------- */
+.films-album {
+  padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 0px;
+  margin-bottom: -50px;
+}
+
+.films-album .card {
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 8.5rem;
+  height: 12.5rem;
+  border-color: transparent;
+  cursor:default;
+  background-color: transparent;
+}
+
+.films-album .card img {
+  width: 95%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
+  box-shadow: 0 0px 5px rgba(255, 255, 255, 0.5);
+}
+
+
+/* Club members album
+-------------------------------------------------- */
+.members-album {
+  padding-bottom: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 0px;
+  margin-bottom: -50px;
+}
+
+.members-album .card {
+  width: 8rem;
+  background-color: transparent;
+  color: darkgray;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.member-image {
+  border-radius: 5px;
+  border: 3px solid transparent;
+  width:100%;
+  height:100%;
+  float:left;
+  overflow:hidden;
+  position:relative;
+  text-align:center;
+  cursor:pointer;
+}
+
+.member-image:hover {
+  border: 3px solid LightSeaGreen;
+  border-radius: 5px;
+}

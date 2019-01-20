@@ -51,19 +51,19 @@
 
 <!--USERNAME-->
 <div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
+  <div class="col-6 text-right"><strong>{% trans 'Username:' %}</strong></div>
   <div class="col-6">{{ user.username }}</div>
 </div>
 
 <!--EMAIL-->
 <div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
+  <div class="col-6 text-right"><strong>{% trans 'Email:' %}</strong></div>
   <div class="col-6">{{ user.email }}</div>
 </div>
 
 <!--PUBLIC EMAIL-->
 <div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Public email in clubs' %}</strong></div>
+  <div class="col-6 text-right"><strong>{% trans 'Public email in clubs:' %}</strong></div>
   <div class="col-6">
     {% if user.public_email %}
     {% trans 'Yes' %}

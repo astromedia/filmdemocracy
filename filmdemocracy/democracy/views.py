@@ -57,7 +57,7 @@ def add_club_context(request, context, club_id):
 
 @method_decorator(login_required, name='dispatch')
 class CreateClubView(generic.FormView):
-    form_class = forms.CreateClubForm
+    form_class = forms.EditClubForm
 
     def get_success_url(self):
         # TODO: redirect to club view
@@ -114,12 +114,13 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         )
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
-        else:
-            context['next_meetings'] = None
         club_films = Film.objects.all().filter(club_id=club_id)
-        context['films_last_pub'] = club_films.order_by('-pub_date')
-        last_seen = club_films.filter(seen=True)
-        context['films_last_seen'] = last_seen.order_by('-seen_date')
+        if club_films:
+            films_last_pub = club_films.order_by('-pub_date')
+            groups_last_pub = [films_last_pub[i:i+4] for i in [0, 4, 8, 12]]
+            context['groups_last_pub'] = groups_last_pub
+            last_seen = club_films.filter(seen=True)
+            context['films_last_seen'] = last_seen.order_by('-seen_date')[0:5]
         return context
 
 
@@ -146,12 +147,15 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
         context['club_member_info'] = club_member_info
         all_votes = member.vote_set.filter(club_id=club.id)
         context['num_of_votes'] = all_votes.count()
-        club_films = Film.objects.all().filter(club_id=club.id, seen=False)
-        votes = [vote for vote in all_votes if vote.film in club_films]
+        club_films = Film.objects.all().filter(club_id=club.id)
+        club_films_seen = club_films.filter(seen=False)
+        votes = [vote for vote in all_votes if vote.film in club_films_seen]
         context['member_votes'] = votes
         member_seen_films = member.seen_by.filter(club_id=club.id)
         context['member_seen_films'] = member_seen_films
         context['num_of_films_seen'] = member_seen_films.count()
+        proposed = club_films.filter(proposed_by=member)
+        context['num_of_films_proposed'] = proposed.count()
         return context
 
 
@@ -159,7 +163,7 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
 class EditClubInfoView(UserPassesTestMixin, generic.UpdateView):
     model = Club
     pk_url_kwarg = 'club_id'
-    fields = ['name', 'logo', 'short_description']
+    form_class = forms.EditClubForm
 
     def test_func(self):
         return user_is_club_admin_check(self.request, self.kwargs['club_id'])
@@ -654,7 +658,6 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                 return out_voters_info, out_warnings, out_points, False
 
         films_results = []
-        films_warnings = []
         participants = self.request.GET.getlist('participants')
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_films = Film.objects.all().filter(club_id=club.id, seen=False)
@@ -668,11 +671,10 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                 'no_voters': voters_info[2],
                 'points': points,
                 'veto': veto,
+                'warnings': warnings,
             })
-            films_warnings.extend(warnings)
         context['club'] = club
         context['films_results'] = films_results
-        context['warnings'] = films_warnings
         context['participants'] = participants
         return context
 
@@ -862,6 +864,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
 @method_decorator(login_required, name='dispatch')
 class MeetingsEditView(UserPassesTestMixin, generic.UpdateView):
     pk_url_kwarg = 'meeting_id'
+    model = Meeting
     form_class = forms.MeetingsForm
 
     def test_func(self):

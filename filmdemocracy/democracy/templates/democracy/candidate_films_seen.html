@@ -5,6 +5,7 @@
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
 {% endblock %}
 
@@ -29,11 +30,7 @@
 {% endif %}
 
 
-<!--START: HEADER-->
-<div class="text-center my-5">
-  <h4 class="display-4">{% trans 'Mark film as seen by club' %}</h4>
-</div>
-<!--END: HEADER-->
+<h3 class="h3">{% trans 'Mark film as seen by club' %}</h3>
 
 
 <div class="text-center">
@@ -43,52 +40,50 @@
 
 
 <!--START: FILM SEEN FORM-->
-<div class="text-center">
-  <form class="mt-5" method="POST">
+  <form class="form-film-seen" method="POST">
     {% csrf_token %}
 
     <!--DATE-->
-    <h5 class="text-center my-5">{% trans 'When was this film seen?' %}</h5>
-
+    <h5 class="h5">{% trans 'When was this film seen?' %}</h5>
 
     <div>
-        {% if form.is_bound %}
-        {% if form.seen_date.errors %}
-        {% render_field form.seen_date class="form-control date-field is-invalid" type="date" %}
-        {% for error in form.seen_date.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
-        {% else %}
-        {% render_field form.seen_date class="form-control date-field is-valid" type="date" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.seen_date class="form-control date-field" type="date" %}
-        {% endif %}
+      {% if form.is_bound %}
+      {% if form.seen_date.errors %}
+      {% render_field form.seen_date class="form-control date-field is-invalid" type="date" %}
+      {% for error in form.seen_date.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
       </div>
+      {% endfor %}
+      {% else %}
+      {% render_field form.seen_date class="form-control date-field is-valid" type="date" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.seen_date class="form-control date-field" type="date" %}
+      {% endif %}
+    </div>
 
 
     <!--MEMBERS-->
-    <h5 class="text-center my-5">{% trans 'Who were there?' %}</h5>
+    <h5 class="h5 mt-5">{% trans 'Who were there?' %}</h5>
 
     <div class="container-fluid">
-      <div class="row mt-4 justify-content-center">
+
+      <div class="row mx-4 justify-content-center">
 
         {% for member in club_members %}
+
         <div class="col-auto">
-          <div class="card mb-4 shadow-sm" style="width: 8rem;">
+          <div class="card shadow-sm">
 
             <label for="member_{{ forloop.counter }}">
               <div class="hovereffect-participant">
                 {% if member.profile_image %}
-                <img class="card-img-top border border-secondary member-shadow"
-                     src="{{ member.profile_image.url }}"
+                <img class="card-img-top border border-secondary" src="{{ member.profile_image.url }}"
                      alt="member.profile_image not found">
                 {% else %}
-                <img class="card-img-top border border-secondary member-shadow"
-                     src="{% static 'registration/user_no_profile_image.png' %}"
-                     alt="member.profile_image not found">
+                <img class="card-img-top border border-secondary"
+                     src="{% static 'registration/user_no_profile_image.png' %}" alt="member.profile_image not found">
                 {% endif %}
               </div>
             </label>
@@ -97,35 +92,27 @@
               <input type="checkbox" class="custom-control-input" name="members"
                      id="member_{{ forloop.counter }}" value="{{ member.pk }}">
               <label class="custom-control-label mr-4" for="member_{{ forloop.counter }}">
-                {{ member.username }}</label>
+                {{ member.username }}
+              </label>
             </div>
 
           </div>
         </div>
+
         {% endfor %}
 
       </div>
     </div>
 
-    <input class="btn btn-lg btn-success mt-5" type="submit" value="{% trans 'Seen!' %}">
+    <input class="btn btn-lg btn-block btn-success" type="submit" value="{% trans 'Seen!' %}">
 
   </form>
-</div>
 <!--END: FILM SEEN FORM-->
 
 
 <form action="{% url 'democracy:candidate_films' club.id %}" class="text-center mt-5">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
-
-
-<script type="text/javascript">
-  $(function(){
-    $(".dateinput").datepicker();
-  });
-
-
-</script>
 
 
 {% endblock %}

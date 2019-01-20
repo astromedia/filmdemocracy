@@ -16,15 +16,15 @@ body {
 /* Webpage text style
 -------------------------------------------------- */
 .webpage-logo {
-max-width: 15rem;
+  max-width: 15rem;
 }
 
 .webpage-title {
-max-width: 80%
+  max-width: 65%
 }
 
 .webpage-subtitle {
-font-size: 25px;
+  font-size: 22px;
 }
 
 .misc-text {
@@ -32,12 +32,15 @@ font-size: 25px;
 }
 
 hr {
-  max-width: 80%;
-  color: #505050;
-  background-color: #505050;
+  max-width: 450px;
+  color: gray;
+  background-color: gray;
+  margin-bottom: 20px;
 }
 
-.yourclubs-title {
+.your-clubs-title {
+  text-align: center;
+  color: darkgray;
   text-transform: uppercase;
   font-size: 15px;
   margin-bottom: -13px;
@@ -51,38 +54,38 @@ hr {
 
 /* Club image
 -------------------------------------------------- */
-.hovereffect-logo-club {
-border: 5px solid black;
-width: 250px;
-height:100%;
-float:left;
-overflow:hidden;
-position:relative;
-text-align:center;
-cursor:default;
-box-shadow: 0 2px 25px rgba(0, 0, 0, 0.85);
+.club-logo {
+  max-width: 250px;
+  max-height: 250px;
+  float:left;
+  overflow: hidden;
+  cursor: default;
+  border: 2px solid black;
+  border-radius: 6px;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.85);
 }
 
-.hovereffect-logo-club:hover {
-box-shadow: 0 0px 25px #fff;
+.club-logo:hover {
+  box-shadow: 0 0px 10px #fff;
 }
 
-.hovereffect-logo-club img {
-width: 100%;
-display:block;
-position:relative;
--webkit-transition:all .2s linear;
-transition:all .2s linear;
+.club-logo img {
+  width: 100%;
+  height: 100%;
+  display:block;
+  position:relative;
+  -webkit-transition:all .2s linear;
+  transition:all .2s linear;
 }
 
-.hovereffect-logo-club:hover img {
--ms-transform:scale(1.1);
--webkit-transform:scale(1.05);
-transform:scale(1.05);
+.club-logo:hover img {
+  -ms-transform:scale(1.1);
+  -webkit-transform:scale(1.05);
+  transform:scale(1.05);
 }
 
 /*
-.hovereffect-logo-club .overlay {
+.club-logo .overlay {
 width:100%;
 height:100%;
 position:absolute;
@@ -96,8 +99,32 @@ transition:all .4s ease-in-out
 }
 
 
-.hovereffect-logo-club:hover .overlay {
+.club-logo:hover .overlay {
 opacity:1;
 filter:alpha(opacity=100);
 }
 */
+
+
+.btn-create-club {
+  min-width: 240px;
+  font-size: 17px;
+  margin: auto;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  color: seagreen;
+  font-weight: bold;
+  border: 0px solid seagreen;
+}
+
+.btn-create-club:hover {
+  color: lightseagreen;
+  text-decoration: none;
+  border: 0px solid lightseagreen;
+}
+
+.btn-create-club:active {
+  color: lightseagreen;
+  border: 0px solid lightseagreen;
+  box-shadow: 0 0 0 #121317;
+}

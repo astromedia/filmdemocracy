@@ -8,19 +8,11 @@
 
 
 <!--START: CLUB BANNER-->
-<div class="container-fluid container-club-banner text-center shadow">
+<div class="container-fluid club-banner text-center shadow">
 
   <!--LOGO-->
-  <div class="mx-auto">
-    <a href="{% url 'democracy:club_detail' club.id %}">
-      {% if club.logo %}
-      <img class="logo-small club-logo-small-shadow rounded"
-           src="{{ club.logo.url }}" alt="club.logo not found">
-      {% else %}
-      <img class="logo-small club-logo-small-shadow rounded"
-           src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
-      {% endif %}
-    </a>
+  <div class="club-name">
+    <a href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
   </div>
 
 </div>

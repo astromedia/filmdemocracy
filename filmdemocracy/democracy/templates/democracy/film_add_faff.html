@@ -1,62 +1,66 @@
-{% extends "democracy/film_base.html" %}
+{% extends "base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/film_detail.css' %}">
+{% endblock %}
+
 {% block title %}{% trans 'Add FilmAffinity url' %}{% endblock %}
 
-{% block content %}
+{% block pagecontent %}
 
 
-<h3 class="h3 mb-4 mt-5 font-weight-normal text-center">{% trans 'Add FilmAffinity url' %}</h3>
+<h3 class="h3">{% trans 'Add FilmAffinity url' %}</h3>
 
 
 <!--START: ADD FILMADD URL FORM-->
-<div class="text-center">
-  <form method="POST" novalidate>
-    {% csrf_token %}
+<form class="form-add-faff" method="POST" novalidate>
+  {% csrf_token %}
 
-    {% for hidden_field in form.hidden_fields %}
-    {{ hidden_field }}
-    {% endfor %}
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
 
-    <div class="form-inputs mt-2">
+  <div class="form-inputs">
 
-      <div class="form-input-field">
-        {% if form.is_bound %}
-        {% if form.faff_url.errors %}
-        {% render_field form.faff_url class="form-control is-invalid" placeholder="FilmAffinity url" %}
-        {% for error in form.faff_url.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
-        {% else %}
-        {% render_field form.faff_url class="form-control is-valid" placeholder="FilmAffinity url" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.faff_url class="form-control" placeholder="FilmAffinity url" %}
-        {% endif %}
+    <div class="form-input-field">
+      {% if form.is_bound %}
+      {% if form.faff_url.errors %}
+      {% render_field form.faff_url class="form-control is-invalid" placeholder="FilmAffinity url" %}
+      {% for error in form.faff_url.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+      {% else %}
+      {% render_field form.faff_url class="form-control is-valid" placeholder="FilmAffinity url" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.faff_url class="form-control" placeholder="FilmAffinity url" %}
+      {% endif %}
 
-        <div class="mb-3 mt-0 ml-2 text-left">
-          <a href="https://www.filmaffinity.com/" target="blank">
-            <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>
-          </a>
-        </div>
-
+      <div class="mb-3 mt-0 ml-2 text-left">
+        <a href="https://www.filmaffinity.com/" target="blank">
+          <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>
+        </a>
       </div>
 
     </div>
 
-    <input class="btn btn-lg btn-success mt-3" type="submit" value="{% trans 'Add' %}">
+  </div>
 
-  </form>
-</div>
+  <input class="btn btn-lg btn-block btn-success" type="submit" value="{% trans 'Add' %}">
+
+</form>
 <!--START: ADD FILMADD URL FORM-->
 
 
-<form action="{% url 'democracy:film_detail' club.id film.id %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'democracy:film_detail' club.id film.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
+
 
 {% endblock %}

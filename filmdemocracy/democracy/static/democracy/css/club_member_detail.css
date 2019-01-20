@@ -1,0 +1,64 @@
+
+/* General page styles
+-------------------------------------------------- */
+body {
+}
+
+.container-base {
+  background-color: #fafafa;
+}
+
+.h3 {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  font-weight: normal;
+}
+
+
+/* Members detail
+-------------------------------------------------- */
+.profile-picture {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-picture img {
+  width: 11rem;
+  border: 2px solid rgba(0, 0, 0, 0.75);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.admin_member {
+  padding: 0px;
+  max-width: 100px;
+  text-align: center;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.member-detail .h5 {
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 0px;
+  font-weight: normal;
+}
+
+u {
+  text-decoration: none;
+  border-bottom: 1px solid gray;
+}
+
+.member-detail .seen-films {
+  margin-top: 10px;
+}
+
+.member-detail .voted-films {
+  margin-top: 10px;
+}
+
+.member-detail .row {
+  margin-bottom: -16px;
+}

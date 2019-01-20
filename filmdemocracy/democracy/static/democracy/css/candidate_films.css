@@ -4,75 +4,25 @@
 body {
 }
 
-
-.date-field {
-  max-width: 300px;
-  margin: auto;
-  padding-left: 60px;
-  text-align:center;
+.display-4 {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 40px;
 }
 
-/* Club banner
--------------------------------------------------- */
-.container-club-banner .logo-small {
-  width: 150px;
-  margin-top: 15px;
-  margin-bottom: 10px;
+.h3 {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  font-weight: normal;
 }
 
-.club-logo-small-shadow {
-  border: 2px solid black;
-  box-shadow: 0px 0px 15px #fff;
+.h5 {
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-.container-club-banner {
-  margin-top: -24px;
-  padding: 10px;
-  background-color: #121317;
-}
-
-
-/* New film form
--------------------------------------------------- */
-.form-inputs {
-  margin-top: -40px;
-  margin-bottom: 30px;
-}
-
-.form-input-field {
-  width: 100%;
-  max-width: 600px;
-  padding: 15px;
-  margin: auto;
-  margin-bottom: -20px;
-}
-
-.form-input-field .invalid-feedback{
-  width: 100%;
-  max-width: 600px;
-  padding: 5px;
-  margin-top: 0px;
-  margin-bottom: -29px;
-}
-
-.form-input-field .form-control {
-  position: relative;
-  box-sizing: border-box;
-  height: auto;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.form-input-field .form-control:focus {
-  z-index: 2;
-}
-
-.film-seen {
-  width: 10rem;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.85);
-}
-
-.btn-block {
+.btn-option {
   min-width: 200px;
   max-width: 250px;
   margin: auto;
@@ -81,14 +31,24 @@ body {
 
 /* Candidate films album
 -------------------------------------------------- */
-.album {
-  background-color: #f5f5f5;
+.films-album {
+  background-color: #121317;
+  padding-top: 50px;
+  padding-bottom: 200px;
+  padding-left: 50px;
+  padding-right: 50px;
+  margin-top: 40px;
+  margin-bottom: -50px;
+}
+
+.films-album .card {
+  width: 13rem;
 }
 
 
 /* Candidate films image hover effect
 -------------------------------------------------- */
-.hovereffect-film {
+.card-film {
   width:100%;
   height:100%;
   float:left;
@@ -96,10 +56,18 @@ body {
   position:relative;
   text-align:center;
   cursor:default;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.85);
+  border-radius: 3px;
+  box-shadow: 0 0px 10px rgba(255, 255, 255, 0.5);
 }
 
-.hovereffect-film .overlay {
+.card-film img {
+  display:block;
+  position:relative;
+  -webkit-transition:all .2s linear;
+  transition:all .2s linear;
+}
+
+.card-film .overlay {
   width:100%;
   height:100%;
   position:absolute;
@@ -107,18 +75,11 @@ body {
   top:0;
   left:0;
   opacity:0;
-  -webkit-transition:all .4s ease-in-out;
-  transition:all .4s ease-in-out
+  -webkit-transition:all .3s ease-in-out;
+  transition:all .3s ease-in-out
 }
 
-.hovereffect-film img {
-  display:block;
-  position:relative;
-  -webkit-transition:all .2s linear;
-  transition:all .2s linear;
-}
-
-.hovereffect-film h2 {
+.card-film .film-title {
   color:#fff;
   text-align:center;
   position:relative;
@@ -127,23 +88,33 @@ body {
   -webkit-transform:translatey(-100px);
   -ms-transform:translatey(-100px);
   transform:translatey(-100px);
-  -webkit-transition:all .1s ease-in-out;
-  transition:all .1s ease-in-out;
+  -webkit-transition:all .3s ease-in-out;
+  transition:all .3s ease-in-out;
   padding:10px;
 }
 
-.hovereffect-film:hover img {
+.card-film .film-voted {
+  color: #fff;
+  text-align: center;
+  margin-top: -33px;
+  position: relative;
+  font-size: 17px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.card-film:hover img {
   -ms-transform:scale(1.1);
   -webkit-transform:scale(1.1);
   transform:scale(1.1);
 }
 
-.hovereffect-film:hover .overlay {
+.card-film:hover .overlay {
   opacity:1;
   filter:alpha(opacity=100);
 }
 
-.hovereffect-film:hover h2 {
+.card-film:hover .film-title {
   opacity:1;
   filter:alpha(opacity=100);
   -ms-transform:translatey(0);
@@ -151,24 +122,113 @@ body {
   transform:translatey(0);
 }
 
-.hovereffect-film h3 {
-  color: #fff;
+
+/* Form new film
+-------------------------------------------------- */
+.form-new-film {
   text-align: center;
+}
+
+.form-new-film .btn-block {
+  max-width: 225px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.form-new-film .form-inputs {
+  margin-bottom: 10px;
+}
+
+.form-new-film .form-inputs .form-input-field {
+  width: 100%;
+  max-width: 650px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: auto;
+}
+
+.form-new-film .form-inputs .form-input-field .label {
+}
+
+.form-new-film .form-inputs .form-input-field .invalid-feedback{
+  width: 100%;
+  padding: 5px;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: -29px;
+}
+
+.form-new-film .form-inputs .form-input-field .form-control {
   position: relative;
-  margin: -28px 0 0 0;
-  font-size: 17px;
-  padding: 4px;
-  background: rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-new-film .form-inputs .form-input-field .form-control:focus {
+  z-index: 2;
 }
 
 
-/* Participants image hover effect
+/* Form participants
+-------------------------------------------------- */
+.form-participants {
+  text-align: center;
+}
+
+.form-participants .card {
+  width: 8rem;
+  margin-bottom: 1rem;
+}
+
+.form-participants .btn-block {
+  max-width: 225px;
+  margin: auto;
+  margin-top: 30px;
+}
+
+
+/* Form seen
+-------------------------------------------------- */
+.film-seen {
+  width: 10rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.85);
+  margin-bottom: 50px;
+}
+
+.form-film-seen {
+  text-align: center;
+}
+
+.form-film-seen .date-field {
+  max-width: 250px;
+  margin: auto;
+  padding-left: 60px;
+  text-align: center;
+}
+
+.form-film-seen .card {
+  width: 8rem;
+  margin-bottom: 1rem;
+}
+
+.form-film-seen .btn-block {
+  max-width: 225px;
+  margin: auto;
+  margin-top: 30px;
+}
+
+
+/* Hover effect participant
 -------------------------------------------------- */
 .hovereffect-participant {
   width:100%;
   height:100%;
   cursor:pointer;
-  transition: box-shadow 0.2s ease-in-out;
+  transition: box-shadow 0.1s ease-in-out;
 }
 
 .hovereffect-participant:hover {

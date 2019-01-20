@@ -5,7 +5,8 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/club.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/club_member_detail.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Club member info' %}{% endblock %}
@@ -13,25 +14,21 @@
 {% block content %}
 
 
-<div>
-  <h3 class="text-center h4 mt-5 mb-4 font-weight-normal">{{ member.username }}</h3>
-</div>
+<h3 class="h3">{{ member.username }}</h3>
 
-<div class="text-center mb-4">
+<!--PROFILE PICTURE-->
+<div class="profile-picture">
   {% if member.profile_image %}
-  <img class="member-profile-image zoom-in-cursor"
-       src="{{ member.profile_image.url }}" alt="member.profile_image not found"
+  <img class="zoom-in-cursor" src="{{ member.profile_image.url }}" alt="member.profile_image not found"
        data-toggle="modal" data-target="#MemberImageModalCenter">
   {% else %}
-  <img class="member-profile-image"
-       src="{% static 'registration/user_no_profile_image.png' %}" alt="member.profile_image not found">
+  <img src="{% static 'registration/user_no_profile_image.png' %}" alt="member.profile_image not found">
   {% endif %}
 </div>
 
-
 <!--ADMIN-->
 {% if member in club_admins %}
-<div class="alert alert-success text-center mx-auto my-3 admin_member border border-secondary" style="max-width: 100px;">
+<div class="alert alert-success admin_member border border-secondary">
   <strong>club admin</strong>
 </div>
 {% endif %}
@@ -39,7 +36,7 @@
 <!--EMAIL-->
 {% if member.public_email %}
 <div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
+  <div class="col-6 text-right"><strong>{% trans 'Email:' %}</strong></div>
   <div class="col-6">{{ member.email }}</div>
 </div>
 {% endif %}
@@ -52,97 +49,98 @@
 
 <!--VOTED FILMS-->
 <div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Number of voted films:' %}</strong></div>
+  <div class="col-6 text-right"><strong>{% trans 'Films voted:' %}</strong></div>
   <div class="col-6">{{ num_of_votes }}</div>
+</div>
+
+<!--PROPOSED FILMS-->
+<div class="row justify-content-center mt-2">
+  <div class="col-6 text-right"><strong>{% trans 'Films proposed:' %}</strong></div>
+  <div class="col-6">{{ num_of_films_proposed }}</div>
 </div>
 
 <!--SEEN FILMS-->
 <div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Number of films seen:' %}</strong></div>
+  <div class="col-6 text-right"><strong>{% trans 'Films seen:' %}</strong></div>
   <div class="col-6">{{ num_of_films_seen }}</div>
 </div>
 
 
-<!--START: SEEN FILMS-->
-<div class="member-detail">
-  <h5 class="text-center mt-5 font-weight-normal">
-    {% trans 'Films seen with club:' %}
-  </h5>
-  <hr class="mt-n1 mb-3">
-</div>
-
-{% if member_films %}
-
-
-{% for film in member_films %}
-<div class="text-center">
-  <a href="{% url 'democracy:film_detail' club.id film.id %}" style="color: black;">
-    <strong>{{ film.filmdb.title }}</strong></a>
-</div>
-{% endfor %}
-
-
-{% else %}
-
-
-<div class="text-center">
-  {% trans "This member hasn't seen any film with the club yet!" %}
-</div>
-
-
-{% endif %}
-<!--END: SEEN FILMS-->
-
-
 <!--START: REGISTERED VOTES-->
 <div class="member-detail">
-  <h5 class="text-center mt-5 font-weight-normal">
-    {% trans 'Registered votes on candidate films:' %}
-  </h5>
-  <hr class="text-center mt-n1 mb-5">
-</div>
+  <h5 class="h5"><u>{% trans 'Registered votes on candidate films:' %}</u></h5>
 
-<div class="mt-n4 invisible">...</div>
-
-{% if member_votes %}
+  <div class="voted-films">
+    {% if member_votes %}
 
 
-{% for vote in member_votes %}
-<div class="row mt-n3 justify-content-center">
-  <div class="col-6 text-right">
-    <a href="{% url 'democracy:film_detail' club.id vote.film.id %}" style="color: black;">
-      <strong>{{ vote.film.filmdb.title }}:</strong></a>
-  </div>
-  <div class="col-6">
+    {% for vote in member_votes %}
+    <div class="row justify-content-center">
+      <div class="col-6 text-right">
+        <a class="text-body" href="{% url 'democracy:film_detail' club.id vote.film.id %}">
+          <strong>{{ vote.film.filmdb.title }}:</strong></a>
+      </div>
+      <div class="col-6">
 
-    {% if vote.vote_karma == 'positive' %}
-    <p class="text-success">{{ vote.get_choice_display }}</p>
-    {% elif vote.vote_karma == 'neutral' %}
-    <p class="text-secondary">{{ vote.get_choice_display }}</p>
-    {% elif vote.vote_karma == 'negative' %}
-    <p class="text-danger">
-      {% if vote.choice == "veto" %}
-      <strong>{{ vote.get_choice_display }}</strong>
-      {% else %}
-      {{ vote.get_choice_display }}
-    </p>
+        {% if vote.vote_karma == 'positive' %}
+        <p class="text-success">{{ vote.get_choice_display }}</p>
+        {% elif vote.vote_karma == 'neutral' %}
+        <p class="text-secondary">{{ vote.get_choice_display }}</p>
+        {% elif vote.vote_karma == 'negative' %}
+        <p class="text-danger">
+          {% if vote.choice == "veto" %}
+          <strong>{{ vote.get_choice_display }}</strong>
+          {% else %}
+          {{ vote.get_choice_display }}
+        </p>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+
+    {% else %}
+
+
+    <div class="text-center">
+      -
+    </div>
+
+
     {% endif %}
-    {% endif %}
   </div>
 </div>
-{% endfor %}
-
-
-{% else %}
-
-
-<div class="text-center mt-n3">
-  {% trans "This member hasn't voted any candidate film yet!" %}
-</div>
-
-
-{% endif %}
 <!--END: REGISTERED VOTES-->
+
+
+<!--START: SEEN FILMS-->
+<div class="member-detail">
+  <h5 class="h5"><u>{% trans 'Films seen with club:' %}</u></h5>
+
+
+  <div class="seen-films">
+    {% if member_seen_films %}
+
+
+    {% for film in member_seen_films %}
+    <div class="text-center">
+      <a class="text-body" href="{% url 'democracy:film_detail' club.id film.id %}">
+        <strong>{{ film.filmdb.title }}</strong></a>
+    </div>
+    {% endfor %}
+
+
+    {% else %}
+
+
+    <div class="text-center">-</div>
+
+
+    {% endif %}
+  </div>
+</div>
+<!--END: SEEN FILMS-->
 
 
 <!-- START MODAL IMAGE -->
@@ -166,5 +164,6 @@
 </div>
 {% endif %}
 <!-- END MODAL IMAGE -->
+
 
 {% endblock %}

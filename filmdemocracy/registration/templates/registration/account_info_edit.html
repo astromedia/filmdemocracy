@@ -70,7 +70,7 @@
     <div class="form-input-field">
 
       <div class="row">
-        <div class="col-6 text-right"><strong>{% trans 'Username' %}</strong></div>
+        <div class="col-6 text-right"><strong>{% trans 'Username:' %}</strong></div>
         <div class="col-6">{{ user.username }}</div>
       </div>
 
@@ -80,7 +80,7 @@
     <div class="form-input-field">
 
       <div class="row align-items-center">
-        <div class="col-6 text-right"><strong>{% trans 'Email' %}</strong></div>
+        <div class="col-6 text-right"><strong>{% trans 'Email:' %}</strong></div>
         <div class="col-6">
           <div class="form-email">
             {% if form.is_bound %}
@@ -108,7 +108,7 @@
 
       <div class="row align-items-center">
         <div class="col-6 text-right">
-          <strong>{% trans 'Public email in clubs' %}</strong>
+          <strong>{% trans 'Public email in clubs:' %}</strong>
         </div>
         <div class="col-6">
           <div class="custom-control custom-switch">
@@ -188,7 +188,7 @@
 <!--END: ACCOUNT INFO FORM-->
 
 
-<form action="{% url 'registration:account_info' %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'registration:account_info' %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 
@@ -229,10 +229,6 @@
           form.reset()
         })
       });
-
-
-
-
 </script>
 <!--END: FILE FORM SCRIPT-->
 

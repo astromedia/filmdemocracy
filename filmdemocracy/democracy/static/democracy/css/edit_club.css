@@ -1,38 +1,59 @@
 
 /* General page styles
 -------------------------------------------------- */
+body {
+}
+
 .container-base {
   background-color: #fafafa;
 }
 
-body {
+.h3 {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  font-weight: normal;
 }
 
 
 /* Form styles
 -------------------------------------------------- */
-.form-inputs {
-  margin-top: -40px;
-  margin-bottom: 30px;
+.form-edit-club {
+  text-align: center;
 }
 
-.form-input-field {
-  width: 100%;
-  padding: 15px;
-  margin-bottom: -20px;
+.form-edit-club .btn-block {
+  max-width: 225px;
+  margin: auto;
+  margin-top: 20px;
 }
 
-.form-input-field .invalid-feedback{
+.form-edit-club .form-inputs {
+  margin-bottom: 10px;
+}
+
+.form-edit-club .form-inputs .form-input-field {
   width: 100%;
-  max-width: 430px;
+  max-width: 400px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: auto;
+}
+
+.form-edit-club .form-inputs .form-input-field .label {
+}
+
+.form-edit-club .form-inputs .form-input-field .invalid-feedback{
+  width: 100%;
   padding: 5px;
+  margin: auto;
   margin-top: 0px;
   margin-bottom: -29px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.form-input-field .form-control {
+.form-edit-club .form-inputs .form-input-field .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;
@@ -40,36 +61,38 @@ body {
   font-size: 16px;
 }
 
-.h3 {
-  padding-top: 60px;
-  padding-bottom: 40px;
+.form-edit-club .form-inputs .form-input-field .form-control:focus {
+  z-index: 2;
 }
 
-.form-name {
-  max-width: 330px;
+.form-edit-club .form-inputs .form-input-field .logo img {
+  width: 15rem;
+  border: 2px solid rgba(0, 0, 0, 0.75);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.form-edit-club .form-inputs .form-input-field .form-logo {
+  margin: auto;
+  text-align: left;
+}
+
+.form-edit-club .form-inputs .form-input-field .form-short-description {
+  max-height: 100px;
   margin: auto;
 }
 
-.form-short-description {
-  width: 100%;
-  max-width: 750px;
-  margin: auto;
-}
-
-.form-club-image-file {
-  max-width: 430px;
-  width: 100%;
-  margin: auto;
-}
-
-.form-club-panel {
+.form-edit-club .form-club-panel {
   max-width: 92%;
   min-height: 450px;
   margin: auto;
   padding: auto;
 }
 
-.markdownx-preview {
+.form-edit-club .markdownx-preview {
+  text-align: left;
   max-width: 90%;
   margin-top: 40px;
   margin-bottom: 40px;
@@ -78,7 +101,7 @@ body {
   padding: auto;
 }
 
-hr {
+.form-edit-club .form-preview hr {
   max-width: 95%;
   margin-top: 0px;
   margin-bottom: 50px;

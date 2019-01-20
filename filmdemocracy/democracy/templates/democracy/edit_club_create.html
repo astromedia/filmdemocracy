@@ -36,96 +36,89 @@
 
 
 <!--START: CREATE CLUB FORM-->
-<div>
-  <h3 class="h3 font-weight-normal text-center">{% trans 'Create new club' %}</h3>
+<h3 class="h3">{% trans 'Create new club' %}</h3>
 
-  <form enctype="multipart/form-data" method="POST" novalidate>
-    {% csrf_token %}
+<form class="form-edit-club" enctype="multipart/form-data" method="POST" novalidate>
+  {% csrf_token %}
 
-    {% for hidden_field in form.hidden_fields %}
-    {{ hidden_field }}
-    {% endfor %}
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
 
-    <div class="form-inputs">
+  <div class="form-inputs">
 
-      <div class="form-input-field text-center mt-3">
-          {{ form.name.label_tag }}
-          {% if form.is_bound %}
-          {% if form.name.errors %}
-          {% render_field form.name class="form-control form-name is-invalid" %}
-          {% else %}
-          {% render_field form.name class="form-control form-name is-valid" %}
-          {% endif %}
-          {% else %}
-          {% render_field form.name class="form-control form-name" %}
-          {% endif %}
-          <small class="form-text text-muted">
-            {% trans 'Maximum of 25 characters.' %}
-          </small>
-          {% for error in form.name.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
-          {% endfor %}
+    <!--NAME-->
+    <div class="form-input-field">
+      <div class="label">
+        {{ form.name.label_tag }}
       </div>
-
-      <div class="form-input-field mt-3">
-          <div class="form-club-image-file mt-3">
-            <div class="text-center">
-              {% trans 'Club logo:' %}<br>
-            </div>
-            <div class="text-center">
-              <img class="rounded mt-2" style="width: 10rem;"
-                   src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
-            </div>
-            <div class="custom-file mt-3">
-              <input id="inputGroupFile" type="file" name='logo' value='logo' class="custom-file-input">
-              <label class="custom-file-label" for="inputGroupFile">Choose file</label>
-            </div>
-
-            <small id="imageHelpBlock" class="form-text text-muted">
-              <!--Please use an image that is 200 x 200 pixels or smaller.-->
-            </small>
-          </div>
+      {% if form.is_bound %}
+      {% if form.name.errors %}
+      {% render_field form.name class="form-control is-invalid" %}
+      {% else %}
+      {% render_field form.name class="form-control is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.name class="form-control" %}
+      {% endif %}
+      {% for error in form.name.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
       </div>
-
-      <div class="form-input-field text-center mt-3">
-          {{ form.short_description.label_tag }}
-          {% if form.is_bound %}
-          {% if form.short_description.errors %}
-          {% render_field form.short_description class="form-control form-short-description is-invalid" %}
-          {% else %}
-          {% render_field form.short_description class="form-control form-short-description is-valid" %}
-          {% endif %}
-          {% else %}
-          {% render_field form.short_description class="form-control form-short-description" %}
-          {% endif %}
-          <small class="form-text text-muted">
-            {% trans 'Maximum of 100 characters.' %}
-          </small>
-          {% for error in form.short_description.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
-          {% endfor %}
-      </div>
-
+      {% endfor %}
     </div>
 
-    <div class="text-center mt-n2 mb-3 text-muted">
+    <!--LOGO-->
+    <div class="form-input-field">
+      <div class="label">
+        {% trans 'Club logo (Optional):' %}
+      </div>
+      <div class="logo">
+        <img src="{% static 'democracy/club_no_logo.png' %}" alt="user.profile_image not found">
+      </div>
+      <div class="form-logo">
+        <div class="custom-file">
+          <input id="inputGroupFile" type="file" name='logo' value='logo' class="custom-file-input">
+          <label class="custom-file-label" for="inputGroupFile">Choose file</label>
+        </div>
+      </div>
+    </div>
+
+    <!--DESCRIPTION-->
+    <div class="form-input-field">
+        <div class="label">
+          {{ form.short_description.label_tag }}
+        </div>
+        {% if form.is_bound %}
+        {% if form.short_description.errors %}
+        {% render_field form.short_description class="form-control form-short-description is-invalid" %}
+        {% else %}
+        {% render_field form.short_description class="form-control form-short-description is-valid" %}
+        {% endif %}
+        {% else %}
+        {% render_field form.short_description class="form-control form-short-description" %}
+        {% endif %}
+        {% for error in form.short_description.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
+    </div>
+
+
+    <div class="form-input-field text-muted mb-n3">
       {% trans 'You will be able to add more details of your club later.' %}
     </div>
 
-    <div class="text-center">
+  </div>
 
-      <input class="btn btn-lg btn-primary mt-2" type="submit" value="{% trans 'Create club' %}">
+  <input class="btn btn-lg btn-block btn-primary" type="submit" value="{% trans 'Create club' %}">
 
-  </form>
-</div>
+</form>
 <!--END: CREATE CLUB FORM-->
 
 
-<form action="{% url 'home' %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'home' %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 
@@ -143,7 +136,6 @@
           form.reset()
         })
       });
-
 </script>
 <!--END: FILE FORM SCRIPT-->
 

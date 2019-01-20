@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/club.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/invite_new_member.css' %}">
 {% endblock %}
 
@@ -14,19 +14,16 @@
 {% block content %}
 
 
-<div class="text-center">
-  <h5 class="font-weight-normal h5 my-5">{% trans 'Invitation email sent' %}</h5>
+<h3 class="h3">{% trans 'Invitation email sent' %}</h3>
 
-  <div class="alert alert-success px-5 mb-5" role="alert">
-    <strong>
-      {% trans 'An invitation email has been sent.' %}
-    </strong>
-  </div>
-
+<div class="alert alert-success px-5 my-5 text-center" role="alert">
+  <strong>
+    {% trans 'An invitation email has been sent.' %}
+  </strong>
 </div>
 
 
-<form action="{% url 'democracy:club_detail' club.id %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Go back to club' %}</button>
 </form>
 

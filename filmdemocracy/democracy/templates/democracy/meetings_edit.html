@@ -5,7 +5,8 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/club.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/meetings.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Edit meeting' %}{% endblock %}
@@ -13,159 +14,153 @@
 {% block content %}
 
 
-<!--START: HEADER-->
-<div class="text-center my-5">
-  <h1 class="display-4">{% trans 'Edit meeting' %}</h1>
-</div>
-<!--START: HEADER-->
+<h3 class="h3">{% trans 'Edit meeting' %}</h3>
 
 
 <!--START: ORGANIZE MEETING FORM-->
-<div class="text-center mt-5">
-  <form class="text-center" method="POST" novalidate>
-    {% csrf_token %}
+<form class="form-meeting" method="POST" novalidate>
+  {% csrf_token %}
 
-    {% for hidden_field in form.hidden_fields %}
-    {{ hidden_field }}
-    {% endfor %}
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+  {% endfor %}
 
-    <div class="form-inputs mt-2">
+  <div class="form-inputs">
 
-      <!--NAME-->
-      <div class="form-input-field mt-3">
-        {{ form.name.label_tag }}
-        {% if form.is_bound %}
-        {% if form.name.errors %}
-        {% render_field form.name class="form-control is-invalid" %}
-        {% else %}
-        {% render_field form.name class="form-control is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.name class="form-control" %}
-        {% endif %}
-        {% for error in form.name.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
+    <!--NAME-->
+    <div class="form-input-field">
+      {{ form.name.label_tag }}
+      {% if form.is_bound %}
+      {% if form.name.errors %}
+      {% render_field form.name class="form-control form-name is-invalid" %}
+      {% else %}
+      {% render_field form.name class="form-control form-name is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.name class="form-control form-name" %}
+      {% endif %}
+      {% for error in form.name.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!--DESCRIPTION-->
+    <div class="form-input-field">
+      {{ form.description.label_tag }}
+      {% if form.is_bound %}
+      {% if form.description.errors %}
+      {% render_field form.description class="form-control form-description is-invalid" %}
+      {% else %}
+      {% render_field form.description class="form-control form-description is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.description class="form-control form-description" %}
+      {% endif %}
+      {% for error in form.description.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!--PLACE-->
+    <div class="form-input-field">
+      {{ form.place.label_tag }}
+      {% if form.is_bound %}
+      {% if form.place.errors %}
+      {% render_field form.place class="form-control form-place is-invalid" %}
+      {% else %}
+      {% render_field form.place class="form-control form-place is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.place class="form-control form-place" %}
+      {% endif %}
+      {% for error in form.place.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!--DATE-->
+    <div class="form-input-field">
+      {{ form.date.label_tag }}
+      {% if form.is_bound %}
+      {% if form.date.errors %}
+      {% render_field form.date class="form-control date-field is-invalid" type="date" %}
+      {% else %}
+      {% render_field form.date class="form-control date-field is-valid" type="date" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.date class="form-control date-field" type="date" %}
+      {% endif %}
+      {% for error in form.date.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+    </div>
+
+
+    <!--DATE AND TIME-->
+    <div class="form-row justify-content-center mx-5">
+
+
+      <!--START TIME-->
+      <div class="col-md-4">
+        <div class="form-input-field">
+          {{ form.time_start.label_tag }}
+          {% if form.is_bound %}
+          {% if form.time_start.errors %}
+          {% render_field form.time_start class="form-control time-field is-invalid" type="time" %}
+          {% else %}
+          {% render_field form.time_start class="form-control time-field is-valid" type="time" %}
+          {% endif %}
+          {% else %}
+          {% render_field form.time_start class="form-control time-field" type="time" %}
+          {% endif %}
+          {% for error in form.time_start.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
       </div>
 
-      <!--DESCRIPTION-->
-      <div class="form-input-field mt-3">
-        {{ form.description.label_tag }}
-        {% if form.is_bound %}
-        {% if form.description.errors %}
-        {% render_field form.description class="form-control is-invalid" %}
-        {% else %}
-        {% render_field form.description class="form-control is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.description class="form-control" %}
-        {% endif %}
-        {% for error in form.description.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
-      </div>
-
-      <!--PLACE-->
-      <div class="form-input-field mt-3">
-        {{ form.place.label_tag }}
-        {% if form.is_bound %}
-        {% if form.place.errors %}
-        {% render_field form.place class="form-control is-invalid" %}
-        {% else %}
-        {% render_field form.place class="form-control is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.place class="form-control" %}
-        {% endif %}
-        {% for error in form.place.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
-      </div>
-
-      <!--DATE AND TIME-->
-      <div class="form-row">
-
-        <!--DATE-->
-        <div class="col-md-4 mt-3 mb-3">
-          <div class="form-input-field">
-            {{ form.date.label_tag }}
-            {% if form.is_bound %}
-            {% if form.date.errors %}
-            {% render_field form.date class="form-control date-field is-invalid" type="date" %}
-            {% else %}
-            {% render_field form.date class="form-control date-field is-valid" type="date" %}
-            {% endif %}
-            {% else %}
-            {% render_field form.date class="form-control date-field" type="date" %}
-            {% endif %}
-            {% for error in form.date.errors %}
-            <div class="invalid-feedback">
-              {{ error }}
-            </div>
-            {% endfor %}
+      <!--END TIME-->
+      <div class="col-md-4">
+        <div class="form-input-field">
+          {{ form.time_end.label_tag }}
+          {% if form.is_bound %}
+          {% if form.time_end.errors %}
+          {% render_field form.time_end class="form-control time-field is-invalid" type="time" %}
+          {% else %}
+          {% render_field form.time_end class="form-control time-field is-valid" type="time" %}
+          {% endif %}
+          {% else %}
+          {% render_field form.time_end class="form-control time-field" type="time" %}
+          {% endif %}
+          {% for error in form.time_end.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
           </div>
+          {% endfor %}
         </div>
-
-        <!--START TIME-->
-        <div class="col-md-4 mt-3 mb-3">
-          <div class="form-input-field">
-            {{ form.time_start.label_tag }}
-            {% if form.is_bound %}
-            {% if form.time_start.errors %}
-            {% render_field form.time_start class="form-control time-field is-invalid" type="time" %}
-            {% else %}
-            {% render_field form.time_start class="form-control time-field is-valid" type="time" %}
-            {% endif %}
-            {% else %}
-            {% render_field form.time_start class="form-control time-field" type="time" %}
-            {% endif %}
-            {% for error in form.time_start.errors %}
-            <div class="invalid-feedback">
-              {{ error }}
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-
-        <!--END TIME-->
-        <div class="col-md-4 mt-3 mb-3">
-          <div class="form-input-field">
-            {{ form.time_end.label_tag }}
-            {% if form.is_bound %}
-            {% if form.time_end.errors %}
-            {% render_field form.time_end class="form-control time-field is-invalid" type="time" %}
-            {% else %}
-            {% render_field form.time_end class="form-control time-field is-valid" type="time" %}
-            {% endif %}
-            {% else %}
-            {% render_field form.time_end class="form-control time-field" type="time" %}
-            {% endif %}
-            {% for error in form.time_end.errors %}
-            <div class="invalid-feedback">
-              {{ error }}
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-
       </div>
 
     </div>
 
-    <input class="btn btn-success mt-3" type="submit" value="{% trans 'Save changes' %}">
+  </div>
 
-  </form>
-</div>
+  <input class="btn btn-block btn-primary" type="submit" value="{% trans 'Save changes' %}">
+
+</form>
 <!--END: ORGANIZE MEETING FORM-->
 
 
-<form action="{% url 'democracy:club_detail' club.id %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 

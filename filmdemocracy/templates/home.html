@@ -13,41 +13,39 @@
 {% block pagecontent %}
 
 
-<!--START: WEBPAGE INTRO-->
+<!--START: WEBSITE INTRO-->
 <div class="container-fluid text-center mb-5">
   <div>
     <img class="webpage-logo" src="{% static 'democracy/svg/urna_glow.svg'%}">
   </div>
   <div>
-  <img class="webpage-title" src="{% static 'democracy/svg/webname_greengray.svg'%}">
+    <img class="webpage-title" src="{% static 'democracy/svg/webname_greengray.svg'%}">
   </div>
   <p class="lead text-muted webpage-subtitle">{% trans 'Power to the people!' %}</p>
 </div>
-<!--END: WEBPAGE INTRO-->
+<!--END: WEBSITE INTRO-->
 
 
 {% if user.is_authenticated %}
 
 
 <!--START: CLUB PANEL-->
-<h4 class="lead text-muted text-center yourclubs-title">{% trans 'Your clubs' %}</h4>
+<h4 class="lead text-muted your-clubs-title">{% trans 'Your clubs' %}</h4>
 
-<hr class="mx-auto">
+<hr>
 
-<div class="row mt-5 px-5 justify-content-center">
+<div class="row mx-5 justify-content-center">
 
   {% for club in user_clubs %}
 
   <!--TODO: clubs with no logo should have a title on hover-->
-  <div class="col-auto mx-auto align-self-center mb-4">
-    <div class="hovereffect-logo-club rounded">
+  <div class="col-sm-auto m-3 align-self-center">
+    <div class="club-logo">
       <a href="{% url 'democracy:club_detail' club.id %}">
         {% if club.logo %}
-        <img class="club-logo"
-        src="{{ club.logo.url }}" alt="club.logo not found">
+        <img src="{{ club.logo.url }}" alt="club.logo not found">
         {% else %}
-        <img class="club-logo"
-             src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
+        <img src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
         {% endif %}
       </a>
     </div>
@@ -57,16 +55,15 @@
 
 </div>
 
-<hr class="mx-auto">
 <!--END: CLUB PANEL-->
 
 
 <!--START: CREATE NEW GROUP-->
-<div class="text-center mt-5">
-  <form action="{% url 'democracy:create_club' %}">
-    <button type="submit" class="btn btn-success">{% trans 'Create new club' %}</button>
-  </form>
-</div>
+<form class="text-center mt-5" action="{% url 'democracy:create_club' %}">
+  <button type="submit" class="btn btn-create-club">
+    {% trans 'Create new club' %}
+  </button>
+</form>
 <!--END: CREATE NEW GROUP-->
 
 

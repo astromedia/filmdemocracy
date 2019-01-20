@@ -92,6 +92,15 @@ body {
   cursor: zoom-in;
 }
 
+.pointer-cursor {
+  cursor: pointer;
+}
+
+.btn-sm-cancel {
+  text-align: center;
+  margin-top: 50px;
+}
+
 
 /* Website colors
 -------------------------------------------------- */
@@ -154,4 +163,12 @@ body {
 .seagreen-link:hover {
   color: LightSeaGreen;
   text-decoration: none;
+}
+
+
+/* General stuff
+-------------------------------------------------- */
+.modal img {
+  max-width: 99%;
+  max-height: 99%;
 }

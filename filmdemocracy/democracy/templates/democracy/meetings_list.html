@@ -5,7 +5,8 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/club.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/meetings.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Organize new meeting' %}{% endblock %}
@@ -13,11 +14,7 @@
 {% block content %}
 
 
-<!--START: HEADER-->
-<div class="text-center my-5">
-  <h1 class="display-4">{% trans 'Programmed meetings' %}</h1>
-</div>
-<!--START: HEADER-->
+<h1 class="display-4">{% trans 'Programmed meetings' %}</h1>
 
 
 {% if club_meetings %}
@@ -25,7 +22,7 @@
 
 {% for meeting in club_meetings %}
 <!--START: MEETING CARD-->
-<div class="card mx-3 shadow-sm my-4">
+<div class="card meeting-card mx-4 shadow-sm my-4">
   <div class="card-body mb-n3">
 
     <div class="row justify-content-between meeting-header">
@@ -33,16 +30,19 @@
         <h5 class="h5">{{ meeting.name }}</h5>
       </div>
       <div class="col-auto">
-        <span class="text-muted">{% trans 'Organized by' %} <strong>{{ meeting.organizer.username }}</strong></span>
+        <span class="text-muted">{% trans 'Organized by' %}{{ meeting.organizer.username }}</span>
       </div>
     </div>
 
     <hr>
 
+    {% if meeting.description %}
     <p>{{ meeting.description }}</p>
+    <hr>
+    {% endif %}
 
     <!--START: MEETING TIME DETAILS-->
-    <div class="row justify-content-start mb-2">
+    <div class="row justify-content-start mb-2 mt-n2">
       <div class="col-auto">
         <div class="media">
           <img style="min-height: 18px;" class="align-self-center mr-2" src="{% static 'democracy/svg/place.svg'%}">
@@ -51,7 +51,8 @@
       </div>
       <div class="col-auto">
         <div class="media">
-          <img style="min-height: 18px;" class="align-self-center mr-2" src="{% static 'democracy/svg/calendar.svg'%}">
+          <img style="min-height: 18px;" class="align-self-center mr-2"
+               src="{% static 'democracy/svg/calendar.svg'%}">
           <span class="text-muted">{{ meeting.date }}</span>
         </div>
       </div>
@@ -100,11 +101,12 @@
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
           {% if user in meeting.members_yes.all %}
-          <label class="btn btn-sm btn-block btn-primary btn-assistance" for="yes_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-primary btn-meeting-assistance" for="yes_{{ forloop.counter }}">
             {% trans 'Confirm assistance' %}
           </label>
           {% else %}
-          <label class="btn btn-sm btn-block btn-outline-primary btn-assistance" for="yes_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-outline-primary btn-meeting-assistance"
+                 for="yes_{{ forloop.counter }}">
             {% trans 'Confirm assistance' %}
           </label>
           {% endif %}
@@ -117,11 +119,12 @@
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
           {% if user in meeting.members_maybe.all %}
-          <label class="btn btn-sm btn-block btn-primary btn-assistance" for="maybe_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-primary btn-meeting-assistance" for="maybe_{{ forloop.counter }}">
             {% trans "I'm interested" %}
           </label>
           {% else %}
-          <label class="btn btn-sm btn-block btn-outline-primary btn-assistance" for="maybe_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-outline-primary btn-meeting-assistance"
+                 for="maybe_{{ forloop.counter }}">
             {% trans "I'm interested" %}
           </label>
           {% endif %}
@@ -130,11 +133,21 @@
         </form>
       </div>
 
+      <!--DELETE BUTTON-->
+      {% if user == meeting.organizer or user in club_admins%}
+      <div class="col-sm-auto ml-auto mt-1 mb-2">
+        <button type="button" class="btn btn-sm btn-block btn-outline-danger btn-meeting-edit" data-toggle="modal"
+                data-target="#DeleteMeetingModal">
+          {% trans 'Delete' %}
+        </button>
+      </div>
+      {% endif %}
+
       <!--EDIT BUTTON-->
       {% if user == meeting.organizer %}
-      <div class="col-sm-auto ml-auto mt-1 mb-2">
+      <div class="col-sm-auto mt-1 mb-2">
         <form action="{% url 'democracy:meetings_edit' club.id meeting.id %}" class="text-center">
-          <button type="submit" class="btn btn-sm btn-block btn-success btn-assistance">
+          <button type="submit" class="btn btn-sm btn-block btn-success btn-meeting-edit">
             {% trans 'Edit' %}
           </button>
         </form>
@@ -163,7 +176,7 @@
 {% endif %}
 
 
-<form action="{% url 'democracy:club_detail' club.id %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
 </form>
 

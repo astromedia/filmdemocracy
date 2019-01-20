@@ -6,6 +6,7 @@
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
 {% endblock %}
 
@@ -14,41 +15,32 @@
 {% block content %}
 
 
-<form action="{% url 'democracy:vote_results' club.id %}" method="GET">
+<h1 class="display-4">{% trans 'Film ranking' %}</h1>
+<h5 class="h5">{% trans 'Who is present? Click on their picture and count their votes.' %}</h5>
+
+
+<form class="form-participants" action="{% url 'democracy:vote_results' club.id %}" method="GET">
   {% csrf_token %}
 
 
-  <!--START: HEADER-->
-  <div class="text-center my-5 mx-3">
-    <h4 class="display-4">{% trans 'Generate film ranking' %}</h4>
-    <h5 class="text-center h5 my-5">
-      {% trans 'Who is present? Click on their picture and count their votes.' %}
-    </h5>
-  </div>
-  <!--END: HEADER-->
-
-
   <!--START: PARTICIPANTS-->
-  <div class="album pt-4 border bg-light">
     <div class="container-fluid">
 
-      <div class="row mt-4 mx-4 justify-content-center">
+      <div class="row mx-4 justify-content-center">
 
         {% for member in club_members %}
 
         <div class="col-auto">
-          <div class="card mb-4 shadow-sm mx-auto" style="width: 8rem;">
+          <div class="card shadow-sm">
 
             <label for="participants{{ forloop.counter }}">
               <div class="hovereffect-participant">
                 {% if member.profile_image %}
-                <img class="card-img-top border border-secondary"
-                     src="{{ member.profile_image.url }}"
+                <img class="card-img-top border border-secondary" src="{{ member.profile_image.url }}"
                      alt="member.profile_image not found">
                 {% else %}
                 <img class="card-img-top border border-secondary"
-                     src="{% static 'registration/user_no_profile_image.png' %}"
-                     alt="member.profile_image not found">
+                     src="{% static 'registration/user_no_profile_image.png' %}" alt="member.profile_image not found">
                 {% endif %}
               </div>
             </label>
@@ -67,22 +59,15 @@
         {% endfor %}
 
       </div>
-
     </div>
-  </div>
   <!--END: PARTICIPANTS-->
 
-
-  <div class="row justify-content-center mt-5">
-    <div class="col-auto">
-      <input type="submit" class="btn btn-lg btn-warning" value="{% trans 'Count votes' %}">
-    </div>
-  </div>
+  <input class="btn btn-lg btn-block btn-primary" type="submit" value="{% trans 'Count votes' %}">
 
 </form>
 
 
-<form action="{% url 'democracy:candidate_films' club.id %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 

@@ -5,6 +5,7 @@
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
 {% endblock %}
 
@@ -13,61 +14,68 @@
 {% block content %}
 
 
-<!--START: HEADER-->
-<div class="text-center my-5">
-  <h4 class="display-4">{% trans 'Mark film as seen by club' %}</h4>
-  <h5 class="text-center my-5">{% trans 'Which film has been seen?' %}</h5>
-</div>
-<!--END: HEADER-->
+<h3 class="h3">{% trans 'Mark film as seen by club' %}</h3>
+<h5 class="h5">{% trans 'Which film has been seen?' %}</h5>
 
 
 <!--START: FILM PANEL-->
-<div class="album py-4 border shadow">
+{% if candidate_films %}
 
-  {% if candidate_films %}
 
+<div class="album films-album">
   <div class="row justify-content-center">
 
     {% for film in candidate_films|dictsort:"filmdb.title" %}
 
     <div class="col-md-4 align-self-center my-3">
-      <div class="card mx-auto" style="width: 13rem;">
+      <div class="card mx-auto">
+        <div class="m-auto">
 
-        <div class="hovereffect-film">
-          <a href="{% url 'democracy:film_seen' club.id film.id %}">
-            <img class="card-img-top border border-secondary" src="{{ film.filmdb.poster_url }}"
-                 alt="film.poster not found">
+          <div class="card-film">
 
-            <div class="overlay">
-              <h2>{{ film.filmdb.title }}</h2>
-            </div>
-          </a>
+            <a href="{% url 'democracy:film_seen' club.id film.id %}">
+              <img class="card-img" src="{{ film.filmdb.poster_url }}"
+                   alt="film.poster not found">
+              <div class="overlay">
+                <div class="film-title">{{ film.filmdb.title }}</div>
+              </div>
+            </a>
+
+          </div>
         </div>
 
       </div>
     </div>
-
     {% endfor %}
 
   </div>
 
-  {% else %}
 
-  <div class="alert alert-warning text-center mt-3">
-    <strong>{% trans 'There are no candidate films...' %}</strong>
-    <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-success ml-3">
-      {% trans 'Propose one!' %}</a>
-  </div>
+  <form class="btn-sm-cancel" action="{% url 'democracy:candidate_films' club.id %}">
+    <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+  </form>
 
-  {% endif %}
 
 </div>
-<!--END: FILM PANEL-->
 
 
-<form action="{% url 'democracy:candidate_films' club.id %}" class="text-center mt-5">
+{% else %}
+
+
+<div class="alert alert-warning text-center mt-3">
+  <strong>{% trans 'There are no candidate films...' %}</strong>
+  <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-success ml-3">
+    {% trans 'Propose one!' %}</a>
+</div>
+
+
+<form class="btn-sm-cancel" action="{% url 'democracy:candidate_films' club.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
+
+
+{% endif %}
+<!--END: FILM PANEL-->
 
 
 {% endblock %}

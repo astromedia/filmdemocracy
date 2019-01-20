@@ -1,0 +1,21 @@
+/* Club banner style
+-------------------------------------------------- */
+.club-banner {
+  text-align: center;
+  margin-top: -24px;
+  padding: 10px;
+  background-color: #121317;
+}
+
+.club-banner .club-name {
+  font-size: 25px;
+}
+
+.club-banner .club-name a {
+  color: seagreen;
+}
+
+.club-banner .club-name a:hover {
+  color: lightseagreen;
+  text-decoration: none;
+}

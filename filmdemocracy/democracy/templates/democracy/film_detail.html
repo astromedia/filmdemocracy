@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/film.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/film_detail.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Film details' %}{% endblock %}
@@ -14,21 +14,21 @@
 
 
 <!--START: FILM BANNER-->
-<div class="container-fluid container-film-banner dark2-bg light2-style shadow">
+<div class="container-fluid container-film-banner shadow">
 
   <!--TITLE-->
-  <h1 class="film-title text-center light3-style">{{ film.filmdb.title }}</h1>
+  <h1 class="film-title text-center">{{ film.filmdb.title }}</h1>
 
   <hr class="mx-auto">
 
-  <div class="container container-film-data">
+  <div class="container film-data">
 
     <div class="row">
 
       <!--POSTER-->
       <div class="col-md-3 text-center mb-4 align-self-center">
-        <img class="img film-poster" src="{{ film.filmdb.poster_url }}" alt="poster image not found"
-             data-toggle="modal" data-target="#PosterModalCenter">
+        <img src="{{ film.filmdb.poster_url }}" alt="poster image not found"
+             data-toggle="modal" data-target="#PosterModal">
       </div>
 
       <!--START: INFO-->
@@ -102,43 +102,6 @@
 <!--END: FILM BANNER-->
 
 
-<!-- START MODAL POSTER -->
-<div class="modal fade" id="PosterModalCenter" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
-        <div class="text-right mb-3">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <br>
-        </div>
-        <div>
-          <img class="club-logo-modal" src="{{ film.filmdb.poster_url }}" alt="poster image not found">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- END MODAL POSTER -->
-
-
-<!--START: SEEN DATE (FILM SEEN)-->
-{% if film.seen %}
-
-<div class="alert alert-success text-center">
-  <strong>{% trans 'Seen in session on the:' %} {{ film.seen_date}}</strong>
-</div>
-
-{% endif %}
-<!--END: SEEN DATE (FILM SEEN)-->
-
-
-<div class="text-center mt-4"><a href="{% url 'democracy:candidate_films' club.id %}">
-  {% trans 'Go back to candidate films' %}</a>
-</div>
-
-
 <!--START: VOTES (FILM NOT SEEN)-->
 {% if not film.seen %}
 
@@ -200,7 +163,7 @@
 <!--START: SEEN BY (FILM NOT SEEN)-->
 {% if film.seen %}
 <div class="mt-4 h6 text-center">
-  <p>{% trans 'Seen by:' %}</p>
+  {% trans 'Seen in session on the' %} {{ film.seen_date}} {% trans 'by:' %}
 </div>
 
 <div class="container-fluid">
@@ -224,7 +187,7 @@
           {% endif %}
         </a>
 
-        <div class="text-center p-1" style="color: black">{{ member.username }}</div>
+        <div class="text-center p-1">{{ member.username }}</div>
 
       </div>
     </div>
@@ -239,22 +202,17 @@
 
 
 <!--START: REGISTERED VOTES-->
-<div class="registered-votes">
-  <h5 class="text-center mt-5 mb-2 font-weight-normal">
-    Registered votes on film:
-  </h5>
-<hr class="text-center mt-n1 mb-3">
-</div>
+<h5 class="text-center mt-5 mb-4 font-weight-normal"><u>{% trans 'Registered votes on film:' %}</u></h5>
+
 
 {% if film.vote_set.all %}
 
 
 {% for vote in film.vote_set.all %}
-<div class="row justify-content-center mb-5">
+<div class="row justify-content-center my-n3">
   <div class="col-6 text-right">
-    <a href="{% url 'democracy:club_member_detail' club.id vote.user.id %}" style="color: black;">
-      <strong>{{ vote.user.username }}:</strong>
-    </a>
+    <a class="text-body" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
+      <strong>{{ vote.user.username }}</strong></a>:
   </div>
   <div class="col-6">
 
@@ -279,9 +237,7 @@
 {% else %}
 
 
-<div class="text-center mt-n3 mb-5">
-  {% trans 'No one has voted this film yet!' %}
-</div>
+<div class="text-center mt-n3 mb-5">-</div>
 
 
 {% endif %}
@@ -292,21 +248,45 @@
 {% if not film.seen %}
 {% if user in club_admins or film.proposed_by == user %}
 <div class="text-center">
-  <button type="button" class="btn btn-sm btn-outline-danger my-3" data-toggle="modal"
-          data-target="#DeleteModalCenter">
+  <button type="button" class="btn btn-sm btn-outline-danger my-3" data-toggle="modal" data-target="#DeleteModalCenter">
     {% trans 'Remove from candidate films' %}
   </button>
 </div>
 {% endif %}
 {% else %}
 <div class="text-center">
-  <button type="button" class="btn btn-sm btn-outline-dark my-3" data-toggle="modal"
-          data-target="#MoveBackModalCenter">
+  <button type="button" class="btn btn-sm btn-outline-dark my-3" data-toggle="modal" data-target="#MoveBackModalCenter">
     {% trans 'Move back to list of candidate films' %}
   </button>
 </div>
 {% endif %}
 <!--END: ADMIN FILM OPTIONS-->
+
+
+<div class="text-center mt-5"><a href="{% url 'democracy:candidate_films' club.id %}">
+  {% trans 'Go to candidate films' %}</a>
+</div>
+
+
+<!-- START MODAL POSTER -->
+<div class="modal fade" id="PosterModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
+        <div class="text-right mb-3">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <br>
+        </div>
+        <div>
+          <img src="{{ film.filmdb.poster_url }}" alt="poster image not found">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END MODAL POSTER -->
 
 
 <!--START: MODAL DELETE-->

@@ -1,0 +1,150 @@
+/* Film banner
+-------------------------------------------------- */
+.container-film-banner {
+  position: relative;
+  padding-top: 40px;
+  padding-bottom: 10px;
+  margin-top: -24px;
+  margin-bottom: 40px;
+  background-color: #121317;
+  color: #A9A9A9;
+}
+
+.container-film-banner .film-title {
+  padding-bottom: 20px;
+  margin-top: -24px;
+  margin-bottom: -26px;
+  color: lightgray;
+}
+
+.container-film-banner hr {
+  max-width: 95%;
+  color: #505050;
+  background-color: #505050;
+  margin-bottom: 25px;
+}
+
+.container-film-banner .film-data {
+  max-width: 95%;
+  font-size: 15px;
+}
+
+.container-film-banner .film-data img {
+  width: 100%;
+  max-width: 200px;
+  margin: auto;
+  cursor:zoom-in;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  box-shadow: 0 0px 10px rgba(255, 255, 255, 0.5);
+}
+
+.container-film-banner .film-data .table-details {
+  margin-left: auto;
+}
+
+.club-poster-modal {
+  max-width: 100%;
+}
+
+/* Vote buttons
+-------------------------------------------------- */
+.registered-votes hr {
+  max-width: 300px;
+  color: #bbbbbb;
+  background-color: #bbbbbb;
+}
+
+.vote-btn {
+  text-transform: initial;
+  max-width: 350px;
+  font-weight: normal;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.success-bg {
+  background-color: rgb(162, 250, 169)
+}
+
+.secondary-bg {
+  background-color: lightgray
+}
+
+.danger-bg {
+  background-color: #ffadbc
+}
+
+.btn-link:hover {
+  text-decoration: none;
+}
+
+u {
+  text-decoration: none;
+  border-bottom: 1px solid gray;
+}
+
+.invisible {
+  margin: -45px;
+}
+
+.black {
+  color: black;
+}
+
+
+/* Form add FilmAffinity
+-------------------------------------------------- */
+.h3 {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 40px;
+  font-weight: normal;
+}
+
+.form-add-faff {
+  text-align: center;
+}
+
+.form-add-faff .btn-block {
+  max-width: 225px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.form-add-faff .form-inputs {
+  margin-bottom: 10px;
+}
+
+.form-add-faff .form-inputs .form-input-field {
+  width: 100%;
+  max-width: 650px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: auto;
+}
+
+.form-add-faff .form-inputs .form-input-field .label {
+}
+
+.form-add-faff .form-inputs .form-input-field .invalid-feedback{
+  width: 100%;
+  padding: 5px;
+  margin: auto;
+  margin-top: 0px;
+  margin-bottom: -29px;
+}
+
+.form-add-faff .form-inputs .form-input-field .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-add-faff .form-inputs .form-input-field .form-control:focus {
+  z-index: 2;
+}

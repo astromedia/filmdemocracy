@@ -22,73 +22,49 @@
   <!--SHORT DESCRIPTION-->
   <div class="lead text-muted short-description">{{ club.short_description }}</div>
 
+  <!--LOGO-->
+  <div class="logo">
+    <a href="{% url 'democracy:club_detail' club.id %}">
+      {% if club.logo %}
+      <img src="{{ club.logo.url }}" alt="club.logo not found">
+      {% else %}
+      <img src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
+      {% endif %}
+    </a>
+  </div>
 
-  <!--START: CLUB PANEL-->
-  <div class="row align-items-center justify-content-center club-panel">
+  <!--START: CLUB LINKS-->
+  <div class="row justify-content-center club-links">
 
-    <!--COLUMN 1-->
+    <!--LINK TO NEW MEETING-->
     <div class="col-md-auto">
-
-      <!--LINK TO FILM PANEL-->
-      <div class="my-4">
-        <form action="{% url 'democracy:candidate_films' club.id %}">
-          <button type="submit" class="btn btn-club-links">
-            {% trans 'Candidate films' %}
-          </button>
-        </form>
-      </div>
-
-      <!--LINK TO FILM RANKING-->
-      <div class="my-4">
-        <form action="{% url 'democracy:participants' club.id %}">
-          <button type="submit" class="btn btn-club-links">
-            {% trans 'Generate film ranking' %}
-          </button>
-        </form>
-      </div>
-
+      <form action="{% url 'democracy:meetings_new' club.id %}">
+        <button type="submit" class="btn btn-club-links">
+          {% trans 'Organize meeting' %}
+        </button>
+      </form>
     </div>
 
-    <!--COLUMN 2-->
+    <!--LINK TO FILM PANEL-->
     <div class="col-md-auto">
-
-      <!--LOGO-->
-      <div class="logo">
-        {% if club.logo %}
-        <img class="zoom-in-cursor" src="{{ club.logo.url }}" alt="club.logo not found"
-             data-toggle="modal" data-target="#ClubLogoModal">
-        {% else %}
-        <img src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
-        {% endif %}
-      </div>
-
+      <form action="{% url 'democracy:candidate_films' club.id %}">
+        <button type="submit" class="btn btn-club-links">
+          {% trans 'Candidate films' %}
+        </button>
+      </form>
     </div>
 
-    <!--COLUMN 3-->
+    <!--LINK TO MEETINGS-->
     <div class="col-md-auto">
-
-      <!--LINK TO NEW MEETING-->
-      <div class="my-4">
-        <form action="{% url 'democracy:meetings_new' club.id %}">
-          <button type="submit" class="btn btn-club-links">
-            {% trans 'Organize meeting' %}
-          </button>
-        </form>
-      </div>
-
-      <!--LINK TO MEETINGS-->
-      <div class="my-4">
-        <form action="{% url 'democracy:meetings_list' club.id %}">
-          <button type="submit" class="btn btn-club-links">
-            {% trans 'Programmed meetings' %}
-          </button>
-        </form>
-      </div>
-
+      <form action="{% url 'democracy:meetings_list' club.id %}">
+        <button type="submit" class="btn btn-club-links">
+          {% trans 'Programmed meetings' %}
+        </button>
+      </form>
     </div>
 
   </div>
-  <!--END: CLUB PANEL-->
+  <!--END: CLUB LINKS-->
 
 
   <!--START: ADMIN UTILS-->
@@ -199,8 +175,8 @@
 
 
 <div class="meetings">
-  <h3 class="h3">{% trans 'Next club meetings' %}</h3>
-  <hr>
+<h3 class="h3">{% trans 'Next club meetings' %}</h3>
+<hr>
 </div>
 
 
@@ -215,7 +191,7 @@
       </div>
       <div class="col-auto">
         <span class="text-muted">{% trans 'Organized by' %}
-          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
+          <a class="organizer-link" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
             {{ meeting.organizer.username }}
           </a>
         </span>
@@ -262,12 +238,13 @@
     <div>
       <strong>{% trans 'Confirmed:' %}</strong>
       {% for member in meeting.members_yes.all %}
-      {% if forloop.counter == meeting.members_yes.all|length %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
-      {% else %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
-      {% endif %}
-
+      <a class="assistant-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">
+        {% if forloop.counter == meeting.members_yes.all|length %}
+        {{ member.username }}
+        {% else %}
+        {{ member.username }},
+        {% endif %}
+      </a>
       {% endfor %}
     </div>
     {% endif %}
@@ -275,11 +252,13 @@
     <div>
       <strong>{% trans 'Interested:' %}</strong>
       {% for member in meeting.members_maybe.all %}
-      {% if forloop.counter == meeting.members_maybe.all|length %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
-      {% else %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
-      {% endif %}
+      <a class="assistant-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">
+        {% if forloop.counter == meeting.members_maybe.all|length %}
+        {{ member.username }}
+        {% else %}
+        {{ member.username }},
+        {% endif %}
+      </a>
       {% endfor %}
     </div>
     {% endif %}
@@ -399,68 +378,30 @@
 
 
 <!--START: LAST PROPOSED FILMS ALBUM-->
-{% if groups_last_pub %}
+{% if films_last_pub %}
 <div class="album films-album">
 
   <h3 class="h3">{% trans 'Last proposed films' %}</h3>
   <hr>
 
-  <div id="carouselControls" class="carousel slide" data-ride="carousel" data-interval="4000">
-    <div class="carousel-inner">
+  <div class="row justify-content-center">
 
-      {% for group in groups_last_pub %}
+    {% for film in films_last_pub %}
 
-      {% if forloop.counter == 1 %}
-      <div class="carousel-item active">
-        <div class="row justify-content-center">
-          {% for film in group %}
-          <div class="col-md-auto align-self-center">
-            <div class="card">
-              <div class="m-auto">
-                <a href="{% url 'democracy:film_detail' club.id film.id %}">
-                  <img class="card-img mt-auto" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
-                </a>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
+    <div class="col-auto align-self-center">
+      <div class="card">
+
+          <a href="{% url 'democracy:film_detail' club.id film.id %}">
+            <img class="card-img-top" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
+          </a>
+
       </div>
-
-      {% else %}
-
-      {% if group %}
-      <div class="carousel-item">
-        <div class="row justify-content-center">
-          {% for film in group %}
-          <div class="col-md-auto align-self-center">
-            <div class="card">
-              <div class="m-auto">
-                <a href="{% url 'democracy:film_detail' club.id film.id %}">
-                  <img class="card-img m-auto" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
-                </a>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-      {% endif %}
-
-      {% endif %}
-
-      {% endfor %}
-
     </div>
-    <a class="carousel-control-prev" href="#carouselControls" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselControls" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
+
+    {% endfor %}
+
   </div>
+
 </div>
 {% endif %}
 <!--END: LAST PROPOSED FILMS ALBUM-->
@@ -479,11 +420,11 @@
 
     <div class="col-auto align-self-center">
       <div class="card">
-        <div class="m-auto">
+
           <a href="{% url 'democracy:film_detail' club.id film.id %}">
-            <img class="card-img" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
+            <img class="card-img-top" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
           </a>
-        </div>
+
       </div>
     </div>
 
@@ -550,29 +491,6 @@
 
 </div>
 <!--END: CLUB MEMBERS PANEL-->
-
-
-<!--START: MODAL LOGO-->
-{% if club.logo %}
-<div class="modal fade" id="ClubLogoModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
-        <div class="text-right mb-3">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <br>
-        </div>
-        <div>
-          <img src="{{ club.logo.url }}" alt="club.logo not found">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-<!--END: MODAL LOGO-->
 
 
 <!-- START: MODAL SELF-DEMOTE -->

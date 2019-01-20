@@ -14,8 +14,11 @@ def get_club_logo_path(instance, filename):
 
 class Club(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5)
-    name = models.CharField('Club name', max_length=25)
-    short_description = models.CharField(_('Short description'), max_length=100)
+    name = models.CharField('Club name', max_length=50)
+    short_description = models.CharField(
+        _('Short description (Optional)'),
+        max_length=120
+    )
     panel = MarkdownxField(
         _('Club panel: description, rules, etc. (optional)'),
         max_length=1000,
@@ -71,7 +74,7 @@ class Meeting(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=9)  # 5(club)+4
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     name = models.CharField(_('Name'), default='Club meeting', max_length=50)
-    description = models.CharField(_('Description'), default='', max_length=100)
+    description = models.CharField(_('Description (Optional)'), default='', max_length=300)
     organizer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     place = models.CharField(_('Place'), default='', max_length=100)
     date = models.DateField(_('Date'))

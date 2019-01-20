@@ -6,6 +6,7 @@
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
 {% endblock %}
 
@@ -15,33 +16,24 @@
 
 
 <!--START: HEADER-->
-<div class="text-center my-5">
-  <h4 class="display-4">{% trans 'Candidate films' %}</h4>
+<h1 class="display-4">{% trans 'Candidate films' %}</h1>
 
-  <div class="row justify-content-center my-4">
-    <div class="col-md-auto">
-      <form action="{% url 'democracy:add_new_film' club.id %}">
-        <button type="submit" class="btn btn-sm btn-block btn-success my-2 mx-auto">
-          {% trans 'Propose new film' %}
-        </button>
-      </form>
-    </div>
-    <div class="col-md-auto">
-      <form action="{% url 'democracy:participants' club.id %}">
-        <button type="submit" class="btn btn-sm btn-block btn-warning my-2 mx-auto">
-          {% trans 'Generate film ranking' %}
-        </button>
-      </form>
-    </div>
-    <div class="col-md-auto">
-      <form action="{% url 'democracy:film_seen_selection' club.id %}">
-        <button type="submit" class="btn btn-sm btn-block btn-primary my-2 mx-auto">
-          {% trans 'Mark film as seen by club' %}
-        </button>
-      </form>
-    </div>
+
+<div class="row justify-content-center my-4">
+  <div class="col-md-auto">
+    <form action="{% url 'democracy:add_new_film' club.id %}">
+      <button type="submit" class="btn btn-sm btn-block btn-option btn-primary my-2 mx-auto">
+        {% trans 'Propose film' %}
+      </button>
+    </form>
   </div>
-
+  <div class="col-md-auto">
+    <form action="{% url 'democracy:film_seen_selection' club.id %}">
+      <button type="submit" class="btn btn-sm btn-block btn-option btn-primary my-2 mx-auto">
+        {% trans 'Mark film as seen by club' %}
+      </button>
+    </form>
+  </div>
 </div>
 <!--END: HEADER-->
 
@@ -50,44 +42,44 @@
 
 
 <!--START: FILM PANEL-->
-<div class="album py-4 border">
+<div class="album films-album">
 
   <div class="row justify-content-center">
 
     {% for candidate in candidate_films|dictsort:"film.filmdb.title" %}
 
     <div class="col-md-4 align-self-center my-3">
-      <div class="card mx-auto" style="width: 13rem;">
-
-        <div class="hovereffect-film">
-          <a class="film-link" href="{% url 'democracy:film_detail' club.id candidate.film.id %}">
-            <img class="card-img-top border border-secondary" src="{{ candidate.film.filmdb.poster_url }}"
-                 alt="film.poster not found">
-
-            <div class="overlay">
-              <h2>{{ candidate.film.filmdb.title }}</h2>
-            </div>
-          </a>
-          {% if candidate.voted %}
-          <h3>
-            <div class="media">
-              <div class="media-body ml-5 mr-2">
-                {% trans 'Voted' %}
+      <div class="card mx-auto">
+        <div class="m-auto">
+          <div class="card-film">
+            <a href="{% url 'democracy:film_detail' club.id candidate.film.id %}">
+              <img class="card-img" src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
+              <div class="overlay">
+                <div class="film-title">{{ candidate.film.filmdb.title }}</div>
               </div>
-              <img src="{% static 'democracy/svg/check_ok.svg'%}" style="max-height: 17px;"
-                   class="align-self-center mr-3">
+            </a>
+            {% if candidate.voted %}
+            <div class="film-voted">
+              <div class="media">
+                <div class="media-body">{% trans 'Voted' %}</div>
+                <img class="align-self-center" src="{% static 'democracy/svg/check_ok.svg'%}" style="max-height: 17px;">
+              </div>
             </div>
-          </h3>
-          {% endif %}
-
+            {% endif %}
+          </div>
         </div>
-
       </div>
     </div>
 
     {% endfor %}
 
   </div>
+
+
+  <form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
+    <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
+  </form>
+
 
 </div>
 <!--END: FILM PANEL-->
@@ -103,12 +95,11 @@
 </div>
 
 
-{% endif %}
-
-
-<form action="{% url 'democracy:club_detail' club.id %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
 </form>
+
+{% endif %}
 
 
 {% endblock %}

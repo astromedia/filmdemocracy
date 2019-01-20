@@ -12,13 +12,20 @@ from filmdemocracy.democracy.models import Film, FilmDb, Club, Meeting
 from filmdemocracy.registration.models import User
 
 
-class CreateClubForm(forms.ModelForm):
+class EditClubForm(forms.ModelForm):
+    short_description = forms.CharField(
+        max_length=100,
+        widget=forms.Textarea,
+        label=_('Short description (Optional)'),
+        required=False,
+    )
 
     class Meta:
         model = Club
         fields = ['name', 'logo', 'short_description']
 
     def clean_logo(self):
+        # TODO: club logo validation
         logo = self.cleaned_data['logo']
         return logo
 
@@ -101,11 +108,11 @@ def process_faff_url(form):
 class FilmAddNewForm(forms.ModelForm):
     imdb_url = forms.CharField(
         max_length=200,
-        help_text=_('IMDb url'),
+        label=_('IMDb url'),
     )
     faff_url = forms.CharField(
         max_length=200,
-        help_text=_('FilmAffinity url'),
+        label=_('FilmAffinity url'),
         required=False,
     )
 
@@ -138,7 +145,7 @@ class FilmAddNewForm(forms.ModelForm):
 class FilmAddFilmAffForm(forms.ModelForm):
     faff_url = forms.CharField(
         max_length=200,
-        help_text=_('FilmAffinity url'),
+        label=_('FilmAffinity url'),
     )
 
     class Meta:
@@ -198,9 +205,9 @@ class FilmSeenForm(forms.ModelForm):
 class InviteNewMemberForm(forms.Form):
     email = forms.EmailField(label=_("Email"), max_length=254)
     invitation_text = forms.CharField(
-        max_length=200,
+        max_length=500,
         widget=forms.Textarea,
-        help_text=_('Send message with email (Optional)'),
+        label=_('Send message with email (Optional)'),
         required=False,
     )
 
@@ -259,6 +266,12 @@ class InviteNewMemberConfirmForm(forms.Form):
 
 
 class MeetingsForm(forms.ModelForm):
+    description = forms.CharField(
+        max_length=300,
+        widget=forms.Textarea,
+        label=_('Description (Optional)'),
+        required=False,
+    )
 
     class Meta:
         model = Meeting

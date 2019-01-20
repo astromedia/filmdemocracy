@@ -5,97 +5,92 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/club.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/club_admin_utils.css' %}">
 {% endblock %}
 
-{% block title %}{% trans 'Club info' %}{% endblock %}
+{% block title %}{% trans 'Promote members' %}{% endblock %}
 
 {% block content %}
 
 
 <!--START: PROMOTE MEMBERS FORM-->
-<div class="text-center">
-  <h5 class="font-weight-normal h5 my-5">{% trans 'Choose members to promote to admin' %}</h5>
+<h3 class="h3">{% trans 'Promote members to admin' %}</h3>
 
-  <form method="POST" novalidate>
-    {% csrf_token %}
+<form class="form-admin-utils" method="POST" novalidate>
+  {% csrf_token %}
 
-    <div class="container-fluid">
-      <div class="row mt-4 justify-content-center">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
 
-        {% for member in club_members %}
-        {% if member != user %}
-        <div class="col-auto">
-          <div class="card mb-4 shadow-sm" style="width: 8rem;">
+      {% for member in club_members %}
+      {% if member != user %}
+      <div class="col-auto">
+        <div class="card shadow-sm">
 
-            <label for="member_{{ forloop.counter }}">
+          <label for="member_{{ forloop.counter }}">
 
-              {% if member in club_admins %}
+            {% if member in club_admins %}
 
-              <div class="hovereffect-member-promote" style="cursor: not-allowed;">
-                {% if member.profile_image %}
-                <img class="card-img-top border border-secondary member-shadow"
-                     src="{{ member.profile_image.url }}"
-                     alt="member.profile_image not found">
-                {% else %}
-                <img class="card-img-top border border-secondary member-shadow"
-                     src="{% static 'registration/user_no_profile_image.png' %}"
-                     alt="member.profile_image not found">
-                {% endif %}
-                <div class="alert alert-success text-center py-0 admin_member border border-secondary">
-                  <strong>club admin</strong>
-                </div>
-              </div>
-
+            <div class="hovereffect-member-promote" style="cursor: not-allowed;">
+              {% if member.profile_image %}
+              <img class="card-img-top border border-secondary" src="{{ member.profile_image.url }}"
+                   alt="member.profile_image not found">
               {% else %}
-
-              <div class="hovereffect-member-promote">
-                {% if member.profile_image %}
-                <img class="card-img-top border border-secondary member-shadow"
-                     src="{{ member.profile_image.url }}"
-                     alt="member.profile_image not found">
-                {% else %}
-                <img class="card-img-top border border-secondary member-shadow"
-                     src="{% static 'registration/user_no_profile_image.png' %}"
-                     alt="member.profile_image not found">
-                {% endif %}
-                <div class="overlay"></div>
+              <img class="card-img-top border border-secondary"
+                   src="{% static 'registration/user_no_profile_image.png' %}" alt="member.profile_image not found">
+              {% endif %}
+              <div class="alert alert-success admin_member border border-secondary">
+                <strong>club admin</strong>
               </div>
-
-              {% endif %}
-
-            </label>
-
-            <div class="custom-control custom-checkbox mx-auto mb-1">
-              {% if member in club_admins %}
-              <input type="checkbox" class="custom-control-input" name="members"
-                     id="member_{{ forloop.counter }}" value="{{ member.pk }}" checked disabled>
-              {% else %}
-              <input type="checkbox" class="custom-control-input" name="members"
-                     id="member_{{ forloop.counter }}" value="{{ member.pk }}">
-              {% endif %}
-
-              <label class="custom-control-label mr-4" for="member_{{ forloop.counter }}">
-                {{ member.username }}</label>
             </div>
 
+            {% else %}
+
+            <div class="hovereffect-member-promote">
+              {% if member.profile_image %}
+              <img class="card-img-top border border-secondary" src="{{ member.profile_image.url }}"
+                   alt="member.profile_image not found">
+              {% else %}
+              <img class="card-img-top border border-secondary"
+                   src="{% static 'registration/user_no_profile_image.png' %}" alt="member.profile_image not found">
+              {% endif %}
+              <div class="overlay"></div>
+            </div>
+
+            {% endif %}
+
+          </label>
+
+          <div class="custom-control custom-checkbox mx-auto mb-1">
+            {% if member in club_admins %}
+            <input type="checkbox" class="custom-control-input" name="members"
+                   id="member_{{ forloop.counter }}" value="{{ member.pk }}" checked disabled>
+            {% else %}
+            <input type="checkbox" class="custom-control-input" name="members"
+                   id="member_{{ forloop.counter }}" value="{{ member.pk }}">
+            {% endif %}
+
+            <label class="custom-control-label mr-4" for="member_{{ forloop.counter }}">
+              {{ member.username }}</label>
           </div>
+
         </div>
-
-        {% endif %}
-        {% endfor %}
-
       </div>
+
+      {% endif %}
+      {% endfor %}
+
     </div>
+  </div>
 
-    <input class="btn btn btn-success mt-3" type="submit" value="{% trans 'Promote to admin' %}">
+  <input class="btn btn-submit btn-success" type="submit" value="{% trans 'Promote to admin' %}">
 
-  </form>
-</div>
+</form>
 <!--END: PROMOTE MEMBERS FORM-->
 
 
-<form action="{% url 'democracy:club_detail' club.id %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
 </form>
 

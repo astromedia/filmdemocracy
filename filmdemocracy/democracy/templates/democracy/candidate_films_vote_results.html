@@ -6,6 +6,7 @@
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
 {% endblock %}
 
@@ -14,12 +15,7 @@
 {% block content %}
 
 
-<!--START: HEADER-->
-<div class="text-center my-5 mx-3">
-  <h4 class="display-4 my-4">{% trans 'Voting results' %}</h4>
-  <a href="{% url 'democracy:candidate_films' club.id %}">{% trans 'Go back to candidate films' %}</a>
-</div>
-<!--END: HEADER-->
+<h1 class="display-4">{% trans 'Film ranking' %}</h1>
 
 
 <!--START: PARTICIPANTS-->
@@ -32,37 +28,16 @@
 <!--END: PARTICIPANTS-->
 
 
-<!--START: WARNINGS-->
-{% if warnings %}
-{% for warning in warnings %}
-<div class="alert alert-warning alert-dismissible fade show text-center my-2" role="alert">
-  {% if warning.type == 'veto' %}
-  {% blocktrans with user=warning.voter film=warning.film %}
-  <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>
-  {% endblocktrans %}
-  {% elif warning.type == 'omg' %}
-  {% blocktrans with user=warning.voter film=warning.film %}
-  Remember that <strong>{{ user }}</strong> really really wants to see <strong>{{ film }}</strong>
-  {% endblocktrans %}
-  {% endif %}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-{% endfor %}
-{% endif %}
-<!--END: WARNINGS-->
-
-
 <!--START: VOTING RESULTS-->
 <table class="table table-hover mt-3">
   <thead>
   <tr>
-    <th scope="col">{% trans 'Film' %}</th>
-    <th scope="col" class="text-center">{% trans 'Score' %}</th>
-    <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}"></th>
-    <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/thumbsdown.svg'%}"></th>
-    <th scope="col" class="text-center"><img style="min-height: 18px;" src="{% static 'democracy/svg/question.svg'%}"></th>
+    <th scope="col"><span class="ml-3">{% trans 'Film' %}</span></th>
+    <th scope="col" class="text-center"><img style="height: 21px;" src="{% static 'democracy/svg/law.svg'%}"></th>
+    <th scope="col" class="text-center"><img style="height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}"></th>
+    <th scope="col" class="text-center"><img style="height: 18px;" src="{% static 'democracy/svg/thumbsdown.svg'%}">
+    </th>
+    <th scope="col" class="text-center"><img style="height: 21px;" src="{% static 'democracy/svg/question.svg'%}"></th>
   </tr>
   </thead>
   <tbody>
@@ -70,20 +45,31 @@
 
   {% if forloop.counter == 1 %}
   <tr class="table-success">
-    <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
-    <td class="text-center">{{ film_results.points }}</td>
-
-    {% elif film_results.veto %}
+  {% elif forloop.counter > 1 %}
+  {% if film_results.veto %}
   <tr class="table-danger">
-    <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
-    <td class="text-center">- ∞</td>
-
-    {% else %}
+  {% else %}
   <tr>
-    <td><a href="{% url 'democracy:film_detail' club.id film_results.id %}">{{ film_results.title }}</a></td>
-    <td class="text-center">{{ film_results.points }}</td>
+  {% endif %}
+  {% endif %}
 
+    <td>
+      <a class="text-body ml-3" href="{% url 'democracy:film_detail' club.id film_results.id %}">
+        <strong>{{ film_results.title }}</strong>
+      </a>
+      {% if film_results.warnings %}
+      <img class="ml-2 mt-n1 pointer-cursor" style="height: 18px;" src="{% static 'democracy/svg/alert.svg'%}"
+           data-toggle="modal" data-target="#WarningsModal_{{ forloop.counter }}">
+      {% endif %}
+    </td>
+
+    {% if film_results.veto %}
+    <td class="text-center">-∞</td>
+    {% else %}
+    <td class="text-center">{{ film_results.points }}</td>
     {% endif %}
+
+
     <td class="text-center">
       {% for voter in film_results.positive_voters %}
       {% if forloop.counter == film_results.positive_voters|length %}{{ voter }}{% else %}{{ voter }},{% endif %}
@@ -99,12 +85,55 @@
       {% if forloop.counter == film_results.no_voters|length %}{{ voter }}{% else %}{{ voter }},{% endif %}
       {% endfor %}
     </td>
+
   </tr>
+
+
+  <!--START: MODAL WARNING-->
+  <div class="modal fade" id="WarningsModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
+       aria-labelledby="WarningsModal_{{ forloop.counter }}_Title" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="WarningsModal_{{ forloop.counter }}_Title">{% trans 'Film warnings' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <!--START: WARNINGS-->
+          {% for warning in film_results.warnings %}
+          <div class="alert alert-warning text-center my-2" role="alert">
+            {% if warning.type == 'veto' %}
+            {% blocktrans with user=warning.voter film=warning.film %}
+            <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>
+            {% endblocktrans %}
+            {% elif warning.type == 'omg' %}
+            {% blocktrans with user=warning.voter film=warning.film %}
+            Remember that <strong>{{ user }}</strong> really really wants to see <strong>{{ film }}</strong>
+            {% endblocktrans %}
+            {% endif %}
+          </div>
+          {% endfor %}
+          <!--END: WARNINGS-->
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END: MODAL WARNING-->
+
 
   {% endfor %}
   </tbody>
 </table>
 <!--END: VOTING RESULTS-->
+
+
+<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
+</form>
 
 
 {% endblock %}

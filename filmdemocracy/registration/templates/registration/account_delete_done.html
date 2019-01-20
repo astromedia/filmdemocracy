@@ -13,21 +13,18 @@
 {% block pagecontent %}
 
 
-<div class="text-center">
-  <h3 class="h3 font-weight-normal">{% trans 'Account deleted' %}</h3>
+<h3 class="h3">{% trans 'Account deleted' %}</h3>
 
-  <div class="alert alert-success px-5 mb-5" role="alert">
-    <strong>
-      {% blocktrans %}
-      Account deleted successfully.
-      {% endblocktrans %}
-    </strong>
-  </div>
-
+<div class="alert alert-success px-5 my-5 text-center" role="alert">
+  <strong>
+    {% blocktrans %}
+    Account deleted successfully.
+    {% endblocktrans %}
+  </strong>
 </div>
 
 
-<form action="{% url 'home' %}" class="text-center mt-5">
+<form class="btn-sm-cancel" action="{% url 'home' %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Home' %}</button>
 </form>
 
