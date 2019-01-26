@@ -12,10 +12,10 @@
 }
 
 .club-banner .club-name a {
-  color: seagreen;
+  color: darkgray;
 }
 
 .club-banner .club-name a:hover {
-  color: lightseagreen;
+  color: #d1d1d1;
   text-decoration: none;
 }

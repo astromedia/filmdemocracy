@@ -31,7 +31,7 @@
         {% for member in club_members %}
 
         <div class="col-auto">
-          <div class="card shadow-sm">
+          <div class="card">
 
             <label for="participants{{ forloop.counter }}">
               <div class="hovereffect-participant">
@@ -48,8 +48,8 @@
             <div class="custom-control custom-checkbox mx-auto mb-1">
               <input type="checkbox" class="custom-control-input" name="participants"
                      id="participants{{ forloop.counter }}" value="{{ member.username }}">
-              <label class="custom-control-label mr-4" for="participants{{ forloop.counter }}">
-                {{ member.username }}
+              <label class="custom-control-label" for="participants{{ forloop.counter }}">
+                <small>{{ member.username }}</small>
               </label>
             </div>
 

@@ -25,6 +25,8 @@ body {
 }
 
 .form-admin-utils .card {
+  background-color: transparent;
+  border-color: transparent;
   width: 8rem;
   margin-bottom: 1rem;
 }

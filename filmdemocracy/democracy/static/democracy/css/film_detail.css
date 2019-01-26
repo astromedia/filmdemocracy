@@ -29,6 +29,10 @@
   font-size: 15px;
 }
 
+.container-film-banner .film-data .proposed-by {
+  color: #A9A9A9;
+}
+
 .container-film-banner .film-data img {
   width: 100%;
   max-width: 200px;

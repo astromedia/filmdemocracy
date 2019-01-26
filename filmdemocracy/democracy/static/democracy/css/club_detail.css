@@ -52,13 +52,22 @@ body {
   margin: auto;
   color: seagreen;
   font-weight: bold;
-  border: 0px solid seagreen;
+  border: 1px solid seagreen;
 }
 
 .club-banner .btn-club-links:hover {
   color: lightseagreen;
   text-decoration: none;
-  border: 0px solid lightseagreen;
+  border: 1px solid lightseagreen;
+  box-shadow: none;
+}
+
+.club-banner .btn-club-links:active {
+  box-shadow: none;
+}
+
+.club-banner .btn-club-links:focus {
+  box-shadow: none;
 }
 
 .club-banner .admin-utils {
@@ -92,15 +101,15 @@ body {
 /* Club meetings panel
 -------------------------------------------------- */
 .meetings .h3 {
+  font-size: 15px;
+  padding-top: 30px;
+  margin-bottom: -13px;
   text-transform: uppercase;
   margin-top: 30px;
-  margin-bottom: -10px;
-  font-size: 20px;
-  font-weight: normal;
 }
 
 .meetings hr {
-  max-width: 350px;
+  max-width: 450px;
   color: gray;
   background-color: gray;
   margin-bottom: 20px;
@@ -128,16 +137,16 @@ body {
 .album .h3 {
   color: darkgray;
   text-transform: uppercase;
+  font-size: 15px;
   padding-top: 30px;
-  margin-bottom: -10px;
-  font-size: 20px;
-  font-weight: normal;
-}
+  margin-bottom: -13px;
+  margin-top: 45px;
+  }
 
 .album hr {
-  max-width: 350px;
-  color: darkgray;
-  background-color: darkgray;
+  max-width: 450px;
+  color: gray;
+  background-color: gray;
   margin-bottom: 20px;
 }
 
@@ -188,6 +197,7 @@ body {
   text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;
+  border-color: transparent;
 }
 
 .member-image {

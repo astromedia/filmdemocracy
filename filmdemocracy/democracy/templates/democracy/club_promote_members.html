@@ -26,7 +26,7 @@
       {% for member in club_members %}
       {% if member != user %}
       <div class="col-auto">
-        <div class="card shadow-sm">
+        <div class="card">
 
           <label for="member_{{ forloop.counter }}">
 
@@ -71,8 +71,8 @@
                    id="member_{{ forloop.counter }}" value="{{ member.pk }}">
             {% endif %}
 
-            <label class="custom-control-label mr-4" for="member_{{ forloop.counter }}">
-              {{ member.username }}</label>
+            <label class="custom-control-label" for="member_{{ forloop.counter }}">
+              <small>{{ member.username }}</small></label>
           </div>
 
         </div>

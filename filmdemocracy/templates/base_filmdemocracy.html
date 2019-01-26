@@ -41,7 +41,7 @@
 
     <div class="collapse navbar-collapse" id="navbarCollapse">
 
-      <span class="navbar-text">Beta version 1.0</span>
+      <span class="navbar-text">{% trans 'Beta version 1.0' %}</span>
 
       <ul class="navbar-nav ml-auto">
 
@@ -63,8 +63,24 @@
             <img style="min-height: 19px;" src="{% static 'democracy/svg/globe_negative.svg'%}">
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="#">Castellano</a>
-            <a class="dropdown-item" href="#">English</a>
+
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+
+            {% for language in languages %}
+            <form class="dropdown-item" action="{% url 'set_language' %}" method="post">
+              {% csrf_token %}
+              <label for="language_{{ forloop.counter }}">
+                {{ language.name_local }} ({{ language.code }})
+              </label>
+
+              <input type="submit" class="invisible my-n5 mx-n5" name="language"
+                     id="language_{{ forloop.counter }}" value="{{ language.code }}">
+              <input name="next" type="hidden" value="{{ redirect_to }}">
+            </form>
+            {% endfor %}
+
           </div>
         </li>
 
@@ -77,13 +93,15 @@
         </li>
 
         <form action="{% url 'registration:user_logout' %}" class="form-inline">
-          <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Log out' %}</button>
+          <button type="submit" class="btn btn-sm btn-logout btn-outline-secondary">{% trans 'Log out' %}</button>
         </form>
 
         {% else %}
+
         <form action="{% url 'registration:user_login' %}" class="form-inline">
-          <button type="submit" class="btn btn-outline-success">{% trans 'Log in' %}</button>
+          <button type="submit" class="btn btn-sm btn-login btn-outline-success">{% trans 'Log in' %}</button>
         </form>
+
         {% endif %}
 
       </ul>
@@ -106,7 +124,9 @@
 <!--START: NAVBAR-->
 <footer class="footer">
   <div class="container text-center">
-    <span class="text-muted">© 2019</span>
+    <span class="text-muted"><strong>Website under testing</strong>: please send comments and report bugs to</span>
+    <span class="text-white">jimeno.romero@gmail.com</span><br>
+    <span class="text-muted">Copyright © 2019 FilmDemocracy</span>
   </div>
 </footer>
 <!--END: NAVBAR-->

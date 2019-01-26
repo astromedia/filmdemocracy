@@ -38,12 +38,13 @@ hr {
   margin-bottom: 20px;
 }
 
-.your-clubs-title {
+.home-section-title {
   text-align: center;
   color: darkgray;
   text-transform: uppercase;
   font-size: 15px;
   margin-bottom: -13px;
+  margin-top: 45px;
 }
 
 .btn-block {
@@ -72,6 +73,7 @@ hr {
 .club-logo img {
   width: 100%;
   height: 100%;
+  opacity:0.8;
   display:block;
   position:relative;
   -webkit-transition:all .2s linear;
@@ -79,52 +81,80 @@ hr {
 }
 
 .club-logo:hover img {
+  opacity:1;
   -ms-transform:scale(1.1);
   -webkit-transform:scale(1.05);
   transform:scale(1.05);
 }
 
-/*
 .club-logo .overlay {
-width:100%;
-height:100%;
-position:absolute;
-overflow:hidden;
-top:0;
-left:0;
-opacity:0;
-background-color:rgba(0,0,0,0.85);
--webkit-transition:all .4s ease-in-out;
-transition:all .4s ease-in-out
+  width: 250px;
+  height: 100%;
+  border: 2px solid black;
+  border-radius: 6px;
+  background-color:rgba(0,0,0,0.85);
+  opacity:0;
+  position:absolute;
+  overflow:hidden;
+  top:0px;
+  left:15px;
+  -webkit-transition:all .2s ease-in-out;
+  transition:all .2s ease-in-out
 }
-
 
 .club-logo:hover .overlay {
-opacity:1;
-filter:alpha(opacity=100);
-}
-*/
-
-
-.btn-create-club {
-  min-width: 240px;
-  font-size: 17px;
-  margin: auto;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  color: seagreen;
-  font-weight: bold;
-  border: 0px solid seagreen;
+  opacity:1;
+  filter:alpha(opacity=100);
 }
 
-.btn-create-club:hover {
-  color: lightseagreen;
+.club-logo .overlay h5 {
+  color: darkgray;
+  text-align: center;
   text-decoration: none;
-  border: 0px solid lightseagreen;
+  text-transform: uppercase;
+  font-size: 20px;
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
-.btn-create-club:active {
-  color: lightseagreen;
-  border: 0px solid lightseagreen;
-  box-shadow: 0 0 0 #121317;
+
+/* New club image
+-------------------------------------------------- */
+.new-club-logo {
+  max-width: 250px;
+  height: 100%;
+  float:left;
+  overflow: hidden;
+  cursor: default;
+  border: 2px solid black;
+  border-radius: 6px;
+  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.85);
 }
+
+.new-club-logo img {
+  width: 100%;
+  height: 100%;
+  display:block;
+  position:relative;
+  opacity:0.2;
+  -webkit-transition:all .2s linear;
+  transition:all .2s linear;
+}
+
+.new-club-logo:hover img {
+  opacity:1;
+}
+
+
+/* Log
+-------------------------------------------------- */
+.home-log {
+  max-width: 600px;
+  padding: 20px;
+  margin: auto;
+  color: darkgray;
+  }
+

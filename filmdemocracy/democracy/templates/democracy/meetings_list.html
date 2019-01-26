@@ -30,7 +30,11 @@
         <h5 class="h5">{{ meeting.name }}</h5>
       </div>
       <div class="col-auto">
-        <span class="text-muted">{% trans 'Organized by' %}{{ meeting.organizer.username }}</span>
+        <span class="text-muted">{% trans 'Organized by' %}
+          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
+            {{ meeting.organizer.username }}
+          </a>
+        </span>
       </div>
     </div>
 
@@ -74,9 +78,12 @@
     <div>
       <strong>{% trans 'Confirmed:' %}</strong>
       {% for member in meeting.members_yes.all %}
-      {% if forloop.counter == meeting.members_yes.all|length %}{{ member.username }}
-      {% else %}{{ member.username }},
+      {% if forloop.counter == meeting.members_yes.all|length %}
+      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
+      {% else %}
+      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
       {% endif %}
+
       {% endfor %}
     </div>
     {% endif %}
@@ -84,8 +91,10 @@
     <div>
       <strong>{% trans 'Interested:' %}</strong>
       {% for member in meeting.members_maybe.all %}
-      {% if forloop.counter == meeting.members_maybe.all|length %}{{ member.username }}
-      {% else %}{{ member.username }},
+      {% if forloop.counter == meeting.members_maybe.all|length %}
+      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
+      {% else %}
+      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
       {% endif %}
       {% endfor %}
     </div>

@@ -180,6 +180,8 @@ body {
 }
 
 .form-participants .card {
+  background-color: transparent;
+  border-color: transparent;
   width: 8rem;
   margin-bottom: 1rem;
 }
@@ -211,6 +213,8 @@ body {
 }
 
 .form-film-seen .card {
+  background-color: transparent;
+  border-color: transparent;
   width: 8rem;
   margin-bottom: 1rem;
 }

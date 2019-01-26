@@ -36,9 +36,9 @@
 
         <!--PROPOSED BY-->
         <div class="mb-2">
-          {% blocktrans with name=film.proposed_by.username date=film.pub_date %}
-          <strong>Proposed by:</strong> {{ name }}, the {{ date }}
-          {% endblocktrans %}
+          <strong>{% trans 'Proposed by: ' %}</strong>
+          <a class="proposed-by" href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
+            {{ film.proposed_by.username }}</a>, {% trans 'on ' %} {{ film.pub_date }}
         </div>
 
         <!--DATABASE LINKS-->
@@ -163,7 +163,9 @@
 <!--START: SEEN BY (FILM NOT SEEN)-->
 {% if film.seen %}
 <div class="mt-4 h6 text-center">
-  {% trans 'Seen in session on the' %} {{ film.seen_date}} {% trans 'by:' %}
+  {% blocktrans with date=film.seen_date %}
+  Seen in session on the {{ filter_title }}{{ date }} by:
+  {% endblocktrans %}
 </div>
 
 <div class="container-fluid">
@@ -187,7 +189,9 @@
           {% endif %}
         </a>
 
-        <div class="text-center p-1">{{ member.username }}</div>
+        <div class="text-center p-1">
+          <small>{{ member.username }}</small>
+        </div>
 
       </div>
     </div>

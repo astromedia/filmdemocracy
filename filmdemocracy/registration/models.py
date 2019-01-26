@@ -15,6 +15,11 @@ class User(AbstractUser):
         _('email'),
         unique=True,
     )
+    username = models.CharField(
+        _('username'),
+        max_length=20,
+        unique=False,
+    )
     public_email = models.BooleanField(_('Public email in clubs'), default=False)
     first_name = models.CharField(
         _('first name'),

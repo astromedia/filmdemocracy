@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import url
+from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
@@ -23,10 +24,13 @@ from filmdemocracy import views
 
 
 urlpatterns = [
-    path(
-        'admin/',
-        admin.site.urls
-    ),
+    path('', views.redirect_to_home),
+    path('admin/', admin.site.urls),
+    path('i18n/', include('django.conf.urls.i18n')),
+    url(r'^markdownx/', include('markdownx.urls')),
+]
+
+urlpatterns += i18n_patterns(
     path(
         'registration/',
         include('filmdemocracy.registration.urls')
@@ -36,7 +40,7 @@ urlpatterns = [
         include('filmdemocracy.democracy.urls')
     ),
     path(
-        '',
+        'home/',
         views.HomeView.as_view(
             template_name='home.html'
         ),
@@ -49,8 +53,8 @@ urlpatterns = [
         ),
         name='terms_and_conditions'
     ),
-    url(r'^markdownx/', include('markdownx.urls')),
-]
+)
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

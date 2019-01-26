@@ -14,7 +14,7 @@
 
 
 <!--START: WEBSITE INTRO-->
-<div class="container-fluid text-center mb-5">
+<div class="container-fluid text-center">
   <div>
     <img class="webpage-logo" src="{% static 'democracy/svg/urna_glow.svg'%}">
   </div>
@@ -30,22 +30,26 @@
 
 
 <!--START: CLUB PANEL-->
-<h4 class="lead text-muted your-clubs-title">{% trans 'Your clubs' %}</h4>
+<h4 class="lead text-muted home-section-title">{% trans 'Your clubs' %}</h4>
 
 <hr>
 
+<!--USER CLUBS-->
 <div class="row mx-5 justify-content-center">
 
   {% for club in user_clubs %}
 
-  <!--TODO: clubs with no logo should have a title on hover-->
   <div class="col-sm-auto m-3 align-self-center">
+
     <div class="club-logo">
       <a href="{% url 'democracy:club_detail' club.id %}">
         {% if club.logo %}
         <img src="{{ club.logo.url }}" alt="club.logo not found">
         {% else %}
         <img src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
+        <div class="overlay py-auto">
+          <h5 class="py-auto">{{ club.name }}</h5>
+        </div>
         {% endif %}
       </a>
     </div>
@@ -55,23 +59,27 @@
 
 </div>
 
+<!--NEW CLUB-->
+<div class="row justify-content-center">
+
+  <div class="col-sm-auto m-3 align-self-center">
+    <div class="new-club-logo">
+      <a href="{% url 'democracy:create_club' %}">
+        <img src="{% static 'democracy/new_club.png' %}" alt="club.logo not found" class="card-img">
+      </a>
+    </div>
+  </div>
+
+</div>
+
 <!--END: CLUB PANEL-->
-
-
-<!--START: CREATE NEW GROUP-->
-<form class="text-center mt-5" action="{% url 'democracy:create_club' %}">
-  <button type="submit" class="btn btn-create-club">
-    {% trans 'Create new club' %}
-  </button>
-</form>
-<!--END: CREATE NEW GROUP-->
 
 
 {% else %}
 
 
 <!--START: LOGIN / SIGNIN-->
-<div class="text-center">
+<div class="text-center my-5">
 
   <p class="lead misc-text light1-style">{% trans 'To start, log in.' %}</p>
 
@@ -90,6 +98,31 @@
 
 
 {% endif %}
+
+<!--START: WEBPAGE LOG-->
+<h4 class="lead text-muted home-section-title">{% trans 'FilmDemocracy log' %}</h4>
+
+<hr>
+
+<div class="home-log">
+  <div class="row">
+
+    <div class="col-sm-2">
+      <strong>2019.01.24:</strong>
+    </div>
+    <div class="col-sm-10">
+      <p>
+        {% blocktrans %}
+        Welcome to FilmDemocracy! This site is under testing,
+        so expect all your data to be deleted at some point before the official launch.
+        Sorry for the inconvinience...
+        {% endblocktrans %}
+      </p>
+    </div>
+
+  </div>
+</div>
+<!--END: WEBPAGE LOG-->
 
 
 {% endblock %}
