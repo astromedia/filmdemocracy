@@ -32,7 +32,7 @@
       <!--LINK TO FILM PANEL-->
       <div class="my-4">
         <form action="{% url 'democracy:candidate_films' club.id %}">
-          <button type="submit" class="btn btn-club-links">
+          <button type="submit" class="btn btn-club-links btn-hover-bg1">
             {% trans 'Candidate films' %}
           </button>
         </form>
@@ -41,7 +41,7 @@
       <!--LINK TO FILM RANKING-->
       <div class="my-4">
         <form action="{% url 'democracy:participants' club.id %}">
-          <button type="submit" class="btn btn-club-links">
+          <button type="submit" class="btn btn-club-links btn-hover-bg1">
             {% trans 'Generate film ranking' %}
           </button>
         </form>
@@ -70,7 +70,7 @@
       <!--LINK TO NEW MEETING-->
       <div class="my-4">
         <form action="{% url 'democracy:meetings_new' club.id %}">
-          <button type="submit" class="btn btn-club-links">
+          <button type="submit" class="btn btn-club-links btn-hover-bg2">
             {% trans 'Organize meeting' %}
           </button>
         </form>
@@ -79,7 +79,7 @@
       <!--LINK TO MEETINGS-->
       <div class="my-4">
         <form action="{% url 'democracy:meetings_list' club.id %}">
-          <button type="submit" class="btn btn-club-links">
+          <button type="submit" class="btn btn-club-links btn-hover-bg2">
             {% trans 'Programmed meetings' %}
           </button>
         </form>
@@ -96,7 +96,7 @@
   <div class="admin-utils">
 
     <!--ADMIN COLLAPSE BUTTON-->
-    <a class="btn btn-club-links" data-toggle="collapse" href="#collapseAdmin" role="button" aria-expanded="false"
+    <a class="btn-admin-utils" data-toggle="collapse" href="#collapseAdmin" role="button" aria-expanded="false"
        aria-controls="collapseAdmin">
       {% trans 'Club admin utilities' %}
     </a>
@@ -126,7 +126,7 @@
           <div class="col-md-auto">
             <form action="{% url 'democracy:promote_members' club.id %}">
               <button type="submit" class="btn btn-sm btn-block btn-util btn-outline-success">
-                {% trans 'Promote members' %}
+                {% trans 'Promote to admin' %}
               </button>
             </form>
           </div>

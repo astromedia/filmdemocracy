@@ -14,32 +14,30 @@ def get_club_logo_path(instance, filename):
 
 class Club(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5)
-    name = models.CharField('Club name', max_length=50)
+    name = models.CharField(_('Club name'), max_length=50)
     short_description = models.CharField(
         _('Short description (Optional)'),
         max_length=120
     )
     panel = MarkdownxField(
-        _('Club panel: description, rules, etc. (optional)'),
+        _('Club panel: description, rules, etc. (Optional)'),
         max_length=1000,
-        default=_(
-            "## A sample club panel written in markdown"
-            "\r\n"
-            "\r\n---"
-            "\r\n"
-            "\r\n#### Point 1: Here is some text. "
-            "\r\nHello world, I'm a cinema club... "
-            "\r\n"
-            "\r\n#### Point 2: And here is a list to consider: "
-            "\r\n1. Item #1"
-            "\r\n2. Item #2"
-            "\r\n3. Item #3"
-            "\r\n"
-            "\r\n#### Point 3: And here is an unordered list to consider:"
-            "\r\n- Item 1"
-            "\r\n- Item 2"
-            "\r\n- Item 3"
-        ),
+        default="## A sample club panel written in markdown"
+                "\r\n"
+                "\r\n---"
+                "\r\n"
+                "\r\n#### Point 1: Here is some text. "
+                "\r\nHello world, I'm a cinema club... "
+                "\r\n"
+                "\r\n#### Point 2: And here is a list to consider: "
+                "\r\n1. Item #1"
+                "\r\n2. Item #2"
+                "\r\n3. Item #3"
+                "\r\n"
+                "\r\n#### Point 3: And here is an unordered list to consider:"
+                "\r\n- Item 1"
+                "\r\n- Item 2"
+                "\r\n- Item 3",
         blank=True,
         null=True,
     )
@@ -73,7 +71,7 @@ class ClubMemberInfo(models.Model):
 class Meeting(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=9)  # 5(club)+4
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    name = models.CharField(_('Name'), default='Club meeting', max_length=50)
+    name = models.CharField(_('Name'), default=_('Club meeting'), max_length=50)
     description = models.CharField(_('Description (Optional)'), default='', max_length=300)
     organizer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     place = models.CharField(_('Place'), default='', max_length=100)
@@ -146,7 +144,7 @@ class Vote(models.Model):
     vote_choices = (
         (OMG, _('I really really want to see it.')),
         (YES, _('I want to see it.')),
-        (SEENOK, _("I've seen it, but I wouldn't mind seeing it again.")),
+        (SEENOK, _("I've seen it, but I wouldn't mind seeing it.")),
         (MEH, _('Meh...')),
         (NO, _("I don't want to see it.")),
         (SEENNO, _("I've seen it, and I don't want to see it again.")),

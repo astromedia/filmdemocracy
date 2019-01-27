@@ -27,7 +27,6 @@ body {
 
 .club-banner .short-description {
   font-size: 19px;
-  color: #d1d1d1;
 }
 
 .club-banner .club-panel {
@@ -47,19 +46,29 @@ body {
 }
 
 .club-banner .btn-club-links {
-  min-width: 240px;
+  min-width: 270px;
   font-size: 17px;
   margin: auto;
-  color: seagreen;
+  padding: 13px;
+  color: #6c737d;
+  background-color: #282828;
   font-weight: bold;
-  border: 1px solid seagreen;
+  border: none;
 }
 
 .club-banner .btn-club-links:hover {
-  color: lightseagreen;
+  color: #fff;
   text-decoration: none;
-  border: 1px solid lightseagreen;
+  border: none;
   box-shadow: none;
+}
+
+.club-banner .btn-hover-bg1:hover {
+  background-color: seagreen;
+}
+
+.club-banner .btn-hover-bg2:hover {
+  background-color: lightseagreen;
 }
 
 .club-banner .btn-club-links:active {
@@ -68,6 +77,18 @@ body {
 
 .club-banner .btn-club-links:focus {
   box-shadow: none;
+}
+
+.club-banner .btn-admin-utils {
+  font-size: 17px;
+  margin: auto;
+  color: seagreen;
+  font-weight: bold;
+}
+
+.club-banner .btn-admin-utils:hover {
+  color: lightseagreen;
+  text-decoration: none;
 }
 
 .club-banner .admin-utils {

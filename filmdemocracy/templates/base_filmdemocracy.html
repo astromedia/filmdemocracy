@@ -72,7 +72,7 @@
             <form class="dropdown-item" action="{% url 'set_language' %}" method="post">
               {% csrf_token %}
               <label for="language_{{ forloop.counter }}">
-                {{ language.name_local }} ({{ language.code }})
+                {{ language.name_local|title }} ({{ language.code }})
               </label>
 
               <input type="submit" class="invisible my-n5 mx-n5" name="language"
@@ -124,7 +124,10 @@
 <!--START: NAVBAR-->
 <footer class="footer">
   <div class="container text-center">
-    <span class="text-muted"><strong>Website under testing</strong>: please send comments and report bugs to</span>
+    <span class="text-muted">
+      <strong>{% trans 'Website under testing' %}</strong><br>
+      {% trans 'Please send your comments and report bugs to' %}
+    </span>
     <span class="text-white">jimeno.romero@gmail.com</span><br>
     <span class="text-muted">Copyright © 2019 FilmDemocracy</span>
   </div>
