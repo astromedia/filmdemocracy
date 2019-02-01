@@ -2,12 +2,13 @@
 -------------------------------------------------- */
 .container-film-banner {
   position: relative;
-  padding-top: 40px;
+  padding-top: 20px;
   padding-bottom: 10px;
-  margin-top: -24px;
+  margin-top: 0px;
   margin-bottom: 40px;
   background-color: #121317;
   color: #A9A9A9;
+  z-index: 1;
 }
 
 .container-film-banner .film-title {
@@ -51,14 +52,16 @@
   max-width: 100%;
 }
 
-/* Vote buttons
+
+/* Nav style
 -------------------------------------------------- */
-.registered-votes hr {
-  max-width: 300px;
-  color: #bbbbbb;
-  background-color: #bbbbbb;
+.nav-film .nav-item {
+  font-size: 20px;
 }
 
+
+/* Vote buttons
+-------------------------------------------------- */
 .vote-btn {
   text-transform: initial;
   max-width: 350px;
@@ -94,6 +97,51 @@ u {
 
 .black {
   color: black;
+}
+
+
+/* Seen by
+-------------------------------------------------- */
+.card {
+  background-color: transparent;
+  border-color: transparent;
+  width: 8rem;
+  margin-bottom: 1rem;
+}
+
+
+/* Registered votes
+-------------------------------------------------- */
+.registered-vote {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
+
+
+/* Comments
+-------------------------------------------------- */
+.comment {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.comment .comment-meta {
+}
+
+.comment .comment-text {
+}
+
+.form-comment {
+  max-width: 800px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: auto;
 }
 
 

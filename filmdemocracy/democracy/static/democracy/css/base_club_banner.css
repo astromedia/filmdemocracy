@@ -5,6 +5,7 @@
   margin-top: -24px;
   padding: 10px;
   background-color: #121317;
+  z-index: 4;
 }
 
 .club-banner .club-name {

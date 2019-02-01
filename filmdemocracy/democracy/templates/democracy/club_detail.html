@@ -30,7 +30,7 @@
     <div class="col-md-auto">
 
       <!--LINK TO FILM PANEL-->
-      <div class="my-4">
+      <div class="my-3">
         <form action="{% url 'democracy:candidate_films' club.id %}">
           <button type="submit" class="btn btn-club-links btn-hover-bg1">
             {% trans 'Candidate films' %}
@@ -39,10 +39,19 @@
       </div>
 
       <!--LINK TO FILM RANKING-->
-      <div class="my-4">
+      <div class="my-3">
         <form action="{% url 'democracy:participants' club.id %}">
           <button type="submit" class="btn btn-club-links btn-hover-bg1">
             {% trans 'Generate film ranking' %}
+          </button>
+        </form>
+      </div>
+
+      <!--LINK TO SEEN FILMS-->
+      <div class="my-3">
+        <form action="{% url 'democracy:seen_films' club.id %}">
+          <button type="submit" class="btn btn-club-links btn-hover-bg1">
+            {% trans 'Films seen' %}
           </button>
         </form>
       </div>
@@ -68,7 +77,7 @@
     <div class="col-md-auto">
 
       <!--LINK TO NEW MEETING-->
-      <div class="my-4">
+      <div class="my-3">
         <form action="{% url 'democracy:meetings_new' club.id %}">
           <button type="submit" class="btn btn-club-links btn-hover-bg2">
             {% trans 'Organize meeting' %}
@@ -77,10 +86,19 @@
       </div>
 
       <!--LINK TO MEETINGS-->
-      <div class="my-4">
+      <div class="my-3">
         <form action="{% url 'democracy:meetings_list' club.id %}">
           <button type="submit" class="btn btn-club-links btn-hover-bg2">
             {% trans 'Programmed meetings' %}
+          </button>
+        </form>
+      </div>
+
+      <!--LINK TO CLUB SHOUTBOX-->
+      <div class="my-3">
+        <form action="{% url 'democracy:shoutbox' club.id %}">
+          <button type="submit" class="btn btn-club-links btn-hover-bg2">
+            {% trans 'Club Shoutbox' %}
           </button>
         </form>
       </div>
@@ -194,6 +212,13 @@
 <!--END: NO LOGO MESSAGE-->
 
 
+<!--START: CLUB DESCRIPTION-->
+<div class="markdownx-view">
+  {{ club.formatted_panel|safe }}
+</div>
+<!--END: CLUB DESCRIPTION-->
+
+
 <!--START: NEXT 3 CLUB MEETINGS-->
 {% if next_meetings %}
 
@@ -262,7 +287,7 @@
     <div>
       <strong>{% trans 'Confirmed:' %}</strong>
       {% for member in meeting.members_yes.all %}
-      {% if forloop.counter == meeting.members_yes.all|length %}
+      {% if forloop.last %}
       <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
       {% else %}
       <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
@@ -275,7 +300,7 @@
     <div>
       <strong>{% trans 'Interested:' %}</strong>
       {% for member in meeting.members_maybe.all %}
-      {% if forloop.counter == meeting.members_maybe.all|length %}
+      {% if forloop.last %}
       <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
       {% else %}
       <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
@@ -391,11 +416,39 @@
 <!--END: NEXT 3 CLUB MEETINGS-->
 
 
-<!--START: CLUB DESCRIPTION-->
-<div class="markdownx-view">
-  {{ club.formatted_panel|safe }}
+<!--START: LAST 5 COMMENTS ON FILMS-->
+{% if last_comments %}
+
+
+<div class="meetings">
+  <h3 class="h3">{% trans 'Last comments on films' %}</h3>
+  <hr>
 </div>
-<!--END: CLUB DESCRIPTION-->
+
+
+<!--COMMENTS-->
+{% for comment in last_comments %}
+<div class="row justify-content-start comment">
+  <div class="col col-3 text-right comment-meta">
+    <div>
+      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
+        <strong>{{ comment.user.username }}</strong></a>:
+    </div>
+    <div class="mt-n2">
+            <a class="small text-muted" href="{% url 'democracy:film_detail' club.id comment.film.id %}">
+              <strong>{{ comment.film.filmdb.title }}</strong>
+            </a>
+    </div>
+  </div>
+  <div class="col comment-text">
+    {{ comment.text }}
+  </div>
+</div>
+{% endfor %}
+
+
+{% endif %}
+<!--END: LAST 5 COMMENTS ON FILMS-->
 
 
 <!--START: LAST PROPOSED FILMS ALBUM-->
@@ -410,7 +463,7 @@
 
       {% for group in groups_last_pub %}
 
-      {% if forloop.counter == 1 %}
+      {% if forloop.first %}
       <div class="carousel-item active">
         <div class="row justify-content-center">
           {% for film in group %}
@@ -522,7 +575,9 @@
           </div>
         </a>
 
-        <div><small>{{ member.username }}</small></div>
+        <div>
+          <small>{{ member.username }}</small>
+        </div>
 
       </div>
     </div>

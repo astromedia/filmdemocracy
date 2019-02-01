@@ -118,6 +118,16 @@ urlpatterns = [
         name='vote_film'
     ),
     path(
+        '<str:club_id>/film/<str:film_id>/comment_film/',
+        views.comment_film,
+        name='comment_film'
+    ),
+    path(
+        '<str:club_id>/film/<str:film_id>/delete_film_comment/<str:comment_id>',
+        views.delete_film_comment,
+        name='delete_film_comment'
+    ),
+    path(
         '<str:club_id>/film/<str:film_id>/film_add_faff/',
         views.FilmAddFilmAffView.as_view(
             template_name='democracy/film_add_faff.html'
@@ -130,9 +140,11 @@ urlpatterns = [
         name='delete_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/unsee_film/',
-        views.unsee_film,
-        name='unsee_film'
+        '<str:club_id>/seen_films/',
+        views.SeenFilmsView.as_view(
+            template_name='democracy/seen_films_list.html'
+        ),
+        name='seen_films'
     ),
     path(
         'club/<str:club_id>/invite_new_member/',
@@ -192,5 +204,22 @@ urlpatterns = [
             template_name='democracy/meetings_list.html'
         ),
         name='meetings_list'
+    ),
+    path(
+        'club/<str:club_id>/shoutbox/',
+        views.ShoutboxView.as_view(
+            template_name='democracy/shoutbox.html'
+        ),
+        name='shoutbox'
+    ),
+    path(
+        'club/<str:club_id>/shoutbox/post/',
+        views.post_in_shoutbox,
+        name='post_in_shoutbox'
+    ),
+    path(
+        'club/<str:club_id>/shoutbox/delete_post/<str:post_id>',
+        views.delete_shoutbox_post,
+        name='delete_shoutbox_post'
     ),
 ]

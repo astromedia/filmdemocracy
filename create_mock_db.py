@@ -9,6 +9,8 @@ names = [
     'Pablo',
     'Ricardo',
     'Alba',
+    'Marcos',
+    'Marta',
     'Naranjo',
     'Timi',
     'Carla',
@@ -22,7 +24,6 @@ names = [
     'Jose',
     'Pedro',
     'Elias',
-    'Marta',
     'Vega',
 ]
 

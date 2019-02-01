@@ -22,7 +22,7 @@
 <div class="text-center mx-3">
   <strong>{% trans 'Participants: ' %}</strong>
   {% for participant in participants %}
-  {% if forloop.counter == participants|length %}{{ participant }}{% else %}{{ participant }},{% endif %}
+  {% if forloop.last %}{{ participant }}{% else %}{{ participant }},{% endif %}
   {% endfor %}
 </div>
 <!--END: PARTICIPANTS-->
@@ -43,7 +43,7 @@
   <tbody>
   {% for film_results in films_results|dictsortreversed:"points" %}
 
-  {% if forloop.counter == 1 %}
+  {% if forloop.first %}
   <tr class="table-success">
   {% elif forloop.counter > 1 %}
   {% if film_results.veto %}
@@ -72,17 +72,17 @@
 
     <td class="text-center">
       {% for voter in film_results.positive_voters %}
-      {% if forloop.counter == film_results.positive_voters|length %}{{ voter }}{% else %}{{ voter }},{% endif %}
+      {% if forloop.last %}{{ voter }}{% else %}{{ voter }},{% endif %}
       {% endfor %}
     </td>
     <td class="text-center">
       {% for voter in film_results.negative_voters %}
-      {% if forloop.counter == film_results.negative_voters|length %}{{ voter }}{% else %}{{ voter }},{% endif %}
+      {% if forloop.last %}{{ voter }}{% else %}{{ voter }},{% endif %}
       {% endfor %}
     </td>
     <td class="text-center">
       {% for voter in film_results.no_voters %}
-      {% if forloop.counter == film_results.no_voters|length %}{{ voter }}{% else %}{{ voter }},{% endif %}
+      {% if forloop.last %}{{ voter }}{% else %}{{ voter }},{% endif %}
       {% endfor %}
     </td>
 

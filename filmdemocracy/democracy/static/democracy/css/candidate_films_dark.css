@@ -1,0 +1,16 @@
+
+/* General page styles
+-------------------------------------------------- */
+body {
+}
+
+.container-base {
+  background-color: #121317;
+}
+
+.display-4 {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 10px;
+  color: darkgray;
+}

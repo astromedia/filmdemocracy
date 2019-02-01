@@ -78,7 +78,7 @@
     <div>
       <strong>{% trans 'Confirmed:' %}</strong>
       {% for member in meeting.members_yes.all %}
-      {% if forloop.counter == meeting.members_yes.all|length %}
+      {% if forloop.last %}
       <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
       {% else %}
       <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
@@ -91,7 +91,7 @@
     <div>
       <strong>{% trans 'Interested:' %}</strong>
       {% for member in meeting.members_maybe.all %}
-      {% if forloop.counter == meeting.members_maybe.all|length %}
+      {% if forloop.last %}
       <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
       {% else %}
       <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,

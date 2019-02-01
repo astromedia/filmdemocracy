@@ -17,8 +17,9 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, ClubMemberInfo, Meeting
-from filmdemocracy.democracy.models import FilmDb, Film, Vote
+from filmdemocracy.democracy.models import Club, ClubMemberInfo
+from filmdemocracy.democracy.models import ShoutboxPost, Meeting
+from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
 from filmdemocracy.settings import OMDB_API_KEY
 
@@ -108,13 +109,16 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         club_id = self.kwargs['club_id']
         context = add_club_context(self.request, context, club_id)
-        club_meetings = Meeting.objects.all().filter(
+        club_meetings = Meeting.objects.filter(
             club_id=club_id,
             date__gte=timezone.now().date()
         )
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
-        club_films = Film.objects.all().filter(club_id=club_id)
+        last_comments = FilmComment.objects.filter(club_id=club_id, deleted=False)
+        if last_comments:
+            context['last_comments'] = last_comments.order_by('-date')[0:5]
+        club_films = Film.objects.filter(club_id=club_id)
         if club_films:
             films_last_pub = club_films.order_by('-pub_date')
             groups_last_pub = [films_last_pub[i:i+4] for i in [0, 4, 8, 12]]
@@ -147,7 +151,7 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
         context['club_member_info'] = club_member_info
         all_votes = member.vote_set.filter(club_id=club.id)
         context['num_of_votes'] = all_votes.count()
-        club_films = Film.objects.all().filter(club_id=club.id)
+        club_films = Film.objects.filter(club_id=club.id)
         club_films_seen = club_films.filter(seen=False)
         votes = [vote for vote in all_votes if vote.film in club_films_seen]
         context['member_votes'] = votes
@@ -337,7 +341,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
-        club_films = Film.objects.all().filter(club_id=club.id)
+        club_films = Film.objects.filter(club_id=club.id)
         candidate_films = []
         for film in club_films.filter(seen=False):
             film_voters = [vote.user.username for vote in film.vote_set.all()]
@@ -346,6 +350,21 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
                 'voted': self.request.user.username in film_voters
             })
         context['candidate_films'] = candidate_films
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
+
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['club'] = club
+        seen_films = Film.objects.filter(club_id=club.id, seen=True)
+        context['seen_films'] = seen_films
         return context
 
 
@@ -360,7 +379,7 @@ class FilmSeenSelectionView(UserPassesTestMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
-        club_films = Film.objects.all().filter(club_id=club.id)
+        club_films = Film.objects.filter(club_id=club.id)
         context['candidate_films'] = club_films.filter(seen=False)
         return context
 
@@ -388,6 +407,18 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
         context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
         return context
 
+    @staticmethod
+    def random_id_generator(club_id):
+        """
+        Random id generator, picks an integer in the [1, 99999] range
+        and checks if it is already used (i.e., not found in the DB).
+        return: new_id: new id number not existing in the database
+        """
+        club_films = Film.objects.filter(club_id=club_id)
+        films_ids = [fid[-5:] for fid in club_films.values_list('id', flat=True)]
+        free_ids = [i for i in range(1, 99999) if i not in films_ids]
+        return f'{random.choice(free_ids):05d}'
+
     def form_valid(self, form):
         imdb_id = form.cleaned_data['imdb_url']
         filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_id)
@@ -410,8 +441,10 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
             filmdb.plot = omdb_data['Plot']
             filmdb.save()
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        new_film_id = self.random_id_generator(club.id)
         Film.objects.create(
-            id=f'{int(club.id):05d}{int(imdb_id):07d}',
+            id=f'{club.id}{new_film_id}',
+            imdb_id=imdb_id,
             proposed_by=self.request.user,
             club=club,
             filmdb=filmdb,
@@ -429,9 +462,14 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context = add_club_context(self.request, context, self.kwargs['club_id'])
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
-        context = add_club_context(self.request, context, self.kwargs['club_id'])
+        film_comments = FilmComment.objects.filter(
+            club=self.kwargs['club_id'],
+            film=self.kwargs['film_id']
+        )
+        context['film_comments'] = film_comments.order_by('date')
 
         def choice_meta(vote_choice):
             vote_meta_dict = {
@@ -482,6 +520,41 @@ def vote_film(request, club_id, film_id):
     return HttpResponseRedirect(reverse(
         'democracy:candidate_films',
         kwargs={'club_id': club_id}
+    ))
+
+
+@login_required
+def comment_film(request, club_id, film_id):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
+    film = get_object_or_404(Film, pk=film_id)
+    club = get_object_or_404(Club, pk=club_id)
+    film_comment = FilmComment.objects.create(
+        user=request.user,
+        film=film,
+        club=club,
+        text=request.POST['text']
+    )
+    film_comment.save()
+    return HttpResponseRedirect(reverse(
+        'democracy:film_detail',
+        kwargs={'club_id': club_id,
+                'film_id': film_id}
+    ))
+
+
+@login_required
+def delete_film_comment(request, club_id, film_id, comment_id):
+    film_comment = get_object_or_404(FilmComment, id=comment_id)
+    if request.user != film_comment.user:
+        if not user_is_club_admin_check(request, club_id):
+            return HttpResponseForbidden()
+    film_comment.deleted = True
+    film_comment.save()
+    return HttpResponseRedirect(reverse(
+        'democracy:film_detail',
+        kwargs={'club_id': club_id,
+                'film_id': film_id}
     ))
 
 
@@ -551,20 +624,6 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
         context['club'] = club
         context['club_members'] = club.members.filter(is_active=True)
         return context
-
-
-@login_required
-def unsee_film(request, club_id, film_id):
-    if not user_is_club_member_check(request, club_id):
-        return HttpResponseForbidden()
-    film = get_object_or_404(Film, pk=film_id)
-    film.seen = False
-    film.seen_date = None
-    film.save()
-    return HttpResponseRedirect(reverse_lazy(
-        'democracy:film_detail',
-        kwargs={'club_id': club_id, 'film_id': film_id}
-    ))
 
 
 @login_required
@@ -660,7 +719,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
         films_results = []
         participants = self.request.GET.getlist('participants')
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        club_films = Film.objects.all().filter(club_id=club.id, seen=False)
+        club_films = Film.objects.filter(club_id=club.id, seen=False)
         for film in club_films:
             voters_info, warnings, points, veto = process(film, participants)
             films_results.append({
@@ -838,7 +897,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
 
     @staticmethod
     def random_id_generator(club_id):
-        club_meetings = Meeting.objects.all().filter(club_id=club_id)
+        club_meetings = Meeting.objects.filter(club_id=club_id)
         meetings_ids = [mid[-4:] for mid in club_meetings.values_list('id', flat=True)]
         free_ids = [i for i in range(1, 9999) if i not in meetings_ids]
         return f'{random.choice(free_ids):04d}'
@@ -935,11 +994,57 @@ class MeetingsListView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        club_meetings = Meeting.objects.all().filter(
+        context = add_club_context(self.request, context, self.kwargs['club_id'])
+        club_meetings = Meeting.objects.filter(
             club_id=self.kwargs['club_id'],
             date__gte=timezone.now().date()
         )
-        context['club'] = club
         context['club_meetings'] = club_meetings.order_by('date')
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+class ShoutboxView(UserPassesTestMixin, generic.TemplateView):
+
+    def test_func(self):
+        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context = add_club_context(self.request, context, self.kwargs['club_id'])
+        posts = ShoutboxPost.objects.filter(
+            club=self.kwargs['club_id'],
+        )
+        context['posts'] = posts.order_by('-date')[:1000]
+        return context
+
+
+@login_required
+def post_in_shoutbox(request, club_id):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
+    club = get_object_or_404(Club, pk=club_id)
+    post = ShoutboxPost.objects.create(
+        user=request.user,
+        club=club,
+        text=request.POST['text']
+    )
+    post.save()
+    return HttpResponseRedirect(reverse(
+        'democracy:shoutbox',
+        kwargs={'club_id': club_id}
+    ))
+
+
+@login_required
+def delete_shoutbox_post(request, club_id, post_id):
+    post = get_object_or_404(ShoutboxPost, id=post_id)
+    if request.user != post.user:
+        if not user_is_club_admin_check(request, club_id):
+            return HttpResponseForbidden()
+    post.deleted = True
+    post.save()
+    return HttpResponseRedirect(reverse(
+        'democracy:shoutbox',
+        kwargs={'club_id': club_id}
+    ))

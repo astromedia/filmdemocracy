@@ -8,6 +8,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/candidate_films_dark.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Candidate films' %}{% endblock %}
@@ -98,6 +99,7 @@
 <form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
   <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
 </form>
+
 
 {% endif %}
 

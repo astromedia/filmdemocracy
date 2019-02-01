@@ -7,7 +7,7 @@ body {
 .display-4 {
   text-align: center;
   margin-top: 50px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
 
 .h3 {
@@ -32,7 +32,7 @@ body {
 /* Candidate films album
 -------------------------------------------------- */
 .films-album {
-  background-color: #121317;
+  background-color: transparent;
   padding-top: 50px;
   padding-bottom: 200px;
   padding-left: 50px;
@@ -60,7 +60,7 @@ body {
   box-shadow: 0 0px 10px rgba(255, 255, 255, 0.5);
 }
 
-.card-film img {
+.card-film .card-img {
   display:block;
   position:relative;
   -webkit-transition:all .2s linear;
@@ -103,7 +103,7 @@ body {
   background: rgba(0, 0, 0, 0.7);
 }
 
-.card-film:hover img {
+.card-film:hover .card-img {
   -ms-transform:scale(1.1);
   -webkit-transform:scale(1.1);
   transform:scale(1.1);

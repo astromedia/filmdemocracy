@@ -161,7 +161,7 @@
         </button>
         <form action="{% url 'registration:account_delete' %}" class="text-center">
           {% csrf_token %}
-          <button method="post" type="submit" class="btn btn-outline-danger mr-3">
+          <button method="POST" type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
           </button>
         </form>

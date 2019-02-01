@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="61.807426mm"
+   height="61.869881mm"
+   viewBox="0 0 61.807425 61.869879"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="person.svg">
+  <defs
+     id="defs2">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Invert"
+       id="filter832">
+      <feColorMatrix
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -0.21 -0.72 -0.07 2 0 "
+         result="fbSourceGraphic"
+         id="feColorMatrix830" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix834" />
+      <feColorMatrix
+         id="feColorMatrix836"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -0.21 -0.72 -0.07 2 0 "
+         result="fbSourceGraphic"
+         in="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix838" />
+      <feColorMatrix
+         id="feColorMatrix840"
+         values="0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 -0.21 -0.72 -0.07 2 0 "
+         result="fbSourceGraphic"
+         in="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix842" />
+      <feColorMatrix
+         id="feColorMatrix844"
+         values="0 0 1 0 0 0 1 0 0 0 1 0 0 0 0 -0.21 -0.72 -0.07 2 0 "
+         result="color2"
+         in="fbSourceGraphic" />
+    </filter>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath841">
+      <circle
+         style="opacity:1;fill:#ffff00;fill-opacity:1;stroke:none;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="circle843"
+         cx="128.95216"
+         cy="171.03062"
+         r="26.79377" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="873.72798"
+     inkscape:cy="97.670772"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-0.90534831,-97.360138)">
+    <path
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.35714287;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 28.926307,159.15588 C 17.209454,157.98135 7.316374,150.53432 3.0023349,139.64159 c -0.9244304,-2.33414 -1.5389834,-4.73116 -1.9235261,-7.50256 -0.2338282,-1.6852 -0.23061351,-5.98487 0.00577,-7.70127 1.1693419,-8.49112 5.414166,-15.79503 12.1084812,-20.83461 12.34966,-9.297008 29.570632,-8.093474 40.494151,2.83004 4.872823,4.87283 7.865827,10.94628 8.849394,17.95732 0.234894,1.67438 0.234894,6.16863 0,7.84301 -0.520102,3.70738 -1.440434,6.6982 -3.053157,9.92187 -1.531035,3.06041 -3.356967,5.59172 -5.797399,8.03703 -2.481106,2.48607 -5.010073,4.29769 -8.176024,5.85687 -3.219286,1.58545 -5.785734,2.38895 -9.35491,2.92883 -1.525069,0.23068 -5.681319,0.33289 -7.228795,0.17776 z m 4.928079,-4.10237 c 4.977207,-0.25563 10.437265,-2.39314 14.659872,-5.73908 1.112618,-0.88163 3.254703,-2.9962 4.118999,-4.0661 l 0.593005,-0.73407 -0.490365,-0.91957 c -1.186437,-2.22491 -2.932869,-4.56465 -4.815234,-6.45109 -2.048775,-2.05321 -4.058232,-3.49932 -6.541204,-4.70741 -0.816597,-0.39731 -1.485225,-0.74365 -1.485844,-0.76964 -5.3e-4,-0.026 0.221019,-0.19562 0.492532,-0.37696 0.825677,-0.55149 2.70701,-2.5041 3.365317,-3.49283 2.145287,-3.22206 2.928665,-6.78451 2.317856,-10.54055 -0.854043,-5.25174 -4.608893,-9.64716 -9.677984,-11.32903 -1.752164,-0.58135 -2.368704,-0.67171 -4.582962,-0.67171 -2.215071,0 -2.832775,0.0906 -4.582962,0.67225 -3.075974,1.02226 -5.680945,3.0241 -7.48675,5.75334 -2.852174,4.3107 -3.16728,9.85473 -0.82283,14.47702 0.963678,1.89997 2.469398,3.72261 4.043251,4.89426 0.418875,0.31183 0.762825,0.58823 0.764333,0.61421 0.0016,0.026 -0.564835,0.31663 -1.258538,0.64587 -4.774456,2.26603 -8.868013,6.27117 -11.629305,11.37815 l -0.436729,0.80772 0.589587,0.74206 c 0.779232,0.98075 2.946135,3.14154 3.952756,3.94162 4.516199,3.58952 9.777415,5.61529 15.355284,5.91237 0.727604,0.0388 1.599311,0.0571 1.937128,0.0407 0.337815,-0.0164 1.06717,-0.0531 1.620787,-0.0815 z"
+       id="path845"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

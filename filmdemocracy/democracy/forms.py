@@ -126,10 +126,9 @@ class FilmAddNewForm(forms.ModelForm):
 
     def clean_imdb_url(self):
         imdb_key = process_imdb_url(self)
-        film_id = f'{self.club_id}{imdb_key}'
-        if Film.objects.filter(pk=film_id):
+        if Film.objects.filter(club=self.club_id, imdb_id=imdb_key, seen=False):
             raise forms.ValidationError(
-                _("That movie is already proposed!")
+                _("That film is already in the candidate list!")
             )
         else:
             return imdb_key

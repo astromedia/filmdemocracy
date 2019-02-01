@@ -1,0 +1,107 @@
+{% extends "democracy/base_club_banner.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/shoutbox.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Club Shoutbox' %}{% endblock %}
+
+{% block content %}
+
+
+<h1 class="display-4">{% trans 'Club Shoutbox' %}</h1>
+
+
+<!--START: SHOUTBOX CONTAINER-->
+<div class="container container-shoutbox overflow-auto border" id="DivShoutbox">
+
+  <!--POSTS-->
+  {% for post in posts|dictsort:"date" %}
+  <div class="row justify-content-start post">
+
+    <!--DELETE ICON-->
+    <div class="col col-1">
+      {% if not post.deleted %}
+      {% if user == post.user or user in club_admins %}
+      <form class="text-center mb-n5 ml-3" action="{% url 'democracy:delete_shoutbox_post' club.id post.id %}"
+            method="POST">
+        {% csrf_token %}
+        <label for="delete-icon_{{ forloop.counter }}" class="">
+          <img class="pointer-cursor" style="height: 18px;" src="{% static 'democracy/svg/trashcan.svg'%}">
+        </label>
+        <input type="submit" class="invisible" id="delete-icon_{{ forloop.counter }}">
+      </form>
+      {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="col col-10">
+
+      <!--NAME AND DATE-->
+      <div class="row">
+        <div class="col-auto mr-auto username">
+          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
+            <strong>{{ post.user.username }}</strong></a>:
+        </div>
+        <div class="col-auto date">
+          <span class="small text-muted">{{ post.date }}</span>
+        </div>
+      </div>
+
+      <!--POST TEXT-->
+      <div>
+        {% if post.deleted %}
+        <span class="text-muted"><em>{% trans 'Post deleted.' %}</em></span>
+        {% else %}
+        <span>{{ post.text }}</span>
+        {% endif %}
+      </div>
+
+    </div>
+
+
+  </div>
+  {% endfor %}
+
+
+</div>
+<!--END: SHOUTBOX CONTAINER-->
+
+
+  <!--START: POST FORM-->
+  <form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id %}" method="POST">
+    {% csrf_token %}
+
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">{% trans 'Say something' %}</span>
+      </div>
+      <textarea class="form-control" aria-label="With textarea" name="text"></textarea>
+      <div class="input-group-append">
+        <input type="submit" class="btn btn-sm btn-outline-success" value="{% trans 'Post' %}">
+      </div>
+    </div>
+
+  </form>
+  <!--END: POST FORM-->
+
+
+<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
+  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
+</form>
+
+
+<script>
+  window.onload=function () {
+     var objDiv = document.getElementById("DivShoutbox");
+     objDiv.scrollTop = objDiv.scrollHeight;
+}
+</script>
+
+
+{% endblock %}

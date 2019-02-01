@@ -1,16 +1,17 @@
-{% extends "base_filmdemocracy.html" %}
+{% extends "democracy/base_club_banner.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/film_detail.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Film details' %}{% endblock %}
 
-{% block pagecontent %}
+{% block content %}
 
 
 <!--START: FILM BANNER-->
@@ -34,12 +35,41 @@
       <!--START: INFO-->
       <div class="col-md-9">
 
-        <!--PROPOSED BY-->
-        <div class="mb-2">
-          <strong>{% trans 'Proposed by: ' %}</strong>
-          <a class="proposed-by" href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
-            {{ film.proposed_by.username }}</a>, {% trans 'on ' %} {{ film.pub_date }}
+
+        <div class="row align-items-center justify-content-between mb-2">
+
+          <!--PROPOSED BY-->
+          <div class="col-auto">
+            <strong>{% trans 'Proposed by: ' %}</strong>
+            <a class="proposed-by" href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
+              {{ film.proposed_by.username }}</a>, {% trans 'on ' %} {{ film.pub_date }}
+          </div>
+
+
+          <!--START: DELETE FILM-->
+          {% if not film.seen %}
+          {% if user in club_admins or film.proposed_by == user %}
+          <div class="col-auto">
+            <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+                    data-target="#DeleteModalCenter">
+              {% trans 'Delete film' %}
+            </button>
+          </div>
+          {% endif %}
+          {% else %}
+          {% if user in club_admins %}
+          <div class="col-auto">
+            <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+                    data-target="#DeleteModalCenter">
+              {% trans 'Delete film' %}
+            </button>
+          </div>
+          {% endif %}
+          {% endif %}
+          <!--END: DELETE FILM-->
+
         </div>
+
 
         <!--DATABASE LINKS-->
         <div class="row mb-2">
@@ -102,173 +132,265 @@
 <!--END: FILM BANNER-->
 
 
-<!--START: VOTES (FILM NOT SEEN)-->
 {% if not film.seen %}
 
-<h4 class="text-center h4 my-4">{% trans 'Did you vote already?' %}</h4>
-
-{% for choice, choice_dict in vote_choices.items %}
-<div class="text-center">
-  <form action="{% url 'democracy:vote_film' club.id film.id %}" method="POST">
-    {% csrf_token %}
-
-    <!--POSITIVE BUTTON-->
-    {% if choice_dict.choice_karma == 'positive' %}
-    {% if choice_dict.choice_voted %}
-    <label class="btn btn-success btn-block vote-btn" for="vote_{{ forloop.counter }}">
-      {{ choice_dict.choice_text }}
-    </label>
-    {% else %}
-    <label class="btn btn-outline-success btn-block vote-btn success-bg black" for="vote_{{ forloop.counter }}">
-      {{ choice_dict.choice_text }}
-    </label>
-    {% endif %}
-
-    <!--NEUTRAL BUTTON-->
-    {% elif choice_dict.choice_karma == 'neutral' %}
-    {% if choice_dict.choice_voted %}
-    <label class="btn btn-secondary btn-block vote-btn" for="vote_{{ forloop.counter }}">
-      {{ choice_dict.choice_text }}
-    </label>
-    {% else %}
-    <label class="btn btn-outline-secondary btn-block vote-btn secondary-bg black" for="vote_{{ forloop.counter }}">
-      {{ choice_dict.choice_text }}
-    </label>
-    {% endif %}
-
-    <!--NEGATIVE BUTTON-->
-    {% elif choice_dict.choice_karma == 'negative' %}
-    {% if choice_dict.choice_voted %}
-    <label class="btn btn-danger btn-block vote-btn" for="vote_{{ forloop.counter }}">
-      {{ choice_dict.choice_text }}
-    </label>
-    {% else %}
-    <label class="btn btn-outline-danger btn-block vote-btn danger-bg black" for="vote_{{ forloop.counter }}">
-      {{ choice_dict.choice_text }}
-    </label>
-    {% endif %}
-    {% endif %}
-
-    <input type="submit" class="btn btn-block vote-btn invisible" name="choice"
-           id="vote_{{ forloop.counter }}" value="{{ choice_dict.choice }}">
-
-  </form>
+<div class="text-center my-4"><a href="{% url 'democracy:candidate_films' club.id %}">
+  {% trans 'Go to candidate films' %}</a>
 </div>
-{% endfor %}
+
+{% elif film.seen %}
+
+<div class="text-center my-4"><a href="{% url 'democracy:seen_films' club.id %}">
+  {% trans 'Go to seen films' %}</a>
+</div>
 
 {% endif %}
-<!--END: VOTES (FILM NOT SEEN)-->
 
 
-<!--START: SEEN BY (FILM NOT SEEN)-->
-{% if film.seen %}
-<div class="mt-4 h6 text-center">
-  {% blocktrans with date=film.seen_date %}
-  Seen in session on the {{ filter_title }}{{ date }} by:
-  {% endblocktrans %}
-</div>
+<nav class="nav-film">
+  <div class="nav nav-tabs justify-content-center nav-justified" id="nav-tab" role="tablist">
+    {% if not film.seen %}
+    <a class="nav-item nav-link active" id="nav-vote-tab" data-toggle="tab" href="#nav-vote"
+       role="tab" aria-controls="nav-vote" aria-selected="true">{% trans 'Your vote' %}</a>
+    {% elif film.seen %}
+    <a class="nav-item nav-link active" id="nav-seen-tab" data-toggle="tab" href="#nav-seen"
+       role="tab" aria-controls="nav-seen" aria-selected="true">{% trans 'Film seen' %}</a>
+    {% endif %}
+    <a class="nav-item nav-link" id="nav-registered-votes-tab" data-toggle="tab" href="#nav-registered-votes"
+       role="tab" aria-controls="nav-registered-votes" aria-selected="false">
+      {% trans 'Registered votes' %} ({{ film.vote_set.all|length }})
+    </a>
+    <a class="nav-item nav-link" id="nav-comments-tab" data-toggle="tab" href="#nav-comments"
+       role="tab" aria-controls="nav-comments-tab" aria-selected="false">
+      {% trans 'Comments' %} ({{ film_comments|length }})
+    </a>
+  </div>
+</nav>
 
-<div class="container-fluid">
 
-  <div class="row mt-4 justify-content-center">
+<div class="tab-content" id="nav-tabContent">
 
-    {% for member in film.seen_by.all %}
 
-    <div class="col-auto">
-      <div class="card mb-4 shadow-sm" style="width: 8rem;">
+  <!--START: VOTES (FILM NOT SEEN) TAB-->
+  {% if not film.seen %}
+  <div class="tab-pane fade show active" id="nav-vote" role="tabpanel" aria-labelledby="nav-vote-tab">
 
-        <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
-          {% if member.profile_image %}
-          <img class="card-img-top border border-secondary member-shadow"
-               src="{{ member.profile_image.url }}"
-               alt="member.profile_image not found">
-          {% else %}
-          <img class="card-img-top border border-secondary member-shadow"
-               src="{% static 'registration/user_no_profile_image.png' %}"
-               alt="member.profile_image not found">
-          {% endif %}
-        </a>
+    <h4 class="text-center h4 my-4">{% trans 'Did you vote already?' %}</h4>
 
-        <div class="text-center p-1">
-          <small>{{ member.username }}</small>
+    {% for choice, choice_dict in vote_choices.items %}
+    <div class="text-center">
+      <form action="{% url 'democracy:vote_film' club.id film.id %}" method="POST">
+        {% csrf_token %}
+
+        <!--POSITIVE BUTTON-->
+        {% if choice_dict.choice_karma == 'positive' %}
+        {% if choice_dict.choice_voted %}
+        <label class="btn btn-success btn-block vote-btn" for="vote_{{ forloop.counter }}">
+          {{ choice_dict.choice_text }}
+        </label>
+        {% else %}
+        <label class="btn btn-outline-success btn-block vote-btn success-bg black" for="vote_{{ forloop.counter }}">
+          {{ choice_dict.choice_text }}
+        </label>
+        {% endif %}
+
+        <!--NEUTRAL BUTTON-->
+        {% elif choice_dict.choice_karma == 'neutral' %}
+        {% if choice_dict.choice_voted %}
+        <label class="btn btn-secondary btn-block vote-btn" for="vote_{{ forloop.counter }}">
+          {{ choice_dict.choice_text }}
+        </label>
+        {% else %}
+        <label class="btn btn-outline-secondary btn-block vote-btn secondary-bg black"
+               for="vote_{{ forloop.counter }}">
+          {{ choice_dict.choice_text }}
+        </label>
+        {% endif %}
+
+        <!--NEGATIVE BUTTON-->
+        {% elif choice_dict.choice_karma == 'negative' %}
+        {% if choice_dict.choice_voted %}
+        <label class="btn btn-danger btn-block vote-btn" for="vote_{{ forloop.counter }}">
+          {{ choice_dict.choice_text }}
+        </label>
+        {% else %}
+        <label class="btn btn-outline-danger btn-block vote-btn danger-bg black" for="vote_{{ forloop.counter }}">
+          {{ choice_dict.choice_text }}
+        </label>
+        {% endif %}
+        {% endif %}
+
+        <input type="submit" class="btn btn-block vote-btn invisible" name="choice"
+               id="vote_{{ forloop.counter }}" value="{{ choice_dict.choice }}">
+
+      </form>
+    </div>
+    {% endfor %}
+
+  </div>
+  {% endif %}
+  <!--END: VOTES (FILM NOT SEEN) TAB-->
+
+
+  <!--START: SEEN BY (FILM SEEN) TAB-->
+  {% if film.seen %}
+  <div class="tab-pane fade show active" id="nav-seen" role="tabpanel" aria-labelledby="nav-seen-tab">
+
+    <h4 class="text-center h4 my-4">
+      {% blocktrans with date=film.seen_date %}
+      Seen in session on {{ filter_title }}{{ date }} by:
+      {% endblocktrans %}
+    </h4>
+
+    <div class="container-fluid">
+
+      <div class="row mt-4 justify-content-center">
+
+        {% for member in film.seen_by.all %}
+
+        <div class="col-auto">
+          <div class="card">
+
+            <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
+              {% if member.profile_image %}
+              <img class="card-img-top border border-secondary member-shadow"
+                   src="{{ member.profile_image.url }}"
+                   alt="member.profile_image not found">
+              {% else %}
+              <img class="card-img-top border border-secondary member-shadow"
+                   src="{% static 'registration/user_no_profile_image.png' %}"
+                   alt="member.profile_image not found">
+              {% endif %}
+            </a>
+
+            <div class="text-center p-1">
+              <small>{{ member.username }}</small>
+            </div>
+
+          </div>
         </div>
+
+        {% endfor %}
 
       </div>
     </div>
 
+  </div>
+  {% endif %}
+  <!--END: SEEN BY (FILM SEEN) TAB-->
+
+
+  <!--START: REGISTERED VOTES TAB-->
+  <div class="tab-pane fade" id="nav-registered-votes" role="tabpanel" aria-labelledby="nav-registered-votes-tab">
+    <h4 class="text-center h4 mt-4 mb-5">{% trans 'Registered votes on film' %}</h4>
+
+
+    {% if film.vote_set.all %}
+
+
+    {% for vote in film.vote_set.all %}
+    <div class="row justify-content-start registered-vote">
+      <div class="col col-3 text-right">
+        <a class="text-body" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
+          <strong>{{ vote.user.username }}</strong></a>:
+      </div>
+      <div class="col col-8">
+
+        {% if vote.vote_karma == 'positive' %}
+        <p class="text-success">{{ vote.get_choice_display }}</p>
+        {% elif vote.vote_karma == 'neutral' %}
+        <p class="text-secondary">{{ vote.get_choice_display }}</p>
+        {% elif vote.vote_karma == 'negative' %}
+        <p class="text-danger">
+          {% if vote.choice == "veto" %}
+          <strong>{{ vote.get_choice_display }}</strong>
+          {% else %}
+          {{ vote.get_choice_display }}
+        </p>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
     {% endfor %}
 
-  </div>
-</div>
 
-{% endif %}
-<!--END: SEEN BY (FILM NOT SEEN)-->
+    {% else %}
 
 
-<!--START: REGISTERED VOTES-->
-<h5 class="text-center mt-5 mb-4 font-weight-normal"><u>{% trans 'Registered votes on film:' %}</u></h5>
+    <div class="text-center mt-n3 mb-5">-</div>
 
 
-{% if film.vote_set.all %}
-
-
-{% for vote in film.vote_set.all %}
-<div class="row justify-content-center my-n3">
-  <div class="col-6 text-right">
-    <a class="text-body" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
-      <strong>{{ vote.user.username }}</strong></a>:
-  </div>
-  <div class="col-6">
-
-    {% if vote.vote_karma == 'positive' %}
-    <p class="text-success">{{ vote.get_choice_display }}</p>
-    {% elif vote.vote_karma == 'neutral' %}
-    <p class="text-secondary">{{ vote.get_choice_display }}</p>
-    {% elif vote.vote_karma == 'negative' %}
-    <p class="text-danger">
-      {% if vote.choice == "veto" %}
-      <strong>{{ vote.get_choice_display }}</strong>
-      {% else %}
-      {{ vote.get_choice_display }}
-    </p>
     {% endif %}
-    {% endif %}
+
+
   </div>
-</div>
-{% endfor %}
+  <!--END: REGISTERED VOTES TAB-->
 
 
-{% else %}
+  <!--START: COMMENTS TAB-->
+  <div class="tab-pane fade px-2" id="nav-comments" role="tabpanel" aria-labelledby="nav-comments-tab">
+
+    <h4 class="text-center h4 mt-4 mb-5">{% trans 'Club members comments' %}</h4>
 
 
-<div class="text-center mt-n3 mb-5">-</div>
+    <!--COMMENTS-->
+    {% for comment in film_comments %}
+    <div class="row justify-content-start comment">
+      <div class="col col-3 text-right comment-meta">
+        <div>
+          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
+            <strong>{{ comment.user.username }}</strong></a>:
+        </div>
+        <div class="mt-n2">
+          <span class="small text-muted">{{ comment.date }}</span>
+        </div>
+      </div>
+      <div class="col comment-text">
+        {% if comment.deleted %}
+        <span class="text-muted"><em>{% trans 'Comment deleted.' %}</em></span>
+        {% else %}
+        {{ comment.text }}
+        {% endif %}
+      </div>
+      <div class="col col-1 comment-text">
+        {% if not comment.deleted %}
+        {% if user == comment.user or user in club_admins %}
+        <form action="{% url 'democracy:delete_film_comment' club.id film.id comment.id %}" method="POST">
+          {% csrf_token %}
+          <label for="delete-icon_{{ forloop.counter }}">
+            <img class="pointer-cursor" style="height: 18px;" src="{% static 'democracy/svg/trashcan.svg'%}">
+          </label>
+          <input type="submit" class="invisible" id="delete-icon_{{ forloop.counter }}">
+        </form>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
 
 
-{% endif %}
-<!--END: REGISTERED VOTES-->
+    <!--START: COMMENT FORM-->
+    <form class="form-comment" action="{% url 'democracy:comment_film' club.id film.id %}" method="POST">
+      {% csrf_token %}
+
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">{% trans 'Write a comment' %}</span>
+        </div>
+        <textarea class="form-control" aria-label="With textarea" name="text"></textarea>
+        <div class="input-group-append">
+          <input type="submit" class="btn btn-sm btn-outline-success" value="{% trans 'Post' %}">
+        </div>
+      </div>
+
+    </form>
+    <!--END: COMMENT FORM-->
 
 
-<!--START: ADMIN FILM OPTIONS-->
-{% if not film.seen %}
-{% if user in club_admins or film.proposed_by == user %}
-<div class="text-center">
-  <button type="button" class="btn btn-sm btn-outline-danger my-3" data-toggle="modal" data-target="#DeleteModalCenter">
-    {% trans 'Remove from candidate films' %}
-  </button>
-</div>
-{% endif %}
-{% else %}
-<div class="text-center">
-  <button type="button" class="btn btn-sm btn-outline-dark my-3" data-toggle="modal" data-target="#MoveBackModalCenter">
-    {% trans 'Move back to list of candidate films' %}
-  </button>
-</div>
-{% endif %}
-<!--END: ADMIN FILM OPTIONS-->
+  </div>
+  <!--END: COMMENTS TAB-->
 
 
-<div class="text-center mt-5"><a href="{% url 'democracy:candidate_films' club.id %}">
-  {% trans 'Go to candidate films' %}</a>
 </div>
 
 
@@ -299,14 +421,14 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="DeleteModalCenterTitle">{% trans 'Remove from candidate films' %}</h5>
+        <h5 class="modal-title" id="DeleteModalCenterTitle">{% trans 'Delete film' %}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        {% trans 'Are you sure you want to remove this film from the list?' %}<br>
-        {% trans 'All its recorded votes will be lost...' %}
+        {% trans 'Are you sure you want to delete this film?' %}
+        {% trans 'All its attached information will be lost...' %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn btn-secondary" data-dismiss="modal">
@@ -314,7 +436,7 @@
         </button>
         <form action="{% url 'democracy:delete_film' club.id film.id %}" class="text-center">
           {% csrf_token %}
-          <button method="post" type="submit" class="btn btn-outline-danger mr-3">
+          <button method="POST" type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
           </button>
         </form>
@@ -323,38 +445,6 @@
   </div>
 </div>
 <!--END: MODAL DELETE-->
-
-
-<!--START: MODAL MOVE BACK-->
-<div class="modal fade" id="MoveBackModalCenter" tabindex="-1" role="dialog" aria-labelledby="MoveBackModalCenterTitle"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="MoveBackModalCenterTitle">{% trans 'Move back to list of candidate films' %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        {% trans 'Are you sure you want to move it back to candidate films?' %}<br>
-        {% trans 'The info of when and who saw it will be lost...' %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn btn-secondary" data-dismiss="modal">
-          {% trans 'Cancel' %}
-        </button>
-        <form action="{% url 'democracy:unsee_film' club.id film.id %}" class="text-center">
-          {% csrf_token %}
-          <button method="post" type="submit" class="btn btn-outline-dark mr-3">
-            {% trans 'Confirm' %}
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!--END: MODAL MOVE BACK-->
 
 
 {% endblock %}

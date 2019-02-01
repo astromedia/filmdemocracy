@@ -1,0 +1,63 @@
+
+/* General page styles
+-------------------------------------------------- */
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+  height: 100%;
+}
+
+.btn-sm-cancel {
+  text-align: center;
+  margin-top: 0px;
+}
+
+.container-base {
+  background-color: #fafafa;
+}
+
+.display-4 {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.container-shoutbox {
+  max-width: 50rem;
+  max-height: 32rem;
+  background-color: #fff;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Posts
+-------------------------------------------------- */
+.post {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.post .username {
+  font-size: 14px;
+}
+
+.post .date {
+  opacity: 0.5;
+}
+
+.form-post {
+  max-width: 50rem;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin: auto;
+}

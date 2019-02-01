@@ -59,6 +59,17 @@ class Club(models.Model):
         return markdownify(str(self.panel))
 
 
+class ShoutboxPost(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    date = models.DateTimeField('comment date', auto_now_add=True)
+    deleted = models.BooleanField(default=False)
+    text = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f'{self.user}|{self.text}'
+
+
 class ClubMemberInfo(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     member = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -116,7 +127,8 @@ class Film(models.Model):
     """
     Film proposed by user in club. Obtains info from FilmDb.
     """
-    id = models.CharField(primary_key=True, unique=True, max_length=12)  # 5(club)+7(imdb)
+    id = models.CharField(primary_key=True, unique=True, max_length=10)  # 5(club)+5
+    imdb_id = models.CharField('IMDb id', max_length=7)
     proposed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     filmdb = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
@@ -133,7 +145,6 @@ class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    vote_date = models.DateTimeField('date of vote', auto_now_add=True)
     VETO = 'veto'
     SEENNO = 'seenno'
     NO = 'no'
@@ -163,3 +174,15 @@ class Vote(models.Model):
 
     def __str__(self):
         return f'{self.user}|{self.film.filmdb.title}|{self.choice}'
+
+
+class FilmComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    film = models.ForeignKey(Film, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    date = models.DateTimeField('comment date', auto_now_add=True)
+    deleted = models.BooleanField(default=False)
+    text = models.CharField(max_length=200)
+
+    def __str__(self):
+        return f'{self.user}|{self.film.filmdb.title}|{self.text}'
