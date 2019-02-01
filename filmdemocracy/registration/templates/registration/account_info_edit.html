@@ -27,7 +27,7 @@
 
 {% if form.errors %}
 {% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center">
+<div class="alert alert-danger text-center mx-4">
   <strong>{{ error|escape }}</strong>
 </div>
 {% endfor %}
@@ -52,7 +52,7 @@
         <img class="zoom-in-cursor" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
              data-toggle="modal" data-target="#UserImageModalCenter">
         {% else %}
-        <img src="{% static 'registration/user_no_profile_image.png' %}"
+        <img src="{% static 'registration/user_no_profile_image.svg' %}"
              alt="user.profile_image not found">
         {% endif %}
       </div>
@@ -182,14 +182,14 @@
 
   </div>
 
-  <input class="btn btn-block btn-success" type="submit" value="{% trans 'Save changes' %}">
+  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Save changes' %}">
 
 </form>
 <!--END: ACCOUNT INFO FORM-->
 
 
-<form class="btn-sm-cancel" action="{% url 'registration:account_info' %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+<form class="btn-cancel" action="{% url 'registration:account_info' %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 
 

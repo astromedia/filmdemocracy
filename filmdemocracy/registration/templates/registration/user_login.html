@@ -16,7 +16,7 @@
 {% if user.is_authenticated %}
 
 
-<div class="alert alert-success text-center my-5" role="alert">
+<div class="alert alert-success text-center my-5 mx-4" role="alert">
   <strong>{% trans 'Your are already logged in as:' %} {{ user.username }}</strong>
 </div>
 
@@ -26,7 +26,7 @@
 
 <!--START: USER DOES NOT HAVE ACCESS-->
 {% if next %}
-<div class="alert alert-danger text-center" role="alert">
+<div class="alert alert-danger text-center mx-4" role="alert">
   {% if user.is_authenticated %}
   <strong>
     {% trans 'Your account does not have access to this page. To continue, log in to an account with access.' %}
@@ -55,7 +55,7 @@
 
 {% if form.errors %}
 {% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center">
+<div class="alert alert-danger text-center mx-4">
   <strong>{{ error|escape }}</strong>
 </div>
 {% endfor %}
@@ -127,7 +127,7 @@
 
   </div>
 
-  <input class="btn btn-lg btn-block btn-success" type="submit" value="{% trans 'Log in' %}">
+  <input class="btn btn-lg btn-block btn-green-to-blue" type="submit" value="{% trans 'Log in' %}">
   <input type="hidden" name="next" value="{{ next }}">
 
 </form>
@@ -142,8 +142,8 @@
 {% endif %}
 
 
-<form class="btn-sm-cancel" action="{% url 'home' %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Home' %}</button>
+<form class="btn-cancel" action="{% url 'home' %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Home' %}</button>
 </form>
 
 

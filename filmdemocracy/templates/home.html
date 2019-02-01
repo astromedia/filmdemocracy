@@ -6,6 +6,7 @@
 {% block styles %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/dark_background.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Home' %}{% endblock %}
@@ -84,14 +85,13 @@
   <p class="lead misc-text light1-style">{% trans 'To start, log in.' %}</p>
 
   <form action="{% url 'registration:user_login' %}">
-    <button type="submit" class="btn btn-block btn-success mb-5">{% trans 'Log in' %}</button>
+    <button type="submit" class="btn btn-block btn-green-to-blue mb-5">{% trans 'Log in' %}</button>
   </form>
 
-  <p class="lead misc-text light1-style">{% trans 'New here? Create an account!' %}</p>
-
-  <form action="{% url 'registration:user_signup' %}">
-    <button type="submit" class="btn btn-block btn-primary">{% trans 'Create account' %}</button>
-  </form>
+  <span class="lead misc-text light1-style">{% trans 'New here?' %}</span>
+  <a class="mx-1 green-color blue-color-hover" href="{% url 'registration:user_signup' %}" target="blank">
+    {% trans 'Create an account!' %}
+  </a>
 
 </div>
 <!--END: LOGIN / SIGNIN-->

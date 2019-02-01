@@ -104,7 +104,7 @@
 
           <!--START: WARNINGS-->
           {% for warning in film_results.warnings %}
-          <div class="alert alert-warning text-center my-2" role="alert">
+          <div class="alert alert-warning text-center my-2 mx-4" role="alert">
             {% if warning.type == 'veto' %}
             {% blocktrans with user=warning.voter film=warning.film %}
             <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>
@@ -131,8 +131,8 @@
 <!--END: VOTING RESULTS-->
 
 
-<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
+<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Back to club' %}</button>
 </form>
 
 

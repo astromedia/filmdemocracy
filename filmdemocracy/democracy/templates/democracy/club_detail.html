@@ -32,7 +32,7 @@
       <!--LINK TO FILM PANEL-->
       <div class="my-3">
         <form action="{% url 'democracy:candidate_films' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-hover-bg1">
+          <button type="submit" class="btn btn-club-links btn-gray-to-color green-bg-hover">
             {% trans 'Candidate films' %}
           </button>
         </form>
@@ -41,7 +41,7 @@
       <!--LINK TO FILM RANKING-->
       <div class="my-3">
         <form action="{% url 'democracy:participants' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-hover-bg1">
+          <button type="submit" class="btn btn-club-links btn-gray-to-color blue-bg-hover">
             {% trans 'Generate film ranking' %}
           </button>
         </form>
@@ -50,7 +50,7 @@
       <!--LINK TO SEEN FILMS-->
       <div class="my-3">
         <form action="{% url 'democracy:seen_films' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-hover-bg1">
+          <button type="submit" class="btn btn-club-links btn-gray-to-color orange-bg-hover">
             {% trans 'Films seen' %}
           </button>
         </form>
@@ -79,7 +79,7 @@
       <!--LINK TO NEW MEETING-->
       <div class="my-3">
         <form action="{% url 'democracy:meetings_new' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-hover-bg2">
+          <button type="submit" class="btn btn-club-links btn-gray-to-color green-bg-hover">
             {% trans 'Organize meeting' %}
           </button>
         </form>
@@ -88,7 +88,7 @@
       <!--LINK TO MEETINGS-->
       <div class="my-3">
         <form action="{% url 'democracy:meetings_list' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-hover-bg2">
+          <button type="submit" class="btn btn-club-links btn-gray-to-color blue-bg-hover">
             {% trans 'Programmed meetings' %}
           </button>
         </form>
@@ -97,7 +97,7 @@
       <!--LINK TO CLUB SHOUTBOX-->
       <div class="my-3">
         <form action="{% url 'democracy:shoutbox' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-hover-bg2">
+          <button type="submit" class="btn btn-club-links btn-gray-to-color orange-bg-hover">
             {% trans 'Club Shoutbox' %}
           </button>
         </form>
@@ -127,7 +127,7 @@
 
           <div class="col-md-auto">
             <form action="{% url 'democracy:edit_club_info' club.id %}">
-              <button type="submit" class="btn btn-sm btn-block btn-util btn-outline-primary">
+              <button type="submit" class="btn btn-sm btn-block btn-util btn-gray-to-color">
                 {% trans 'Edit club info' %}
               </button>
             </form>
@@ -135,7 +135,7 @@
 
           <div class="col-md-auto">
             <form action="{% url 'democracy:edit_club_panel' club.id %}">
-              <button type="submit" class="btn btn-sm btn-block btn-util btn-outline-primary">
+              <button type="submit" class="btn btn-sm btn-block btn-util btn-gray-to-color">
                 {% trans 'Edit club panel' %}
               </button>
             </form>
@@ -143,7 +143,7 @@
 
           <div class="col-md-auto">
             <form action="{% url 'democracy:promote_members' club.id %}">
-              <button type="submit" class="btn btn-sm btn-block btn-util btn-outline-success">
+              <button type="submit" class="btn btn-sm btn-block btn-util btn-gray-to-color">
                 {% trans 'Promote to admin' %}
               </button>
             </form>
@@ -151,14 +151,14 @@
 
           <div class="col-md-auto">
             <form action="{% url 'democracy:kick_members' club.id %}">
-              <button type="submit" class="btn btn-sm btn-block btn-util btn-outline-danger">
+              <button type="submit" class="btn btn-sm btn-block btn-util btn-gray-to-color">
                 {% trans 'Kick members' %}
               </button>
             </form>
           </div>
 
           <div class="col-md-auto">
-            <button type="button" class="btn btn-sm btn-block btn-util btn-outline-danger" data-toggle="modal"
+            <button type="button" class="btn btn-sm btn-block btn-util btn-gray-to-color" data-toggle="modal"
                     data-target="#self_demoteModal">
               {% trans 'Self-demote' %}
             </button>
@@ -181,7 +181,7 @@
 
 <!--START: WARNING MESSAGE-->
 {% if warning_message %}
-<div class="alert alert-danger text-center mt-4 alert-dismissible fade show" role="alert">
+<div class="alert alert-danger text-center mt-4 mx-4 alert-dismissible fade show" role="alert">
   <strong>{{ warning_message }}</strong>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -194,7 +194,7 @@
 <!--START: NO LOGO MESSAGE-->
 {% if user in club_admins %}
 {% if not club.logo %}
-<div class="alert alert-warning text-center alert-dismissible fade show mt-4 club-message" role="alert">
+<div class="alert alert-warning text-center alert-dismissible fade show mt-4 mx-4 club-message" role="alert">
   <div class="row justify-content-center">
     <div class="col-md-auto">
       <strong>{% trans "Your club doesn't have a logo yet!" %}</strong>
@@ -319,11 +319,11 @@
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
           {% if user in meeting.members_yes.all %}
-          <label class="btn btn-sm btn-block btn-primary btn-meeting-assistance" for="yes_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-assistance-active" for="yes_{{ forloop.counter }}">
             {% trans 'Confirm assistance' %}
           </label>
           {% else %}
-          <label class="btn btn-sm btn-block btn-outline-primary btn-meeting-assistance"
+          <label class="btn btn-sm btn-block btn-assistance"
                  for="yes_{{ forloop.counter }}">
             {% trans 'Confirm assistance' %}
           </label>
@@ -337,11 +337,11 @@
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
           {% if user in meeting.members_maybe.all %}
-          <label class="btn btn-sm btn-block btn-primary btn-meeting-assistance" for="maybe_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-assistance-active" for="maybe_{{ forloop.counter }}">
             {% trans "I'm interested" %}
           </label>
           {% else %}
-          <label class="btn btn-sm btn-block btn-outline-primary btn-meeting-assistance"
+          <label class="btn btn-sm btn-block btn-assistance"
                  for="maybe_{{ forloop.counter }}">
             {% trans "I'm interested" %}
           </label>
@@ -365,7 +365,7 @@
       {% if user == meeting.organizer %}
       <div class="col-sm-auto mt-1 mb-2">
         <form action="{% url 'democracy:meetings_edit' club.id meeting.id %}" class="text-center">
-          <button type="submit" class="btn btn-sm btn-block btn-success btn-meeting-edit">
+          <button type="submit" class="btn btn-sm btn-block btn-green-to-blue btn-meeting-edit">
             {% trans 'Edit' %}
           </button>
         </form>
@@ -435,9 +435,9 @@
         <strong>{{ comment.user.username }}</strong></a>:
     </div>
     <div class="mt-n2">
-            <a class="small text-muted" href="{% url 'democracy:film_detail' club.id comment.film.id %}">
-              <strong>{{ comment.film.filmdb.title }}</strong>
-            </a>
+      <a class="small text-muted" href="{% url 'democracy:film_detail' club.id comment.film.id %}">
+        <strong>{{ comment.film.filmdb.title }}</strong>
+      </a>
     </div>
   </div>
   <div class="col comment-text">
@@ -559,6 +559,8 @@
 
   <div class="row justify-content-center">
 
+    <!--MEMBER-->
+
     {% for member in club_members %}
     <div class="col-auto align-self-center">
       <div class="card">
@@ -569,7 +571,7 @@
             <img class="card-img-top" src="{{ member.profile_image.url }}"
                  alt="member.profile_image not found">
             {% else %}
-            <img class="card-img-top" src="{% static 'registration/user_no_profile_image.png' %}"
+            <img class="card-img-top" src="{% static 'registration/user_no_profile_image.svg' %}"
                  alt="member.profile_image not found">
             {% endif %}
           </div>
@@ -583,16 +585,26 @@
     </div>
     {% endfor %}
 
+
+    <!--INVITE NEW MEMBER-->
+    <div class="col-auto align-self-center">
+      <div class="card">
+        <a href="{% url 'democracy:invite_new_member' club.id %}">
+          <div class="member-image">
+            <img class="card-img-top" src="{% static 'registration/invite_user_image.svg' %}"
+                 alt="member.profile_image not found">
+          </div>
+        </a>
+
+        <div>
+          <small>{% trans 'Invite new member' %}</small>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
-  <!--INVITE NEW MEMBER BUTTON-->
-  <div class="text-center my-5">
-    <form action="{% url 'democracy:invite_new_member' club.id %}">
-      <button type="submit" class="btn btn-outline-success">
-        {% trans 'Invite new member' %}
-      </button>
-    </form>
-  </div>
 
   <!--LEAVE BUTTON-->
   <div class="text-center my-5">

@@ -75,14 +75,14 @@
         <div class="row mb-2">
 
           <div class="col-auto">
-            <a href="{{ film.filmdb.imdb_url }}" class="seagreen-link" target="blank">
+            <a href="{{ film.filmdb.imdb_url }}" class="green-color blue-color-hover" target="blank">
               {% trans 'IMDb page' %}
             </a>
           </div>
 
           <div class="col-auto">
             {% if film.filmdb.faff_id %}
-            <a class="mx-1 seagreen-link" href="{{ film.filmdb.faff_url }}" target="blank">
+            <a class="mx-1 green-color blue-color-hover" href="{{ film.filmdb.faff_url }}" target="blank">
               {% trans 'FilmAffinity page' %}
             </a>
             {% elif not film.filmdb.faff_id %}
@@ -258,7 +258,7 @@
                    alt="member.profile_image not found">
               {% else %}
               <img class="card-img-top border border-secondary member-shadow"
-                   src="{% static 'registration/user_no_profile_image.png' %}"
+                   src="{% static 'registration/user_no_profile_image.svg' %}"
                    alt="member.profile_image not found">
               {% endif %}
             </a>
@@ -379,7 +379,7 @@
         </div>
         <textarea class="form-control" aria-label="With textarea" name="text"></textarea>
         <div class="input-group-append">
-          <input type="submit" class="btn btn-sm btn-outline-success" value="{% trans 'Post' %}">
+          <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
         </div>
       </div>
 

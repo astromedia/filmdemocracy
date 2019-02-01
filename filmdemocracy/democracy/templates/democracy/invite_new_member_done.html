@@ -16,15 +16,15 @@
 
 <h3 class="h3">{% trans 'Invitation email sent' %}</h3>
 
-<div class="alert alert-success px-5 my-5 text-center" role="alert">
+<div class="alert alert-success px-5 my-5 mx-4 text-center" role="alert">
   <strong>
     {% trans 'An invitation email has been sent.' %}
   </strong>
 </div>
 
 
-<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Go back to club' %}</button>
+<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Go back to club' %}</button>
 </form>
 
 

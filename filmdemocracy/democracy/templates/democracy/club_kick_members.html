@@ -35,7 +35,7 @@
                    alt="member.profile_image not found">
               {% else %}
               <img class="card-img-top border border-secondary"
-                   src="{% static 'registration/user_no_profile_image.png' %}" alt="member.profile_image not found">
+                   src="{% static 'registration/user_no_profile_image.svg' %}" alt="member.profile_image not found">
               {% endif %}
               <div class="overlay"></div>
               {% if member in club_admins %}
@@ -67,8 +67,8 @@
 <!--END: KICK MEMBERS FORM-->
 
 
-<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 
 

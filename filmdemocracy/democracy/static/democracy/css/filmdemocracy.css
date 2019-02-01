@@ -45,11 +45,32 @@ body {
 
 .btn-login {
   width: 140px;
+  color: seagreen;
+  background-color: transparent;
+  border: 1px solid seagreen;
+}
+
+.btn-login:hover {
+  color: #fff;
+  text-decoration: none;
+  background-color: lightseagreen;
 }
 
 .btn-logout {
   width: 140px;
+  color: #6c737d;
+  background-color: transparent;
+  border: 1px solid #282828;
 }
+
+.btn-logout:hover {
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid #282828;
+  background-color: #282828;
+}
+
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -84,6 +105,14 @@ body {
   font-weight: bold;
 }
 
+.btn:active {
+  box-shadow: none;
+}
+
+.btn:focus {
+  box-shadow: none;
+}
+
 .btn-lg {
   font-size: 17px;
 }
@@ -104,10 +133,98 @@ body {
   cursor: pointer;
 }
 
-.btn-sm-cancel {
+.btn-cancel {
   text-align: center;
   margin-top: 50px;
 }
+
+.btn-cancel .btn {
+  color: #6c737d;
+  background-color: transparent;
+  border: 1px solid #282828;
+}
+
+.btn-cancel .btn:hover {
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid #282828;
+  background-color: #282828;
+}
+
+
+/* Button colors
+-------------------------------------------------- */
+
+.btn-gray-to-color {
+  color: #6c737d;
+  background-color: #282828;
+  font-weight: bold;
+  border: none;
+}
+
+.btn-gray-to-color:hover {
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-green-to-blue {
+  color: #fff;
+  background-color: seagreen;
+  border: none;
+}
+
+.btn-green-to-blue:hover {
+  color: #fff;
+  background-color: lightseagreen;
+  text-decoration: none;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-outline-green {
+  color: seagreen;
+  background-color: transparent;
+  border: 1px solid seagreen;
+}
+
+.btn-outline-green:hover {
+  color: #fff;
+  background-color: seagreen;
+  text-decoration: none;
+  border: 1px solid seagreen;
+  box-shadow: none;
+}
+
+.btn-blue {
+  color: #fff;
+  background-color: lightseagreen;
+  border: none;
+}
+
+.btn-blue:hover {
+  color: #fff;
+  background-color: #1a918b;
+  text-decoration: none;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-outline-blue {
+  color: lightseagreen;
+  background-color: transparent;
+  border: 1px solid lightseagreen;
+}
+
+.btn-outline-blue:hover {
+  color: #fff;
+  background-color: lightseagreen;
+  text-decoration: none;
+  border: 1px solid lightseagreen;
+  box-shadow: none;
+}
+
 
 
 /* Website colors
@@ -152,25 +269,58 @@ body {
   color: lightgray;
 }
 
-.success-light-style {
-  color: #44cb5d;
-}
-
-.success-style {
-  color: #00ba48
-}
-
-.success-dark-style {
-  color: #2dc14d;
-}
-
-.seagreen-link {
-  color: SeaGreen;
-}
-
-.seagreen-link:hover {
-  color: LightSeaGreen;
+.green-color {
+  color: seagreen;
   text-decoration: none;
+}
+
+.green-color-hover:hover {
+  color: seagreen;
+  text-decoration: none;
+}
+
+.green-bg {
+  background-color: seagreen;
+}
+
+.green-bg-hover:hover {
+  background-color: seagreen;
+}
+
+.blue-color {
+  color: lightseagreen;
+  text-decoration: none;
+}
+
+.blue-color-hover:hover {
+  color: lightseagreen;
+  text-decoration: none;
+}
+
+.blue-bg {
+  background-color: lightseagreen;
+}
+
+.blue-bg-hover:hover {
+  background-color: lightseagreen;
+}
+
+.orange-color {
+  color: #d7a03d;
+  text-decoration: none;
+}
+
+.orange-color-hover:hover {
+  color: #d7a03d;
+  text-decoration: none;
+}
+
+.orange-bg {
+  background-color: #d7a03d;
+}
+
+.orange-bg-hover:hover {
+  background-color: #d7a03d;
 }
 
 

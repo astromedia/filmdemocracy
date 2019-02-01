@@ -51,26 +51,19 @@
   </div>
 
 
-  <form class="btn-sm-cancel" action="{% url 'democracy:candidate_films' club.id %}">
-    <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
-  </form>
-
-
 </div>
 
 
 {% else %}
 
 
-<div class="alert alert-warning text-center mt-3">
-  <strong>{% trans 'There are no candidate films...' %}</strong>
-  <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-success ml-3">
-    {% trans 'Propose one!' %}</a>
+<div class="text-center text-muted mt-5">
+  <span>{% trans 'There are no candidate films...' %}</span>
 </div>
 
 
-<form class="btn-sm-cancel" action="{% url 'democracy:candidate_films' club.id %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+<form class="btn-cancel" action="{% url 'democracy:candidate_films' club.id %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 
 

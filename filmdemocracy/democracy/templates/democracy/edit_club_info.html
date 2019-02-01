@@ -28,7 +28,7 @@
 
 {% if form.errors %}
 {% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center">
+<div class="alert alert-danger text-center mx-4">
   <strong>{{ error|escape }}</strong>
 </div>
 {% endfor %}
@@ -112,14 +112,14 @@
 
   </div>
 
-  <input class="btn btn-block btn-primary" type="submit" value="{% trans 'Save changes' %}">
+  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Save changes' %}">
 
 </form>
 <!--END: EDIT CLUB FORM-->
 
 
-<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 
 

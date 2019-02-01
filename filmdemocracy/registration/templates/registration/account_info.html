@@ -15,7 +15,7 @@
 
 <!--START: NO PROFILE IMAGE MESSAGE-->
 {% if not user.profile_image %}
-<div class="alert alert-warning text-center alert-dismissible fade show" role="alert">
+<div class="alert alert-warning text-center mx-4 alert-dismissible fade show" role="alert">
   <div class="row justify-content-center">
     <div class="col-md-auto">
       <strong>{% trans "You don't have a profile picture yet!" %}</strong>
@@ -44,7 +44,7 @@
   <img class="zoom-in-cursor" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
        data-toggle="modal" data-target="#UserImageModalCenter">
   {% else %}
-  <img src="{% static 'registration/user_no_profile_image.png' %}"
+  <img src="{% static 'registration/user_no_profile_image.svg' %}"
        alt="user.profile_image not found">
   {% endif %}
 </div>
@@ -93,7 +93,7 @@
 
   <div class="col-sm-auto text-center my-2">
     <form action="{% url 'registration:account_info_edit' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-primary btn-profile">
+      <button type="submit" class="btn btn-sm btn-block btn-green-to-blue btn-profile">
         {% trans 'Edit profile' %}
       </button>
     </form>
@@ -101,7 +101,7 @@
 
   <div class="col-sm-auto text-center my-2">
     <form action="{% url 'registration:password_change' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-primary btn-profile">
+      <button type="submit" class="btn btn-sm btn-block btn-green-to-blue btn-profile">
         {% trans 'Change password' %}
       </button>
     </form>

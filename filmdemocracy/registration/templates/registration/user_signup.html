@@ -29,14 +29,14 @@
 {% for field in form %}
 {% if field.label == 'agree_terms' %}
 {% for error in field.errors %}
-<div class="alert alert-danger text-center">
+<div class="alert alert-danger text-center mx-4">
   <strong>{{ error|escape }}</strong>
 </div>
 {% endfor %}
 {% endif %}
 {% endfor %}
 {% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center">
+<div class="alert alert-danger text-center mx-4">
   <strong>{{ error|escape }}</strong>
 </div>
 {% endfor %}
@@ -92,15 +92,15 @@
 
   </div>
 
-  <input class="btn btn-lg btn-block btn-primary" type="submit" value="{% trans 'Create account' %}">
+  <input class="btn btn-lg btn-block btn-green-to-blue" type="submit" value="{% trans 'Create account' %}">
   <input type="hidden" name="next" value="{{ next }}">
 
 </form>
 <!--END: SIGN UP IN FORM-->
 
 
-<form class="btn-sm-cancel" action="{% url 'home' %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Cancel' %}</button>
+<form class="btn-cancel" action="{% url 'home' %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 
 

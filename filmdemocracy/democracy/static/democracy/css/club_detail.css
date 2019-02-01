@@ -48,46 +48,18 @@ body {
 .club-banner .btn-club-links {
   min-width: 270px;
   font-size: 17px;
-  margin: auto;
   padding: 10px;
-  color: #6c737d;
-  background-color: #282828;
-  font-weight: bold;
-  border: none;
-}
-
-.club-banner .btn-club-links:hover {
-  color: #fff;
-  text-decoration: none;
-  border: none;
-  box-shadow: none;
-}
-
-.club-banner .btn-hover-bg1:hover {
-  background-color: seagreen;
-}
-
-.club-banner .btn-hover-bg2:hover {
-  background-color: lightseagreen;
-}
-
-.club-banner .btn-club-links:active {
-  box-shadow: none;
-}
-
-.club-banner .btn-club-links:focus {
-  box-shadow: none;
 }
 
 .club-banner .btn-admin-utils {
   font-size: 17px;
   margin: auto;
-  color: seagreen;
+  color: #6c737d;
   font-weight: bold;
 }
 
 .club-banner .btn-admin-utils:hover {
-  color: lightseagreen;
+  color: #fff;
   text-decoration: none;
 }
 
@@ -234,6 +206,6 @@ body {
 }
 
 .member-image:hover {
-  border: 3px solid LightSeaGreen;
+  border: 3px solid lightseagreen;
   border-radius: 5px;
 }

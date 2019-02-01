@@ -1,16 +1,18 @@
-
 /* General page styles
 -------------------------------------------------- */
 body {
+  background-color: #121317;
 }
 
 .container-base {
   background-color: #121317;
+  box-shadow: none;
+}
+
+.club-banner {
+  box-shadow: none;
 }
 
 .display-4 {
-  text-align: center;
-  margin-top: 50px;
-  margin-bottom: 10px;
   color: darkgray;
 }

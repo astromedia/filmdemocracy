@@ -93,13 +93,13 @@
         </li>
 
         <form action="{% url 'registration:user_logout' %}" class="form-inline">
-          <button type="submit" class="btn btn-sm btn-logout btn-outline-secondary">{% trans 'Log out' %}</button>
+          <button type="submit" class="btn btn-sm btn-logout">{% trans 'Log out' %}</button>
         </form>
 
         {% else %}
 
         <form action="{% url 'registration:user_login' %}" class="form-inline">
-          <button type="submit" class="btn btn-sm btn-login btn-outline-success">{% trans 'Log in' %}</button>
+          <button type="submit" class="btn btn-sm btn-login">{% trans 'Log in' %}</button>
         </form>
 
         {% endif %}

@@ -1,17 +1,16 @@
 
 /* General page styles
 -------------------------------------------------- */
-html {
-  overflow: hidden;
-  height: 100%;
-}
 
 body {
-  overflow: hidden;
   height: 100%;
 }
 
-.btn-sm-cancel {
+.container-base {
+  min-height: 0;
+}
+
+.btn-cancel {
   text-align: center;
   margin-top: 0px;
 }
@@ -22,15 +21,16 @@ body {
 
 .display-4 {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 
 .container-shoutbox {
   max-width: 50rem;
-  max-height: 32rem;
+  min-height: 27.5rem;
+  max-height: 27.5rem;
   background-color: #fff;
-  padding: 10px;
+  padding: 20px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -45,6 +45,18 @@ body {
   margin-bottom: 10px;
 }
 
+.post:hover {
+ background-color: #fafafa;
+}
+
+.post img {
+ opacity: 0;
+}
+
+.post:hover img {
+ opacity: 1;
+}
+
 .post .username {
   font-size: 14px;
 }
@@ -55,9 +67,9 @@ body {
 
 .form-post {
   max-width: 50rem;
-  padding-top: 25px;
-  padding-bottom: 25px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-top: 0px;
+  padding-bottom: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
   margin: auto;
 }

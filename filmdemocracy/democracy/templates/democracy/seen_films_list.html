@@ -8,7 +8,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
-<link rel="stylesheet" href="{% static 'democracy/css/candidate_films_dark.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/dark_background.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Seen films' %}{% endblock %}
@@ -20,12 +20,11 @@
 <p class="lead text-muted text-center">{% trans '(Hall of fame)' %}</p>
 
 
+{% if seen_films %}
+
+
 <!--START: FILM PANEL-->
 <div class="album films-album">
-
-
-  {% if seen_films %}
-
 
   <div class="row justify-content-center">
 
@@ -50,24 +49,26 @@
 
   </div>
 
-
-  {% else %}
-
-
-  <div class="alert alert-warning text-center mt-3">
-    <strong>{% trans 'No film has been seen in the club yet...' %}</strong>
-  </div>
-
-
-  {% endif %}
-
-
-  <form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
-    <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
-  </form>
-
-
 </div>
+<!--END: FILM PANEL-->
+
+
+{% else %}
+
+
+<div class="text-center text-muted mt-5">
+  <span>{% trans 'No film has been seen in the club yet...' %}</span>
+</div>
+
+
+{% endif %}
+
+
+<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Back to club' %}</button>
+</form>
+
+
 <!--END: FILM PANEL-->
 
 

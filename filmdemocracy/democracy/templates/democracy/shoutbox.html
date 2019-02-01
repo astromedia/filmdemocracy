@@ -20,6 +20,10 @@
 <!--START: SHOUTBOX CONTAINER-->
 <div class="container container-shoutbox overflow-auto border" id="DivShoutbox">
 
+
+  {% if posts %}
+
+
   <!--POSTS-->
   {% for post in posts|dictsort:"date" %}
   <div class="row justify-content-start post">
@@ -28,11 +32,11 @@
     <div class="col col-1">
       {% if not post.deleted %}
       {% if user == post.user or user in club_admins %}
-      <form class="text-center mb-n5 ml-3" action="{% url 'democracy:delete_shoutbox_post' club.id post.id %}"
+      <form class="text-center mb-n5 ml-0" action="{% url 'democracy:delete_shoutbox_post' club.id post.id %}"
             method="POST">
         {% csrf_token %}
         <label for="delete-icon_{{ forloop.counter }}" class="">
-          <img class="pointer-cursor" style="height: 18px;" src="{% static 'democracy/svg/trashcan.svg'%}">
+          <img class="pointer-cursor" style="height: 20px;" src="{% static 'democracy/svg/trashcan.svg'%}">
         </label>
         <input type="submit" class="invisible" id="delete-icon_{{ forloop.counter }}">
       </form>
@@ -46,7 +50,7 @@
       <div class="row">
         <div class="col-auto mr-auto username">
           <a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
-            <strong>{{ post.user.username }}</strong></a>:
+            <strong>{{ post.user.username }}</strong></a>
         </div>
         <div class="col-auto date">
           <span class="small text-muted">{{ post.date }}</span>
@@ -69,30 +73,39 @@
   {% endfor %}
 
 
+  {% else %}
+
+
+  <div class="text-center my-5">cri cri...</div>
+
+
+  {% endif %}
+
+
 </div>
 <!--END: SHOUTBOX CONTAINER-->
 
 
-  <!--START: POST FORM-->
-  <form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id %}" method="POST">
-    {% csrf_token %}
+<!--START: POST FORM-->
+<form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id %}" method="POST">
+  {% csrf_token %}
 
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text">{% trans 'Say something' %}</span>
-      </div>
-      <textarea class="form-control" aria-label="With textarea" name="text"></textarea>
-      <div class="input-group-append">
-        <input type="submit" class="btn btn-sm btn-outline-success" value="{% trans 'Post' %}">
-      </div>
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">{% trans 'Say something' %}</span>
     </div>
+    <textarea class="form-control" aria-label="With textarea" name="text"></textarea>
+    <div class="input-group-append">
+      <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
+    </div>
+  </div>
 
-  </form>
-  <!--END: POST FORM-->
+</form>
+<!--END: POST FORM-->
 
 
-<form class="btn-sm-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm btn-outline-secondary">{% trans 'Back to club' %}</button>
+<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Back to club' %}</button>
 </form>
 
 
@@ -101,6 +114,7 @@
      var objDiv = document.getElementById("DivShoutbox");
      objDiv.scrollTop = objDiv.scrollHeight;
 }
+
 </script>
 
 
