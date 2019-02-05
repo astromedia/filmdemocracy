@@ -51,23 +51,22 @@ body {
   padding: 10px;
 }
 
-.club-banner .btn-admin-utils {
-  font-size: 17px;
+.club-banner .admin-utils {
+  text-transform: uppercase;
   margin: auto;
+  margin-top: 10px;
+  margin-bottom: -10px;
+}
+
+.club-banner .admin-utils .btn-admin-utils {
+  font-size: 17px;
   color: #6c737d;
   font-weight: bold;
 }
 
-.club-banner .btn-admin-utils:hover {
+.club-banner .admin-utils .btn-admin-utils:hover {
   color: #fff;
   text-decoration: none;
-}
-
-.club-banner .admin-utils {
-  text-transform: uppercase;
-  margin: auto;
-  margin-top: 25px;
-  margin-bottom: 0px;
 }
 
 .club-banner .admin-utils .admin-buttons {
@@ -186,7 +185,7 @@ body {
 .members-album .card {
   width: 8rem;
   background-color: transparent;
-  color: darkgray;
+  color: darkgray;ier
   text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;

@@ -563,7 +563,7 @@
 
     {% for member in club_members %}
     <div class="col-auto align-self-center">
-      <div class="card">
+      <div class="card text-center">
 
         <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
           <div class="member-image">
@@ -588,7 +588,7 @@
 
     <!--INVITE NEW MEMBER-->
     <div class="col-auto align-self-center">
-      <div class="card">
+      <div class="card text-center">
         <a href="{% url 'democracy:invite_new_member' club.id %}">
           <div class="member-image">
             <img class="card-img-top" src="{% static 'registration/invite_user_image.svg' %}"

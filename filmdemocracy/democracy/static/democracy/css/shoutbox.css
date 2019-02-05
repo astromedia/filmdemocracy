@@ -13,26 +13,30 @@ body {
 .btn-cancel {
   text-align: center;
   margin-top: 0px;
+  margin-bottom: -20px;
 }
 
 .container-base {
   background-color: #fafafa;
 }
 
-.display-4 {
+.h3 {
   text-align: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .container-shoutbox {
+  position: relative;
   max-width: 50rem;
-  min-height: 27.5rem;
-  max-height: 27.5rem;
+  min-height: 37.5rem;
+  max-height: 33.5rem;
   background-color: #fff;
   padding: 20px;
+  margin-top: 0px;
   margin-left: auto;
   margin-right: auto;
+  z-index: 2;
 }
 
 

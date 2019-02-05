@@ -1,6 +1,7 @@
 /* Club banner style
 -------------------------------------------------- */
 .club-banner {
+  position: relative;
   text-align: center;
   margin-top: -24px;
   padding: 10px;
