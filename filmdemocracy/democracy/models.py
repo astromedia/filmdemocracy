@@ -108,7 +108,7 @@ class FilmDb(models.Model):
     actors = models.CharField(default='', max_length=300)
     poster_url = models.URLField(default='', max_length=500)
     country = models.CharField(default='', max_length=100)
-    language = models.CharField(default='', max_length=20)
+    language = models.CharField(default='', max_length=100)
     plot = models.CharField(default='', max_length=1000)
 
     def __str__(self):
