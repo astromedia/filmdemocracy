@@ -202,10 +202,11 @@ def leave_club(request, club_id):
     context = {}
     context = add_club_context(request, context, club_id)
     club = context['club']
+    club_members = context['club_members']
     club_admins = context['club_admins']
     user = request.user
     if user in club_admins:
-        if len(club_admins) == 1:
+        if len(club_members) > 1 and len(club_admins) == 1:
             context['warning_message'] = \
                 _("You must promote other club member "
                   "to admin before leaving the club.")
@@ -221,6 +222,8 @@ def leave_club(request, club_id):
     )
     club_member_info.delete()
     # TODO: Message: 'You have successfully left the club.'
+    if len(club_members) == 1:
+        club.delete()
     return HttpResponseRedirect(reverse('home'))
 
 

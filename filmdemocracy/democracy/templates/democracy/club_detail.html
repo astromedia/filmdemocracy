@@ -688,6 +688,9 @@
       </div>
       <div class="modal-body">
         {% trans 'Are you sure about this?' %}
+        {% if club_members|length == 1 %}
+        {% trans 'You are the only member of the club, if you leave, the club will disappear!' %}
+        {% endif %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
