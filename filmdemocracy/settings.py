@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 
 from django.utils.translation import gettext_lazy as _
+from filmdemocracy.secrets import SECRET_KEY, OMDB_API_KEY, EMAIL_HOST_PASSWORD
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -21,12 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ze&a-_k75@^%0zp*!-l7ul(pegr8#1)7ykb4=@ih807a4q9nb&'
-
-# OMDb API Key: keep the secret key used in production secret!
-OMDB_API_KEY = '4b213d96'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -153,9 +148,16 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Dev email backend
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "local/sent_emails")
+#EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+#EMAIL_FILE_PATH = os.path.join(BASE_DIR, "local/sent_emails")
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'filmdemocracyweb'
+#EMAIL_HOST_PASSWORD = 'gmail_password'
+DEFAULT_FROM_EMAIL = 'filmdemocracyweb@gmail.com'
 
 # Using a custom user model when starting a project
 # https://docs.djangoproject.com/en/2.1/topics/auth/customizing/#extending-the-existing-user-model
