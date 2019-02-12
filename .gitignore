@@ -119,3 +119,4 @@ dmypy.json
 
 # Local stuff...
 /local
+/filmdemocracy/secrets.py

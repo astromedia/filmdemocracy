@@ -749,7 +749,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
     email_template_name = 'democracy/invite_new_member_email.html'
     html_email_template_name = 'democracy/invite_new_member_email_html.html'
     extra_email_context = None
-    from_email = 'info@filmdemocracy.net'
+    from_email = 'filmdemocracyweb@gmail.com'
 
     def test_func(self):
         return user_is_club_member_check(self.request, self.kwargs['club_id'])
