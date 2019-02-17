@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -79,12 +79,6 @@ WSGI_APPLICATION = 'filmdemocracy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'local/db.sqlite3'),
-#    }
-#}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -148,15 +142,12 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Dev email backend
 
-#EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-#EMAIL_FILE_PATH = os.path.join(BASE_DIR, "local/sent_emails")
-
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'filmdemocracyweb'
-#EMAIL_HOST_PASSWORD = 'gmail_password'
+# EMAIL_HOST_PASSWORD = 'gmail_password'
 DEFAULT_FROM_EMAIL = 'filmdemocracyweb@gmail.com'
 
 # Using a custom user model when starting a project

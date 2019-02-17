@@ -91,12 +91,18 @@ def process_faff_url(form):
         faff_url = form.cleaned_data['faff_url']
         if 'filmaffinity' not in faff_url:
             raise ValueError
-        try:
-            filmaff_key = faff_url.split('film')[2]
-        except IndexError:
-            raise ValueError
-        if '.html' in filmaff_key:
-            filmaff_key = filmaff_key.replace('.html', '')
+        elif 'm.filmaffinity' in faff_url:
+            try:
+                filmaff_key = faff_url.split('id=')[1][0:6]
+            except IndexError:
+                raise ValueError
+        else:
+            try:
+                filmaff_key = faff_url.split('film')[2][0:6]
+            except IndexError:
+                raise ValueError
+            if '.html' in filmaff_key:
+                filmaff_key = filmaff_key.replace('.html', '')
         if len(filmaff_key) is not 6:
             raise ValueError
         else:

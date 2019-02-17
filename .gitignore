@@ -117,6 +117,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Ignore migrations
+migrations/
+
 # Local stuff...
 /local
 /filmdemocracy/secrets.py

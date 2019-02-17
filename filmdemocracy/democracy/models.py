@@ -21,7 +21,7 @@ class Club(models.Model):
     )
     panel = MarkdownxField(
         _('Club panel: description, rules, etc. (Optional)'),
-        max_length=1000,
+        max_length=20000,
         default="## A sample club panel written in markdown"
                 "\r\n"
                 "\r\n---"
@@ -64,7 +64,7 @@ class ShoutboxPost(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     date = models.DateTimeField('comment date', auto_now_add=True)
     deleted = models.BooleanField(default=False)
-    text = models.CharField(max_length=200)
+    text = models.CharField(max_length=5000)
 
     def __str__(self):
         return f'{self.user}|{self.text}'
@@ -83,7 +83,7 @@ class Meeting(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=9)  # 5(club)+4
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     name = models.CharField(_('Name'), default=_('Club meeting'), max_length=50)
-    description = models.CharField(_('Description (Optional)'), default='', max_length=300)
+    description = models.CharField(_('Description (Optional)'), default='', max_length=5000)
     organizer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     place = models.CharField(_('Place'), default='', max_length=100)
     date = models.DateField(_('Date'))
@@ -99,17 +99,17 @@ class Meeting(models.Model):
 class FilmDb(models.Model):
     imdb_id = models.CharField('IMDb id', primary_key=True, max_length=7)
     faff_id = models.CharField('FilmAffinity id', default='', max_length=6)
-    title = models.CharField(default='', max_length=200)
+    title = models.CharField(default='', max_length=1000)
     year = models.IntegerField(default=0)
-    rated = models.CharField(default='', max_length=10)
-    duration = models.IntegerField(default=0)
-    director = models.CharField(default='', max_length=100)
-    writer = models.CharField(default='', max_length=200)
-    actors = models.CharField(default='', max_length=300)
-    poster_url = models.URLField(default='', max_length=500)
-    country = models.CharField(default='', max_length=100)
-    language = models.CharField(default='', max_length=100)
-    plot = models.CharField(default='', max_length=1000)
+    rated = models.CharField(default='', max_length=20)
+    duration = models.CharField(default='', max_length=20)
+    director = models.CharField(default='', max_length=1000)
+    writer = models.CharField(default='', max_length=1000)
+    actors = models.CharField(default='', max_length=1000)
+    poster_url = models.URLField(default='', max_length=1000)
+    country = models.CharField(default='', max_length=1000)
+    language = models.CharField(default='', max_length=1000)
+    plot = models.CharField(default='', max_length=5000)
 
     def __str__(self):
         return f'{self.imdb_id}|{self.title}'
@@ -182,7 +182,7 @@ class FilmComment(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     date = models.DateTimeField('comment date', auto_now_add=True)
     deleted = models.BooleanField(default=False)
-    text = models.CharField(max_length=200)
+    text = models.CharField(max_length=5000)
 
     def __str__(self):
         return f'{self.user}|{self.film.filmdb.title}|{self.text}'

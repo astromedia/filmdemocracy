@@ -425,7 +425,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     def form_valid(self, form):
         imdb_id = form.cleaned_data['imdb_url']
         filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_id)
-        if created:
+        if created or (not created and not filmdb.title):
             omdb_api_url = f'http://www.omdbapi.com/?i=tt{imdb_id}' \
                 f'&apikey={OMDB_API_KEY}'
             response = requests.get(omdb_api_url)
@@ -437,7 +437,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
             filmdb.writer = omdb_data['Writer']
             filmdb.actors = omdb_data['Actors']
             filmdb.poster_url = omdb_data['Poster']
-            filmdb.duration = int(omdb_data['Runtime'].replace('min', ''))
+            filmdb.duration = omdb_data['Runtime']
             filmdb.language = omdb_data['Language']
             filmdb.rated = omdb_data['Rated']
             filmdb.country = omdb_data['Country']
@@ -468,6 +468,10 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         context = add_club_context(self.request, context, self.kwargs['club_id'])
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
+        if 'min' in film.filmdb.duration:
+            context['film_runtime'] = film.filmdb.duration.replace('min', ' min')
+        else:
+            context['film_runtime'] = film.filmdb.duration
         film_comments = FilmComment.objects.filter(
             club=self.kwargs['club_id'],
             film=self.kwargs['film_id']
@@ -576,8 +580,8 @@ class FilmAddFilmAffView(UserPassesTestMixin, generic.FormView):
         )
 
     def form_valid(self, form):
-        imdb_id = str(self.kwargs['film_id'])[5:]
-        filmdb = get_object_or_404(FilmDb, imdb_id=imdb_id)
+        film = get_object_or_404(Film, id=self.kwargs['film_id'])
+        filmdb = get_object_or_404(FilmDb, imdb_id=film.filmdb.imdb_id)
         filmdb.faff_id = form.cleaned_data['faff_url']
         filmdb.save()
         return super().form_valid(form)
