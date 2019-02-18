@@ -1,0 +1,14 @@
+{% load i18n %}
+
+{{ organizer.username }} {% trans 'has proposed a new meeting for club' %} {{ club.name }}
+
+{{ name }}
+{% if description %}{{ description }}{% endif %}
+
+{% trans 'Where:' %} {{ place }}
+{% trans 'When:' %} {{ date }}
+{% if time_start %}{ trans 'Starting at: '}{{ time_start }}{% endif %}
+{% if time_end %}{ trans 'Finishing at: '}{{ time_end }}{% endif %}
+
+{% trans "Follow this link to go to the club and confirm assistance or say you're interested:" %}
+{{ protocol}}://{{ domain }}{% url 'democracy:club_detail' club.id %}

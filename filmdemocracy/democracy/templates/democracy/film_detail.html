@@ -289,7 +289,7 @@
 
 
     {% for vote in film.vote_set.all %}
-    <div class="row justify-content-start registered-vote">
+    <div class="row mx-1 justify-content-start registered-vote">
       <div class="col col-3 text-right">
         <a class="text-body" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
           <strong>{{ vote.user.username }}</strong></a>:
@@ -335,7 +335,7 @@
 
     <!--COMMENTS-->
     {% for comment in film_comments %}
-    <div class="row justify-content-start comment">
+    <div class="row mx-1 justify-content-start comment">
       <div class="col col-3 text-right comment-meta">
         <div>
           <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
@@ -374,10 +374,7 @@
       {% csrf_token %}
 
       <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">{% trans 'Write a comment' %}</span>
-        </div>
-        <textarea class="form-control" aria-label="With textarea" name="text"></textarea>
+        <textarea class="form-control" aria-label="With textarea" name="text" placeholder="{% trans 'Write a comment' %}"></textarea>
         <div class="input-group-append">
           <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
         </div>

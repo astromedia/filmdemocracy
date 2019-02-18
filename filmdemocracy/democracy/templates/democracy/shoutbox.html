@@ -23,7 +23,7 @@
 
   <!--POSTS-->
   {% for post in posts|dictsort:"date" %}
-  <div class="row justify-content-start post">
+  <div class="row mx-n3 justify-content-start post">
 
     <!--DELETE ICON-->
     <div class="col col-1">
@@ -88,10 +88,7 @@
   {% csrf_token %}
 
   <div class="input-group">
-    <div class="input-group-prepend">
-      <span class="input-group-text">{% trans 'Say something' %}</span>
-    </div>
-    <textarea class="form-control" aria-label="With textarea" name="text"></textarea>
+    <textarea class="form-control" aria-label="With textarea" name="text" placeholder="{% trans 'Say something' %}"></textarea>
     <div class="input-group-append">
       <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
     </div>

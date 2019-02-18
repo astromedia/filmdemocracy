@@ -236,7 +236,7 @@ class InviteNewMemberForm(forms.Form):
     def save(self, domain_override=None,
              subject_template_name='democracy/invite_new_member_subject.txt',
              email_template_name='democracy/invite_new_member_email.html',
-             html_email_template_name=None,
+             html_email_template_name='democracy/invite_new_member_email_html.html',
              extra_email_context=None,
              use_https=False, from_email=None, request=None):
         user = request.user
@@ -262,8 +262,10 @@ class InviteNewMemberForm(forms.Form):
             'protocol': 'https' if use_https else 'http',
             **(extra_email_context or {}),
         }
-        self.send_mail(subject_template_name, email_template_name,
-                       html_email_template_name, context, from_email, email)
+        self.send_mail(
+            subject_template_name, email_template_name,
+            html_email_template_name, context, from_email, email
+        )
 
 
 class InviteNewMemberConfirmForm(forms.Form):
@@ -277,6 +279,10 @@ class MeetingsForm(forms.ModelForm):
         label=_('Description (Optional)'),
         required=False,
     )
+
+    def __init__(self, *args, **kwargs):
+        self.club_id = kwargs.pop('club_id', None)
+        super(MeetingsForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = Meeting
@@ -301,3 +307,58 @@ class MeetingsForm(forms.ModelForm):
                         _("Meetings can't start before they are proposed, sorry.")
                     )
         return self.cleaned_data['time_start']
+
+    def send_mail(self, subject_template_name, email_template_name,
+                  html_email_template_name, context, from_email, to_email):
+        subject = loader.render_to_string(subject_template_name, context)
+        # Email subject *must not* contain newlines:
+        # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
+        subject = ''.join(subject.splitlines())
+        body = loader.render_to_string(email_template_name, context)
+        email_message = EmailMultiAlternatives(subject, body, from_email, [to_email])
+        if html_email_template_name is not None:
+            html_email = loader.render_to_string(html_email_template_name, context)
+            email_message.attach_alternative(html_email, 'text/html')
+        email_message.send()
+
+    def save(self, domain_override=None,
+             subject_template_name='democracy/new_meeting_subject.txt',
+             email_template_name='democracy/new_meeting_email.html',
+             html_email_template_name='democracy/new_meeting_email_html.html',
+             extra_email_context=None,
+             use_https=False, from_email=None, request=None):
+        user = request.user
+        name = self.cleaned_data['name']
+        description = self.cleaned_data['description']
+        place = self.cleaned_data['place']
+        date = self.cleaned_data['date']
+        time_start = self.cleaned_data['time_start']
+        time_end = self.cleaned_data['time_end']
+        club = get_object_or_404(Club, pk=self.club_id)
+        if not domain_override:
+            current_site = get_current_site(request)
+            site_name = current_site.name
+            domain = current_site.domain
+        else:
+            site_name = domain = domain_override
+        context = {
+            'organizer': user,
+            'club': club,
+            'name': name,
+            'description': description,
+            'place': place,
+            'date': date,
+            'time_start': time_start,
+            'time_end': time_end,
+            'domain': domain,
+            'site_name': site_name,
+            'protocol': 'https' if use_https else 'http',
+            **(extra_email_context or {}),
+        }
+        club_members = club.members.filter(is_active=True)
+        spammable_members = club_members.exclude(pk=user.id)
+        for member in spammable_members:
+            self.send_mail(
+                subject_template_name, email_template_name,
+                html_email_template_name, context, from_email, member.email
+            )

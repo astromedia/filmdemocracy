@@ -768,7 +768,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
         return kwargs
 
     def form_valid(self, form):
-        opts = {
+        email_opts = {
             'subject_template_name': self.subject_template_name,
             'email_template_name': self.email_template_name,
             'html_email_template_name': self.html_email_template_name,
@@ -777,7 +777,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
             'from_email': self.from_email,
             'request': self.request,
         }
-        form.save(**opts)
+        form.save(**email_opts)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -887,9 +887,19 @@ class InviteNewMemberCompleteView(UserPassesTestMixin, generic.TemplateView):
 @method_decorator(login_required, name='dispatch')
 class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     form_class = forms.MeetingsForm
+    subject_template_name = 'democracy/new_meeting_subject.txt'
+    email_template_name = 'democracy/new_meeting_email.html'
+    html_email_template_name = 'democracy/new_meeting_email_html.html'
+    extra_email_context = None
+    from_email = 'filmdemocracyweb@gmail.com'
 
     def test_func(self):
         return user_is_club_member_check(self.request, self.kwargs['club_id'])
+
+    def get_form_kwargs(self):
+        kwargs = super(MeetingsNewView, self).get_form_kwargs()
+        kwargs.update({'club_id': self.kwargs['club_id']})
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy(
@@ -924,6 +934,16 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
             time_end=form.cleaned_data['time_end'],
         )
         new_meeting.save()
+        email_opts = {
+            'subject_template_name': self.subject_template_name,
+            'email_template_name': self.email_template_name,
+            'html_email_template_name': self.html_email_template_name,
+            'extra_email_context': self.extra_email_context,
+            'use_https': self.request.is_secure(),
+            'from_email': self.from_email,
+            'request': self.request,
+        }
+        form.save(**email_opts)
         return super().form_valid(form)
 
 

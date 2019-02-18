@@ -35,32 +35,32 @@
 
 <!--EMAIL-->
 {% if member.public_email %}
-<div class="row justify-content-center mt-2">
+<div class="row mx-1 justify-content-center mt-2">
   <div class="col-6 text-right"><strong>{% trans 'Email:' %}</strong></div>
   <div class="col-6">{{ member.email }}</div>
 </div>
 {% endif %}
 
 <!--JOINED CLUB-->
-<div class="row justify-content-center mt-2">
+<div class="row mx-1 justify-content-center mt-2">
   <div class="col-6 text-right"><strong>{% trans 'Joined club:' %}</strong></div>
   <div class="col-6">{{ club_member_info.joined_date }}</div>
 </div>
 
 <!--VOTED FILMS-->
-<div class="row justify-content-center mt-2">
+<div class="row mx-1 justify-content-center mt-2">
   <div class="col-6 text-right"><strong>{% trans 'Films voted:' %}</strong></div>
   <div class="col-6">{{ num_of_votes }}</div>
 </div>
 
 <!--PROPOSED FILMS-->
-<div class="row justify-content-center mt-2">
+<div class="row mx-1 justify-content-center mt-2">
   <div class="col-6 text-right"><strong>{% trans 'Films proposed:' %}</strong></div>
   <div class="col-6">{{ num_of_films_proposed }}</div>
 </div>
 
 <!--SEEN FILMS-->
-<div class="row justify-content-center mt-2">
+<div class="row mx-1 justify-content-center mt-2">
   <div class="col-6 text-right"><strong>{% trans 'Films seen:' %}</strong></div>
   <div class="col-6">{{ num_of_films_seen }}</div>
 </div>
@@ -68,14 +68,15 @@
 
 <!--START: REGISTERED VOTES-->
 <div class="member-detail">
-  <h5 class="h5"><u>{% trans 'Registered votes on candidate films:' %}</u></h5>
+  <h5 class="h5">{% trans 'Registered votes on candidate films' %}</h5>
+  <hr>
 
   <div class="voted-films">
     {% if member_votes %}
 
 
     {% for vote in member_votes %}
-    <div class="row justify-content-center">
+    <div class="row mx-1 justify-content-center">
       <div class="col-6 text-right">
         <a class="text-body" href="{% url 'democracy:film_detail' club.id vote.film.id %}">
           <strong>{{ vote.film.filmdb.title }}:</strong></a>
@@ -116,8 +117,8 @@
 
 <!--START: SEEN FILMS-->
 <div class="member-detail">
-  <h5 class="h5"><u>{% trans 'Films seen with club:' %}</u></h5>
-
+  <h5 class="h5">{% trans 'Films seen with club' %}</h5>
+  <hr>
 
   <div class="seen-films">
     {% if member_seen_films %}

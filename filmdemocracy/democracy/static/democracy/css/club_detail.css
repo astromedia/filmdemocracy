@@ -13,8 +13,6 @@ body {
 .club-banner {
   text-align: center;
   margin-top: -24px;
-  padding-left: 10px;
-  padding-right: 10px;
   padding-top: 10px;
   padding-bottom: 30px;
   background-color: #121317;
@@ -90,9 +88,9 @@ body {
 }
 
 
-/* Club meetings panel
+/* Club section header
 -------------------------------------------------- */
-.meetings .h3 {
+.club-section-title .h3 {
   font-size: 15px;
   padding-top: 30px;
   margin-bottom: -13px;
@@ -100,7 +98,7 @@ body {
   margin-top: 30px;
 }
 
-.meetings hr {
+.club-section-title hr {
   max-width: 450px;
   color: gray;
   background-color: gray;

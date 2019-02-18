@@ -1,6 +1,12 @@
 #!/bin/bash
 
-python manage.py makemigrations
+#python manage.py makemigrations
+#python manage.py migrate
+
+python manage.py makemigrations registration
+python manage.py makemigrations democracy
+python manage.py sqlmigrate registration 0001
+python manage.py sqlmigrate democracy 0001
 python manage.py migrate
 
 cd filmdemocracy

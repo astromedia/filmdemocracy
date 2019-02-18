@@ -42,13 +42,10 @@ body {
 .member-detail .h5 {
   text-align: center;
   margin-top: 25px;
-  margin-bottom: 0px;
+  margin-bottom: -13px;
   font-weight: normal;
-}
-
-u {
-  text-decoration: none;
-  border-bottom: 1px solid gray;
+  font-size: 15px;
+  text-transform: uppercase;
 }
 
 .member-detail .seen-films {
@@ -61,4 +58,11 @@ u {
 
 .member-detail .row {
   margin-bottom: -16px;
+}
+
+.member-detail hr {
+  max-width: 300px;
+  color: gray;
+  background-color: gray;
+  margin-bottom: 13px;
 }

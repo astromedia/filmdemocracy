@@ -42,6 +42,7 @@ hr {
 /* Club image
 -------------------------------------------------- */
 .club-logo {
+  position: relative;
   max-width: 250px;
   max-height: 250px;
   float:left;
@@ -58,10 +59,9 @@ hr {
 
 .club-logo img {
   width: 100%;
-  height: 100%;
-  opacity:0.8;
+  height: auto;
   display:block;
-  position:relative;
+  opacity:0.8;
   -webkit-transition:all .2s linear;
   transition:all .2s linear;
 }
@@ -74,16 +74,15 @@ hr {
 }
 
 .club-logo .overlay {
-  width: 250px;
+  position: absolute;
   height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
   border: 2px solid black;
   border-radius: 6px;
   background-color:rgba(0,0,0,0.85);
   opacity:0;
-  position:absolute;
-  overflow:hidden;
-  top:0px;
-  left:15px;
   -webkit-transition:all .2s ease-in-out;
   transition:all .2s ease-in-out
 }
@@ -111,7 +110,7 @@ hr {
 -------------------------------------------------- */
 .new-club-logo {
   max-width: 250px;
-  height: 100%;
+  max-height: 250px;
   float:left;
   overflow: hidden;
   cursor: default;
