@@ -19,25 +19,39 @@
 
 
 <!--START: PARTICIPANTS-->
-<div class="text-center mx-3">
-  <strong>{% trans 'Participants: ' %}</strong>
-  {% for participant in participants %}
-  {% if forloop.last %}{{ participant }}{% else %}{{ participant }},{% endif %}
-  {% endfor %}
+<div class="participants-header">
+  <h3 class="h3">{% trans 'Participants' %}</h3>
+  <hr>
+  <div class="row mx-1 justify-content-center">
+    {% for participant in participants %}
+    <div class="col-auto">
+      {% if participant.profile_image %}
+      <img class="participant-picture" src="{{ participant.profile_image.url }}"
+           alt="participant.profile_image not found">
+      {% else %}
+      <img class="participant-picture"
+           src="{% static 'registration/user_no_profile_image.svg' %}" alt="participant.profile_image not found">
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
 </div>
 <!--END: PARTICIPANTS-->
 
 
 <!--START: VOTING RESULTS-->
-<table class="table table-hover mt-3">
+<table class="table table-hover table-ranking">
   <thead>
   <tr>
-    <td scope="col"><span class="ml-3">{% trans 'Film' %}</span></td>
-    <td scope="col" class="text-center">{% trans 'Score' %}</td>
-    <td scope="col" class="text-center"><img style="height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}"></td>
+    <td scope="col"><span class="ml-1">{% trans 'Film' %}</span></td>
+    <td scope="col" class="text-center"></td>
+    <td scope="col" class="text-center"><img style="height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}">
+    </td>
     <td scope="col" class="text-center"><img style="height: 18px;" src="{% static 'democracy/svg/thumbsdown.svg'%}">
     </td>
-    <td scope="col" class="text-center"><img style="height: 21px;" src="{% static 'democracy/svg/question.svg'%}"></td>
+    <td scope="col" class="text-center"><img style="height: 21px;" src="{% static 'democracy/svg/question.svg'%}">
+    </td>
   </tr>
   </thead>
   <tbody>
@@ -45,44 +59,82 @@
 
   {% if forloop.first %}
   <tr class="table-success">
-  {% elif forloop.counter > 1 %}
-  {% if film_results.veto %}
+    {% elif forloop.counter > 1 %}
+    {% if film_results.veto %}
   <tr class="table-danger">
-  {% else %}
-  <tr>
-  {% endif %}
-  {% endif %}
+    {% else %}
+  <tr class="">
+    {% endif %}
+    {% endif %}
 
-    <td>
-      <a class="text-body ml-3" href="{% url 'democracy:film_detail' club.id film_results.id %}">
+    <td class="align-middle">
+      <a class="text-body ml-1" href="{% url 'democracy:film_detail' club.id film_results.id %}">
         <strong>{{ film_results.title }}</strong>
       </a>
+    </td>
+
+    <!--{% if film_results.veto %}-->
+    <!--<td class="text-center">-∞</td>-->
+    <!--{% else %}-->
+    <!--<td class="text-center">{{ film_results.points }}</td>-->
+    <!--{% endif %}-->
+
+    <td class="text-center align-middle">
       {% if film_results.warnings %}
       <img class="ml-2 mt-n1 pointer-cursor" style="height: 18px;" src="{% static 'democracy/svg/alert.svg'%}"
            data-toggle="modal" data-target="#WarningsModal_{{ forloop.counter }}">
       {% endif %}
     </td>
 
-    {% if film_results.veto %}
-    <td class="text-center">-∞</td>
-    {% else %}
-    <td class="text-center">{{ film_results.points }}</td>
-    {% endif %}
-
-
-    <td class="text-center">
-      {% for voter in film_results.positive_voters %}
-      {% if forloop.last %}{{ voter }}{% else %}{{ voter }},{% endif %}
+    <td class="text-center align-middle">
+      {% for participant in film_results.positive_voters %}
+      <div class="row mx-1 justify-content-center">
+        {% for participant in participants %}
+        <div class="col-auto align-items-center">
+          {% if participant.profile_image %}
+          <img class="participant-picture" src="{{ participant.profile_image.url }}"
+               alt="participant.profile_image not found">
+          {% else %}
+          <img class="participant-picture"
+               src="{% static 'registration/user_no_profile_image.svg' %}" alt="participant.profile_image not found">
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
       {% endfor %}
     </td>
-    <td class="text-center">
-      {% for voter in film_results.negative_voters %}
-      {% if forloop.last %}{{ voter }}{% else %}{{ voter }},{% endif %}
+    <td class="text-center align-middle">
+      {% for participant in film_results.negative_voters %}
+      <div class="row mx-1 justify-content-center">
+        {% for participant in participants %}
+        <div class="col-auto">
+          {% if participant.profile_image %}
+          <img class="participant-picture" src="{{ participant.profile_image.url }}"
+               alt="participant.profile_image not found">
+          {% else %}
+          <img class="participant-picture"
+               src="{% static 'registration/user_no_profile_image.svg' %}" alt="participant.profile_image not found">
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
       {% endfor %}
     </td>
-    <td class="text-center">
-      {% for voter in film_results.no_voters %}
-      {% if forloop.last %}{{ voter }}{% else %}{{ voter }},{% endif %}
+    <td class="text-center align-middle">
+      {% for participant in film_results.abstentionists %}
+      <div class="row mx-1 justify-content-center">
+        {% for participant in participants %}
+        <div class="col-auto">
+          {% if participant.profile_image %}
+          <img class="participant-picture" src="{{ participant.profile_image.url }}"
+               alt="participant.profile_image not found">
+          {% else %}
+          <img class="participant-picture"
+               src="{% static 'registration/user_no_profile_image.svg' %}" alt="participant.profile_image not found">
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
       {% endfor %}
     </td>
 
@@ -95,7 +147,8 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="WarningsModal_{{ forloop.counter }}_Title">{% trans 'Film warnings' %}</h5>
+          <h5 class="modal-title" id="WarningsModal_{{ forloop.counter }}_Title">
+            {% trans 'Warnings for' %} {{ film_results.title }}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -107,11 +160,15 @@
           <div class="alert alert-warning text-center my-2 mx-4" role="alert">
             {% if warning.type == 'veto' %}
             {% blocktrans with user=warning.voter film=warning.film %}
-            <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>
+            <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>.
             {% endblocktrans %}
             {% elif warning.type == 'omg' %}
             {% blocktrans with user=warning.voter film=warning.film %}
-            Remember that <strong>{{ user }}</strong> really really wants to see <strong>{{ film }}</strong>
+            Remember that <strong>{{ user }}</strong> really really wants to see <strong>{{ film }}</strong>.
+            {% endblocktrans %}
+            {% elif warning.type == 'proposer missing' %}
+            {% blocktrans with user=warning.voter film=warning.film %}
+            Keep in mind that <strong>{{ user }}</strong> proposed <strong>{{ film }}</strong>, and is not present.
             {% endblocktrans %}
             {% endif %}
           </div>

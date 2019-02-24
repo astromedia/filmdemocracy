@@ -193,6 +193,38 @@ body {
 }
 
 
+
+/* Film ranking
+-------------------------------------------------- */
+
+.table-ranking {
+  max-width: 100%;
+}
+
+.participants-header {
+  margin-bottom: 40px;
+}
+
+.participants-header .h3 {
+  font-size: 15px;
+  margin-bottom: -13px;
+  text-transform: uppercase;
+  margin-top: 40px;
+}
+
+.participants-header hr {
+  max-width: 350px;
+  color: gray;
+  background-color: gray;
+  margin-bottom: 20px;
+}
+
+.participant-picture {
+  max-width: 30px;
+  border-radius: 3px;
+}
+
+
 /* Form seen
 -------------------------------------------------- */
 .film-seen {

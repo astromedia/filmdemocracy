@@ -668,39 +668,46 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        def process(in_film, in_participants):
-            out_warnings = []
-            film_all_votes = in_film.vote_set.all()
-            film_voters = [vote.user.username for vote in film_all_votes]
-            no_voters = []
-            for participant in in_participants:
-                if participant not in film_voters:
-                    no_voters.append(participant)
-            film_votes = []
+        def process_film(film, participants, **options):
+            warnings = []
+            film_all_votes = film.vote_set.all()
+            film_voters = [vote.user for vote in film_all_votes]
+            abstentionists = []
             positive_voters = []
             negative_voters = []
+            for participant in participants:
+                if participant not in film_voters:
+                    abstentionists.append(participant)
+            film_votes = []
             for vote in film_all_votes:
-                voter = vote.user.username
-                if voter in in_participants:
+                if vote.user in participants:
                     film_votes.append(vote.choice)
                     if vote.vote_karma is 'positive':
-                        positive_voters.append(voter)
+                        positive_voters.append(vote.user)
                     elif vote.vote_karma is 'negative':
-                        negative_voters.append(voter)
+                        negative_voters.append(vote.user)
+                    else:
+                        pass
                     if vote.choice == Vote.VETO:
-                        out_warnings.append({
+                        warnings.append({
                             'type': Vote.VETO,
                             'film': film.filmdb.title,
-                            'voter': voter,
+                            'voter': vote.user.username,
                         })
-                elif voter not in in_participants:
+                elif vote.user not in participants:
                     if vote.choice == Vote.OMG:
-                        out_warnings.append({
+                        warnings.append({
                             'type': Vote.OMG,
                             'film': film.filmdb.title,
-                            'voter': voter,
+                            'voter': vote.user.username,
                         })
-            out_voters_info = (positive_voters, negative_voters, no_voters)
+                    if vote.user == film.proposed_by:
+                        warnings.append({
+                            'type': 'proposer missing',
+                            'film': film.filmdb.title,
+                            'voter': vote.user.username,
+                        })
+            voters_meta = (positive_voters, negative_voters, abstentionists)
 
             # TODO: use aggregations to do this count
             n_veto = film_votes.count(Vote.VETO)
@@ -711,9 +718,9 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
             n_yes = film_votes.count(Vote.YES)
             n_omg = film_votes.count(Vote.OMG)
             if n_veto >= 1:
-                return out_voters_info, out_warnings, -1000, True
+                return voters_meta, warnings, -1000, True
             else:
-                out_points = (
+                points = (
                         - 50 * n_seenno
                         - 25 * n_no
                         + 0 * n_meh
@@ -721,20 +728,21 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                         + 10 * n_yes
                         + 20 * n_omg
                 )
-                return out_voters_info, out_warnings, out_points, False
+                return voters_meta, warnings, points, False
 
         films_results = []
-        participants = self.request.GET.getlist('participants')
+        participants = [User.objects.filter(id=id)[0]
+                        for id in self.request.GET.getlist('participants')]
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_films = Film.objects.filter(club_id=club.id, seen=False)
         for film in club_films:
-            voters_info, warnings, points, veto = process(film, participants)
+            voters_meta, warnings, points, veto = process_film(film, participants)
             films_results.append({
                 'id': film.id,
                 'title': film.filmdb.title,
-                'positive_voters': voters_info[0],
-                'negative_voters': voters_info[1],
-                'no_voters': voters_info[2],
+                'positive_voters': voters_meta[0],
+                'negative_voters': voters_meta[1],
+                'abstentionists': voters_meta[2],
                 'points': points,
                 'veto': veto,
                 'warnings': warnings,
@@ -1003,7 +1011,7 @@ def meeting_assistance(request, club_id, meeting_id):
 def delete_meeting(request, club_id, meeting_id):
     organizer_check = user_is_organizer_check(request, club_id, meeting_id)
     admin_check = user_is_club_admin_check(request, club_id)
-    if not organizer_check or not admin_check:
+    if not organizer_check and not admin_check:
         return HttpResponseForbidden()
     meeting = get_object_or_404(Meeting, pk=meeting_id)
     meeting.delete()
