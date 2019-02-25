@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-24 21:22+0100\n"
+"POT-Creation-Date: 2019-02-25 23:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,7 +225,7 @@ msgid "Propose one!"
 msgstr "¡Propón una!"
 
 #: democracy/templates/democracy/candidate_films_list.html:102
-#: democracy/templates/democracy/candidate_films_vote_results.html:192
+#: democracy/templates/democracy/candidate_films_vote_results.html:187
 #: democracy/templates/democracy/meetings_list.html:223
 #: democracy/templates/democracy/seen_films_list.html:68
 #: democracy/templates/democracy/shoutbox.html:102
@@ -278,15 +278,16 @@ msgstr "¿Qué película se ha visto?"
 msgid "Voting results"
 msgstr "Resultados de la votación"
 
-#: democracy/templates/democracy/candidate_films_vote_results.html:47
+#: democracy/templates/democracy/candidate_films_vote_results.html:48
 msgid "Film"
 msgstr "Película"
 
-#: democracy/templates/democracy/candidate_films_vote_results.html:151
+#: democracy/templates/democracy/candidate_films_vote_results.html:146
 msgid "Warnings for"
 msgstr ""
 
-#: democracy/templates/democracy/candidate_films_vote_results.html:162
+#: democracy/templates/democracy/candidate_films_vote_results.html:157
+#, python-format
 msgid ""
 "\n"
 "            <strong>%(user)s</strong> vetoed the film <strong>%(film)s</"
@@ -298,7 +299,8 @@ msgstr ""
 "%(film)s</strong>\n"
 "            "
 
-#: democracy/templates/democracy/candidate_films_vote_results.html:166
+#: democracy/templates/democracy/candidate_films_vote_results.html:161
+#, python-format
 msgid ""
 "\n"
 "            Remember that <strong>%(user)s</strong> really really wants to "
@@ -310,7 +312,8 @@ msgstr ""
 "de ver <strong>%(film)s</strong>\n"
 "            "
 
-#: democracy/templates/democracy/candidate_films_vote_results.html:170
+#: democracy/templates/democracy/candidate_films_vote_results.html:165
+#, python-format
 msgid ""
 "\n"
 "            Keep in mind that <strong>%(user)s</strong> proposed <strong>"
@@ -318,8 +321,8 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"            Recordad que <strong>%(user)s</strong> tiene muchas muchas ganas "
-"de ver <strong>%(film)s</strong>\n"
+"            Recordad que <strong>%(user)s</strong> propuso "
+"<strong>%(film)s</strong>, y no está presente.\n"
 "            "
 
 #: democracy/templates/democracy/club_detail.html:47
@@ -748,7 +751,6 @@ msgstr "Ir al club"
 #: registration/templates/registration/account_delete_done.html:28
 #: registration/templates/registration/password_reset_done.html:29
 #: registration/templates/registration/user_login.html:146
-#: templates/home.html:12
 msgid "Home"
 msgstr "Inicio"
 
@@ -1025,7 +1027,7 @@ msgstr "Tu nueva contraseña ha sido establecida."
 #: registration/templates/registration/user_login.html:11
 #: registration/templates/registration/user_login.html:67
 #: registration/templates/registration/user_login.html:130
-#: templates/base_filmdemocracy.html:106 templates/home.html:88
+#: templates/base_filmdemocracy.html:108 templates/home.html:88
 msgid "Log in"
 msgstr "Iniciar sesión"
 
@@ -1123,11 +1125,11 @@ msgstr "Inglés"
 msgid "Spanish"
 msgstr "Español"
 
-#: templates/base_filmdemocracy.html:100
+#: templates/base_filmdemocracy.html:102
 msgid "Log out"
 msgstr "Cerrar sesión"
 
-#: templates/base_filmdemocracy.html:132
+#: templates/base_filmdemocracy.html:134
 msgid "Website under testing"
 msgstr "Pagina en construcción"
 

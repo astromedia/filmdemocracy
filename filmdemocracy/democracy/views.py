@@ -731,7 +731,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                 return voters_meta, warnings, points, False
 
         films_results = []
-        participants = [User.objects.filter(id=id)[0]
+        participants = [get_object_or_404(User, id=id)
                         for id in self.request.GET.getlist('participants')]
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_films = Film.objects.filter(club_id=club.id, seen=False)
