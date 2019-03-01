@@ -38,7 +38,7 @@ body {
   padding-left: 50px;
   padding-right: 50px;
   margin-top: 40px;
-  margin-bottom: -50px;
+  margin-bottom: 0px;
 }
 
 .films-album .card {
@@ -56,8 +56,21 @@ body {
   position:relative;
   text-align:center;
   cursor:default;
+  box-shadow: 0 0px 15px rgba(255, 255, 255, 0.6);
+}
+
+.positive-vote {
+
+  box-shadow: 0 0px 10px rgba(0, 255, 0, 0.8) !important;
+}
+
+.neutral-vote {
   border-radius: 3px;
-  box-shadow: 0 0px 10px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0px 10px rgba(255, 255, 255, 0.2) !important;
+}
+
+.negative-vote {
+  box-shadow: 0 0px 10px rgba(255, 0, 0, 0.8) !important;
 }
 
 .card-film .card-img {
@@ -192,6 +205,24 @@ body {
   margin-top: 30px;
 }
 
+
+/* Ranking options header
+-------------------------------------------------- */
+.ranking-options .h3 {
+  font-size: 15px;
+  padding-top: 10px;
+  margin-bottom: -13px;
+  text-transform: uppercase;
+  margin-top: 30px;
+}
+
+.ranking-options hr {
+  width: 450px;
+  max-width: 80%;
+  color: gray;
+  background-color: gray;
+  margin-bottom: 20px;
+}
 
 
 /* Film ranking

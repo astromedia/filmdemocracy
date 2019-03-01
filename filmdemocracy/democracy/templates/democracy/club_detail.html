@@ -33,7 +33,7 @@
 
       <!--LINK TO FILM PANEL-->
       <div class="my-3">
-        <form action="{% url 'democracy:candidate_films' club.id %}">
+        <form action="{% url 'democracy:candidate_films' club.id 'all' %}">
           <button type="submit" class="btn btn-club-links btn-gray-to-color green-bg-hover">
             {% trans 'Candidate films' %}
           </button>

@@ -62,6 +62,46 @@
     </div>
   <!--END: PARTICIPANTS-->
 
+  <!--RANKING OPTIONS-->
+  <div class="ranking-options">
+
+    <h3 class="h3">{% trans 'Ranking options' %}</h3>
+    <hr>
+
+    <!--EXCLUDE FILMS PROPOSED BY MEMBERS NOT PRESENT-->
+    <div class="form-input-field">
+
+      <div class="row align-items-center mx-1">
+        <div class="col-6 text-right">
+          <strong>{% trans 'Exclude films proposed by members not present:' %}</strong>
+        </div>
+        <div class="col-1">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
+                   value="exclude_not_present">
+            <label class="custom-control-label" for="exclude_not_present"></label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!--MAX FILM DURATION-->
+    <div class="form-input-field">
+
+      <div class="row align-items-center mx-1">
+        <div class="col-6 text-right">
+          <strong>{% trans 'Maximum film duration (minutes):' %}</strong>
+        </div>
+        <div class="col-3">
+          <input type="text" class="form-control" name="max_duration" id="max_duration" value="240">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
   <input class="btn btn-lg btn-block btn-green-to-blue" type="submit" value="{% trans 'Count votes' %}">
 
 </form>

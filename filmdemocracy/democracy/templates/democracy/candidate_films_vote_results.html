@@ -46,7 +46,7 @@
   <thead>
   <tr>
     <td scope="col"><span class="ml-1">{% trans 'Film' %}</span></td>
-    <!--<td scope="col" class="text-center"></td>-->
+    <td scope="col" class="text-center">{% trans 'Duration' %}</td>
     <td scope="col" class="text-center"><img style="height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}">
     </td>
     <td scope="col" class="text-center"><img style="height: 18px;" src="{% static 'democracy/svg/thumbsdown.svg'%}">
@@ -77,6 +77,8 @@
            data-toggle="modal" data-target="#WarningsModal_{{ forloop.counter }}">
       {% endif %}
     </td>
+
+    <td class="text-center align-middle">{{ film_results.duration }}</td>
 
     <!--{% if film_results.veto %}-->
     <!--<td class="text-center">-∞</td>-->

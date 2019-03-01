@@ -45,8 +45,8 @@ body {
 
 .club-banner .btn-club-links {
   min-width: 270px;
-  font-size: 17px;
-  padding: 10px;
+  padding: 5px;
+  margin: 3px;
 }
 
 .club-banner .admin-utils {
@@ -57,7 +57,6 @@ body {
 }
 
 .club-banner .admin-utils .btn-admin-utils {
-  font-size: 17px;
   color: #6c737d;
   font-weight: bold;
 }
@@ -183,7 +182,7 @@ body {
 .members-album .card {
   width: 8rem;
   background-color: transparent;
-  color: darkgray;ier
+  color: darkgray;
   text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;

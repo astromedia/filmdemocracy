@@ -64,7 +64,7 @@ urlpatterns = [
         name='promote_members'
     ),
     path(
-        '<str:club_id>/candidate_films/',
+        '<str:club_id>/candidate_films/view=<str:view_option>',
         views.CandidateFilmsView.as_view(
             template_name='democracy/candidate_films_list.html'
         ),

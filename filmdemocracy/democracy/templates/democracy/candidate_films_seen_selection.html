@@ -62,13 +62,13 @@
 </div>
 
 
-<form class="btn-cancel" action="{% url 'democracy:candidate_films' club.id %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
-</form>
-
-
 {% endif %}
 <!--END: FILM PANEL-->
+
+
+<form class="btn-cancel mt-n5" action="{% url 'democracy:candidate_films' club.id 'all' %}">
+  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
+</form>
 
 
 {% endblock %}

@@ -97,7 +97,7 @@
         <!--MISC INFO-->
         <div class="row mb-3">
           <div class="col-auto"><strong>{% trans 'Year' %}</strong>: {{ film.filmdb.year }}</div>
-          <div class="col-auto"><strong>{% trans 'Duration' %}</strong>: {{ film_runtime }}</div>
+          <div class="col-auto"><strong>{% trans 'Duration' %}</strong>: {{ film_duration }}</div>
           <div class="col-auto"><strong>{% trans 'Rated' %}</strong>: {{ film.filmdb.rated }}</div>
           <div class="col-auto"><strong>{% trans 'Country' %}</strong>: {{ film.filmdb.country }}</div>
         </div>
@@ -134,7 +134,7 @@
 
 {% if not film.seen %}
 
-<div class="text-center my-4"><a href="{% url 'democracy:candidate_films' club.id %}">
+<div class="text-center my-4"><a href="{% url 'democracy:candidate_films' club.id 'all' %}">
   {% trans 'Go to candidate films' %}</a>
 </div>
 

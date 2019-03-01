@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/dark_background.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/candidate_films_wide.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Candidate films' %}{% endblock %}
@@ -38,6 +39,21 @@
       </button>
     </form>
   </div>
+  <div class="col-md-auto">
+    {% if view_option == 'all' %}
+    <form action="{% url 'democracy:candidate_films' club.id 'not_voted' %}">
+      <button type="submit" class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover my-2 mx-auto">
+        {% trans 'View only not voted yet' %}
+      </button>
+    </form>
+    {% elif view_option == 'not_voted' %}
+    <form action="{% url 'democracy:candidate_films' club.id 'all' %}">
+      <button type="submit" class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover my-2 mx-auto">
+        {% trans 'View all' %}
+      </button>
+    </form>
+    {% endif %}
+  </div>
 </div>
 <!--END: FILM OPTIONS-->
 
@@ -45,31 +61,40 @@
 
 
 <!--START: FILM PANEL-->
-<div class="album films-album">
+<div class="album films-album mt-n5">
 
   <div class="row justify-content-center">
 
     {% for candidate in candidate_films|dictsort:"film.filmdb.title" %}
 
-    <div class="col-md-4 align-self-center my-3">
+    <div class="col align-self-center my-3">
+      {% if candidate.vote == 'positive' %}
+      <div class="card border border-success mx-auto">
+        <div class="card-film border border-success positive-vote">
+      {% elif candidate.vote == 'neutral' %}
+      <div class="card border-secondary mx-auto">
+        <div class="card-film border border-secondary neutral-vote">
+      {% elif candidate.vote == 'negative' %}
+      <div class="card border-danger mx-auto">
+        <div class="card-film border border-danger negative-vote">
+      {% else %}
       <div class="card mx-auto">
-        <div class="m-auto">
-          <div class="card-film">
-            <a href="{% url 'democracy:film_detail' club.id candidate.film.id %}">
-              <img class="card-img" src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
-              <div class="overlay">
-                <div class="film-title">{{ candidate.film.filmdb.title }}</div>
-              </div>
-            </a>
-            {% if candidate.voted %}
-            <div class="film-voted">
-              <div class="media">
-                <div class="media-body">{% trans 'Voted' %}</div>
-                <img class="align-self-center" src="{% static 'democracy/svg/check_ok.svg'%}" style="max-height: 17px;">
-              </div>
+        <div class="card-film">
+      {% endif %}
+          <a href="{% url 'democracy:film_detail' club.id candidate.film.id %}">
+            <img class="card-img " src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
+            <div class="overlay">
+              <div class="film-title">{{ candidate.film.filmdb.title }}</div>
             </div>
-            {% endif %}
+          </a>
+          {% if candidate.voted %}
+          <div class="film-voted">
+            <div class="media">
+              <div class="media-body"><strong>{% trans 'Voted' %}</strong></div>
+              <img class="align-self-center" src="{% static 'democracy/svg/check_ok.svg'%}" style="max-height: 17px;">
+            </div>
           </div>
+          {% endif %}
         </div>
       </div>
     </div>

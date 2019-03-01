@@ -344,14 +344,26 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
-        club_films = Film.objects.filter(club_id=club.id)
+        club_films = Film.objects.filter(club_id=club.id, seen=False)
+        view_option = self.kwargs['view_option']
+        context['view_option'] = self.kwargs['view_option']
         candidate_films = []
-        for film in club_films.filter(seen=False):
+        for film in club_films:
             film_voters = [vote.user.username for vote in film.vote_set.all()]
-            candidate_films.append({
-                'film': film,
-                'voted': self.request.user.username in film_voters
-            })
+            if self.request.user.username in film_voters:
+                if view_option == 'all':
+                    user_vote = get_object_or_404(Vote, user=self.request.user, film=film)
+                    candidate_films.append({
+                        'film': film,
+                        'voted': True,
+                        'vote': user_vote.vote_karma,
+                    })
+            else:
+                candidate_films.append({
+                    'film': film,
+                    'voted': False,
+                    'vote': False,
+                })
         context['candidate_films'] = candidate_films
         return context
 
@@ -469,9 +481,9 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
         if 'min' in film.filmdb.duration:
-            context['film_runtime'] = film.filmdb.duration.replace('min', ' min')
+            context['film_duration'] = film.filmdb.duration.replace('min', ' min')
         else:
-            context['film_runtime'] = film.filmdb.duration
+            context['film_duration'] = film.filmdb.duration
         film_comments = FilmComment.objects.filter(
             club=self.kwargs['club_id'],
             film=self.kwargs['film_id']
@@ -733,20 +745,36 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
         films_results = []
         participants = [get_object_or_404(User, id=id)
                         for id in self.request.GET.getlist('participants')]
+        exclude_not_present = self.request.GET.get('exclude_not_present')
+        max_duration = int(self.request.GET.get('max_duration'))
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_films = Film.objects.filter(club_id=club.id, seen=False)
         for film in club_films:
-            voters_meta, warnings, points, veto = process_film(film, participants)
-            films_results.append({
-                'id': film.id,
-                'title': film.filmdb.title,
-                'positive_voters': voters_meta[0],
-                'negative_voters': voters_meta[1],
-                'abstentionists': voters_meta[2],
-                'points': points,
-                'veto': veto,
-                'warnings': warnings,
-            })
+            if not(film.proposed_by not in participants and exclude_not_present):
+                try:
+                    film_duration = int(film.filmdb.duration)
+                except ValueError:
+                    if ' min' in film.filmdb.duration:
+                        film_duration = int(film.filmdb.duration.replace(' min', ''))
+                    elif 'min' in film.filmdb.duration:
+                        film_duration = int(film.filmdb.duration.replace('min', ''))
+                    else:
+                        film_duration = film.filmdb.duration
+                if isinstance(film_duration, int) and film_duration > max_duration:
+                    pass
+                else:
+                    voters_meta, warnings, points, veto = process_film(film, participants)
+                    films_results.append({
+                        'id': film.id,
+                        'title': film.filmdb.title,
+                        'duration': film_duration,
+                        'positive_voters': voters_meta[0],
+                        'negative_voters': voters_meta[1],
+                        'abstentionists': voters_meta[2],
+                        'points': points,
+                        'veto': veto,
+                        'warnings': warnings,
+                    })
         context['club'] = club
         context['films_results'] = films_results
         context['participants'] = participants
