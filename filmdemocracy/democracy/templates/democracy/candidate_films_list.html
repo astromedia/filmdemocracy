@@ -39,25 +39,58 @@
       </button>
     </form>
   </div>
-  <div class="col-md-auto">
-    {% if view_option == 'all' %}
-    <form action="{% url 'democracy:candidate_films' club.id 'not_voted' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover my-2 mx-auto">
-        {% trans 'View only not voted yet' %}
-      </button>
-    </form>
-    {% elif view_option == 'not_voted' %}
-    <form action="{% url 'democracy:candidate_films' club.id 'all' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover my-2 mx-auto">
-        {% trans 'View all' %}
-      </button>
-    </form>
-    {% endif %}
-  </div>
 </div>
 <!--END: FILM OPTIONS-->
 
 
+<!--START: FILM OPTIONS-->
+<div class="row justify-content-center my-4">
+
+  <div class="col-md-auto">
+
+    <div class="dropdown">
+      <button class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover dropdown-toggle my-2 mx-auto"
+              type="button" id="dropdownMenuButtonView" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+        {% trans 'Filter' %}: {{ view_option_tag }}
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButtonView">
+        <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id 'all' order_option %}">
+          {% trans 'All' %}</a>
+        <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id 'not_voted' order_option %}">
+          {% trans 'Not voted' %}</a>
+        <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id 'only_voted' order_option %}">
+          {% trans 'Only voted' %}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-auto">
+
+    <div class="dropdown">
+      <button class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover dropdown-toggle my-2 mx-auto"
+              type="button" id="dropdownMenuButtonOrder" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+        {% trans 'Order' %}: {{ order_option_tag }}
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButtonOrder">
+        <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id view_option 'title' %}">
+          {% trans 'Title' %}</a>
+        <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id view_option 'date_proposed' %}">
+          {% trans 'Date proposed' %}</a>
+        <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id view_option 'year' %}">
+          {% trans 'Year' %}</a>
+        <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id view_option 'duration' %}">
+          {% trans 'Duration' %}</a>
+        <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id view_option 'user_vote' %}">
+          {% trans 'My vote' %}</a>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+<!--END: FILM OPTIONS-->
 
 
 <!--START: FILM PANEL-->
@@ -65,23 +98,18 @@
 
   <div class="row justify-content-center">
 
-    {% for candidate in candidate_films|dictsort:"film.filmdb.title" %}
+    {% for candidate in candidate_films|dictsort:order_option_string %}
 
     <div class="col align-self-center my-3">
-      {% if candidate.vote == 'positive' %}
-      <div class="card border border-success mx-auto">
-        <div class="card-film border border-success positive-vote">
-      {% elif candidate.vote == 'neutral' %}
-      <div class="card border-secondary mx-auto">
-        <div class="card-film border border-secondary neutral-vote">
-      {% elif candidate.vote == 'negative' %}
-      <div class="card border-danger mx-auto">
-        <div class="card-film border border-danger negative-vote">
-      {% else %}
       <div class="card mx-auto">
+        {% if candidate.vote == 'positive' %}
+        <div class="card-film border positive-vote">
+        {% elif candidate.vote == 'negative' %}
+        <div class="card-film border negative-vote">
+        {% else %}
         <div class="card-film">
-      {% endif %}
-          <a href="{% url 'democracy:film_detail' club.id candidate.film.id %}">
+        {% endif %}
+          <a href="{% url 'democracy:film_detail' club.id candidate.film.id view_option order_option %}">
             <img class="card-img " src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
             <div class="overlay">
               <div class="film-title">{{ candidate.film.filmdb.title }}</div>
@@ -90,8 +118,15 @@
           {% if candidate.voted %}
           <div class="film-voted">
             <div class="media">
+              <img class="align-self-center" style="height: 17px;" src="{% static 'democracy/svg/check_ok.svg'%}">
               <div class="media-body"><strong>{% trans 'Voted' %}</strong></div>
-              <img class="align-self-center" src="{% static 'democracy/svg/check_ok.svg'%}" style="max-height: 17px;">
+              {% if candidate.vote == 'positive' %}
+              <img class="align-self-center" style="height: 17px;"
+                   src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+              {% elif candidate.vote == 'negative' %}
+              <img class="align-self-center" style="height: 17px;"
+                   src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+              {% endif %}
             </div>
           </div>
           {% endif %}

@@ -86,7 +86,8 @@
               {% trans 'FilmAffinity page' %}
             </a>
             {% elif not film.filmdb.faff_id %}
-            <a href="{% url 'democracy:film_add_faff' club.id film.id %}" class="badge badge-dark">
+            <a href="{% url 'democracy:film_add_faff' club.id film.id view_option order_option %}"
+               class="badge badge-dark">
               {% trans 'Add FilmAffinity url' %}
             </a>
             {% endif %}
@@ -132,19 +133,24 @@
 <!--END: FILM BANNER-->
 
 
-{% if not film.seen %}
-
-<div class="text-center my-4"><a href="{% url 'democracy:candidate_films' club.id 'all' %}">
-  {% trans 'Go to candidate films' %}</a>
+<div class="row justify-content-center mt-n2 mb-4 mx-1">
+  <div class="col-sm-auto">
+    {% if not film.seen %}
+    <form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">
+      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to candidate films' %}</button>
+    </form>
+    {% elif film.seen %}
+    <form class="" action="{% url 'democracy:seen_films' club.id %}">
+      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to seen films' %}</button>
+    </form>
+    {% endif %}
+  </div>
+  <div class="col-sm-auto">
+    <form class="" action="{% url 'democracy:club_detail' club.id %}">
+      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to club' %}</button>
+    </form>
+  </div>
 </div>
-
-{% elif film.seen %}
-
-<div class="text-center my-4"><a href="{% url 'democracy:seen_films' club.id %}">
-  {% trans 'Go to seen films' %}</a>
-</div>
-
-{% endif %}
 
 
 <nav class="nav-film">
@@ -179,29 +185,17 @@
 
     {% for choice, choice_dict in vote_choices.items %}
     <div class="text-center">
-      <form action="{% url 'democracy:vote_film' club.id film.id %}" method="POST">
+      <form action="{% url 'democracy:vote_film' club.id film.id view_option order_option %}" method="POST">
         {% csrf_token %}
 
         <!--POSITIVE BUTTON-->
         {% if choice_dict.choice_karma == 'positive' %}
         {% if choice_dict.choice_voted %}
-        <label class="btn btn-success btn-block vote-btn" for="vote_{{ forloop.counter }}">
+        <label class="btn btn-success btn-block vote-btn pointer-cursor" for="vote_{{ forloop.counter }}">
           {{ choice_dict.choice_text }}
         </label>
         {% else %}
-        <label class="btn btn-outline-success btn-block vote-btn success-bg black" for="vote_{{ forloop.counter }}">
-          {{ choice_dict.choice_text }}
-        </label>
-        {% endif %}
-
-        <!--NEUTRAL BUTTON-->
-        {% elif choice_dict.choice_karma == 'neutral' %}
-        {% if choice_dict.choice_voted %}
-        <label class="btn btn-secondary btn-block vote-btn" for="vote_{{ forloop.counter }}">
-          {{ choice_dict.choice_text }}
-        </label>
-        {% else %}
-        <label class="btn btn-outline-secondary btn-block vote-btn secondary-bg black"
+        <label class="btn btn-outline-success btn-block vote-btn success-bg black pointer-cursor"
                for="vote_{{ forloop.counter }}">
           {{ choice_dict.choice_text }}
         </label>
@@ -210,11 +204,12 @@
         <!--NEGATIVE BUTTON-->
         {% elif choice_dict.choice_karma == 'negative' %}
         {% if choice_dict.choice_voted %}
-        <label class="btn btn-danger btn-block vote-btn" for="vote_{{ forloop.counter }}">
+        <label class="btn btn-danger btn-block vote-btn pointer-cursor" for="vote_{{ forloop.counter }}">
           {{ choice_dict.choice_text }}
         </label>
         {% else %}
-        <label class="btn btn-outline-danger btn-block vote-btn danger-bg black" for="vote_{{ forloop.counter }}">
+        <label class="btn btn-outline-danger btn-block vote-btn danger-bg black pointer-cursor"
+               for="vote_{{ forloop.counter }}">
           {{ choice_dict.choice_text }}
         </label>
         {% endif %}
@@ -298,8 +293,6 @@
 
         {% if vote.vote_karma == 'positive' %}
         <p class="text-success">{{ vote.get_choice_display }}</p>
-        {% elif vote.vote_karma == 'neutral' %}
-        <p class="text-secondary">{{ vote.get_choice_display }}</p>
         {% elif vote.vote_karma == 'negative' %}
         <p class="text-danger">
           {% if vote.choice == "veto" %}
@@ -355,7 +348,8 @@
       <div class="col col-1 comment-text">
         {% if not comment.deleted %}
         {% if user == comment.user or user in club_admins %}
-        <form action="{% url 'democracy:delete_film_comment' club.id film.id comment.id %}" method="POST">
+        <form action="{% url 'democracy:delete_film_comment' club.id film.id comment.id view_option order_option %}"
+              method="POST">
           {% csrf_token %}
           <label for="delete-icon_{{ forloop.counter }}">
             <img class="pointer-cursor" style="height: 18px;" src="{% static 'democracy/svg/trashcan.svg'%}">
@@ -370,11 +364,13 @@
 
 
     <!--START: COMMENT FORM-->
-    <form class="form-comment" action="{% url 'democracy:comment_film' club.id film.id %}" method="POST">
+    <form class="form-comment" action="{% url 'democracy:comment_film' club.id film.id view_option order_option %}"
+          method="POST">
       {% csrf_token %}
 
       <div class="input-group">
-        <textarea class="form-control" aria-label="With textarea" name="text" placeholder="{% trans 'Write a comment' %}"></textarea>
+        <textarea class="form-control" aria-label="With textarea" name="text"
+                  placeholder="{% trans 'Write a comment' %}"></textarea>
         <div class="input-group-append">
           <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
         </div>
@@ -431,7 +427,7 @@
         <button type="button" class="btn btn btn-secondary" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form action="{% url 'democracy:delete_film' club.id film.id %}" class="text-center">
+        <form action="{% url 'democracy:delete_film' club.id film.id view_option order_option %}" class="text-center">
           {% csrf_token %}
           <button method="POST" type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}

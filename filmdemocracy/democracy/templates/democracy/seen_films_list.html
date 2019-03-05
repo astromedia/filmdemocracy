@@ -34,7 +34,7 @@
       <div class="card mx-auto">
         <div class="m-auto">
           <div class="card-film">
-            <a href="{% url 'democracy:film_detail' club.id film.id %}">
+            <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' %}">
               <img class="card-img" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
               <div class="overlay">
                 <div class="film-title">{{ film.filmdb.title }}</div>

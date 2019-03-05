@@ -56,6 +56,19 @@ def add_club_context(request, context, club_id):
     return context
 
 
+def choice_meta(vote_choice):
+    vote_meta_dict = {
+        Vote.OMG: (6, 'positive'),
+        Vote.YES: (5, 'positive'),
+        Vote.SEENOK: (4, 'positive'),
+        Vote.MEH: (3, 'positive'),
+        Vote.NO: (2, 'negative'),
+        Vote.SEENNO: (1, 'negative'),
+        Vote.VETO: (0, 'negative'),
+    }
+    return vote_meta_dict[vote_choice]
+
+
 @method_decorator(login_required, name='dispatch')
 class CreateClubView(generic.FormView):
     form_class = forms.EditClubForm
@@ -346,22 +359,58 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         context['club'] = club
         club_films = Film.objects.filter(club_id=club.id, seen=False)
         view_option = self.kwargs['view_option']
+        order_option = self.kwargs['order_option']
         context['view_option'] = self.kwargs['view_option']
+        context['order_option'] = self.kwargs['order_option']
+        if view_option == 'all':
+            context['view_option_tag'] = _("All")
+        elif view_option == 'not_voted':
+            context['view_option_tag'] = _("Not voted")
+        elif view_option == 'only_voted':
+            context['view_option_tag'] = _("Only voted")
+        if order_option == 'title':
+            context['order_option_string'] = "film.filmdb.title"
+            context['order_option_tag'] = _("Title")
+        elif order_option == 'date_proposed':
+            context['order_option_string'] = "film.pub_date"
+            context['order_option_tag'] = _("Date proposed")
+        elif order_option == 'year':
+            context['order_option_string'] = "film.filmdb.year"
+            context['order_option_tag'] = _("Year")
+        elif order_option == 'duration':
+            context['order_option_string'] = "duration"
+            context['order_option_tag'] = _("Duration")
+        elif order_option == 'user_vote':
+            context['order_option_string'] = "vote_points"
+            context['order_option_tag'] = _("My vote")
         candidate_films = []
         for film in club_films:
+            try:
+                film_duration = int(film.filmdb.duration)
+            except ValueError:
+                if ' min' in film.filmdb.duration:
+                    film_duration = int(film.filmdb.duration.replace(' min', ''))
+                elif 'min' in film.filmdb.duration:
+                    film_duration = int(film.filmdb.duration.replace('min', ''))
+                else:
+                    film_duration = 0
             film_voters = [vote.user.username for vote in film.vote_set.all()]
             if self.request.user.username in film_voters:
-                if view_option == 'all':
+                if view_option == 'all' or view_option == 'only_voted':
                     user_vote = get_object_or_404(Vote, user=self.request.user, film=film)
                     candidate_films.append({
                         'film': film,
                         'voted': True,
+                        'vote_points': - choice_meta(user_vote.choice)[0],
+                        'duration': film_duration,
                         'vote': user_vote.vote_karma,
                     })
-            else:
+            elif view_option != 'only_voted':
                 candidate_films.append({
                     'film': film,
                     'voted': False,
+                    'vote_points': -2.5,
+                    'duration': film_duration,
                     'vote': False,
                 })
         context['candidate_films'] = candidate_films
@@ -414,7 +463,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     def get_success_url(self):
         return reverse_lazy(
             'democracy:candidate_films',
-            kwargs={'club_id': self.kwargs['club_id']}
+            kwargs={'club_id': self.kwargs['club_id'], 'view_option': 'all', 'order_option': 'title'}
         )
 
     def get_context_data(self, **kwargs):
@@ -449,7 +498,12 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
             filmdb.writer = omdb_data['Writer']
             filmdb.actors = omdb_data['Actors']
             filmdb.poster_url = omdb_data['Poster']
-            filmdb.duration = omdb_data['Runtime']
+            if ' min' in omdb_data['Runtime']:
+                filmdb.duration = omdb_data['Runtime'].replace(' min', '')
+            elif 'min' in omdb_data['Runtime']:
+                filmdb.duration = omdb_data['Runtime'].replace('min', '')
+            else:
+                filmdb.duration = omdb_data['Runtime']
             filmdb.language = omdb_data['Language']
             filmdb.rated = omdb_data['Rated']
             filmdb.country = omdb_data['Country']
@@ -478,30 +532,24 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context = add_club_context(self.request, context, self.kwargs['club_id'])
+        context['view_option'] = self.kwargs['view_option']
+        context['order_option'] = self.kwargs['order_option']
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
-        if 'min' in film.filmdb.duration:
-            context['film_duration'] = film.filmdb.duration.replace('min', ' min')
-        else:
-            context['film_duration'] = film.filmdb.duration
+        try:
+            context['film_duration'] = f'{int(film.filmdb.duration)} min'
+        except ValueError:
+            if ' min' in film.filmdb.duration:
+                context['film_duration'] = film.filmdb.duration
+            elif 'min' in film.filmdb.duration:
+                context['film_duration'] = film.filmdb.duration.replace('min', ' min')
+            else:
+                context['film_duration'] = film.filmdb.duration
         film_comments = FilmComment.objects.filter(
             club=self.kwargs['club_id'],
             film=self.kwargs['film_id']
         )
         context['film_comments'] = film_comments.order_by('date')
-
-        def choice_meta(vote_choice):
-            vote_meta_dict = {
-                Vote.OMG: (6, 'positive'),
-                Vote.YES: (5, 'positive'),
-                Vote.SEENOK: (4, 'positive'),
-                Vote.MEH: (3, 'neutral'),
-                Vote.NO: (2, 'negative'),
-                Vote.SEENNO: (1, 'negative'),
-                Vote.VETO: (0, 'negative'),
-            }
-            return vote_meta_dict[vote_choice]
-
         choice_dict = {}
         for choice in Vote.vote_choices:
             choice_dict[choice[0]] = {
@@ -524,7 +572,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
 
 
 @login_required
-def vote_film(request, club_id, film_id):
+def vote_film(request, club_id, film_id, view_option, order_option):
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
@@ -538,12 +586,12 @@ def vote_film(request, club_id, film_id):
     user_vote.save()
     return HttpResponseRedirect(reverse(
         'democracy:candidate_films',
-        kwargs={'club_id': club_id}
+        kwargs={'club_id': club_id, 'view_option': view_option, 'order_option': order_option}
     ))
 
 
 @login_required
-def comment_film(request, club_id, film_id):
+def comment_film(request, club_id, film_id, view_option, order_option):
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
@@ -558,12 +606,14 @@ def comment_film(request, club_id, film_id):
     return HttpResponseRedirect(reverse(
         'democracy:film_detail',
         kwargs={'club_id': club_id,
-                'film_id': film_id}
+                'film_id': film_id,
+                'view_option': view_option,
+                'order_option': order_option}
     ))
 
 
 @login_required
-def delete_film_comment(request, club_id, film_id, comment_id):
+def delete_film_comment(request, club_id, film_id, comment_id, view_option, order_option):
     film_comment = get_object_or_404(FilmComment, id=comment_id)
     if request.user != film_comment.user:
         if not user_is_club_admin_check(request, club_id):
@@ -573,7 +623,9 @@ def delete_film_comment(request, club_id, film_id, comment_id):
     return HttpResponseRedirect(reverse(
         'democracy:film_detail',
         kwargs={'club_id': club_id,
-                'film_id': film_id}
+                'film_id': film_id,
+                'view_option': view_option,
+                'order_option': order_option}
     ))
 
 
@@ -588,7 +640,9 @@ class FilmAddFilmAffView(UserPassesTestMixin, generic.FormView):
         return reverse_lazy(
             'democracy:film_detail',
             kwargs={'club_id': self.kwargs['club_id'],
-                    'film_id': self.kwargs['film_id']}
+                    'film_id': self.kwargs['film_id'],
+                    'view_option': self.kwargs['view_option'],
+                    'order_option': self.kwargs['order_option']}
         )
 
     def form_valid(self, form):
@@ -602,6 +656,8 @@ class FilmAddFilmAffView(UserPassesTestMixin, generic.FormView):
         context = super().get_context_data(**kwargs)
         context['film'] = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['view_option'] = self.kwargs['view_option']
+        context['order_option'] = self.kwargs['order_option']
         return context
 
 
@@ -616,7 +672,9 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
         return reverse_lazy(
             'democracy:film_detail',
             kwargs={'club_id': self.kwargs['club_id'],
-                    'film_id': self.kwargs['film_id']}
+                    'film_id': self.kwargs['film_id'],
+                    'view_option': 'all',
+                    'order_option': 'title'}
         )
 
     def get_form_kwargs(self):
@@ -646,14 +704,14 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
 
 
 @login_required
-def delete_film(request, club_id, film_id):
+def delete_film(request, club_id, film_id, view_option, order_option):
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     film.delete()
     return HttpResponseRedirect(reverse(
         'democracy:candidate_films',
-        kwargs={'club_id': club_id}
+        kwargs={'club_id': club_id, 'view_option': view_option, 'order_option': order_option}
     ))
 
 

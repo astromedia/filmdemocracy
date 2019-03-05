@@ -58,7 +58,7 @@
 <!--START: ADD FILMADD URL FORM-->
 
 
-<form class="btn-cancel" action="{% url 'democracy:film_detail' club.id film.id %}">
+<form class="btn-cancel" action="{% url 'democracy:film_detail' club.id film.id view_option order_option %}">
   <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 

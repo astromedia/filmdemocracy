@@ -64,7 +64,7 @@ urlpatterns = [
         name='promote_members'
     ),
     path(
-        '<str:club_id>/candidate_films/view=<str:view_option>',
+        '<str:club_id>/candidate_films/&view=<str:view_option>&order=<str:order_option>',
         views.CandidateFilmsView.as_view(
             template_name='democracy/candidate_films_list.html'
         ),
@@ -106,36 +106,36 @@ urlpatterns = [
         name='add_new_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/',
+        '<str:club_id>/film/<str:film_id>/&view=<str:view_option>&order=<str:order_option>',
         views.FilmDetailView.as_view(
             template_name='democracy/film_detail.html'
         ),
         name='film_detail'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/vote_film/',
+        '<str:club_id>/film/<str:film_id>/vote_film/&view=<str:view_option>&order=<str:order_option>',
         views.vote_film,
         name='vote_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/comment_film/',
+        '<str:club_id>/film/<str:film_id>/comment_film/&view=<str:view_option>&order=<str:order_option>',
         views.comment_film,
         name='comment_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/delete_film_comment/<str:comment_id>',
+        '<str:club_id>/film/<str:film_id>/delete_comment/<str:comment_id>&view=<str:view_option>&order=<str:order_option>',
         views.delete_film_comment,
         name='delete_film_comment'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/film_add_faff/',
+        '<str:club_id>/film/<str:film_id>/film_add_faff/&view=<str:view_option>&order=<str:order_option>',
         views.FilmAddFilmAffView.as_view(
             template_name='democracy/film_add_faff.html'
         ),
         name='film_add_faff'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/delete_film/',
+        '<str:club_id>/film/<str:film_id>/delete_film/&view=<str:view_option>&order=<str:order_option>',
         views.delete_film,
         name='delete_film'
     ),

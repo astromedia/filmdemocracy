@@ -60,17 +60,11 @@ body {
 }
 
 .positive-vote {
-
-  box-shadow: 0 0px 10px rgba(0, 255, 0, 0.8) !important;
-}
-
-.neutral-vote {
-  border-radius: 3px;
-  box-shadow: 0 0px 10px rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 0px 10px rgba(0, 255, 0, 0.6) !important;
 }
 
 .negative-vote {
-  box-shadow: 0 0px 10px rgba(255, 0, 0, 0.8) !important;
+  box-shadow: 0 0px 10px rgba(255, 0, 0, 0.6) !important;
 }
 
 .card-film .card-img {

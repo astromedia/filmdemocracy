@@ -1,4 +1,5 @@
 import os
+import datetime
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -110,6 +111,7 @@ class FilmDb(models.Model):
     country = models.CharField(default='', max_length=1000)
     language = models.CharField(default='', max_length=1000)
     plot = models.CharField(default='', max_length=5000)
+    last_db_update = models.DateField('last db update date', default=datetime.date.today)
 
     def __str__(self):
         return f'{self.imdb_id}|{self.title}'
@@ -156,7 +158,7 @@ class Vote(models.Model):
         (OMG, _('I really really want to see it.')),
         (YES, _('I want to see it.')),
         (SEENOK, _("I've seen it, but I wouldn't mind seeing it.")),
-        (MEH, _('Meh...')),
+        (MEH, _('Meh... I could see it.')),
         (NO, _("I don't want to see it.")),
         (SEENNO, _("I've seen it, and I don't want to see it again.")),
         (VETO, _('Veto!')),
@@ -165,10 +167,8 @@ class Vote(models.Model):
 
     @property
     def vote_karma(self):
-        if self.choice in [self.OMG, self.YES, self.SEENOK]:
+        if self.choice in [self.OMG, self.YES, self.SEENOK, self.MEH]:
             return 'positive'
-        elif self.choice in [self.MEH]:
-            return 'neutral'
         elif self.choice in [self.NO, self.SEENNO, self.VETO]:
             return 'negative'
 

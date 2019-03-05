@@ -90,7 +90,7 @@
 <!--END: ADD NEW FILM FORM-->
 
 
-<form class="btn-cancel" action="{% url 'democracy:candidate_films' club.id 'all' %}">
+<form class="btn-cancel" action="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">
   <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 
