@@ -111,7 +111,8 @@ class FilmDb(models.Model):
     country = models.CharField(default='', max_length=1000)
     language = models.CharField(default='', max_length=1000)
     plot = models.CharField(default='', max_length=5000)
-    last_db_update = models.DateField('last db update date', default=datetime.date.today)
+    created = models.DateField('db created date', auto_now_add=True)
+    last_updated = models.DateField('last db update date', auto_now=True)
 
     def __str__(self):
         return f'{self.imdb_id}|{self.title}'

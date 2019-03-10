@@ -140,6 +140,11 @@ urlpatterns = [
         name='delete_film'
     ),
     path(
+        '<str:club_id>/film/<str:film_id>/update_film_data/&view=<str:view_option>&order=<str:order_option>',
+        views.update_film_data,
+        name='update_film_data'
+    ),
+    path(
         '<str:club_id>/seen_films/',
         views.SeenFilmsView.as_view(
             template_name='democracy/seen_films_list.html'

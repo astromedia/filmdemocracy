@@ -1,5 +1,6 @@
-import requests
+import datetime
 import random
+import requests
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -67,6 +68,30 @@ def choice_meta(vote_choice):
         Vote.VETO: (0, 'negative'),
     }
     return vote_meta_dict[vote_choice]
+
+
+def update_filmdb_omdb_info(filmdb, imdb_id):
+    omdb_api_url = f'http://www.omdbapi.com/?i=tt{imdb_id}' \
+        f'&apikey={OMDB_API_KEY}'
+    response = requests.get(omdb_api_url)
+    omdb_data = response.json()
+    filmdb.title = omdb_data['Title']
+    filmdb.year = omdb_data['Year']
+    filmdb.director = omdb_data['Director']
+    filmdb.writer = omdb_data['Writer']
+    filmdb.actors = omdb_data['Actors']
+    filmdb.poster_url = omdb_data['Poster']
+    if ' min' in omdb_data['Runtime']:
+        filmdb.duration = omdb_data['Runtime'].replace(' min', '')
+    elif 'min' in omdb_data['Runtime']:
+        filmdb.duration = omdb_data['Runtime'].replace('min', '')
+    else:
+        filmdb.duration = omdb_data['Runtime']
+    filmdb.language = omdb_data['Language']
+    filmdb.rated = omdb_data['Rated']
+    filmdb.country = omdb_data['Country']
+    filmdb.plot = omdb_data['Plot']
+    filmdb.save()
 
 
 @method_decorator(login_required, name='dispatch')
@@ -487,28 +512,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
         imdb_id = form.cleaned_data['imdb_url']
         filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_id)
         if created or (not created and not filmdb.title):
-            omdb_api_url = f'http://www.omdbapi.com/?i=tt{imdb_id}' \
-                f'&apikey={OMDB_API_KEY}'
-            response = requests.get(omdb_api_url)
-            omdb_data = response.json()
-            filmdb.faff_id = form.cleaned_data['faff_url']
-            filmdb.title = omdb_data['Title']
-            filmdb.year = omdb_data['Year']
-            filmdb.director = omdb_data['Director']
-            filmdb.writer = omdb_data['Writer']
-            filmdb.actors = omdb_data['Actors']
-            filmdb.poster_url = omdb_data['Poster']
-            if ' min' in omdb_data['Runtime']:
-                filmdb.duration = omdb_data['Runtime'].replace(' min', '')
-            elif 'min' in omdb_data['Runtime']:
-                filmdb.duration = omdb_data['Runtime'].replace('min', '')
-            else:
-                filmdb.duration = omdb_data['Runtime']
-            filmdb.language = omdb_data['Language']
-            filmdb.rated = omdb_data['Rated']
-            filmdb.country = omdb_data['Country']
-            filmdb.plot = omdb_data['Plot']
-            filmdb.save()
+            update_filmdb_omdb_info(filmdb, imdb_id)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         new_film_id = self.random_id_generator(club.id)
         Film.objects.create(
@@ -536,6 +540,11 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         context['order_option'] = self.kwargs['order_option']
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
+        time_diff = datetime.datetime.now().date() - film.filmdb.last_updated
+        if time_diff > datetime.timedelta(days=14):
+            context['updatable_db'] = True
+        else:
+            context['updatable_db'] = False
         try:
             context['film_duration'] = f'{int(film.filmdb.duration)} min'
         except ValueError:
@@ -712,6 +721,22 @@ def delete_film(request, club_id, film_id, view_option, order_option):
     return HttpResponseRedirect(reverse(
         'democracy:candidate_films',
         kwargs={'club_id': club_id, 'view_option': view_option, 'order_option': order_option}
+    ))
+
+
+@login_required
+def update_film_data(request, club_id, film_id, view_option, order_option):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
+    film = get_object_or_404(Film, pk=film_id)
+    filmdb = get_object_or_404(FilmDb, pk=film.filmdb.imdb_id)
+    update_filmdb_omdb_info(filmdb, filmdb.imdb_id)
+    return HttpResponseRedirect(reverse(
+        'democracy:film_detail',
+        kwargs={'club_id': club_id,
+                'film_id': film_id,
+                'view_option': view_option,
+                'order_option': order_option}
     ))
 
 

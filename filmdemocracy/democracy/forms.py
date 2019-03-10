@@ -116,15 +116,10 @@ class FilmAddNewForm(forms.ModelForm):
         max_length=200,
         label=_('IMDb url'),
     )
-    faff_url = forms.CharField(
-        max_length=200,
-        label=_('FilmAffinity url'),
-        required=False,
-    )
 
     class Meta:
         model = Film
-        fields = ['imdb_url', 'faff_url']
+        fields = ['imdb_url']
 
     def __init__(self, *args, **kwargs):
         self.club_id = kwargs.pop('club_id', None)
@@ -138,13 +133,6 @@ class FilmAddNewForm(forms.ModelForm):
             )
         else:
             return imdb_key
-
-    def clean_faff_url(self):
-        if self.cleaned_data['faff_url']:
-            faff_key = process_faff_url(self)
-            return faff_key
-        else:
-            return ''
 
 
 class FilmAddFilmAffForm(forms.ModelForm):

@@ -57,30 +57,30 @@
     </div>
 
     <!--FILMAFFINITY URL-->
-    <div class="form-input-field">
+    <!--<div class="form-input-field">-->
 
-      {% if form.is_bound %}
-      {% if form.faff_url.errors %}
-      {% render_field form.faff_url placeholder=faffurl class="form-control is-invalid" %}
-      {% for error in form.faff_url.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-      {% endfor %}
-      {% else %}
-      {% render_field form.faff_url placeholder=faffurl class="form-control is-valid" %}
-      {% endif %}
-      {% else %}
-      {% render_field form.faff_url placeholder=faffurl class="form-control" %}
-      {% endif %}
+      <!--{% if form.is_bound %}-->
+      <!--{% if form.faff_url.errors %}-->
+      <!--{% render_field form.faff_url placeholder=faffurl class="form-control is-invalid" %}-->
+      <!--{% for error in form.faff_url.errors %}-->
+      <!--<div class="invalid-feedback">-->
+        <!--{{ error }}-->
+      <!--</div>-->
+      <!--{% endfor %}-->
+      <!--{% else %}-->
+      <!--{% render_field form.faff_url placeholder=faffurl class="form-control is-valid" %}-->
+      <!--{% endif %}-->
+      <!--{% else %}-->
+      <!--{% render_field form.faff_url placeholder=faffurl class="form-control" %}-->
+      <!--{% endif %}-->
 
-      <div class="mb-2 mt-0 ml-2 text-left">
-        <a href="https://www.filmaffinity.com/" target="blank">
-          <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>
-        </a>
-      </div>
+      <!--<div class="mb-2 mt-0 ml-2 text-left">-->
+        <!--<a href="https://www.filmaffinity.com/" target="blank">-->
+          <!--<small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>-->
+        <!--</a>-->
+      <!--</div>-->
 
-    </div>
+    <!--</div>-->
 
   </div>
 

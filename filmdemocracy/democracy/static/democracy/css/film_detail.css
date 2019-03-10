@@ -53,10 +53,25 @@
   max-width: 100%;
 }
 
-.btn-delete-film {
+.btn-film-option {
   font-size: 11px;
+  min-width: 150px;
+  max-width: 250px;
+  margin: auto;
+  color: #6c737d;
+  background-color: transparent;
+  border: 1px solid #282828;
 }
 
+.btn-film-option:hover {
+  color: white;
+  border: 1px solid #6c737d;
+}
+
+.container-film-banner .btn-outline-danger:hover {
+  color: white;
+  border: 1px solid transparent;
+}
 
 /* Nav style
 -------------------------------------------------- */
@@ -76,7 +91,7 @@
   border: 1px solid #282828;
 }
 
-.btn-option .btn:hover {
+.btn-option:hover {
   color: #fff;
   text-decoration: none;
   border: 1px solid #282828;

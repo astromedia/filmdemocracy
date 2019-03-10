@@ -35,22 +35,18 @@
       <!--START: INFO-->
       <div class="col-md-9">
 
-
-        <div class="row align-items-center justify-content-between mb-2">
-
           <!--PROPOSED BY-->
-          <div class="col-auto">
             <strong>{% trans 'Proposed by: ' %}</strong>
             <a class="proposed-by" href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
               {{ film.proposed_by.username }}</a>, {% trans 'on ' %} {{ film.pub_date }}
-          </div>
 
+          <div class="row align-items-center my-2">
 
           <!--START: DELETE FILM-->
           {% if not film.seen %}
           {% if user in club_admins or film.proposed_by == user %}
           <div class="col-auto">
-            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-film my-2" data-toggle="modal"
+            <button type="button" class="btn btn-sm btn-film-option btn-outline-danger my-2 mx-auto" data-toggle="modal"
                     data-target="#DeleteModalCenter">
               {% trans 'Delete film' %}
             </button>
@@ -59,7 +55,7 @@
           {% else %}
           {% if user in club_admins %}
           <div class="col-auto">
-            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-film my-2" data-toggle="modal"
+            <button type="button" class="btn btn-sm btn-film-option btn-outline-danger my-2 mx-auto" data-toggle="modal"
                     data-target="#DeleteModalCenter">
               {% trans 'Delete film' %}
             </button>
@@ -67,6 +63,25 @@
           {% endif %}
           {% endif %}
           <!--END: DELETE FILM-->
+
+          <!--<div class="col-auto">-->
+            <!--<form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">-->
+              <!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
+                <!--{% trans 'Report problem with film info' %}-->
+              <!--</button>-->
+            <!--</form>-->
+          <!--</div>-->
+
+          {% if updatable_db %}
+          <div class="col-auto">
+            <form class="" action="{% url 'democracy:update_film_data' club.id film.id view_option order_option %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-film-option my-2 mx-auto">
+                {% trans 'Request data update' %}
+              </button>
+            </form>
+          </div>
+          {% endif %}
 
         </div>
 
@@ -427,9 +442,9 @@
         <button type="button" class="btn btn btn-secondary" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form action="{% url 'democracy:delete_film' club.id film.id view_option order_option %}" class="text-center">
+        <form method="POST" action="{% url 'democracy:delete_film' club.id film.id view_option order_option %}" class="text-center">
           {% csrf_token %}
-          <button method="POST" type="submit" class="btn btn-outline-danger mr-3">
+          <button type="submit" class="btn btn-outline-danger mr-3">
             {% trans 'Confirm' %}
           </button>
         </form>
