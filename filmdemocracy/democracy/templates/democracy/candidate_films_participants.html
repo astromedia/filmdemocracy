@@ -36,10 +36,10 @@
             <label for="participants{{ forloop.counter }}">
               <div class="hovereffect-participant">
                 {% if member.profile_image %}
-                <img class="card-img-top border border-secondary" src="{{ member.profile_image.url }}"
+                <img class="card-img-top rounded-circle border border-secondary" src="{{ member.profile_image.url }}"
                      alt="member.profile_image not found">
                 {% else %}
-                <img class="card-img-top border border-secondary"
+                <img class="card-img-top rounded-circle border border-secondary"
                      src="{% static 'registration/user_no_profile_image.svg' %}" alt="member.profile_image not found">
                 {% endif %}
               </div>

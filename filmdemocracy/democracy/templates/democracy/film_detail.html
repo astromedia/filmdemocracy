@@ -42,6 +42,40 @@
 
           <div class="row align-items-center my-2">
 
+          <!--START: REPORT PROBLEM-->
+          <!--<div class="col-auto">-->
+            <!--<form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">-->
+              <!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
+                <!--{% trans 'Report problem with film info' %}-->
+              <!--</button>-->
+            <!--</form>-->
+          <!--</div>-->
+          <!--END: REPORT PROBLEM-->
+
+          <!--START: MARK AS SEEN-->
+          <div class="col-auto">
+            <form class="" action="{% url 'democracy:film_seen' club.id film.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-film-option my-2 mx-auto">
+                {% trans 'Mark as seen by club' %}
+              </button>
+            </form>
+          </div>
+          <!--END: MARK AS SEEN-->
+
+          <!--START: UPDATE FILMDB-->
+          {% if updatable_db %}
+          <div class="col-auto">
+            <form class="" action="{% url 'democracy:update_film_data' club.id film.id view_option order_option %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-film-option my-2 mx-auto">
+                {% trans 'Request data update' %}
+              </button>
+            </form>
+          </div>
+          {% endif %}
+          <!--END: UPDATE FILMDB-->
+
           <!--START: DELETE FILM-->
           {% if not film.seen %}
           {% if user in club_admins or film.proposed_by == user %}
@@ -63,25 +97,6 @@
           {% endif %}
           {% endif %}
           <!--END: DELETE FILM-->
-
-          <!--<div class="col-auto">-->
-            <!--<form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">-->
-              <!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
-                <!--{% trans 'Report problem with film info' %}-->
-              <!--</button>-->
-            <!--</form>-->
-          <!--</div>-->
-
-          {% if updatable_db %}
-          <div class="col-auto">
-            <form class="" action="{% url 'democracy:update_film_data' club.id film.id view_option order_option %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-film-option my-2 mx-auto">
-                {% trans 'Request data update' %}
-              </button>
-            </form>
-          </div>
-          {% endif %}
 
         </div>
 

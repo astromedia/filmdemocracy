@@ -458,22 +458,6 @@ class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class FilmSeenSelectionView(UserPassesTestMixin, generic.TemplateView):
-    # TODO: change to ListView?
-
-    def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        context['club'] = club
-        club_films = Film.objects.filter(club_id=club.id)
-        context['candidate_films'] = club_films.filter(seen=False)
-        return context
-
-
-@method_decorator(login_required, name='dispatch')
 class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmAddNewForm
 

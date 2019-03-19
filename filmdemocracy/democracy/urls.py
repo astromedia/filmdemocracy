@@ -71,13 +71,6 @@ urlpatterns = [
         name='candidate_films'
     ),
     path(
-        '<str:club_id>/candidate_films/seen_selection/',
-        views.FilmSeenSelectionView.as_view(
-            template_name='democracy/candidate_films_seen_selection.html'
-        ),
-        name='film_seen_selection'
-    ),
-    path(
         '<str:club_id>/candidate_films/film_seen/<str:film_id>/',
         views.FilmSeenView.as_view(
             template_name='democracy/candidate_films_seen.html'

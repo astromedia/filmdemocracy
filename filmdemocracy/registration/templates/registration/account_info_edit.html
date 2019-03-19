@@ -6,6 +6,7 @@
 {% block styles %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'registration/css/registration.css' %}">
+<link rel="stylesheet" href="{% static 'registration/css/cropper.min.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Edit account information' %}{% endblock %}
@@ -13,58 +14,54 @@
 {% block pagecontent %}
 
 
-<!--START ERRORS-->
-{% for hidden_field in form.hidden_fields %}
-{% if hidden_field.errors %}
-<ul>
-  {% for error in hidden_field.errors %}
-  <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
-{{ hidden_field }}
-{% endfor %}
+<!--&lt;!&ndash;START ERRORS&ndash;&gt;-->
+<!--{% for hidden_field in form.hidden_fields %}-->
+<!--{% if hidden_field.errors %}-->
+<!--<ul>-->
+  <!--{% for error in hidden_field.errors %}-->
+  <!--<li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>-->
+  <!--{% endfor %}-->
+<!--</ul>-->
+<!--{% endif %}-->
+<!--{{ hidden_field }}-->
+<!--{% endfor %}-->
 
-{% if form.errors %}
-{% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center mx-4">
-  <strong>{{ error|escape }}</strong>
-</div>
-{% endfor %}
-{% endif %}
-<!--END ERRORS-->
+<!--{% if form.errors %}-->
+<!--{% for error in form.non_field_errors %}-->
+<!--<div class="alert alert-danger text-center mx-4">-->
+  <!--<strong>{{ error|escape }}</strong>-->
+<!--</div>-->
+<!--{% endfor %}-->
+<!--{% endif %}-->
+<!--&lt;!&ndash;END ERRORS&ndash;&gt;-->
 
 
 <h3 class="h3">{% trans 'Account information' %}</h3>
 
 
 <!--START: ACCOUNT INFO FORM-->
-<form class="form-registration form-profile" enctype="multipart/form-data" method="POST" novalidate>
+<form class="form-registration form-profile" enctype="multipart/form-data" method="POST" id="formUpload" novalidate>
   {% csrf_token %}
+
+  <input type="hidden" name="x" id="id_x">
+  <input type="hidden" name="y" id="id_y">
+  <input type="hidden" name="width" id="id_width">
+  <input type="hidden" name="height" id="id_height">
 
   <div class="form-inputs">
 
     <!--PICTURE-->
-    <div class="form-input-field">
-
       <div class="profile-picture">
         {% if user.profile_image %}
-        <img class="zoom-in-cursor" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
-             data-toggle="modal" data-target="#UserImageModalCenter">
+        <img class="rounded-circle pointer-cursor" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
+        onclick="document.getElementById('id_profile_image').click();">
         {% else %}
-        <img src="{% static 'registration/user_no_profile_image.svg' %}"
-             alt="user.profile_image not found">
+        <img class="rounded-circle pointer-cursor" src="{% static 'registration/user_no_profile_image.svg' %}"
+             alt="user.profile_image not found" onclick="document.getElementById('id_profile_image').click();">
         {% endif %}
       </div>
 
-      <div class="form-picture">
-        <div class="custom-file">
-          <input id="inputGroupFile" type="file" name='profile_image' class="custom-file-input">
-          <label class="custom-file-label" for="inputGroupFile">{% trans 'Choose file' %}</label>
-        </div>
-      </div>
-
-    </div>
+      <input id="id_profile_image" type="file" name='profile_image' style="display: none;">
 
     <!--USERNAME-->
     <div class="form-input-field">
@@ -182,6 +179,40 @@
 
   </div>
 
+
+  <!-- MODAL TO CROP THE IMAGE -->
+  <div class="modal fade" id="modalCrop">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{% trans 'Format your profile picture' %}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img src="" id="image" style="max-width: 100%;">
+        </div>
+        <div class="modal-footer">
+          <div class="btn-group pull-left" role="group">
+            <button type="button" class="btn btn-default js-zoom-in">
+              <span class="glyphicon glyphicon-zoom-in"></span>
+            </button>
+            <button type="button" class="btn btn-default js-zoom-out">
+              <span class="glyphicon glyphicon-zoom-out"></span>
+            </button>
+          </div>
+          <a class="btn btn-sm btn-cancel-modal mr-3" href="{% url 'registration:account_info_edit' %}" role="button">
+            {% trans 'Cancel' %}</a>
+          <button type="button" class="btn btn-submit-modal btn-green-to-blue js-crop-and-upload">
+            {% trans 'Upload and save changes' %}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END MODAL IMAGE -->
+
+
   <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Save changes' %}">
 
 </form>
@@ -193,44 +224,68 @@
 </form>
 
 
-<!-- START MODAL IMAGE -->
-{% if user.profile_image %}
-<div class="modal fade" id="UserImageModalCenter" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
-        <div class="text-right mb-3">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <br>
-        </div>
-        <div>
-          <img src="{{ user.profile_image.url }}" alt="user.profile_image not found">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-<!-- END MODAL IMAGE -->
+{% block javascript %}
+<!--START: CROPPER SCRIPT-->
+<!--https://github.com/Foliotek/Croppie-->
+<script src="{% static 'democracy/js/cropper.min.js' %}" crossorigin="anonymous"></script>
+ <script>
+    $(function () {
 
-
-<!--START: FILE FORM SCRIPT-->
-<!--https://github.com/Johann-S/bs-custom-file-input-->
-<script src="{% static 'democracy/js/bs-custom-file-input.min.js' %}" crossorigin="anonymous"></script>
-<script>
-      document.addEventListener('DOMContentLoaded', function() {
-        bsCustomFileInput.init()
-
-        var btn = document.getElementById('btnResetForm')
-        var form = document.querySelector('form')
-        btn.addEventListener('click', function() {
-          form.reset()
-        })
+      /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+      $("#id_profile_image").change(function () {
+        if (this.files && this.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            $("#image").attr("src", e.target.result);
+            $("#modalCrop").modal("show");
+          }
+          reader.readAsDataURL(this.files[0]);
+        }
       });
-</script>
-<!--END: FILE FORM SCRIPT-->
+
+      /* SCRIPTS TO HANDLE THE CROPPER BOX */
+      var $image = $("#image");
+      var cropBoxData;
+      var canvasData;
+      $("#modalCrop").on("shown.bs.modal", function () {
+        $image.cropper({
+          viewMode: 1,
+          aspectRatio: 1/1,
+          minCropBoxWidth: 200,
+          minCropBoxHeight: 200,
+          ready: function () {
+            $image.cropper("setCanvasData", canvasData);
+            $image.cropper("setCropBoxData", cropBoxData);
+          }
+        });
+      }).on("hidden.bs.modal", function () {
+        cropBoxData = $image.cropper("getCropBoxData");
+        canvasData = $image.cropper("getCanvasData");
+        $image.cropper("destroy");
+      });
+
+      $(".js-zoom-in").click(function () {
+        $image.cropper("zoom", 0.1);
+      });
+
+      $(".js-zoom-out").click(function () {
+        $image.cropper("zoom", -0.1);
+      });
+
+      /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+      $(".js-crop-and-upload").click(function () {
+        var cropData = $image.cropper("getData");
+        $("#id_x").val(cropData["x"]);
+        $("#id_y").val(cropData["y"]);
+        $("#id_height").val(cropData["height"]);
+        $("#id_width").val(cropData["width"]);
+        $("#formUpload").submit();
+      });
+
+    });
+  </script>
+<!--END: CROPPER SCRIPT-->
+{% endblock %}
 
 
 {% endblock %}

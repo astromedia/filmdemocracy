@@ -26,11 +26,11 @@
     {% for participant in participants %}
     <div class="col-auto">
       {% if participant.profile_image %}
-      <img class="participant-picture border border-secondary" title="{{ participant.username }}"
+      <img class="participant-picture border border-secondary rounded-circle" title="{{ participant.username }}"
            src="{{ participant.profile_image.url }}"
            alt="participant.profile_image not found">
       {% else %}
-      <img class="participant-picture border border-secondary" title="{{ participant.username }}"
+      <img class="participant-picture border border-secondary rounded-circle" title="{{ participant.username }}"
            src="{% static 'registration/user_no_profile_image.svg' %}" alt="participant.profile_image not found">
       {% endif %}
     </div>
@@ -91,11 +91,11 @@
         {% for participant in film_results.positive_voters %}
         <div class="col-auto align-items-center">
           {% if participant.profile_image %}
-          <img class="participant-picture border border-secondary" title="{{ participant.username }}"
+          <img class="participant-picture border border-secondary rounded-circle" title="{{ participant.username }}"
                src="{{ participant.profile_image.url }}"
                alt="participant.profile_image not found">
           {% else %}
-          <img class="participant-picture border border-secondary" title="{{ participant.username }}"
+          <img class="participant-picture border border-secondary rounded-circle" title="{{ participant.username }}"
                src="{% static 'registration/user_no_profile_image.svg' %}" alt="participant.profile_image not found">
           {% endif %}
         </div>

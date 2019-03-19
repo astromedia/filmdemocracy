@@ -41,10 +41,10 @@
 <!--PICTURE-->
 <div class="profile-picture">
   {% if user.profile_image %}
-  <img class="zoom-in-cursor" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
+  <img class="zoom-in-cursor rounded-circle " src="{{ user.profile_image.url }}" alt="user.profile_image not found"
        data-toggle="modal" data-target="#UserImageModalCenter">
   {% else %}
-  <img src="{% static 'registration/user_no_profile_image.svg' %}"
+  <img class="rounded-circle " src="{% static 'registration/user_no_profile_image.svg' %}"
        alt="user.profile_image not found">
   {% endif %}
 </div>
@@ -66,9 +66,15 @@
   <div class="col-6 text-right"><strong>{% trans 'Public email in clubs:' %}</strong></div>
   <div class="col-6">
     {% if user.public_email %}
-    {% trans 'Yes' %}
+    <div class="custom-control custom-switch">
+      <input type="checkbox" class="custom-control-input" disabled checked id="customSwitch1">
+      <label class="custom-control-label" for="customSwitch1"></label>
+    </div>
     {% elif not user.public_email %}
-    {% trans 'No' %}
+    <div class="custom-control custom-switch">
+      <input type="checkbox" class="custom-control-input" disabled id="customSwitch2">
+      <label class="custom-control-label" for="customSwitch2"></label>
+    </div>
     {% endif %}
   </div>
 </div>

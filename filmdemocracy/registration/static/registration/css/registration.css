@@ -110,3 +110,26 @@ body {
 .form-profile .form-inputs .form-input-field .form-last-name {
   max-width: 310px;
 }
+
+.form-registration .btn-cancel-modal {
+  text-align: center;
+  font-size: 13px;
+}
+
+.form-registration .btn-cancel-modal {
+  color: #6c737d;
+  background-color: transparent;
+  border: 1px solid #282828;
+}
+
+.form-registration .btn-cancel-modal:hover {
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid #282828;
+  background-color: #282828;
+}
+
+.form-registration .btn-submit-modal {
+  max-width: 300px;
+  font-size: 13px;
+}

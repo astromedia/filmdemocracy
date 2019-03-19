@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="63.5mm"
-   height="70.55555mm"
-   viewBox="0 0 63.5 70.55555"
+   width="63.494999mm"
+   height="65.568871mm"
+   viewBox="0 0 63.494999 65.568871"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
@@ -100,6 +100,17 @@
          x="36.285713"
          y="116.20139" />
     </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath837">
+      <rect
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:#fffffa;stroke-width:0.11583145;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect839"
+         width="65.568871"
+         height="65.568871"
+         x="34.211842"
+         y="121.18307" />
+    </clipPath>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -109,10 +120,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="-52.008186"
-     inkscape:cy="138.79025"
+     inkscape:cx="73.706099"
+     inkscape:cy="94.485631"
      inkscape:document-units="mm"
-     inkscape:current-layer="g939"
+     inkscape:current-layer="layer1"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -139,7 +150,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-36.285713,-116.20139)">
+     transform="translate(-36.285713,-121.18307)">
     <rect
        style="opacity:1;fill:#2e8b57;fill-opacity:1;stroke:none;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect828"
@@ -147,7 +158,7 @@
        height="70.55555"
        x="36.285713"
        y="116.20139"
-       clip-path="url(#clipPath876)" />
+       clip-path="url(#clipPath837)" />
     <ellipse
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.01173711;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path862"

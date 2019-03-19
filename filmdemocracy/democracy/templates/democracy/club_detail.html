@@ -570,10 +570,10 @@
         <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
           <div class="member-image">
             {% if member.profile_image %}
-            <img class="card-img-top" src="{{ member.profile_image.url }}"
+            <img class="card-img-top rounded-circle" src="{{ member.profile_image.url }}"
                  alt="member.profile_image not found">
             {% else %}
-            <img class="card-img-top" src="{% static 'registration/user_no_profile_image.svg' %}"
+            <img class="card-img-top rounded-circle" src="{% static 'registration/user_no_profile_image.svg' %}"
                  alt="member.profile_image not found">
             {% endif %}
           </div>
@@ -593,7 +593,7 @@
       <div class="card text-center">
         <a href="{% url 'democracy:invite_new_member' club.id %}">
           <div class="member-image">
-            <img class="card-img-top" src="{% static 'registration/invite_user_image.svg' %}"
+            <img class="card-img-top rounded-circle" src="{% static 'registration/invite_user_image.svg' %}"
                  alt="member.profile_image not found">
           </div>
         </a>

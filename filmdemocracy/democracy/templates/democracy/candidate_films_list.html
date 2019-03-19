@@ -23,8 +23,9 @@
 {% if candidate_films %}
 
 
-<!--START: FILM OPTIONS-->
+<!--START: CANDIDATE FILMS VIEW OPTIONS-->
 <div class="row justify-content-center my-4">
+
   <div class="col-md-auto">
     <form action="{% url 'democracy:add_new_film' club.id %}">
       <button type="submit" class="btn btn-sm btn-block btn-option btn-gray-to-color green-bg-hover my-2 mx-auto">
@@ -32,22 +33,8 @@
       </button>
     </form>
   </div>
-  <div class="col-md-auto">
-    <form action="{% url 'democracy:film_seen_selection' club.id %}">
-      <button type="submit" class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover my-2 mx-auto">
-        {% trans 'Mark film as seen by club' %}
-      </button>
-    </form>
-  </div>
-</div>
-<!--END: FILM OPTIONS-->
-
-
-<!--START: FILM OPTIONS-->
-<div class="row justify-content-center my-4">
 
   <div class="col-md-auto">
-
     <div class="dropdown">
       <button class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover dropdown-toggle my-2 mx-auto"
               type="button" id="dropdownMenuButtonView" data-toggle="dropdown" aria-haspopup="true"
@@ -66,7 +53,6 @@
   </div>
 
   <div class="col-md-auto">
-
     <div class="dropdown">
       <button class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover dropdown-toggle my-2 mx-auto"
               type="button" id="dropdownMenuButtonOrder" data-toggle="dropdown" aria-haspopup="true"
@@ -88,9 +74,8 @@
     </div>
   </div>
 
-
 </div>
-<!--END: FILM OPTIONS-->
+<!--END: CANDIDATE FILMS VIEW OPTIONS-->
 
 
 <!--START: FILM PANEL-->
