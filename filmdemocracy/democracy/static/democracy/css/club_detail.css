@@ -180,7 +180,7 @@ body {
 }
 
 .members-album .card {
-  width: 8rem;
+  width: 135px;
   background-color: transparent;
   color: darkgray;
   text-align: center;
@@ -190,7 +190,7 @@ body {
 }
 
 .member-image {
-  border-radius: 100px;
+  border-radius: 200px;
   border: 3px solid transparent;
   width:100%;
   height:100%;
@@ -203,5 +203,5 @@ body {
 
 .member-image:hover {
   border: 3px solid lightseagreen;
-  border-radius: 100px;
+  border-radius: 200px;
 }

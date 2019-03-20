@@ -35,20 +35,20 @@
       <!--START: INFO-->
       <div class="col-md-9">
 
-          <!--PROPOSED BY-->
-            <strong>{% trans 'Proposed by: ' %}</strong>
-            <a class="proposed-by" href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
-              {{ film.proposed_by.username }}</a>, {% trans 'on ' %} {{ film.pub_date }}
+        <!--PROPOSED BY-->
+        <strong>{% trans 'Proposed by: ' %}</strong>
+        <a class="proposed-by" href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
+          {{ film.proposed_by.username }}</a>, {% trans 'on ' %} {{ film.pub_date }}
 
-          <div class="row align-items-center my-2">
+        <div class="row align-items-center my-2">
 
           <!--START: REPORT PROBLEM-->
           <!--<div class="col-auto">-->
-            <!--<form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">-->
-              <!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
-                <!--{% trans 'Report problem with film info' %}-->
-              <!--</button>-->
-            <!--</form>-->
+          <!--<form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">-->
+          <!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
+          <!--{% trans 'Report problem with film info' %}-->
+          <!--</button>-->
+          <!--</form>-->
           <!--</div>-->
           <!--END: REPORT PROBLEM-->
 
@@ -116,10 +116,10 @@
               {% trans 'FilmAffinity page' %}
             </a>
             {% elif not film.filmdb.faff_id %}
-            <a href="{% url 'democracy:film_add_faff' club.id film.id view_option order_option %}"
-               class="badge badge-dark">
-              {% trans 'Add FilmAffinity url' %}
+            <a data-toggle="modal" data-target="#AddFaffModalCenter" class="badge badge-dark pointer-cursor">
+              {% trans 'Add FilmAffinity link' %}
             </a>
+
             {% endif %}
           </div>
 
@@ -136,19 +136,18 @@
         <!--PLOT-->
         <p class="text-justify"><em>{{ film.filmdb.plot }}</em></p>
 
-
         <!--DIRECTOR, WRITER, ACTOR-->
         <table class="table table-sm table-borderless table-details">
-          <tr>
-            <th class="text-right" scope="row">{% trans 'Director' %}:</th>
-            <td>{{ film.filmdb.director }}</td>
+          <tr class="d-flex">
+            <td class="text-right col-2" scope="row"><strong>{% trans 'Director' %}:</strong></td>
+            <td class="text-left col-10">{{ film.filmdb.director }}</td>
           </tr>
-          <tr>
-            <th class="text-right" scope="row">{% trans 'Writer' %}:</th>
-            <td>{{ film.filmdb.writer }}</td>
-          <tr>
-            <th class="text-right" scope="row">{% trans 'Cast' %}:</th>
-            <td>{{ film.filmdb.actors }}</td>
+          <tr class="d-flex">
+            <td class="text-right col-2" scope="row"><strong>{% trans 'Writer' %}:</strong></td>
+            <td class="text-left col-10">{{ film.filmdb.writer }}</td>
+          <tr class="d-flex">
+            <td class="text-right col-2" scope="row"><strong>{% trans 'Cast' %}:</strong></td>
+            <td class="text-left col-10">{{ film.filmdb.actors }}</td>
           </tr>
         </table>
 
@@ -163,11 +162,22 @@
 <!--END: FILM BANNER-->
 
 
+{% for message in messages %}
+  <div class="alert {{ message.tags }} alert-dismissible text-center mt-n3 mb-4" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="ml-4"><strong>{{ message }}</strong></span>
+  </div>
+{% endfor %}
+
+
 <div class="row justify-content-center mt-n2 mb-4 mx-1">
   <div class="col-sm-auto">
     {% if not film.seen %}
     <form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">
-      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to candidate films' %}</button>
+      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to candidate films' %}
+      </button>
     </form>
     {% elif film.seen %}
     <form class="" action="{% url 'democracy:seen_films' club.id %}">
@@ -454,12 +464,13 @@
         {% trans 'All its attached information will be lost...' %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn btn-secondary" data-dismiss="modal">
+        <button type="button" class="btn btn-sm  btn-secondary" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form method="POST" action="{% url 'democracy:delete_film' club.id film.id view_option order_option %}" class="text-center">
+        <form method="POST" action="{% url 'democracy:delete_film' club.id film.id view_option order_option %}"
+              class="text-center">
           {% csrf_token %}
-          <button type="submit" class="btn btn-outline-danger mr-3">
+          <button type="submit" class="btn btn-sm btn-outline-danger mr-3">
             {% trans 'Confirm' %}
           </button>
         </form>
@@ -468,6 +479,44 @@
   </div>
 </div>
 <!--END: MODAL DELETE-->
+
+
+<!--START: MODAL ADD FAFF-->
+<div class="modal fade" id="AddFaffModalCenter" tabindex="-1" role="dialog" aria-labelledby="AddFaffModalCenterTitle"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' club.id film.id view_option order_option %}"
+            class="text-center">
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddFaffModalCenterTitle">{% trans 'Add FilmAffinity page' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="form-group m-4">
+          <input class="form-control" type="text" placeholder="FilmAffinity url" id="faff_url" name="faff_url"
+                 aria-describedby="FaffWeb">
+          <a href="https://www.filmaffinity.com/" target="blank" id="FaffWeb" class="form-text text-left ml-2">
+            <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>
+          </a>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+            {% trans 'Cancel' %}
+          </button>
+
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-green-to-blue mr-3">
+            {% trans 'Add' %}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<!--END: MODAL ADD FAFF-->
 
 
 {% endblock %}

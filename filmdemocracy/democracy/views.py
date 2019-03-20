@@ -2,6 +2,7 @@ import datetime
 import random
 import requests
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import ValidationError
@@ -622,36 +623,42 @@ def delete_film_comment(request, club_id, film_id, comment_id, view_option, orde
     ))
 
 
-@method_decorator(login_required, name='dispatch')
-class FilmAddFilmAffView(UserPassesTestMixin, generic.FormView):
-    form_class = forms.FilmAddFilmAffForm
-
-    def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
-
-    def get_success_url(self):
-        return reverse_lazy(
-            'democracy:film_detail',
-            kwargs={'club_id': self.kwargs['club_id'],
-                    'film_id': self.kwargs['film_id'],
-                    'view_option': self.kwargs['view_option'],
-                    'order_option': self.kwargs['order_option']}
-        )
-
-    def form_valid(self, form):
-        film = get_object_or_404(Film, id=self.kwargs['film_id'])
+@login_required
+def add_filmaffinity_url(request, club_id, film_id, view_option, order_option):
+    faff_url = request.POST.get('faff_url')
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
+    try:
+        if 'filmaffinity' not in faff_url:
+            raise ValueError
+        elif 'm.filmaffinity' in faff_url:
+            try:
+                filmaff_key = faff_url.split('id=')[1][0:6]
+            except IndexError:
+                raise ValueError
+        else:
+            try:
+                filmaff_key = faff_url.split('film')[2][0:6]
+            except IndexError:
+                raise ValueError
+            if '.html' in filmaff_key:
+                filmaff_key = filmaff_key.replace('.html', '')
+        if len(filmaff_key) is not 6:
+            raise ValueError
+        film = get_object_or_404(Film, pk=film_id)
         filmdb = get_object_or_404(FilmDb, imdb_id=film.filmdb.imdb_id)
-        filmdb.faff_id = form.cleaned_data['faff_url']
+        filmdb.faff_id = filmaff_key
         filmdb.save()
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['film'] = get_object_or_404(Film, pk=self.kwargs['film_id'])
-        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        context['view_option'] = self.kwargs['view_option']
-        context['order_option'] = self.kwargs['order_option']
-        return context
+        messages.success(request, _('FilmAffinity url added!'))
+    except ValueError:
+        messages.warning(request, _('Invalid FilmAffinity url!'))
+    return HttpResponseRedirect(reverse(
+        'democracy:film_detail',
+        kwargs={'club_id': club_id,
+                'film_id': film_id,
+                'view_option': view_option,
+                'order_option': order_option}
+    ))
 
 
 @method_decorator(login_required, name='dispatch')

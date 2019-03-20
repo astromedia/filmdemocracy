@@ -43,6 +43,10 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
 }
 
+.navbar .nav-item .user-info img {
+  border: 2px solid #3D3D3D;
+}
+
 .btn-login {
   width: 140px;
   color: seagreen;

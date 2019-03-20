@@ -121,13 +121,6 @@ urlpatterns = [
         name='delete_film_comment'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/film_add_faff/&view=<str:view_option>&order=<str:order_option>',
-        views.FilmAddFilmAffView.as_view(
-            template_name='democracy/film_add_faff.html'
-        ),
-        name='film_add_faff'
-    ),
-    path(
         '<str:club_id>/film/<str:film_id>/delete_film/&view=<str:view_option>&order=<str:order_option>',
         views.delete_film,
         name='delete_film'
@@ -136,6 +129,11 @@ urlpatterns = [
         '<str:club_id>/film/<str:film_id>/update_film_data/&view=<str:view_option>&order=<str:order_option>',
         views.update_film_data,
         name='update_film_data'
+    ),
+    path(
+        '<str:club_id>/film/<str:film_id>/add_filmaffinity_url/&view=<str:view_option>&order=<str:order_option>',
+        views.add_filmaffinity_url,
+        name='add_filmaffinity_url'
     ),
     path(
         '<str:club_id>/seen_films/',

@@ -44,8 +44,7 @@
   box-shadow: 0 0px 10px rgba(255, 255, 255, 0.5);
 }
 
-.container-film-banner .film-data .table-details {
-  margin-left: auto;
+.container-film-banner .film-data table {
   color: #A9A9A9;
 }
 

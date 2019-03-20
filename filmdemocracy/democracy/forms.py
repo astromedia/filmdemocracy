@@ -83,32 +83,32 @@ def process_imdb_url(form):
         raise forms.ValidationError(_("Invalid IMDb url."))
 
 
-def process_faff_url(form):
-    """
-    Validate that the url is a valid FAff url, and return FAff id.
-    """
-    try:
-        faff_url = form.cleaned_data['faff_url']
-        if 'filmaffinity' not in faff_url:
-            raise ValueError
-        elif 'm.filmaffinity' in faff_url:
-            try:
-                filmaff_key = faff_url.split('id=')[1][0:6]
-            except IndexError:
-                raise ValueError
-        else:
-            try:
-                filmaff_key = faff_url.split('film')[2][0:6]
-            except IndexError:
-                raise ValueError
-            if '.html' in filmaff_key:
-                filmaff_key = filmaff_key.replace('.html', '')
-        if len(filmaff_key) is not 6:
-            raise ValueError
-        else:
-            return filmaff_key
-    except ValueError:
-        raise forms.ValidationError(_("Invalid FilmAffinity url."))
+# def process_faff_url(form):
+#     """
+#     Validate that the url is a valid FAff url, and return FAff id.
+#     """
+#     try:
+#         faff_url = form.cleaned_data['faff_url']
+#         if 'filmaffinity' not in faff_url:
+#             raise ValueError
+#         elif 'm.filmaffinity' in faff_url:
+#             try:
+#                 filmaff_key = faff_url.split('id=')[1][0:6]
+#             except IndexError:
+#                 raise ValueError
+#         else:
+#             try:
+#                 filmaff_key = faff_url.split('film')[2][0:6]
+#             except IndexError:
+#                 raise ValueError
+#             if '.html' in filmaff_key:
+#                 filmaff_key = filmaff_key.replace('.html', '')
+#         if len(filmaff_key) is not 6:
+#             raise ValueError
+#         else:
+#             return filmaff_key
+#     except ValueError:
+#         raise forms.ValidationError(_("Invalid FilmAffinity url."))
 
 
 class FilmAddNewForm(forms.ModelForm):
@@ -135,19 +135,19 @@ class FilmAddNewForm(forms.ModelForm):
             return imdb_key
 
 
-class FilmAddFilmAffForm(forms.ModelForm):
-    faff_url = forms.CharField(
-        max_length=200,
-        label=_('FilmAffinity url'),
-    )
-
-    class Meta:
-        model = FilmDb
-        fields = ['faff_url']
-
-    def clean_faff_url(self):
-        faff_key = process_faff_url(self)
-        return faff_key
+# class FilmAddFilmAffForm(forms.ModelForm):
+#     faff_url = forms.CharField(
+#         max_length=200,
+#         label=_('FilmAffinity url'),
+#     )
+#
+#     class Meta:
+#         model = FilmDb
+#         fields = ['faff_url']
+#
+#     def clean_faff_url(self):
+#         faff_key = process_faff_url(self)
+#         return faff_key
 
 
 class FilmSeenForm(forms.ModelForm):

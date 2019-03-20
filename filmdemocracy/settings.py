@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 from filmdemocracy.secrets import SECRET_KEY, OMDB_API_KEY, EMAIL_HOST_PASSWORD
 
@@ -157,3 +158,15 @@ AUTH_USER_MODEL = 'registration.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "local/media")
+
+
+# Custom Bootstrap messages
+# https://simpleisbetterthancomplex.com/tips/2016/09/06/django-tip-14-messages-framework.html
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
