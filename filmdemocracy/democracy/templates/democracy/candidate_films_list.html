@@ -27,11 +27,10 @@
 <div class="row justify-content-center my-4">
 
   <div class="col-md-auto">
-    <form action="{% url 'democracy:add_new_film' club.id %}">
-      <button type="submit" class="btn btn-sm btn-block btn-option btn-gray-to-color green-bg-hover my-2 mx-auto">
-        {% trans 'Propose film' %}
-      </button>
-    </form>
+    <button data-toggle="modal" data-target="#AddFilmModalCenter" type="button"
+            class="btn btn-sm btn-block btn-option btn-gray-to-color green-bg-hover my-2 mx-auto">
+      {% trans 'Propose film' %}
+    </button>
   </div>
 
   <div class="col-md-auto">
@@ -78,6 +77,16 @@
 <!--END: CANDIDATE FILMS VIEW OPTIONS-->
 
 
+{% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible text-center mt-n1 mb-4 mx-4" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <span class="ml-4"><strong>{{ message }}</strong></span>
+</div>
+{% endfor %}
+
+
 <!--START: FILM PANEL-->
 <div class="album films-album mt-n5">
 
@@ -89,63 +98,104 @@
       <div class="card mx-auto">
         {% if candidate.vote == 'positive' %}
         <div class="card-film border positive-vote">
-        {% elif candidate.vote == 'negative' %}
-        <div class="card-film border negative-vote">
-        {% else %}
-        <div class="card-film">
-        {% endif %}
-          <a href="{% url 'democracy:film_detail' club.id candidate.film.id view_option order_option %}">
-            <img class="card-img " src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
-            <div class="overlay">
-              <div class="film-title">{{ candidate.film.filmdb.title }}</div>
-            </div>
-          </a>
-          {% if candidate.voted %}
-          <div class="film-voted">
-            <div class="media">
-              <img class="align-self-center" style="height: 17px;" src="{% static 'democracy/svg/check_ok.svg'%}">
-              <div class="media-body"><strong>{% trans 'Voted' %}</strong></div>
-              {% if candidate.vote == 'positive' %}
-              <img class="align-self-center" style="height: 17px;"
-                   src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
-              {% elif candidate.vote == 'negative' %}
-              <img class="align-self-center" style="height: 17px;"
-                   src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+          {% elif candidate.vote == 'negative' %}
+          <div class="card-film border negative-vote">
+            {% else %}
+            <div class="card-film">
+              {% endif %}
+              <a href="{% url 'democracy:film_detail' club.id candidate.film.id view_option order_option %}">
+                <img class="card-img " src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
+                <div class="overlay">
+                  <div class="film-title">{{ candidate.film.filmdb.title }}</div>
+                </div>
+              </a>
+              {% if candidate.voted %}
+              <div class="film-voted">
+                <div class="media">
+                  <!--<img class="align-self-center" style="height: 17px;" src="{% static 'democracy/svg/check_ok.svg'%}">-->
+                  <div class="media-body mr-n4"><strong>{% trans 'Voted' %}</strong></div>
+                  {% if candidate.vote == 'positive' %}
+                  <img class="align-self-center" style="height: 22px;"
+                       src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+                  {% elif candidate.vote == 'negative' %}
+                  <img class="align-self-center" style="height: 22px;"
+                       src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+                  {% endif %}
+                </div>
+              </div>
               {% endif %}
             </div>
           </div>
-          {% endif %}
         </div>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+    <!--END: FILM PANEL-->
+
+
+    {% else %}
+
+
+    <div class="text-center text-muted mt-5">
+      <span>{% trans 'There are no candidate films...' %}</span>
+      <div>
+        <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-green-to-blue my-3">
+          {% trans 'Propose one!' %}
+        </a>
       </div>
     </div>
 
-    {% endfor %}
 
-  </div>
-
-</div>
-<!--END: FILM PANEL-->
+    {% endif %}
 
 
-{% else %}
+    <form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
+      <button type="submit" class="btn btn-sm">{% trans 'Back to club' %}</button>
+    </form>
 
-
-<div class="text-center text-muted mt-5">
-  <span>{% trans 'There are no candidate films...' %}</span>
-  <div>
-    <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-green-to-blue my-3">
-      {% trans 'Propose one!' %}
-    </a>
   </div>
 </div>
 
+<!--START: MODAL ADD FILM-->
+<div class="modal fade" id="AddFilmModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="AddFilmModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'democracy:add_new_film' club.id view_option order_option %}"
+            class="text-center">
+        {% csrf_token %}
 
-{% endif %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddFilmModalCenterTitle">{% trans 'Propose film' %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="form-group m-4">
+          <input class="form-control" type="text" placeholder="IMDb url" id="imdb_url" name="imdb_url"
+                 aria-describedby="IMDbWeb">
+          <a href="https://www.imdb.com/" target="blank" id="IMDbWeb" class="form-text text-left ml-2">
+            <small>{% trans 'Open imdb.com in a new tab' %}</small>
+          </a>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+            {% trans 'Cancel' %}
+          </button>
 
+          <button type="submit" class="btn btn-sm btn-green-to-blue mr-3">
+            {% trans 'Add' %}
+          </button>
+        </div>
+      </form>
 
-<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Back to club' %}</button>
-</form>
+    </div>
+  </div>
+</div>
+<!--END: MODAL ADD FILM-->
 
 
 {% endblock %}

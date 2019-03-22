@@ -73,7 +73,7 @@
         <div class="col-6 text-right">
           <strong>{% trans 'Exclude films proposed by members not present:' %}</strong>
         </div>
-        <div class="col-1">
+        <div class="col-6 text-left">
           <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
                    value="exclude_not_present">
@@ -87,8 +87,8 @@
         <div class="col-6 text-right">
           <strong>{% trans 'Maximum film duration (minutes):' %}</strong>
         </div>
-        <div class="col-2">
-          <input type="text" class="form-control" name="max_duration" id="max_duration" value="240">
+        <div class="col-6 text-center">
+          <input type="text" style='max-width: 75px' class="form-control" name="max_duration" id="max_duration" value="240">
         </div>
       </div>
 

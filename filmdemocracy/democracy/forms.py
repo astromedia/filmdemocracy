@@ -111,28 +111,28 @@ def process_imdb_url(form):
 #         raise forms.ValidationError(_("Invalid FilmAffinity url."))
 
 
-class FilmAddNewForm(forms.ModelForm):
-    imdb_url = forms.CharField(
-        max_length=200,
-        label=_('IMDb url'),
-    )
-
-    class Meta:
-        model = Film
-        fields = ['imdb_url']
-
-    def __init__(self, *args, **kwargs):
-        self.club_id = kwargs.pop('club_id', None)
-        super(FilmAddNewForm, self).__init__(*args, **kwargs)
-
-    def clean_imdb_url(self):
-        imdb_key = process_imdb_url(self)
-        if Film.objects.filter(club=self.club_id, imdb_id=imdb_key, seen=False):
-            raise forms.ValidationError(
-                _("That film is already in the candidate list!")
-            )
-        else:
-            return imdb_key
+# class FilmAddNewForm(forms.ModelForm):
+#     imdb_url = forms.CharField(
+#         max_length=200,
+#         label=_('IMDb url'),
+#     )
+#
+#     class Meta:
+#         model = Film
+#         fields = ['imdb_url']
+#
+#     def __init__(self, *args, **kwargs):
+#         self.club_id = kwargs.pop('club_id', None)
+#         super(FilmAddNewForm, self).__init__(*args, **kwargs)
+#
+#     def clean_imdb_url(self):
+#         imdb_key = process_imdb_url(self)
+#         if Film.objects.filter(club=self.club_id, imdb_id=imdb_key, seen=False):
+#             raise forms.ValidationError(
+#                 _("That film is already in the candidate list!")
+#             )
+#         else:
+#             return imdb_key
 
 
 # class FilmAddFilmAffForm(forms.ModelForm):

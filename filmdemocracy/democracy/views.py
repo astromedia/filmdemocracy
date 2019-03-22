@@ -95,6 +95,18 @@ def update_filmdb_omdb_info(filmdb, imdb_id):
     filmdb.save()
 
 
+def random_id_generator(club_id):
+    """
+    Random id generator, picks an integer in the [1, 99999] range
+    and checks if it is already used (i.e., not found in the DB).
+    return: new_id: new id number not existing in the database
+    """
+    club_films = Film.objects.filter(club_id=club_id)
+    films_ids = [fid[-5:] for fid in club_films.values_list('id', flat=True)]
+    free_ids = [i for i in range(1, 99999) if i not in films_ids]
+    return f'{random.choice(free_ids):05d}'
+
+
 @method_decorator(login_required, name='dispatch')
 class CreateClubView(generic.FormView):
     form_class = forms.EditClubForm
@@ -458,56 +470,55 @@ class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
-class AddNewFilmView(UserPassesTestMixin, generic.FormView):
-    form_class = forms.FilmAddNewForm
-
-    def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
-
-    def get_form_kwargs(self):
-        kwargs = super(AddNewFilmView, self).get_form_kwargs()
-        kwargs.update({'club_id': self.kwargs['club_id']})
-        return kwargs
-
-    def get_success_url(self):
-        return reverse_lazy(
-            'democracy:candidate_films',
-            kwargs={'club_id': self.kwargs['club_id'], 'view_option': 'all', 'order_option': 'title'}
-        )
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        return context
-
-    @staticmethod
-    def random_id_generator(club_id):
-        """
-        Random id generator, picks an integer in the [1, 99999] range
-        and checks if it is already used (i.e., not found in the DB).
-        return: new_id: new id number not existing in the database
-        """
-        club_films = Film.objects.filter(club_id=club_id)
-        films_ids = [fid[-5:] for fid in club_films.values_list('id', flat=True)]
-        free_ids = [i for i in range(1, 99999) if i not in films_ids]
-        return f'{random.choice(free_ids):05d}'
-
-    def form_valid(self, form):
-        imdb_id = form.cleaned_data['imdb_url']
-        filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_id)
-        if created or (not created and not filmdb.title):
-            update_filmdb_omdb_info(filmdb, imdb_id)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        new_film_id = self.random_id_generator(club.id)
-        Film.objects.create(
-            id=f'{club.id}{new_film_id}',
-            imdb_id=imdb_id,
-            proposed_by=self.request.user,
-            club=club,
-            filmdb=filmdb,
-        )
-        return super().form_valid(form)
+@login_required
+def add_new_film(request, club_id, view_option, order_option):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
+    imdb_url = request.POST.get('imdb_url')
+    try:
+        if 'imdb' not in imdb_url:
+            raise ValueError
+        url_list = imdb_url.split('/')
+        title_position = url_list.index('title')
+        imdb_key = url_list[title_position + 1]
+        if 'tt' not in imdb_key or len(imdb_key) is not 9:
+            raise ValueError
+        else:
+            imdb_id = imdb_key.replace('tt', '')
+            if Film.objects.filter(club=club_id, imdb_id=imdb_id, seen=False):
+                raise KeyError
+            else:
+                filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_id)
+                if created or (not created and not filmdb.title):
+                    update_filmdb_omdb_info(filmdb, imdb_id)
+                club = get_object_or_404(Club, pk=club_id)
+                new_film_id = random_id_generator(club_id)
+                film = Film.objects.create(
+                    id=f'{club_id}{new_film_id}',
+                    imdb_id=imdb_id,
+                    proposed_by=request.user,
+                    club=club,
+                    filmdb=filmdb,
+                )
+                film.save()
+                messages.success(request, _('New film added! Be the first to vote it!'))
+                return HttpResponseRedirect(reverse(
+                    'democracy:film_detail',
+                    kwargs={'club_id': club_id,
+                            'film_id': film.id,
+                            'view_option': view_option,
+                            'order_option': order_option}
+                ))
+    except ValueError:
+        messages.warning(request, _('Invalid IMDb url!'))
+    except KeyError:
+        messages.warning(request, _("That film is already in the candidate list!"))
+    return HttpResponseRedirect(reverse(
+        'democracy:candidate_films',
+        kwargs={'club_id': club_id,
+                'view_option': view_option,
+                'order_option': order_option}
+        ))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -525,8 +536,9 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         context['order_option'] = self.kwargs['order_option']
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
-        time_diff = datetime.datetime.now().date() - film.filmdb.last_updated
-        if time_diff > datetime.timedelta(days=14):
+        time_diff_created = datetime.datetime.now().date() - film.filmdb.created
+        time_diff_updated = film.filmdb.last_updated - film.filmdb.created
+        if time_diff_created > 2*time_diff_updated:
             context['updatable_db'] = True
         else:
             context['updatable_db'] = False
@@ -787,12 +799,6 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                             'film': film.filmdb.title,
                             'voter': vote.user.username,
                         })
-                    if vote.user == film.proposed_by:
-                        warnings.append({
-                            'type': 'proposer missing',
-                            'film': film.filmdb.title,
-                            'voter': vote.user.username,
-                        })
             voters_meta = (positive_voters, negative_voters, abstentionists)
 
             # TODO: use aggregations to do this count
@@ -835,13 +841,19 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                     else:
                         film_duration = film.filmdb.duration
                 if isinstance(film_duration, int) and film_duration > max_duration:
-                    pass
+                    continue
                 else:
                     voters_meta, warnings, points, veto = process_film(film, participants)
+                    if film.proposed_by not in participants:
+                        warnings.append({
+                            'type': 'proposer missing',
+                            'film': film.filmdb.title,
+                            'voter': film.proposed_by.username,
+                        })
                     films_results.append({
                         'id': film.id,
                         'title': film.filmdb.title,
-                        'duration': film_duration,
+                        'duration': f'{film_duration} min',
                         'positive_voters': voters_meta[0],
                         'negative_voters': voters_meta[1],
                         'abstentionists': voters_meta[2],

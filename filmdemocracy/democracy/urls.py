@@ -92,10 +92,8 @@ urlpatterns = [
         name='vote_results'
     ),
     path(
-        '<str:club_id>/candidate_films/add_new/',
-        views.AddNewFilmView.as_view(
-            template_name='democracy/candidate_films_add_new.html'
-        ),
+        '<str:club_id>/candidate_films/add_new_film/&view=<str:view_option>&order=<str:order_option>',
+        views.add_new_film,
         name='add_new_film'
     ),
     path(

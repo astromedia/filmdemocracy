@@ -163,7 +163,7 @@
 
 
 {% for message in messages %}
-  <div class="alert {{ message.tags }} alert-dismissible text-center mt-n3 mb-4" role="alert">
+  <div class="alert {{ message.tags }} alert-dismissible text-center mt-n3 mb-4 mx-4" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -488,6 +488,7 @@
     <div class="modal-content">
       <form method="POST" action="{% url 'democracy:add_filmaffinity_url' club.id film.id view_option order_option %}"
             class="text-center">
+        {% csrf_token %}
         <div class="modal-header">
           <h5 class="modal-title" id="AddFaffModalCenterTitle">{% trans 'Add FilmAffinity page' %}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -506,7 +507,6 @@
             {% trans 'Cancel' %}
           </button>
 
-          {% csrf_token %}
           <button type="submit" class="btn btn-sm btn-green-to-blue mr-3">
             {% trans 'Add' %}
           </button>
