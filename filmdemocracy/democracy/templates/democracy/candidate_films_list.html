@@ -20,9 +20,6 @@
 <h1 class="display-4">{% trans 'Candidate films' %}</h1>
 
 
-{% if candidate_films %}
-
-
 <!--START: CANDIDATE FILMS VIEW OPTIONS-->
 <div class="row justify-content-center my-4">
 
@@ -87,6 +84,9 @@
 {% endfor %}
 
 
+{% if candidate_films %}
+
+
 <!--START: FILM PANEL-->
 <div class="album films-album mt-n5">
 
@@ -139,14 +139,19 @@
     {% else %}
 
 
+    {% if view_option == 'all' %}
     <div class="text-center text-muted mt-5">
-      <span>{% trans 'There are no candidate films...' %}</span>
-      <div>
-        <a href="{% url 'democracy:add_new_film' club.id %}" class="btn btn-green-to-blue my-3">
-          {% trans 'Propose one!' %}
-        </a>
-      </div>
+      <span>{% trans 'There are no candidate films...' %}</span><br>
+      <button data-toggle="modal" data-target="#AddFilmModalCenter" type="button"
+              class="btn btn-green-to-blue my-3">
+        {% trans 'Propose one!' %}
+      </button>
     </div>
+    {% else %}
+    <div class="text-center text-muted mt-5">
+      <span>{% trans 'Move along, nothing to see here...' %}</span>
+    </div>
+    {% endif %}
 
 
     {% endif %}

@@ -92,6 +92,7 @@ class Meeting(models.Model):
     time_end = models.TimeField(_('End time (Optional)'), null=True, blank=True)
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')
+    members_no = models.ManyToManyField(User, related_name='members_no')
 
     def __str__(self):
         return f'{self.id}|{self.name}'

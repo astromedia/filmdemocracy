@@ -661,7 +661,7 @@ def add_filmaffinity_url(request, club_id, film_id, view_option, order_option):
         filmdb = get_object_or_404(FilmDb, imdb_id=film.filmdb.imdb_id)
         filmdb.faff_id = filmaff_key
         filmdb.save()
-        messages.success(request, _('FilmAffinity url added!'))
+        messages.success(request, _('Link to FilmAffinity added!'))
     except ValueError:
         messages.warning(request, _('Invalid FilmAffinity url!'))
     return HttpResponseRedirect(reverse(
@@ -1100,20 +1100,33 @@ def meeting_assistance(request, club_id, meeting_id):
         return HttpResponseForbidden()
     user = request.user
     meeting = get_object_or_404(Meeting, pk=meeting_id)
-    if 'yes' in request.POST:
+    if 'assist_yes' in request.POST:
         if user in meeting.members_yes.all():
             meeting.members_yes.remove(user)
         else:
             if user in meeting.members_maybe.all():
                 meeting.members_maybe.remove(user)
+            elif user in meeting.members_no.all():
+                meeting.members_no.remove(user)
             meeting.members_yes.add(user)
-    elif 'maybe' in request.POST:
+    elif 'assist_maybe' in request.POST:
         if user in meeting.members_maybe.all():
             meeting.members_maybe.remove(user)
         else:
             if user in meeting.members_yes.all():
                 meeting.members_yes.remove(user)
+            elif user in meeting.members_no.all():
+                meeting.members_no.remove(user)
             meeting.members_maybe.add(user)
+    elif 'assist_no' in request.POST:
+        if user in meeting.members_no.all():
+            meeting.members_no.remove(user)
+        else:
+            if user in meeting.members_yes.all():
+                meeting.members_yes.remove(user)
+            if user in meeting.members_maybe.all():
+                meeting.members_maybe.remove(user)
+            meeting.members_no.add(user)
     meeting.save()
     return HttpResponseRedirect(reverse(
         'democracy:club_detail',

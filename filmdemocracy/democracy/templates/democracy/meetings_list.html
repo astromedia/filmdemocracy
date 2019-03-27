@@ -99,6 +99,18 @@
       {% endfor %}
     </div>
     {% endif %}
+    {% if meeting.members_no.all %}
+    <div>
+      <strong>{% trans "Can't assist:" %}</strong>
+      {% for member in meeting.members_no.all %}
+      {% if forloop.last %}
+      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
+      {% else %}
+      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
     <!--START: MEETING ASSISTANCE DETAILS-->
 
 
@@ -110,16 +122,16 @@
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
           {% if user in meeting.members_yes.all %}
-          <label class="btn btn-sm btn-block btn-assistance-active" for="yes_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-assistance-active pointer-cursor" for="yes_{{ forloop.counter }}">
             {% trans 'Confirm assistance' %}
           </label>
           {% else %}
-          <label class="btn btn-sm btn-block btn-assistance"
-                 for="yes_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-assistance pointer-cursor" for="yes_{{ forloop.counter }}">
             {% trans 'Confirm assistance' %}
           </label>
           {% endif %}
-          <input type="submit" class="invisible my-n5 mx-n5" name="yes" id="yes_{{ forloop.counter }}" value="yes">
+          <input type="submit" class="invisible my-n5 mx-n5" name="assist_yes" id="yes_{{ forloop.counter }}"
+                 value="assist_yes">
         </form>
       </div>
 
@@ -128,17 +140,34 @@
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
           {% if user in meeting.members_maybe.all %}
-          <label class="btn btn-sm btn-block btn-assistance-active" for="maybe_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-assistance-active pointer-cursor" for="maybe_{{ forloop.counter }}">
             {% trans "I'm interested" %}
           </label>
           {% else %}
-          <label class="btn btn-sm btn-block btn-assistance"
-                 for="maybe_{{ forloop.counter }}">
+          <label class="btn btn-sm btn-block btn-assistance pointer-cursor" for="maybe_{{ forloop.counter }}">
             {% trans "I'm interested" %}
           </label>
           {% endif %}
-          <input type="submit" class="invisible my-n5 mx-n5" name="maybe" id="maybe_{{ forloop.counter }}"
-                 value="maybe">
+          <input type="submit" class="invisible my-n5 mx-n5" name="assist_maybe" id="maybe_{{ forloop.counter }}"
+                 value="assist_maybe">
+        </form>
+      </div>
+
+      <!--I CAN'T ASSIST BUTTON-->
+      <div class="col-sm-auto mt-1 mb-n3">
+        <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
+          {% csrf_token %}
+          {% if user in meeting.members_no.all %}
+          <label class="btn btn-sm btn-block btn-assistance-active pointer-cursor" for="no_{{ forloop.counter }}">
+            {% trans "I can't assist" %}
+          </label>
+          {% else %}
+          <label class="btn btn-sm btn-block btn-assistance pointer-cursor" for="no_{{ forloop.counter }}">
+            {% trans "I can't assist" %}
+          </label>
+          {% endif %}
+          <input type="submit" class="invisible my-n5 mx-n5" name="assist_no" id="no_{{ forloop.counter }}"
+                 value="assist_no">
         </form>
       </div>
 
