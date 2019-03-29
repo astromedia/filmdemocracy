@@ -1,6 +1,6 @@
 /* Club banner style
 -------------------------------------------------- */
-.club-banner {
+.navigation-banner {
   position: relative;
   text-align: center;
   margin-top: -24px;
@@ -10,15 +10,24 @@
   box-shadow: 0 0px 15px rgba(0, 0, 0, 0.75);
 }
 
-.club-banner .club-name {
-  font-size: 25px;
+.navigation-banner .navigation-option {
+  font-size: 17px;
+  min-width: 245px;
 }
 
-.club-banner .club-name a {
+.navigation-banner .navigation-option a {
   color: darkgray;
 }
 
-.club-banner .club-name a:hover {
+.navigation-banner .navigation-option a:hover {
   color: #d1d1d1;
   text-decoration: none;
+}
+
+.navigation-banner hr {
+  max-width: 0px;
+  color: #505050;
+  background-color: #505050;
+  margin-top: 5px;
+  margin-bottom: -11px;
 }

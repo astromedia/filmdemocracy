@@ -1,28 +1,30 @@
+/* Club banner style
+-------------------------------------------------- */
+.navigation-banner {
+  box-shadow: none;
+}
+
+.navigation-banner hr {
+  max-width: 850px;
+}
+
 /* Film banner
 -------------------------------------------------- */
 .container-film-banner {
   position: relative;
-  padding-top: 20px;
+  padding-top: 35px;
   padding-bottom: 10px;
   margin-top: 0px;
   margin-bottom: 40px;
   background-color: #121317;
   color: #A9A9A9;
-  z-index: 5;
 }
 
 .container-film-banner .film-title {
   padding-bottom: 20px;
   margin-top: -26px;
-  margin-bottom: -26px;
+  margin-bottom: 0px;
   color: lightgray;
-}
-
-.container-film-banner hr {
-  max-width: 95%;
-  color: #505050;
-  background-color: #505050;
-  margin-bottom: 25px;
 }
 
 .container-film-banner .film-data {

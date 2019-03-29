@@ -9,10 +9,15 @@ body {
   box-shadow: none;
 }
 
-.club-banner {
+.navigation-banner {
   box-shadow: none;
+}
+
+.navigation-banner hr {
+  max-width: 850px;
 }
 
 .display-4 {
   color: darkgray;
 }
+

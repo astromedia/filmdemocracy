@@ -1,5 +1,6 @@
 {% extends "democracy/base_club_banner.html" %}
 {% load static %}
+{% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
 
@@ -13,14 +14,11 @@
 
 {% block content %}
 
-
 <!--START: FILM BANNER-->
 <div class="container-fluid container-film-banner shadow">
 
   <!--TITLE-->
   <h1 class="film-title text-center">{{ film.filmdb.title }}</h1>
-
-  <hr class="mx-auto">
 
   <div class="container film-data">
 
@@ -134,22 +132,12 @@
         </div>
 
         <!--PLOT-->
-        <p class="text-justify"><em>{{ film.filmdb.plot }}</em></p>
+        <p class="text-justify mb-2"><em>{{ film.filmdb.plot }}</em></p>
 
         <!--DIRECTOR, WRITER, ACTOR-->
-        <table class="table table-sm table-borderless table-details">
-          <tr class="d-flex">
-            <td class="text-right col-2" scope="row"><strong>{% trans 'Director' %}:</strong></td>
-            <td class="text-left col-10">{{ film.filmdb.director }}</td>
-          </tr>
-          <tr class="d-flex">
-            <td class="text-right col-2" scope="row"><strong>{% trans 'Writer' %}:</strong></td>
-            <td class="text-left col-10">{{ film.filmdb.writer }}</td>
-          <tr class="d-flex">
-            <td class="text-right col-2" scope="row"><strong>{% trans 'Cast' %}:</strong></td>
-            <td class="text-left col-10">{{ film.filmdb.actors }}</td>
-          </tr>
-        </table>
+        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Director' %}:</strong> {{ film.filmdb.director }}</p>
+        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Writer' %}:</strong> {{ film.filmdb.writer }}</p>
+        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Cast' %}:</strong> {{ film.filmdb.actors }}</p>
 
       </div>
       <!--END: INFO-->
@@ -163,34 +151,34 @@
 
 
 {% for message in messages %}
-  <div class="alert {{ message.tags }} alert-dismissible text-center mt-n3 mb-4 mx-4" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <span class="ml-4"><strong>{{ message }}</strong></span>
-  </div>
+<div class="alert {{ message.tags }} alert-dismissible text-center mt-n3 mb-4 mx-4" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <span class="ml-4"><strong>{{ message }}</strong></span>
+</div>
 {% endfor %}
 
 
-<div class="row justify-content-center mt-n2 mb-4 mx-1">
-  <div class="col-sm-auto">
-    {% if not film.seen %}
-    <form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">
-      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to candidate films' %}
-      </button>
-    </form>
-    {% elif film.seen %}
-    <form class="" action="{% url 'democracy:seen_films' club.id %}">
-      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to seen films' %}</button>
-    </form>
-    {% endif %}
-  </div>
-  <div class="col-sm-auto">
-    <form class="" action="{% url 'democracy:club_detail' club.id %}">
-      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to club' %}</button>
-    </form>
-  </div>
-</div>
+<!--<div class="row justify-content-center mt-n2 mb-4 mx-1">-->
+<!--  <div class="col-sm-auto">-->
+<!--    {% if not film.seen %}-->
+<!--    <form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">-->
+<!--      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to candidate films' %}-->
+<!--      </button>-->
+<!--    </form>-->
+<!--    {% elif film.seen %}-->
+<!--    <form class="" action="{% url 'democracy:seen_films' club.id %}">-->
+<!--      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to seen films' %}</button>-->
+<!--    </form>-->
+<!--    {% endif %}-->
+<!--  </div>-->
+<!--  <div class="col-sm-auto">-->
+<!--    <form class="" action="{% url 'democracy:club_detail' club.id %}">-->
+<!--      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to club' %}</button>-->
+<!--    </form>-->
+<!--  </div>-->
+<!--</div>-->
 
 
 <nav class="nav-film">

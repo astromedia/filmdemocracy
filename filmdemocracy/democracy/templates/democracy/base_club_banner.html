@@ -8,11 +8,33 @@
 
 
 <!--START: CLUB BANNER-->
-<div class="container-fluid club-banner text-center">
+<div class="container-fluid navigation-banner text-center">
 
-  <div class="club-name">
-    <a href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+  <div class="row justify-content-center mx-1">
+
+    <div class="col-md-auto my-2">
+      <div class="navigation-option">
+        <a href="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">
+          {% trans 'Candidate films' %}
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-auto my-2">
+      <div class="navigation-option">
+        <a href="{% url 'democracy:club_detail' club.id %}">{% trans 'Club' %}</a>
+      </div>
+    </div>
+
+    <div class="col-md-auto my-2">
+      <div class="navigation-option">
+        <a href="{% url 'democracy:participants' club.id %}">{% trans 'Film ranking' %}</a>
+      </div>
+    </div>
+
   </div>
+
+  <hr>
 
 </div>
 <!--END: CLUB BANNER-->

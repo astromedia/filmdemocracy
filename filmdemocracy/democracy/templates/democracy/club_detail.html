@@ -1,17 +1,19 @@
-{% extends "base_filmdemocracy.html" %}
+{% extends "democracy/base_club_banner.html" %}
 {% load static %}
+{% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/club_detail.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/meetings.css' %}">
 {% endblock %}
 
 {% block title %}{{ club.name }}{% endblock %}
 
-{% block pagecontent %}
+{% block content %}
 
 
 <!--START: CLUB BANNER-->
@@ -19,7 +21,7 @@
 
 
   <!--NAME-->
-  <div class="lead text-center name"><strong>{{ club.name }}</strong></div>
+  <div class="lead text-center name mt-3"><strong>{{ club.name }}</strong></div>
 
   <!--SHORT DESCRIPTION-->
   <div class="lead text-muted short-description">{{ club.short_description }}</div>

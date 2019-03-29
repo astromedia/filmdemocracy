@@ -95,7 +95,7 @@
         <li class="nav-item active mr-4">
           <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
             {% if user.profile_image %}
-            <img class="mt-n1 mx-1 rounded-circle" style="max-height: 25px;" src="{{ user.profile_image.url }}" alt="user.profile_image not found">
+            <img class="mt-n1 mx-1 rounded-circle" style="max-height: 27px;" src="{{ user.profile_image.url }}" alt="user.profile_image not found">
             {% else %}
             <img class="mt-n1 mx-1" style="max-height: 18px;" src="{% static 'democracy/svg/person.svg'%}">
             {% endif %}

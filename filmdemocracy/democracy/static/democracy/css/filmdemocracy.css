@@ -44,7 +44,7 @@ body {
 }
 
 .navbar .nav-item .user-info img {
-  border: 2px solid lightseagreen;
+  border: 0px solid black;
 }
 
 .btn-login {
