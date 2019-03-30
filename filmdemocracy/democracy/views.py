@@ -158,6 +158,7 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page'] = 'club_detail'
         club_id = self.kwargs['club_id']
         context = add_club_context(self.request, context, club_id)
         club_meetings = Meeting.objects.filter(
@@ -393,6 +394,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page'] = 'candidate_films'
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
         club_films = Film.objects.filter(club_id=club.id, seen=False)
@@ -751,6 +753,7 @@ class ParticipantsView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page'] = 'film_ranking'
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
         context['club_members'] = club.members.filter(is_active=True)

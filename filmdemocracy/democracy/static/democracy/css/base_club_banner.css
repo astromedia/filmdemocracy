@@ -10,9 +10,11 @@
   box-shadow: 0 0px 15px rgba(0, 0, 0, 0.75);
 }
 
+.navigation-banner .row {
+  max-width: 880px;
+}
 .navigation-banner .navigation-option {
   font-size: 17px;
-  min-width: 245px;
 }
 
 .navigation-banner .navigation-option a {

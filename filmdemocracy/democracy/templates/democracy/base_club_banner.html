@@ -10,25 +10,35 @@
 <!--START: CLUB BANNER-->
 <div class="container-fluid navigation-banner text-center">
 
-  <div class="row justify-content-center mx-1">
+  <div class="row justify-content-center align-items-center mx-auto">
 
-    <div class="col-md-auto my-2">
+    <div class="col-md-auto my-2 mr-auto">
       <div class="navigation-option">
-        <a href="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">
-          {% trans 'Candidate films' %}
-        </a>
+        {% if page == 'candidate_films' %}
+        <a style='color: #d1d1d1;' href="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">{% trans 'Candidate films' %}</a>
+        {% else %}
+        <a href="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">{% trans 'Candidate films' %}</a>
+        {% endif %}
       </div>
     </div>
 
     <div class="col-md-auto my-2">
       <div class="navigation-option">
-        <a href="{% url 'democracy:club_detail' club.id %}">{% trans 'Club' %}</a>
+        {% if page == 'club_detail' %}
+        <a style='font-size: 19px; color: #d1d1d1;' href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+        {% else %}
+        <a style='font-size: 19px' href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+        {% endif %}
       </div>
     </div>
 
-    <div class="col-md-auto my-2">
+    <div class="col-md-auto my-2 ml-auto">
       <div class="navigation-option">
+        {% if page == 'film_ranking' %}
+        <a style='color: #d1d1d1;' href="{% url 'democracy:participants' club.id %}">{% trans 'Film ranking' %}</a>
+        {% else %}
         <a href="{% url 'democracy:participants' club.id %}">{% trans 'Film ranking' %}</a>
+        {% endif %}
       </div>
     </div>
 
