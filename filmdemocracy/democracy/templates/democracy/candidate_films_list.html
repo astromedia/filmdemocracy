@@ -35,7 +35,7 @@
       <button class="btn btn-sm btn-block btn-option btn-gray-to-color blue-bg-hover dropdown-toggle my-2 mx-auto"
               type="button" id="dropdownMenuButtonView" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
-        {% trans 'Filter' %}: {{ view_option_tag }}
+        {% trans 'Show' %}: {{ view_option_tag }}
       </button>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButtonView">
         <a class="dropdown-item" href="{% url 'democracy:candidate_films' club.id 'all' order_option %}">

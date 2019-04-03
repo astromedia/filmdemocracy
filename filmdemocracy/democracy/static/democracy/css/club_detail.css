@@ -46,7 +46,7 @@ body {
 .club-banner .logo img {
   border: 2px solid black;
   border-radius: 5px;
-  box-shadow: 0 0px 10px #fff;
+  box-shadow: 0 0px 8px #fff;
   max-width: 200px;
   max-height: 200px;
 }
@@ -110,6 +110,36 @@ body {
   color: gray;
   background-color: gray;
   margin-bottom: 20px;
+}
+
+
+/* Club shoutbox
+-------------------------------------------------- */
+.container-shoutbox {
+  max-width: 90%;
+  margin-bottom: 40px;
+  padding: auto;
+}
+
+.form-post {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.post .media-body {
+  padding:0px;
+}
+
+.post .user-image img {
+ max-width: 35px;
+}
+
+.post .post-text {
+  background-color: white;
+}
+
+.post .date {
+  opacity: 0.7;
 }
 
 
@@ -211,5 +241,6 @@ body {
 
 .member-image:hover {
   border: 3px solid lightseagreen;
+  background-color: lightseagreen;
   border-radius: 200px;
 }

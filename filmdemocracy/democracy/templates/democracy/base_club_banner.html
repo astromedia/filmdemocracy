@@ -17,7 +17,7 @@
         {% if page == 'candidate_films' %}
         <a style='color: #d1d1d1;' href="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">{% trans 'Candidate films' %}</a>
         {% else %}
-        <a href="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">{% trans 'Candidate films' %}</a>
+        <a class="text-muted" href="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">{% trans 'Candidate films' %}</a>
         {% endif %}
       </div>
     </div>
@@ -27,7 +27,7 @@
         {% if page == 'club_detail' %}
         <a style='font-size: 19px; color: #d1d1d1;' href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
         {% else %}
-        <a style='font-size: 19px' href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+        <a class="text-muted" style='font-size: 19px' href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
         {% endif %}
       </div>
     </div>
@@ -37,7 +37,7 @@
         {% if page == 'film_ranking' %}
         <a style='color: #d1d1d1;' href="{% url 'democracy:participants' club.id %}">{% trans 'Film ranking' %}</a>
         {% else %}
-        <a href="{% url 'democracy:participants' club.id %}">{% trans 'Film ranking' %}</a>
+        <a class="text-muted" href="{% url 'democracy:participants' club.id %}">{% trans 'Film ranking' %}</a>
         {% endif %}
       </div>
     </div>

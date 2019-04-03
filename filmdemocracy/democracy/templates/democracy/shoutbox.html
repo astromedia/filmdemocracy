@@ -84,7 +84,7 @@
 
 
 <!--START: POST FORM-->
-<form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id %}" method="POST">
+<form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id 'True' %}" method="POST">
   {% csrf_token %}
 
   <div class="input-group">

@@ -50,7 +50,9 @@ hr {
   cursor: default;
   border: 2px solid black;
   border-radius: 6px;
-  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.85);
+  -webkit-transition:all .15s linear;
+  transition:all .15s linear;
 }
 
 .club-logo:hover {
@@ -62,15 +64,12 @@ hr {
   height: auto;
   display:block;
   opacity:0.8;
-  -webkit-transition:all .2s linear;
-  transition:all .2s linear;
+  -webkit-transition:all .15s linear;
+  transition:all .15s linear;
 }
 
 .club-logo:hover img {
   opacity:1;
-  -ms-transform:scale(1.1);
-  -webkit-transform:scale(1.05);
-  transform:scale(1.05);
 }
 
 .club-logo .overlay {

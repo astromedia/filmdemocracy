@@ -78,6 +78,24 @@ body {
   border: 2px solid rgba(0, 0, 0, 0.75);
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.profile-picture .edit-picture {
+  position: relative;
+  opacity:0.5;
+}
+
+.overlay {
+  max-width: 70px;
+  text-align: center;
+  margin-top: -148px;
+  margin-bottom: 68px;
+  position: relative;
+}
+
+.overlay img {
+  padding: 10px;
 }
 
 .btn-profile {

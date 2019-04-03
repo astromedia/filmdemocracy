@@ -51,11 +51,11 @@ body {
  background-color: #fafafa;
 }
 
-.post img {
+.post .delete img {
  opacity: 0;
 }
 
-.post:hover img {
+.post .delete:hover img {
  opacity: 1;
 }
 

@@ -167,6 +167,11 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         )
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
+        posts = ShoutboxPost.objects.filter(
+            club=self.kwargs['club_id'],
+        )
+        if posts:
+            context['posts'] = posts.order_by('-date')[:5]
         last_comments = FilmComment.objects.filter(club_id=club_id, deleted=False)
         if last_comments:
             context['last_comments'] = last_comments.order_by('-date')[0:5]
@@ -204,8 +209,8 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
         all_votes = member.vote_set.filter(club_id=club.id)
         context['num_of_votes'] = all_votes.count()
         club_films = Film.objects.filter(club_id=club.id)
-        club_films_seen = club_films.filter(seen=False)
-        votes = [vote for vote in all_votes if vote.film in club_films_seen]
+        club_films_not_seen = club_films.filter(seen=False)
+        votes = [vote for vote in all_votes if vote.film in club_films_not_seen]
         context['member_votes'] = votes
         member_seen_films = member.seen_by.filter(club_id=club.id)
         context['member_seen_films'] = member_seen_films
@@ -1185,7 +1190,7 @@ class ShoutboxView(UserPassesTestMixin, generic.TemplateView):
 
 
 @login_required
-def post_in_shoutbox(request, club_id):
+def post_in_shoutbox(request, club_id, in_shoutbox_view):
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
     club = get_object_or_404(Club, pk=club_id)
@@ -1195,10 +1200,16 @@ def post_in_shoutbox(request, club_id):
         text=request.POST['text']
     )
     post.save()
-    return HttpResponseRedirect(reverse(
-        'democracy:shoutbox',
-        kwargs={'club_id': club_id}
-    ))
+    if in_shoutbox_view == 'True':
+        return HttpResponseRedirect(reverse(
+            'democracy:shoutbox',
+            kwargs={'club_id': club_id}
+        ))
+    else:
+        return HttpResponseRedirect(reverse(
+            'democracy:club_detail',
+            kwargs={'club_id': club_id}
+        ))
 
 
 @login_required

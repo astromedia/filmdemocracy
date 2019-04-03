@@ -207,7 +207,7 @@ urlpatterns = [
         name='shoutbox'
     ),
     path(
-        'club/<str:club_id>/shoutbox/post/',
+        'club/<str:club_id>/shoutbox/post/<str:in_shoutbox_view>',
         views.post_in_shoutbox,
         name='post_in_shoutbox'
     ),

@@ -18,9 +18,9 @@
 <!--{% for hidden_field in form.hidden_fields %}-->
 <!--{% if hidden_field.errors %}-->
 <!--<ul>-->
-  <!--{% for error in hidden_field.errors %}-->
-  <!--<li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>-->
-  <!--{% endfor %}-->
+<!--{% for error in hidden_field.errors %}-->
+<!--<li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>-->
+<!--{% endfor %}-->
 <!--</ul>-->
 <!--{% endif %}-->
 <!--{{ hidden_field }}-->
@@ -29,7 +29,7 @@
 <!--{% if form.errors %}-->
 <!--{% for error in form.non_field_errors %}-->
 <!--<div class="alert alert-danger text-center mx-4">-->
-  <!--<strong>{{ error|escape }}</strong>-->
+<!--<strong>{{ error|escape }}</strong>-->
 <!--</div>-->
 <!--{% endfor %}-->
 <!--{% endif %}-->
@@ -51,17 +51,20 @@
   <div class="form-inputs">
 
     <!--PICTURE-->
-      <div class="profile-picture">
-        {% if user.profile_image %}
-        <img class="rounded-circle pointer-cursor" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
-        onclick="document.getElementById('id_profile_image').click();">
-        {% else %}
-        <img class="rounded-circle pointer-cursor" src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-             alt="user.profile_image not found" onclick="document.getElementById('id_profile_image').click();">
-        {% endif %}
-      </div>
+    <div class="profile-picture">
+      {% if user.profile_image %}
+      <img class="rounded-circle pointer-cursor edit-picture" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
+           onclick="document.getElementById('id_profile_image').click();">
+      {% else %}
+      <img class="rounded-circle pointer-cursor edit-picture" src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+           alt="user.profile_image not found" onclick="document.getElementById('id_profile_image').click();">
+      {% endif %}
+    </div>
+    <div class="overlay pointer-cursor mx-auto" onclick="document.getElementById('id_profile_image').click();">
+      <img class="align-self-center" style="height: 70px;" src="{% static 'registration/svg/pencil.svg'%}">
+    </div>
 
-      <input id="id_profile_image" type="file" name='profile_image' style="display: none;">
+    <input id="id_profile_image" type="file" name='profile_image' style="display: none;">
 
     <!--USERNAME-->
     <div class="form-input-field">
@@ -205,7 +208,8 @@
           <a class="btn btn-sm btn-cancel-modal mr-3" href="{% url 'registration:account_info_edit' %}" role="button">
             {% trans 'Cancel' %}</a>
           <button type="button" class="btn btn-submit-modal btn-green-to-blue js-crop-and-upload">
-            {% trans 'Upload and save changes' %}</button>
+            {% trans 'Upload and save changes' %}
+          </button>
         </div>
       </div>
     </div>
@@ -228,7 +232,7 @@
 <!--START: CROPPER SCRIPT-->
 <!--https://github.com/Foliotek/Croppie-->
 <script src="{% static 'democracy/js/cropper.min.js' %}" crossorigin="anonymous"></script>
- <script>
+<script>
     $(function () {
 
       /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
@@ -283,7 +287,10 @@
       });
 
     });
-  </script>
+
+
+
+</script>
 <!--END: CROPPER SCRIPT-->
 {% endblock %}
 
