@@ -25,6 +25,7 @@ hr {
 }
 
 .home-section-title {
+  font-weight: bold !important;
   text-align: center;
   color: darkgray;
   text-transform: uppercase;
@@ -53,10 +54,6 @@ hr {
   box-shadow: 0 0px 8px rgba(0, 0, 0, 0.85);
   -webkit-transition:all .15s linear;
   transition:all .15s linear;
-}
-
-.club-logo:hover {
-  box-shadow: 0 0px 10px #fff;
 }
 
 .club-logo img {

@@ -17,11 +17,11 @@ class Club(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5)
     name = models.CharField(_('Club name'), max_length=50)
     short_description = models.CharField(
-        _('Short description (Optional)'),
+        _('Short description (optional)'),
         max_length=120
     )
     panel = MarkdownxField(
-        _('Club panel: description, rules, etc. (Optional)'),
+        _('Club panel: description, rules, etc. (optional)'),
         max_length=20000,
         default="## A sample club panel written in markdown"
                 "\r\n"
@@ -84,12 +84,12 @@ class Meeting(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=9)  # 5(club)+4
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     name = models.CharField(_('Name'), default=_('Club meeting'), max_length=50)
-    description = models.CharField(_('Description (Optional)'), default='', max_length=5000)
+    description = models.CharField(_('Description (optional)'), default='', max_length=5000)
     organizer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     place = models.CharField(_('Place'), default='', max_length=100)
     date = models.DateField(_('Date'))
-    time_start = models.TimeField(_('Start time (Optional)'), null=True, blank=True)
-    time_end = models.TimeField(_('End time (Optional)'), null=True, blank=True)
+    time_start = models.TimeField(_('Start time (optional)'), null=True, blank=True)
+    time_end = models.TimeField(_('End time (optional)'), null=True, blank=True)
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')
     members_no = models.ManyToManyField(User, related_name='members_no')

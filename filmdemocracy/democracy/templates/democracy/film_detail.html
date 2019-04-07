@@ -34,9 +34,10 @@
       <div class="col-md-9">
 
         <!--PROPOSED BY-->
-        <strong>{% trans 'Proposed by: ' %}</strong>
+        {% trans 'Proposed by' %}
         <a class="proposed-by" href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
-          {{ film.proposed_by.username }}</a>, {% trans 'on ' %} {{ film.pub_date }}
+          <strong>{{ film.proposed_by.username }}</strong></a> {% trans 'on ' %} {{ film.pub_date }}
+
 
         <div class="row align-items-center my-2">
 
@@ -51,6 +52,7 @@
           <!--END: REPORT PROBLEM-->
 
           <!--START: MARK AS SEEN-->
+          {% if not film.seen %}
           <div class="col-auto">
             <form class="" action="{% url 'democracy:film_seen' club.id film.id %}">
               {% csrf_token %}
@@ -59,7 +61,23 @@
               </button>
             </form>
           </div>
+          {% endif %}
           <!--END: MARK AS SEEN-->
+
+          <!--START: MARK AS NOT SEEN-->
+          {% if film.seen %}
+          {% if user in club_admins %}
+          <div class="col-auto">
+            <form class="" action="{% url 'democracy:unsee_film' club.id film.id view_option order_option %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-film-option my-2 mx-auto">
+                {% trans 'Move back to candidate films' %}
+              </button>
+            </form>
+          </div>
+          {% endif %}
+          {% endif %}
+          <!--END: MARK AS NOT SEEN-->
 
           <!--START: UPDATE FILMDB-->
           {% if updatable_db %}
@@ -135,9 +153,12 @@
         <p class="text-justify mb-2"><em>{{ film.filmdb.plot }}</em></p>
 
         <!--DIRECTOR, WRITER, ACTOR-->
-        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Director' %}:</strong> {{ film.filmdb.director }}</p>
-        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Writer' %}:</strong> {{ film.filmdb.writer }}</p>
-        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Cast' %}:</strong> {{ film.filmdb.actors }}</p>
+        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Director' %}:</strong>
+          {{ film.filmdb.director }}</p>
+        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Writer' %}:</strong>
+          {{ film.filmdb.writer }}</p>
+        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Cast' %}:</strong>
+          {{ film.filmdb.actors }}</p>
 
       </div>
       <!--END: INFO-->
@@ -181,20 +202,17 @@
 <!--</div>-->
 
 
-<nav class="nav-film">
-  <div class="nav nav-tabs justify-content-center nav-justified" id="nav-tab" role="tablist">
-    {% if not film.seen %}
-    <a class="nav-item nav-link active" id="nav-vote-tab" data-toggle="tab" href="#nav-vote"
-       role="tab" aria-controls="nav-vote" aria-selected="true">{% trans 'Your vote' %}</a>
-    {% elif film.seen %}
-    <a class="nav-item nav-link active" id="nav-seen-tab" data-toggle="tab" href="#nav-seen"
-       role="tab" aria-controls="nav-seen" aria-selected="true">{% trans 'Film seen' %}</a>
-    {% endif %}
-    <a class="nav-item nav-link" id="nav-registered-votes-tab" data-toggle="tab" href="#nav-registered-votes"
+<nav class="nav-film mx-2 mt-n2">
+  <div class="nav nav-pills flex-column flex-sm-row justify-content-center nav-justified" id="nav-tab" role="tablist">
+    <a class="nav-item nav-link m-2 active" id="nav-voteorseen-tab" data-toggle="pill" href="#nav-voteorseen"
+       role="tab" aria-controls="nav-voteorseen" aria-selected="true">
+      {% if not film.seen %}{% trans 'Your vote' %}{% elif film.seen %}{% trans 'Film seen' %}{% endif %}
+    </a>
+    <a class="nav-item nav-link m-2" id="nav-registered-votes-tab" data-toggle="pill" href="#nav-registered-votes"
        role="tab" aria-controls="nav-registered-votes" aria-selected="false">
       {% trans 'Registered votes' %} ({{ film.vote_set.all|length }})
     </a>
-    <a class="nav-item nav-link" id="nav-comments-tab" data-toggle="tab" href="#nav-comments"
+    <a class="nav-item nav-link m-2" id="nav-comments-tab" data-toggle="pill" href="#nav-comments"
        role="tab" aria-controls="nav-comments-tab" aria-selected="false">
       {% trans 'Comments' %} ({{ film_comments|length }})
     </a>
@@ -205,9 +223,12 @@
 <div class="tab-content" id="nav-tabContent">
 
 
-  <!--START: VOTES (FILM NOT SEEN) TAB-->
-  {% if not film.seen %}
-  <div class="tab-pane fade show active" id="nav-vote" role="tabpanel" aria-labelledby="nav-vote-tab">
+  <!--START: VOTES / FILM SEEN TAB-->
+  <div class="tab-pane fade px-2 show active" id="nav-voteorseen" role="tabpanel" aria-labelledby="nav-voteorseen-tab">
+
+
+    {% if not film.seen %}
+
 
     <h4 class="text-center h4 my-4">{% trans 'Did you vote already?' %}</h4>
 
@@ -250,20 +271,16 @@
     </div>
     {% endfor %}
 
-  </div>
-  {% endif %}
-  <!--END: VOTES (FILM NOT SEEN) TAB-->
 
+    {% elif film.seen %}
 
-  <!--START: SEEN BY (FILM SEEN) TAB-->
-  {% if film.seen %}
-  <div class="tab-pane fade show active" id="nav-seen" role="tabpanel" aria-labelledby="nav-seen-tab">
 
     <h4 class="text-center h4 my-4">
       {% blocktrans with date=film.seen_date %}
       Seen in session on {{ filter_title }}{{ date }} by:
       {% endblocktrans %}
     </h4>
+
 
     <div class="container-fluid">
 
@@ -275,15 +292,17 @@
           <div class="card">
 
             <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
-              {% if member.profile_image %}
-              <img class="card-img-top border border-secondary member-shadow"
-                   src="{{ member.profile_image.url }}"
-                   alt="member.profile_image not found">
-              {% else %}
-              <img class="card-img-top border border-secondary member-shadow"
-                   src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-                   alt="member.profile_image not found">
-              {% endif %}
+              <div class="participant">
+                {% if member.profile_image %}
+                <img class="card-img-top rounded-circle border border-secondary member-shadow"
+                     src="{{ member.profile_image.url }}"
+                     alt="member.profile_image not found">
+                {% else %}
+                <img class="card-img-top rounded-circle border border-secondary member-shadow"
+                     src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+                     alt="member.profile_image not found">
+                {% endif %}
+              </div>
             </a>
 
             <div class="text-center p-1">
@@ -298,13 +317,17 @@
       </div>
     </div>
 
+
+    {% endif %}
+
+
   </div>
-  {% endif %}
-  <!--END: SEEN BY (FILM SEEN) TAB-->
+  <!--END: VOTES / FILM SEEN TAB-->
 
 
   <!--START: REGISTERED VOTES TAB-->
-  <div class="tab-pane fade" id="nav-registered-votes" role="tabpanel" aria-labelledby="nav-registered-votes-tab">
+  <div class="tab-pane fade px-2" id="nav-registered-votes" role="tabpanel" aria-labelledby="nav-registered-votes-tab">
+
     <h4 class="text-center h4 mt-4 mb-5">{% trans 'Registered votes on film' %}</h4>
 
 
@@ -452,13 +475,13 @@
         {% trans 'All its attached information will be lost...' %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-sm  btn-secondary" data-dismiss="modal">
+        <button type="button" class="btn btn-sm" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
         <form method="POST" action="{% url 'democracy:delete_film' club.id film.id view_option order_option %}"
               class="text-center">
           {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-danger mr-3">
+          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
             {% trans 'Confirm' %}
           </button>
         </form>
@@ -491,11 +514,11 @@
           </a>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+          <button type="button" class="btn btn-sm" data-dismiss="modal">
             {% trans 'Cancel' %}
           </button>
 
-          <button type="submit" class="btn btn-sm btn-green-to-blue mr-3">
+          <button type="submit" class="btn btn-sm btn-green-to-blue mx-3">
             {% trans 'Add' %}
           </button>
         </div>

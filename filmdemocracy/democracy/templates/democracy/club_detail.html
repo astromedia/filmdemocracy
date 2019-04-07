@@ -19,40 +19,12 @@
 <!--START: CLUB BANNER-->
 <div class="container-fluid club-banner shadow">
 
+  <div class="row justify-content-around align-items-center mx-auto">
 
-  <!--NAME-->
-  <!--  <div class="lead text-center name mt-3"><strong>{{ club.name }}</strong></div>-->
-
-  <!--SHORT DESCRIPTION-->
-  <div class="lead text-muted short-description mt-3">{{ club.short_description }}</div>
-
-
-  <!--START: CLUB PANEL-->
-  <div class="row align-items-center justify-content-center club-panel">
-
-    <!--COLUMN 1-->
     <div class="col-md-auto">
 
-      <!--LINK TO FILM PANEL-->
-      <div class="my-3">
-        <form action="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">
-          <button type="submit" class="btn btn-club-links btn-gray-to-color green-bg-hover">
-            {% trans 'Candidate films' %}
-          </button>
-        </form>
-      </div>
-
-      <!--LINK TO FILM RANKING-->
-      <div class="my-3">
-        <form action="{% url 'democracy:participants' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-gray-to-color blue-bg-hover">
-            {% trans 'Generate film ranking' %}
-          </button>
-        </form>
-      </div>
-
       <!--LINK TO SEEN FILMS-->
-      <div class="my-3">
+      <div class="my-2">
         <form action="{% url 'democracy:seen_films' club.id %}">
           <button type="submit" class="btn btn-club-links btn-gray-to-color orange-bg-hover">
             {% trans 'Films seen' %}
@@ -62,26 +34,10 @@
 
     </div>
 
-    <!--COLUMN 2-->
-    <div class="col-md-auto">
-
-      <!--LOGO-->
-      <div class="logo">
-        {% if club.logo %}
-        <img class="zoom-in-cursor" src="{{ club.logo.url }}" alt="club.logo not found"
-             data-toggle="modal" data-target="#ClubLogoModal">
-        {% else %}
-        <img src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
-        {% endif %}
-      </div>
-
-    </div>
-
-    <!--COLUMN 3-->
     <div class="col-md-auto">
 
       <!--LINK TO NEW MEETING-->
-      <div class="my-3">
+      <div class="my-2">
         <form action="{% url 'democracy:meetings_new' club.id %}">
           <button type="submit" class="btn btn-club-links btn-gray-to-color green-bg-hover">
             {% trans 'Organize meeting' %}
@@ -89,94 +45,24 @@
         </form>
       </div>
 
-      <!--LINK TO MEETINGS-->
-      <div class="my-3">
-        <form action="{% url 'democracy:meetings_list' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-gray-to-color blue-bg-hover">
-            {% trans 'Programmed meetings' %}
-          </button>
-        </form>
-      </div>
-
-      <!--LINK TO CLUB SHOUTBOX-->
-      <div class="my-3">
-        <form action="{% url 'democracy:shoutbox' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-gray-to-color orange-bg-hover">
-            {% trans 'Club Shoutbox' %}
-          </button>
-        </form>
-      </div>
-
     </div>
 
   </div>
-  <!--END: CLUB PANEL-->
 
 
-  <!--START: ADMIN UTILS-->
-  {% if user in club_admins %}
-  <div class="admin-utils">
+  <!--SHORT DESCRIPTION-->
+  <div class="lead text-muted short-description mt-1 mb-3">{{ club.short_description }}</div>
 
-    <!--ADMIN COLLAPSE BUTTON-->
-    <a class="btn-admin-utils" data-toggle="collapse" href="#collapseAdmin" role="button" aria-expanded="false"
-       aria-controls="collapseAdmin">
-      {% trans 'Club admin utilities' %}
-    </a>
 
-    <!--START: ADMIN BUTTONS-->
-    <div id="collapseAdmin" class="collapse">
-      <div class="card-body">
-
-        <div class="row justify-content-center admin-buttons">
-
-          <div class="col-md-auto">
-            <form action="{% url 'democracy:edit_club_info' club.id %}">
-              <button type="submit" class="btn btn-sm btn-block btn-util btn-gray-to-color">
-                {% trans 'Edit club info' %}
-              </button>
-            </form>
-          </div>
-
-          <div class="col-md-auto">
-            <form action="{% url 'democracy:edit_club_panel' club.id %}">
-              <button type="submit" class="btn btn-sm btn-block btn-util btn-gray-to-color">
-                {% trans 'Edit club panel' %}
-              </button>
-            </form>
-          </div>
-
-          <div class="col-md-auto">
-            <form action="{% url 'democracy:promote_members' club.id %}">
-              <button type="submit" class="btn btn-sm btn-block btn-util btn-gray-to-color">
-                {% trans 'Promote to admin' %}
-              </button>
-            </form>
-          </div>
-
-          <div class="col-md-auto">
-            <form action="{% url 'democracy:kick_members' club.id %}">
-              <button type="submit" class="btn btn-sm btn-block btn-util btn-gray-to-color">
-                {% trans 'Kick members' %}
-              </button>
-            </form>
-          </div>
-
-          <div class="col-md-auto">
-            <button type="button" class="btn btn-sm btn-block btn-util btn-gray-to-color" data-toggle="modal"
-                    data-target="#self_demoteModal">
-              {% trans 'Self-demote' %}
-            </button>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-    <!--END: ADMIN BUTTONS-->
-
+  <!--LOGO-->
+  <div class="logo">
+    {% if club.logo %}
+    <img class="zoom-in-cursor shadow" src="{{ club.logo.url }}" alt="club.logo not found"
+         data-toggle="modal" data-target="#ClubLogoModal">
+    {% else %}
+    <img class="shadow" src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
+    {% endif %}
   </div>
-  {% endif %}
-  <!--END: ADMIN UTILS-->
 
 
 </div>
@@ -193,6 +79,18 @@
 </div>
 {% endif %}
 <!--END: WARNING MESSAGE-->
+
+
+{% for message in messages %}
+<div class="container-message mt-4">
+  <div class="alert {{ message.tags }} alert-dismissible text-center mt-n1 mb-4 mx-2" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="ml-4"><strong>{{ message }}</strong></span>
+  </div>
+</div>
+{% endfor %}
 
 
 <!--START: NO LOGO MESSAGE-->
@@ -216,11 +114,74 @@
 <!--END: NO LOGO MESSAGE-->
 
 
+<!--START: ADMIN UTILS-->
+{% if user in club_admins %}
+
+<div class="club-section-title">
+  <h3 class="h3">{% trans 'Club admin utilities' %}</h3>
+  <hr>
+</div>
+
+
+<div class="admin-utils mx-2">
+
+  <!--START: ADMIN BUTTONS-->
+
+  <div class="row justify-content-center mx-2">
+
+    <div class="col-md-auto">
+      <form action="{% url 'democracy:edit_club_info' club.id %}">
+        <button type="submit" class="btn btn-sm btn-block my-2">
+          {% trans 'Edit club info' %}
+        </button>
+      </form>
+    </div>
+
+    <div class="col-md-auto">
+      <form action="{% url 'democracy:edit_club_panel' club.id %}">
+        <button type="submit" class="btn btn-sm btn-block my-2">
+          {% trans 'Edit club panel' %}
+        </button>
+      </form>
+    </div>
+
+    <div class="col-md-auto">
+      <form action="{% url 'democracy:promote_members' club.id %}">
+        <button type="submit" class="btn btn-sm btn-block my-2">
+          {% trans 'Promote to admin' %}
+        </button>
+      </form>
+    </div>
+
+    <div class="col-md-auto">
+      <form action="{% url 'democracy:kick_members' club.id %}">
+        <button type="submit" class="btn btn-sm btn-block my-2">
+          {% trans 'Kick members' %}
+        </button>
+      </form>
+    </div>
+
+    <div class="col-md-auto">
+      <button type="button" class="btn btn-sm btn-block my-2" data-toggle="modal"
+              data-target="#self_demoteModal">
+        {% trans 'Self-demote' %}
+      </button>
+    </div>
+
+  </div>
+  <!--END: ADMIN BUTTONS-->
+
+</div>
+
+{% endif %}
+<!--END: ADMIN UTILS-->
+
+
 <!--START: NEXT 3 CLUB MEETINGS-->
 {% if next_meetings %}
 
 
-<div class="club-section-title mt-n4">
+<div class="club-section-title">
   <h3 class="h3">{% trans 'Next club meetings' %}</h3>
   <hr>
 </div>
@@ -238,7 +199,7 @@
       <div class="col-auto">
         <span class="text-muted">{% trans 'Organized by' %}
           <a class="text-body" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
-            {{ meeting.organizer.username }}
+            <strong>{{ meeting.organizer.username }}</strong>
           </a>
         </span>
       </div>
@@ -421,12 +382,12 @@
         {% trans 'Are you sure about this?' %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
+        <button type="button" class="btn btn-sm" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
         <form method="POST" action="{% url 'democracy:delete_meeting' club.id meeting.id %}" class="text-center">
           {% csrf_token %}
-          <button type="submit" class="btn btn-outline-danger mr-3">
+          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
             {% trans 'Confirm' %}
           </button>
         </form>
@@ -438,6 +399,13 @@
 
 
 {% endfor %}
+
+{% if extra_meetings %}
+<div class="text-center mt-n1">
+  <a class="small" href="{% url 'democracy:meetings_list' club.id %}">{% trans 'Check all meetings' %}</a>
+</div>
+{% endif %}
+
 {% endif %}
 <!--END: NEXT 3 CLUB MEETINGS-->
 
@@ -465,7 +433,7 @@
       {% csrf_token %}
 
       <div class="input-group">
-      <textarea class="form-control" aria-label="With textarea" name="text"
+      <textarea style="height: 38px;" class="form-control" aria-label="With textarea" name="text"
                 placeholder="{% trans 'Say something...' %}"></textarea>
         <div class="input-group-append">
           <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
@@ -477,7 +445,6 @@
 
 
   {% if posts %}
-
 
   <!--POSTS-->
   {% for post in posts %}
@@ -510,20 +477,11 @@
 
   {% endfor %}
 
-
-  {% else %}
-
-
-  <div class="text-center my-5">cri cri...</div>
-
-
   {% endif %}
-
 
   <div class="text-center">
     <a class="small" href="{% url 'democracy:shoutbox' club.id %}">{% trans 'Check all messages' %}</a>
   </div>
-
 
 </div>
 <!--END: SHOUTBOX-->
@@ -784,12 +742,12 @@
         {% trans "Are you sure you don't want to be an admin anymore?" %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
+        <button type="button" class="btn btn-sm" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
         <form method="POST" action="{% url 'democracy:self_demote' club.id %}" class="text-center">
           {% csrf_token %}
-          <button type="submit" class="btn btn-outline-danger mr-3">
+          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
             {% trans 'Confirm' %}
           </button>
         </form>
@@ -819,12 +777,12 @@
         {% endif %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
+        <button type="button" class="btn btn-sm" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
         <form method="POST" action="{% url 'democracy:leave_club' club.id %}" class="text-center">
           {% csrf_token %}
-          <button type="submit" class="btn btn-outline-danger mr-3">
+          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
             {% trans 'Confirm' %}
           </button>
         </form>

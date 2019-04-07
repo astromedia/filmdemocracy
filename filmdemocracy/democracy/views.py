@@ -167,6 +167,7 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         )
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
+            context['extra_meetings'] = len(club_meetings) > 3
         posts = ShoutboxPost.objects.filter(
             club=self.kwargs['club_id'],
         )
@@ -517,7 +518,7 @@ def add_new_film(request, club_id, view_option, order_option):
                             'order_option': order_option}
                 ))
     except ValueError:
-        messages.warning(request, _('Invalid IMDb url!'))
+        messages.warning(request, _('The IMDb url does not seem to be valid.'))
     except KeyError:
         messages.warning(request, _("That film is already in the candidate list!"))
     return HttpResponseRedirect(reverse(
@@ -735,6 +736,31 @@ def delete_film(request, club_id, film_id, view_option, order_option):
 
 
 @login_required
+def unsee_film(request, club_id, film_id, view_option, order_option):
+    if not user_is_club_admin_check(request, club_id):
+        return HttpResponseForbidden()
+    film = get_object_or_404(Film, pk=film_id)
+    if Film.objects.filter(club=club_id, imdb_id=film.filmdb.imdb_id, seen=False):
+        messages.warning(request, _('This film is already in the candidate list! Delete it or leave it.'))
+        return HttpResponseRedirect(reverse(
+            'democracy:film_detail',
+            kwargs={'club_id': club_id,
+                    'film_id': film_id,
+                    'view_option': view_option,
+                    'order_option': order_option}
+        ))
+    else:
+        film.seen = False
+        film.seen_by.clear()
+        film.seen_date = None
+        film.save()
+        return HttpResponseRedirect(reverse(
+            'democracy:candidate_films',
+            kwargs={'club_id': club_id, 'view_option': view_option, 'order_option': order_option}
+        ))
+
+
+@login_required
 def update_film_data(request, club_id, film_id, view_option, order_option):
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
@@ -831,11 +857,19 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                 return voters_meta, warnings, points, False
 
         films_results = []
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         participants = [get_object_or_404(User, id=id)
                         for id in self.request.GET.getlist('participants')]
         exclude_not_present = self.request.GET.get('exclude_not_present')
-        max_duration = int(self.request.GET.get('max_duration'))
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        max_duration_input = self.request.GET.get('max_duration')
+        if max_duration_input == '':
+            max_duration = 999
+        else:
+            try:
+                max_duration = int(max_duration_input)
+            except ValueError:
+                messages.warning(self.request, _('Invalid maximum film duration input! Filter not applied.'))
+                max_duration = 999
         club_films = Film.objects.filter(club_id=club.id, seen=False)
         for film in club_films:
             if not(film.proposed_by not in participants and exclude_not_present):
@@ -1017,9 +1051,9 @@ class InviteNewMemberCompleteView(UserPassesTestMixin, generic.TemplateView):
 @method_decorator(login_required, name='dispatch')
 class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     form_class = forms.MeetingsForm
-    subject_template_name = 'democracy/new_meeting_subject.txt'
-    email_template_name = 'democracy/new_meeting_email.html'
-    html_email_template_name = 'democracy/new_meeting_email_html.html'
+    subject_template_name = 'democracy/meeting_new_subject.txt'
+    email_template_name = 'democracy/meeting_new_email.html'
+    html_email_template_name = 'democracy/meeting_new_email_html.html'
     extra_email_context = None
     from_email = 'filmdemocracyweb@gmail.com'
 
@@ -1040,6 +1074,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['new_meeting'] = True
         return context
 
     @staticmethod
@@ -1064,24 +1099,36 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
             time_end=form.cleaned_data['time_end'],
         )
         new_meeting.save()
-        email_opts = {
-            'subject_template_name': self.subject_template_name,
-            'email_template_name': self.email_template_name,
-            'html_email_template_name': self.html_email_template_name,
-            'extra_email_context': self.extra_email_context,
-            'use_https': self.request.is_secure(),
-            'from_email': self.from_email,
-            'request': self.request,
-        }
-        form.save(**email_opts)
+        if form.cleaned_data['send_spam']:
+            email_opts = {
+                'domain_override': None,
+                'subject_template_name': self.subject_template_name,
+                'email_template_name': self.email_template_name,
+                'html_email_template_name': self.html_email_template_name,
+                'extra_email_context': self.extra_email_context,
+                'use_https': self.request.is_secure(),
+                'from_email': self.from_email,
+                'request': self.request,
+            }
+            spammable_members = club.members.filter(is_active=True)
+            form.spam_members(spammable_members, **email_opts)
+            messages.success(
+                self.request,
+                _('Meeting planned! A notification has been sent to club members.')
+            )
+        else:
+            messages.success(self.request, _('Meeting planned!'))
         return super().form_valid(form)
 
 
 @method_decorator(login_required, name='dispatch')
-class MeetingsEditView(UserPassesTestMixin, generic.UpdateView):
-    pk_url_kwarg = 'meeting_id'
-    model = Meeting
+class MeetingsEditView(UserPassesTestMixin, generic.FormView):
     form_class = forms.MeetingsForm
+    subject_template_name = 'democracy/meeting_edit_subject.txt'
+    email_template_name = 'democracy/meeting_edit_email.html'
+    html_email_template_name = 'democracy/meeting_edit_email_html.html'
+    extra_email_context = None
+    from_email = 'filmdemocracyweb@gmail.com'
 
     def test_func(self):
         return user_is_organizer_check(
@@ -1089,6 +1136,12 @@ class MeetingsEditView(UserPassesTestMixin, generic.UpdateView):
             self.kwargs['club_id'],
             self.kwargs['meeting_id']
         )
+
+    def get_form_kwargs(self):
+        kwargs = super(MeetingsEditView, self).get_form_kwargs()
+        kwargs.update({'club_id': self.kwargs['club_id']})
+        kwargs.update({'meeting_id': self.kwargs['meeting_id']})
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy(
@@ -1099,7 +1152,39 @@ class MeetingsEditView(UserPassesTestMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['meeting'] = get_object_or_404(Meeting, pk=self.kwargs['meeting_id'])
+        context['new_meeting'] = False
         return context
+
+    def form_valid(self, form):
+        meeting = get_object_or_404(Meeting, pk=self.kwargs['meeting_id'])
+        meeting.name = form.cleaned_data['name']
+        meeting.description = form.cleaned_data['description']
+        meeting.place = form.cleaned_data['place']
+        meeting.date = form.cleaned_data['date']
+        meeting.time_start = form.cleaned_data['time_start']
+        meeting.time_end = form.cleaned_data['time_end']
+        meeting.save()
+        if form.cleaned_data['send_spam']:
+            email_opts = {
+                'domain_override': None,
+                'subject_template_name': self.subject_template_name,
+                'email_template_name': self.email_template_name,
+                'html_email_template_name': self.html_email_template_name,
+                'extra_email_context': self.extra_email_context,
+                'use_https': self.request.is_secure(),
+                'from_email': self.from_email,
+                'request': self.request,
+            }
+            for spammable_members in [meeting.members_yes.all(), meeting.members_maybe.all()]:
+                form.spam_members(spammable_members, **email_opts)
+            messages.success(
+                self.request,
+                _('Meeting edited! A notification has been sent to members that were interested in it.')
+            )
+        else:
+            messages.success(self.request, _('Meeting edited!'))
+        return super().form_valid(form)
 
 
 @login_required

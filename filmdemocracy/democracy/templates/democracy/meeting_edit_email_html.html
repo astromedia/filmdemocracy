@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<p>{% trans 'The meeting proposed by' %} {{ organizer.username }} {% trans 'in your club' %} {{ club.name }} {% trans 'has been modified.' %}</p>
+
+<p>{% trans 'This is the updated meeting information:' %}</p>
+
+<p><strong>{{ name }}</strong></p>
+<p><em>{% if description %}{{ description }}{% endif %}</em></p>
+
+<p><strong>{% trans 'Where:' %}</strong> {{ place }}<br>
+<strong>{% trans 'When:' %}</strong> {{ date }}</p>
+<p>{% if time_start %}{% trans 'Starting at: '%}{{ time_start }}{% endif %}</p>
+<p>{% if time_end %}{% trans 'Finishing at: '%}{{ time_end }}{% endif %}</p>
+
+<p>{% trans "In case these changes affect you, follow this link to go to the club and modify your interest in the meeting:" %}
+   <a style="text-decoration: none" href="{{ protocol}}://{{ domain }}{% url 'democracy:club_detail' club.id %}" target="_blank"><strong>go to club</strong></a></p>

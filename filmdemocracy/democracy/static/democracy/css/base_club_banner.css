@@ -4,6 +4,7 @@
   position: relative;
   text-align: center;
   margin-top: -24px;
+  margin-bottom: -11px;
   padding: 10px;
   background-color: #121317;
   z-index: 4;
@@ -13,16 +14,35 @@
 .navigation-banner .row {
   max-width: 880px;
 }
-.navigation-banner .navigation-option {
+
+.navigation-banner .navigation-option .btn {
+  text-transform: none !important;
+  font-weight: normal !important;
   font-size: 17px;
+  min-width: 230px;
+  max-height: 36px;
+  color: #6c737d;
+  background-color: transparent;
+  border: 1px solid #282828;
+  padding-top: 2px;
+  padding-bottom: 3px;
+}
+
+.navigation-banner .navigation-option .active {
+  color: #d1d1d1;
+}
+
+.navigation-banner .navigation-option:hover .btn {
+  color: white;
+  border: 1px solid #6c737d;
 }
 
 .navigation-banner .navigation-option a {
+  text-decoration: none;
 }
 
-.navigation-banner .navigation-option a:hover {
-  color: #d1d1d1;
-  text-decoration: none;
+.navigation-banner .navigation-option:hover a {
+  color: white !important;
 }
 
 .navigation-banner hr {

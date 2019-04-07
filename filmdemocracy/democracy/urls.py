@@ -124,6 +124,11 @@ urlpatterns = [
         name='delete_film'
     ),
     path(
+        '<str:club_id>/film/<str:film_id>/unsee_film/&view=<str:view_option>&order=<str:order_option>',
+        views.unsee_film,
+        name='unsee_film'
+    ),
+    path(
         '<str:club_id>/film/<str:film_id>/update_film_data/&view=<str:view_option>&order=<str:order_option>',
         views.update_film_data,
         name='update_film_data'
@@ -171,7 +176,7 @@ urlpatterns = [
     path(
         'club/<str:club_id>/meetings/organize_new/',
         views.MeetingsNewView.as_view(
-            template_name='democracy/meetings_new.html'
+            template_name='democracy/meetings_form.html'
         ),
         name='meetings_new'
     ),
@@ -188,7 +193,7 @@ urlpatterns = [
     path(
         'club/<str:club_id>/meetings/<str:meeting_id>/edit/',
         views.MeetingsEditView.as_view(
-            template_name='democracy/meetings_edit.html'
+            template_name='democracy/meetings_form.html'
         ),
         name='meetings_edit'
     ),

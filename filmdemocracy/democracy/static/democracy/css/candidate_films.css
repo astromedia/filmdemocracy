@@ -28,6 +28,9 @@ body {
   margin: auto;
 }
 
+.container-message {
+  max-width: 900px;
+}
 
 /* Candidate films album
 -------------------------------------------------- */
@@ -244,12 +247,14 @@ body {
   margin-bottom: 20px;
 }
 
-.participant-picture {
+.participants-header img {
   width: 40px;
+  background: rgba(0, 0, 0, 1) !important;
 }
 
 .voter-picture {
   width: 90px;
+  background: rgba(0, 0, 0, 1) !important;
 }
 
 

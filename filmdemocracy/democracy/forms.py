@@ -16,7 +16,7 @@ class EditClubForm(forms.ModelForm):
     short_description = forms.CharField(
         max_length=100,
         widget=forms.Textarea,
-        label=_('Short description (Optional)'),
+        label=_('Short description (optional)'),
         required=False,
     )
 
@@ -200,7 +200,7 @@ class InviteNewMemberForm(forms.Form):
     invitation_text = forms.CharField(
         max_length=500,
         widget=forms.Textarea,
-        label=_('Send message with email (Optional)'),
+        label=_('Send message with email (optional)'),
         required=False,
     )
 
@@ -264,17 +264,30 @@ class MeetingsForm(forms.ModelForm):
     description = forms.CharField(
         max_length=300,
         widget=forms.Textarea,
-        label=_('Description (Optional)'),
+        label=_('Description (optional)'),
         required=False,
     )
+    send_spam = forms.BooleanField(label='send_spam', required=False)
 
     def __init__(self, *args, **kwargs):
         self.club_id = kwargs.pop('club_id', None)
+        if 'meeting_id' in kwargs:
+            self.meeting_id = kwargs.pop('meeting_id', None)
         super(MeetingsForm, self).__init__(*args, **kwargs)
+        try:
+            meeting = get_object_or_404(Meeting, pk=self.meeting_id)
+            self.initial['name'] = meeting.name
+            self.initial['description'] = meeting.description
+            self.initial['place'] = meeting.place
+            self.initial['date'] = meeting.date
+            self.initial['time_start'] = meeting.time_start
+            self.initial['time_end'] = meeting.time_end
+        except AttributeError:
+            pass
 
     class Meta:
         model = Meeting
-        fields = ['name', 'description', 'place', 'date', 'time_start', 'time_end']
+        fields = ['name', 'description', 'place', 'date', 'time_start', 'time_end', 'send_spam']
 
     def clean_date(self):
         date = self.cleaned_data['date']
@@ -296,7 +309,8 @@ class MeetingsForm(forms.ModelForm):
                     )
         return self.cleaned_data['time_start']
 
-    def send_mail(self, subject_template_name, email_template_name,
+    @staticmethod
+    def send_mail(subject_template_name, email_template_name,
                   html_email_template_name, context, from_email, to_email):
         subject = loader.render_to_string(subject_template_name, context)
         # Email subject *must not* contain newlines:
@@ -309,12 +323,14 @@ class MeetingsForm(forms.ModelForm):
             email_message.attach_alternative(html_email, 'text/html')
         email_message.send()
 
-    def save(self, domain_override=None,
-             subject_template_name='democracy/new_meeting_subject.txt',
-             email_template_name='democracy/new_meeting_email.html',
-             html_email_template_name='democracy/new_meeting_email_html.html',
-             extra_email_context=None,
-             use_https=False, from_email=None, request=None):
+    def spam_members(self,
+                     spammable_members,
+                     domain_override=None,
+                     subject_template_name='',
+                     email_template_name='',
+                     html_email_template_name='',
+                     extra_email_context=None,
+                     use_https=False, from_email=None, request=None):
         user = request.user
         name = self.cleaned_data['name']
         description = self.cleaned_data['description']
@@ -343,10 +359,6 @@ class MeetingsForm(forms.ModelForm):
             'protocol': 'https' if use_https else 'http',
             **(extra_email_context or {}),
         }
-        club_members = club.members.filter(is_active=True)
-        spammable_members = club_members.exclude(pk=user.id)
         for member in spammable_members:
-            self.send_mail(
-                subject_template_name, email_template_name,
-                html_email_template_name, context, from_email, member.email
-            )
+            self.send_mail(subject_template_name, email_template_name, html_email_template_name,
+                           context, from_email, member.email)

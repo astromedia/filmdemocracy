@@ -20,23 +20,15 @@ body {
 -------------------------------------------------- */
 .club-banner {
   text-align: center;
-  margin-top: -14px;
+  margin-top: -18px;
   padding-top: 10px;
   padding-bottom: 30px;
   background-color: #121317;
-}
-
-.club-banner .name {
-  font-size: 25px;
-  color: #d1d1d1;
+  margin-bottom: 130px;
 }
 
 .club-banner .short-description {
   font-size: 19px;
-}
-
-.club-banner .club-panel {
-  margin-top: 25px;
 }
 
 .club-banner .logo {
@@ -47,44 +39,42 @@ body {
   border: 2px solid black;
   border-radius: 5px;
   box-shadow: 0 0px 8px #fff;
-  max-width: 200px;
-  max-height: 200px;
+  height: 200px;
+  margin-bottom: -130px;
 }
 
 .club-banner .btn-club-links {
-  min-width: 270px;
-  padding: 5px;
-  margin: 3px;
-}
-
-.club-banner .admin-utils {
-  text-transform: uppercase;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: -10px;
-}
-
-.club-banner .admin-utils .btn-admin-utils {
+  text-transform: none !important;
+  font-weight: normal !important;
+  font-size: 17px;
+  min-width: 230px;
+  max-height: 36px;
   color: #6c737d;
+  background-color: transparent;
+  border: 1px solid #282828;
+  padding-top: 2px;
+  padding-bottom: 3px;
+}
+
+.club-banner .btn-club-links:hover {
+  color: white;
+  border: 1px solid #6c737d;
+}
+
+.admin-utils .btn {
+  text-transform: uppercase;
+  color: #282828;
+  border: 1px solid #282828;
   font-weight: bold;
-}
-
-.club-banner .admin-utils .btn-admin-utils:hover {
-  color: #fff;
-  text-decoration: none;
-}
-
-.club-banner .admin-utils .admin-buttons {
-  margin-top: -5px;
-  margin-bottom: -20px;
-}
-
-.club-banner .admin-utils .admin-buttons .btn-util {
   min-width: 140px;
   max-width: 300px;
   margin: auto;
-  margin-top: 7px;
-  margin-bottom: 7px;
+}
+
+.admin-utils .btn:hover {
+  color: white;
+  background-color: #282828;
+  border: 1px solid #282828;
 }
 
 
@@ -98,8 +88,9 @@ body {
 /* Club section header
 -------------------------------------------------- */
 .club-section-title .h3 {
+  font-weight: bold !important;
   font-size: 15px;
-  padding-top: 30px;
+  padding-top: 10px;
   margin-bottom: -13px;
   text-transform: uppercase;
   margin-top: 30px;
@@ -132,6 +123,7 @@ body {
 
 .post .user-image img {
  max-width: 35px;
+ background: rgba(0, 0, 0, 1) !important;
 }
 
 .post .post-text {

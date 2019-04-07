@@ -56,12 +56,11 @@
 
 .btn-film-option {
   font-size: 11px;
-  min-width: 150px;
   max-width: 250px;
-  margin: auto;
   color: #6c737d;
   background-color: transparent;
   border: 1px solid #282828;
+  margin: auto;
 }
 
 .btn-film-option:hover {
@@ -77,7 +76,30 @@
 /* Nav style
 -------------------------------------------------- */
 .nav-film .nav-item {
-  font-size: 20px;
+  font-size: 18px !important;
+  color: #282828 !important;
+  background-color: transparent !important;
+  border: 1px solid #282828 !important;
+  padding: 4px;
+  margin: auto;
+}
+
+.nav-film .nav-link:hover {
+  color: #fff !important;
+  text-decoration: none !important;
+  background-color: #282828 !important;
+}
+
+.nav-film .nav-link:focus {
+  color: #fff !important;
+  text-decoration: none !important;
+  background-color: #282828 !important;
+}
+
+.nav-film .nav-link:active {
+  color: #fff !important;
+  text-decoration: none !important;
+  background-color: #282828 !important;
 }
 
 
@@ -146,6 +168,10 @@ u {
   border-color: transparent;
   width: 8rem;
   margin-bottom: 1rem;
+}
+
+.participant img {
+  background: rgba(0, 0, 0, 1);
 }
 
 
