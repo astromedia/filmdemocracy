@@ -19,7 +19,7 @@
 <!--START: CLUB BANNER-->
 <div class="container-fluid club-banner shadow">
 
-  <div class="row justify-content-around align-items-center mx-auto">
+  <div class="row justify-content-between align-items-center mx-auto">
 
     <div class="col-md-auto">
 
@@ -28,6 +28,19 @@
         <form action="{% url 'democracy:seen_films' club.id %}">
           <button type="submit" class="btn btn-club-links btn-gray-to-color orange-bg-hover">
             {% trans 'Films seen' %}
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="col-md-auto">
+
+      <!--LINK SHOUTBOX-->
+      <div class="my-2">
+        <form action="{% url 'democracy:shoutbox' club.id %}">
+          <button type="submit" class="btn btn-club-links btn-gray-to-color green-bg-hover">
+            {% trans 'Club shoutbox' %}
           </button>
         </form>
       </div>
@@ -222,8 +235,7 @@
       </div>
       <div class="col-auto">
         <div class="media">
-          <img style="min-height: 18px;" class="align-self-center mr-2"
-               src="{% static 'democracy/svg/calendar.svg'%}">
+          <img style="min-height: 18px;" class="align-self-center mr-2" src="{% static 'democracy/svg/calendar.svg'%}">
           <span class="text-muted">{{ meeting.date }}</span>
         </div>
       </div>
@@ -419,8 +431,8 @@
 
 <div class="container-shoutbox mx-auto">
 
-  <div class="media post mx-2">
-    <div class="align-self-start mr-3 user-image">
+  <div class="media form-post mx-2">
+    <div class="mt-n1 ml-n1 mr-3 user-image">
       {% if user.profile_image %}
       <img class="border border-secondary rounded-circle" src="{{ user.profile_image.url }}"
            alt="user.profile_image not found">
@@ -429,14 +441,16 @@
            src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="user.profile_image not found">
       {% endif %}
     </div>
-    <form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id 'False' %}" method="POST">
+    <form class="" action="{% url 'democracy:post_in_shoutbox' club.id 'False' %}" method="POST">
       {% csrf_token %}
 
       <div class="input-group">
       <textarea style="height: 38px;" class="form-control" aria-label="With textarea" name="text"
                 placeholder="{% trans 'Say something...' %}"></textarea>
         <div class="input-group-append">
-          <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
+          <button type="submit" class="btn btn-sm btn-green-to-blue">
+            <img style="max-height: 18px;" class="align-self-center mr-1" src="{% static 'democracy/svg/send.svg'%}">
+          </button>
         </div>
       </div>
 
@@ -473,7 +487,6 @@
       <p class="small text-muted my-0 ml-1 date">{{ post.date }}</p>
     </div>
   </div>
-
 
   {% endfor %}
 

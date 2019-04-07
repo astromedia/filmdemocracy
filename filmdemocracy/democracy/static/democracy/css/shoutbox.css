@@ -8,16 +8,13 @@ body {
 
 .container-base {
   min-height: 0;
+  background-color: #fafafa;
 }
 
 .btn-cancel {
   text-align: center;
   margin-top: 0px;
   margin-bottom: -20px;
-}
-
-.container-base {
-  background-color: #fafafa;
 }
 
 .h3 {
@@ -31,8 +28,8 @@ body {
   max-width: 50rem;
   min-height: 37.5rem;
   max-height: 33.5rem;
-  background-color: #fff;
-  padding: 20px;
+  padding-top: 30px;
+  padding-bottom: 5px;
   margin-top: 0px;
   margin-left: auto;
   margin-right: auto;
@@ -42,36 +39,47 @@ body {
 
 /* Posts
 -------------------------------------------------- */
-.post {
-  margin-top: 10px;
-  margin-bottom: 10px;
+.post .media-body {
+  padding:0px;
 }
 
-.post:hover {
- background-color: #fafafa;
+.post .user-image img {
+ max-width: 35px;
+ background: rgba(0, 0, 0, 1) !important;
 }
 
-.post .delete img {
- opacity: 0;
+.post .post-text {
+  background-color: white;
 }
 
-.post .delete:hover img {
- opacity: 1;
+.post .post-footer {
+  opacity: 0.7;
+  max-height: 20px;
 }
 
-.post .username {
-  font-size: 14px;
+.post .post-footer form {
+  margin-top: -2px;
 }
 
-.post .date {
-  opacity: 0.5;
+.post .post-footer label:hover {
+  color: red;
 }
+
+
+/* Post Form
+-------------------------------------------------- */
 
 .form-post {
-  max-width: 50rem;
-  padding-top: 0px;
-  padding-bottom: 15px;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin: auto;
+  max-width: 52rem;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.form-post .user-image img {
+ max-width: 45px !important;
+ background: rgba(0, 0, 0, 1) !important;
+}
+
+.form-post form {
+  width: 99%
 }

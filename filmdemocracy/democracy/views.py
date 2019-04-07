@@ -1279,12 +1279,14 @@ def post_in_shoutbox(request, club_id, in_shoutbox_view):
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
     club = get_object_or_404(Club, pk=club_id)
-    post = ShoutboxPost.objects.create(
-        user=request.user,
-        club=club,
-        text=request.POST['text']
-    )
-    post.save()
+    post_text = request.POST['text']
+    if not post_text == '':
+        post = ShoutboxPost.objects.create(
+            user=request.user,
+            club=club,
+            text=post_text
+        )
+        post.save()
     if in_shoutbox_view == 'True':
         return HttpResponseRedirect(reverse(
             'democracy:shoutbox',

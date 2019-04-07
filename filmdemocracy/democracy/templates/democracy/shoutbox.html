@@ -15,7 +15,7 @@
 
 
 <!--START: SHOUTBOX CONTAINER-->
-<div class="container container-shoutbox overflow-auto border" id="DivShoutbox">
+<div class="container container-shoutbox overflow-auto border-bottom" id="DivShoutbox">
 
 
   {% if posts %}
@@ -23,60 +23,92 @@
 
   <!--POSTS-->
   {% for post in posts|dictsort:"date" %}
-  <div class="row mx-n3 justify-content-start post">
+  <!--  <div class="row mx-n3 justify-content-start post">-->
 
-    <!--DELETE ICON-->
-    <div class="col col-1">
-      {% if not post.deleted %}
-      {% if user == post.user or user in club_admins %}
-      <form class="text-center mb-n5 ml-0" action="{% url 'democracy:delete_shoutbox_post' club.id post.id %}"
-            method="POST">
-        {% csrf_token %}
-        <label for="delete-icon_{{ forloop.counter }}" class="">
-          <img class="pointer-cursor" style="height: 20px;" src="{% static 'democracy/svg/trashcan.svg'%}">
-        </label>
-        <input type="submit" class="invisible" id="delete-icon_{{ forloop.counter }}">
-      </form>
-      {% endif %}
+  <!--    &lt;!&ndash;DELETE ICON&ndash;&gt;-->
+  <!--    <div class="col col-1">-->
+
+  <!--    </div>-->
+
+  <!--    <div class="col col-10">-->
+
+  <!--      &lt;!&ndash;NAME AND DATE&ndash;&gt;-->
+  <!--      <div class="row">-->
+  <!--        <div class="col-auto mr-auto username">-->
+  <!--          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">-->
+  <!--            <strong>{{ post.user.username }}</strong></a>-->
+  <!--        </div>-->
+  <!--        <div class="col-auto date">-->
+  <!--          <span class="small text-muted">{{ post.date }}</span>-->
+  <!--        </div>-->
+  <!--      </div>-->
+
+  <!--      &lt;!&ndash;POST TEXT&ndash;&gt;-->
+  <!--      <div>-->
+  <!--        {% if post.deleted %}-->
+  <!--        <span class="text-muted"><em>{% trans 'Post deleted.' %}</em></span>-->
+  <!--        {% else %}-->
+  <!--        <span>{{ post.text }}</span>-->
+  <!--        {% endif %}-->
+  <!--      </div>-->
+
+  <!--    </div>-->
+
+
+  <!--  </div>-->
+
+
+  <div class="media post my-1 mx-2">
+    <div class="align-self-start mr-3 user-image">
+      {% if post.user.profile_image %}
+      <img class="border border-secondary rounded-circle" title="{{ post.user.username }}"
+           src="{{ post.user.profile_image.url }}"
+           alt="post.user.profile_image not found">
+      {% else %}
+      <img class="border border-secondary rounded-circle" title="{{ post.user.username }}"
+           src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="post.user.profile_image not found">
       {% endif %}
     </div>
-
-    <div class="col col-10">
-
-      <!--NAME AND DATE-->
-      <div class="row">
-        <div class="col-auto mr-auto username">
-          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
-            <strong>{{ post.user.username }}</strong></a>
-        </div>
-        <div class="col-auto date">
-          <span class="small text-muted">{{ post.date }}</span>
-        </div>
-      </div>
-
-      <!--POST TEXT-->
-      <div>
+    <div class="">
+      <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
+        <strong><a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
+          {{ post.user.username }}</a>:</strong>
         {% if post.deleted %}
         <span class="text-muted"><em>{% trans 'Post deleted.' %}</em></span>
         {% else %}
         <span>{{ post.text }}</span>
         {% endif %}
+      </p>
+      <div class="small text-muted ml-1 my-0 py-0 post-footer">
+
+        {% if not post.deleted %}
+        {% if user == post.user or user in club_admins %}
+        <form class="" action="{% url 'democracy:delete_shoutbox_post' club.id post.id %}" method="POST">
+          {% csrf_token %}
+          {{ post.date }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
+          {% trans 'Delete post' %}</label>
+          <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">
+        </form>
+        {% endif %}
+        {% else %}
+        {{ post.date }}
+        {% endif %}
       </div>
 
     </div>
-
-
   </div>
-  {% endfor %}
 
 
-  {% else %}
+{% endfor %}
 
 
-  <div class="text-center my-5">cri cri...</div>
+{% else %}
 
 
-  {% endif %}
+<div class="text-center my-5">cri cri...</div>
+
+
+{% endif %}
 
 
 </div>
@@ -84,17 +116,44 @@
 
 
 <!--START: POST FORM-->
-<form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id 'True' %}" method="POST">
-  {% csrf_token %}
+<!--<form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id 'True' %}" method="POST">-->
+<!--  {% csrf_token %}-->
 
-  <div class="input-group">
-    <textarea class="form-control" aria-label="With textarea" name="text" placeholder="{% trans 'Say something' %}"></textarea>
-    <div class="input-group-append">
-      <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
+<!--  <div class="input-group">-->
+<!--    <textarea class="form-control" aria-label="With textarea" name="text" placeholder="{% trans 'Say something' %}"></textarea>-->
+<!--    <div class="input-group-append">-->
+<!--      <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--</form>-->
+<div class="mx-2">
+  <div class="media form-post mx-auto">
+    <div class="align-self-center mr-3 user-image">
+      {% if user.profile_image %}
+      <img class="border border-secondary rounded-circle" src="{{ user.profile_image.url }}"
+           alt="user.profile_image not found">
+      {% else %}
+      <img class="rounded-circle"
+           src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="user.profile_image not found">
+      {% endif %}
     </div>
-  </div>
+    <form class="mx-auto" action="{% url 'democracy:post_in_shoutbox' club.id 'True' %}" method="POST">
+      {% csrf_token %}
 
-</form>
+      <div class="input-group mx-auto">
+      <textarea class="form-control" aria-label="With textarea" name="text"
+                placeholder="{% trans 'Say something...' %}"></textarea>
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-sm btn-green-to-blue">
+            <img style="max-height: 18px;" class="align-self-center mr-1" src="{% static 'democracy/svg/send.svg'%}">
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
 <!--END: POST FORM-->
 
 
@@ -108,6 +167,13 @@
      var objDiv = document.getElementById("DivShoutbox");
      objDiv.scrollTop = objDiv.scrollHeight;
 }
+
+
+
+
+
+
+
 
 </script>
 

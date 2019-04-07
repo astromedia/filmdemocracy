@@ -40,6 +40,7 @@ body {
   border-radius: 5px;
   box-shadow: 0 0px 8px #fff;
   height: 200px;
+  max-width: 90%;
   margin-bottom: -130px;
 }
 
@@ -114,7 +115,15 @@ body {
 
 .form-post {
   margin-bottom: 20px;
+}
+
+.form-post form {
   width: 100%;
+}
+
+.form-post .user-image img {
+ max-width: 45px;
+ background: rgba(0, 0, 0, 1) !important;
 }
 
 .post .media-body {
@@ -130,7 +139,7 @@ body {
   background-color: white;
 }
 
-.post .date {
+.post .post-footer {
   opacity: 0.7;
 }
 
