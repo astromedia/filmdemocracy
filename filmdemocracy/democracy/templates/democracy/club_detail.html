@@ -34,18 +34,18 @@
 
     </div>
 
-    <div class="col-md-auto">
+<!--    <div class="col-md-auto">-->
 
-      <!--LINK SHOUTBOX-->
-      <div class="my-2">
-        <form action="{% url 'democracy:shoutbox' club.id %}">
-          <button type="submit" class="btn btn-club-links btn-gray-to-color green-bg-hover">
-            {% trans 'Club shoutbox' %}
-          </button>
-        </form>
-      </div>
+<!--      &lt;!&ndash;LINK SHOUTBOX&ndash;&gt;-->
+<!--      <div class="my-2">-->
+<!--        <form action="{% url 'democracy:shoutbox' club.id %}">-->
+<!--          <button type="submit" class="btn btn-club-links btn-gray-to-color green-bg-hover">-->
+<!--            {% trans 'Club shoutbox' %}-->
+<!--          </button>-->
+<!--        </form>-->
+<!--      </div>-->
 
-    </div>
+<!--    </div>-->
 
     <div class="col-md-auto">
 
@@ -524,25 +524,40 @@
 
 
 <!--COMMENTS-->
-{% for comment in last_comments %}
-<div class="row mx-2 justify-content-start comment">
-  <div class="col col-3 text-right comment-meta">
-    <div>
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
-        <strong>{{ comment.user.username }}</strong></a>:
-    </div>
-    <div class="mt-n2">
-      <a class="small text-muted" href="{% url 'democracy:film_detail' club.id comment.film.id 'all' 'title' %}">
-        <strong>{{ comment.film.filmdb.title }}</strong>
-      </a>
-    </div>
-  </div>
-  <div class="col comment-text">
-    {{ comment.text }}
-  </div>
-</div>
-{% endfor %}
 
+<div class="container-shoutbox mx-auto">
+
+  {% for comment in last_comments %}
+
+  <div class="media post my-1 mx-2">
+    <div class="align-self-start mr-3 user-image">
+      {% if comment.user.profile_image %}
+      <img class="border border-secondary rounded-circle" title="{{ comment.user.username }}"
+           src="{{ comment.user.profile_image.url }}"
+           alt="comment.user.profile_image not found">
+      {% else %}
+      <img class="border border-secondary rounded-circle" title="{{ comment.user.username }}"
+           src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="comment.user.profile_image not found">
+      {% endif %}
+    </div>
+    <div class="">
+      <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
+        <strong>
+          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
+            {{ comment.user.username }}</a>
+          @
+          <a class="text-body" href="{% url 'democracy:film_detail' club.id comment.film.id 'all' 'title' %}">
+            {{ comment.film.filmdb.title }}</a>:
+        </strong>
+        <span>{{ comment.text }}</span>
+      </p>
+      <p class="small text-muted my-0 ml-1 date">{{ comment.date }}</p>
+    </div>
+  </div>
+
+  {% endfor %}
+
+</div>
 
 {% endif %}
 <!--END: LAST 5 COMMENTS ON FILMS-->

@@ -99,16 +99,16 @@
   </div>
 
 
-{% endfor %}
+  {% endfor %}
 
 
-{% else %}
+  {% else %}
 
 
-<div class="text-center my-5">cri cri...</div>
+  <div class="text-center my-5">cri cri...</div>
 
 
-{% endif %}
+  {% endif %}
 
 
 </div>
@@ -116,17 +116,6 @@
 
 
 <!--START: POST FORM-->
-<!--<form class="form-post" action="{% url 'democracy:post_in_shoutbox' club.id 'True' %}" method="POST">-->
-<!--  {% csrf_token %}-->
-
-<!--  <div class="input-group">-->
-<!--    <textarea class="form-control" aria-label="With textarea" name="text" placeholder="{% trans 'Say something' %}"></textarea>-->
-<!--    <div class="input-group-append">-->
-<!--      <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--</form>-->
 <div class="mx-2">
   <div class="media form-post mx-auto">
     <div class="align-self-center mr-3 user-image">
@@ -167,6 +156,7 @@
      var objDiv = document.getElementById("DivShoutbox");
      objDiv.scrollTop = objDiv.scrollHeight;
 }
+
 
 
 

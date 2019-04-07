@@ -333,35 +333,53 @@
 
     {% if film.vote_set.all %}
 
+    <div class="container-comments mx-auto">
 
-    {% for vote in film.vote_set.all %}
-    <div class="row mx-1 justify-content-start registered-vote">
-      <div class="col col-3 text-right">
-        <a class="text-body" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
-          <strong>{{ vote.user.username }}</strong></a>:
-      </div>
-      <div class="col col-8">
+      {% for vote in film.vote_set.all %}
 
-        {% if vote.vote_karma == 'positive' %}
-        <p class="text-success">{{ vote.get_choice_display }}</p>
-        {% elif vote.vote_karma == 'negative' %}
-        <p class="text-danger">
+
+      <div class="media post my-1 mx-2">
+        <div class="align-self-start mr-3 user-image">
+          {% if vote.user.profile_image %}
+          <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
+               src="{{ vote.user.profile_image.url }}"
+               alt="vote.user.profile_image not found">
+          {% else %}
+          <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
+               src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+               alt="vote.user.profile_image not found">
+          {% endif %}
+        </div>
+        <div class="">
+          <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
+            <strong>
+              <a class="text-body" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
+                {{ vote.user.username }}</a>:
+            </strong>
+            {% if vote.vote_karma == 'positive' %}
+            <span class="text-success">{{ vote.get_choice_display }}</span>
+            {% elif vote.vote_karma == 'negative' %}
+            <span class="text-danger">
           {% if vote.choice == "veto" %}
           <strong>{{ vote.get_choice_display }}</strong>
           {% else %}
           {{ vote.get_choice_display }}
-        </p>
-        {% endif %}
-        {% endif %}
+        </span>
+            {% endif %}
+            {% endif %}
+          </p>
+        </div>
       </div>
-    </div>
-    {% endfor %}
 
+
+      {% endfor %}
+
+    </div>
 
     {% else %}
 
 
-    <div class="text-center mt-n3 mb-5">-</div>
+    <div class="text-center mt-n3 mb-5">{% trans 'There are no registered votes on this film yet...' %}</div>
 
 
     {% endif %}
@@ -377,58 +395,99 @@
     <h4 class="text-center h4 mt-4 mb-5">{% trans 'Club members comments' %}</h4>
 
 
-    <!--COMMENTS-->
-    {% for comment in film_comments %}
-    <div class="row mx-1 justify-content-start comment">
-      <div class="col col-3 text-right comment-meta">
-        <div>
-          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
-            <strong>{{ comment.user.username }}</strong></a>:
+    <div class="container-comments mx-auto">
+
+      {% if film_comments %}
+
+      {% for comment in film_comments %}
+
+      <div class="media post my-1 mx-2">
+        <div class="align-self-start mr-3 user-image">
+          {% if comment.user.profile_image %}
+          <img class="border border-secondary rounded-circle" title="{{ comment.user.username }}"
+               src="{{ comment.user.profile_image.url }}"
+               alt="comment.user.profile_image not found">
+          {% else %}
+          <img class="border border-secondary rounded-circle" title="{{ comment.user.username }}"
+               src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+               alt="comment.user.profile_image not found">
+          {% endif %}
         </div>
-        <div class="mt-n2">
-          <span class="small text-muted">{{ comment.date }}</span>
+        <div class="">
+          <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
+            <strong>
+              <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
+                {{ comment.user.username }}</a>:
+            </strong>
+            {% if comment.deleted %}
+            <span class="text-muted"><em>{% trans 'Comment deleted.' %}</em></span>
+            {% else %}
+            <span>{{ comment.text }}</span>
+            {% endif %}
+          </p>
+          <div class="small text-muted ml-1 my-0 py-0 post-footer">
+
+            {% if not comment.deleted %}
+            {% if user == comment.user or user in club_admins %}
+            <form class=""
+                  action="{% url 'democracy:delete_film_comment' club.id film.id comment.id view_option order_option %}"
+                  method="POST">
+              {% csrf_token %}
+              {{ comment.date }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
+              {% trans 'Delete comment' %}</label>
+              <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">
+            </form>
+            {% endif %}
+            {% else %}
+            {{ comment.date }}
+            {% endif %}
+          </div>
+
         </div>
       </div>
-      <div class="col comment-text">
-        {% if comment.deleted %}
-        <span class="text-muted"><em>{% trans 'Comment deleted.' %}</em></span>
-        {% else %}
-        {{ comment.text }}
-        {% endif %}
-      </div>
-      <div class="col col-1 comment-text">
-        {% if not comment.deleted %}
-        {% if user == comment.user or user in club_admins %}
-        <form action="{% url 'democracy:delete_film_comment' club.id film.id comment.id view_option order_option %}"
+
+      {% endfor %}
+
+      {% else %}
+
+      <div class="text-center my-5">cri cri...</div>
+
+      {% endif %}
+
+    </div>
+
+
+    <!--START: POST FORM-->
+    <div class="mx-4">
+      <div class="media form-post mx-auto">
+        <div class="align-self-center mr-3 user-image">
+          {% if user.profile_image %}
+          <img class="border border-secondary rounded-circle" src="{{ user.profile_image.url }}"
+               alt="user.profile_image not found">
+          {% else %}
+          <img class="rounded-circle"
+               src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="user.profile_image not found">
+          {% endif %}
+        </div>
+        <form class="mx-auto" action="{% url 'democracy:comment_film' club.id film.id view_option order_option %}"
               method="POST">
           {% csrf_token %}
-          <label for="delete-icon_{{ forloop.counter }}">
-            <img class="pointer-cursor" style="height: 18px;" src="{% static 'democracy/svg/trashcan.svg'%}">
-          </label>
-          <input type="submit" class="invisible" id="delete-icon_{{ forloop.counter }}">
+
+          <div class="input-group mx-auto">
+      <textarea class="form-control" aria-label="With textarea" name="text"
+                placeholder="{% trans 'Write a comment...' %}"></textarea>
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-sm btn-green-to-blue">
+                <img style="max-height: 18px;" class="align-self-center mr-1"
+                     src="{% static 'democracy/svg/send.svg'%}">
+              </button>
+            </div>
+          </div>
+
         </form>
-        {% endif %}
-        {% endif %}
       </div>
     </div>
-    {% endfor %}
-
-
-    <!--START: COMMENT FORM-->
-    <form class="form-comment" action="{% url 'democracy:comment_film' club.id film.id view_option order_option %}"
-          method="POST">
-      {% csrf_token %}
-
-      <div class="input-group">
-        <textarea class="form-control" aria-label="With textarea" name="text"
-                  placeholder="{% trans 'Write a comment' %}"></textarea>
-        <div class="input-group-append">
-          <input type="submit" class="btn btn-sm btn-green-to-blue" value="{% trans 'Post' %}">
-        </div>
-      </div>
-
-    </form>
-    <!--END: COMMENT FORM-->
+    <!--END: POST FORM-->
 
 
   </div>
