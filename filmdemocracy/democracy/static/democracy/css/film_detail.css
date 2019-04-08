@@ -8,6 +8,7 @@
   max-width: 850px;
 }
 
+
 /* Film banner
 -------------------------------------------------- */
 .container-film-banner {
@@ -68,17 +69,43 @@
   border: 1px solid #6c737d;
 }
 
-.container-film-banner .btn-outline-danger:hover {
-  color: white;
-  border: 1px solid transparent;
+.btn-film-option-magic {
+  font-size: 11px;
+  max-width: 250px;
+  color: #D4AF37;
+  background-color: transparent;
+  border: 1px solid gold;
+  margin: auto;
 }
+
+.btn-film-option-magic:hover {
+  color: black;
+  border: 1px solid gold;
+  background-color: gold;
+}
+
+.btn-film-option-delete {
+  font-size: 11px;
+  max-width: 250px;
+  color: #6c737d;
+  background-color: transparent;
+  border: 1px solid #282828;
+  margin: auto;
+}
+
+.btn-film-option-delete:hover {
+  color: white;
+  border: 1px solid red;
+  background-color: red;
+}
+
 
 /* Nav style
 -------------------------------------------------- */
 .nav-film .nav-item {
   font-size: 18px !important;
   color: #282828 !important;
-  background-color: transparent !important;
+  background-color: white !important;
   border: 1px solid #282828 !important;
   padding: 4px;
   margin: auto;
@@ -102,24 +129,6 @@
   background-color: #282828 !important;
 }
 
-
-/* Exit buttons
--------------------------------------------------- */
-.btn-option {
-  min-width: 230px;
-  max-width: 250px;
-  margin: auto;
-  color: #6c737d;
-  background-color: transparent;
-  border: 1px solid #282828;
-}
-
-.btn-option:hover {
-  color: #fff;
-  text-decoration: none;
-  border: 1px solid #282828;
-  background-color: #282828;
-}
 
 /* Vote buttons
 -------------------------------------------------- */
@@ -213,6 +222,10 @@ u {
 .post .user-image img {
  max-width: 35px;
  background: rgba(0, 0, 0, 1) !important;
+}
+
+.post .user-image .hand-icon {
+  position:absolute;
 }
 
 .post .post-text {

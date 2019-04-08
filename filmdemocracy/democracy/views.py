@@ -72,7 +72,7 @@ def choice_meta(vote_choice):
 
 
 def update_filmdb_omdb_info(filmdb, imdb_id):
-    omdb_api_url = f'http://www.omdbapi.com/?i=tt{imdb_id}' \
+    omdb_api_url = f'http://www.omdbapi.com/?i=tt{imdb_id}&plot=full' \
         f'&apikey={OMDB_API_KEY}'
     response = requests.get(omdb_api_url)
     omdb_data = response.json()
@@ -544,12 +544,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         context['order_option'] = self.kwargs['order_option']
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
-        time_diff_created = datetime.datetime.now().date() - film.filmdb.created
-        time_diff_updated = film.filmdb.last_updated - film.filmdb.created
-        if time_diff_created > 2*time_diff_updated:
-            context['updatable_db'] = True
-        else:
-            context['updatable_db'] = False
+        context['updatable_db'] = film.filmdb.updatable
         try:
             context['film_duration'] = f'{int(film.filmdb.duration)} min'
         except ValueError:
@@ -578,9 +573,10 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
                 user=self.request.user,
                 film=film,
             )
+            context['film_voted'] = True
             choice_dict[user_vote.choice]['choice_voted'] = True
         except Vote.DoesNotExist:
-            pass
+            context['film_voted'] = False
         context['vote_choices'] = choice_dict
         return context
 
@@ -605,18 +601,37 @@ def vote_film(request, club_id, film_id, view_option, order_option):
 
 
 @login_required
+def delete_vote(request, club_id, film_id, view_option, order_option):
+    if not user_is_club_member_check(request, club_id):
+        return HttpResponseForbidden()
+    film = get_object_or_404(Film, pk=film_id)
+    club = get_object_or_404(Club, pk=club_id)
+    vote = get_object_or_404(Vote, user=request.user, film=film, club=club)
+    vote.delete()
+    return HttpResponseRedirect(reverse(
+        'democracy:film_detail',
+        kwargs={'club_id': club_id,
+                'film_id': film_id,
+                'view_option': view_option,
+                'order_option': order_option}
+    ))
+
+
+@login_required
 def comment_film(request, club_id, film_id, view_option, order_option):
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     club = get_object_or_404(Club, pk=club_id)
-    film_comment = FilmComment.objects.create(
-        user=request.user,
-        film=film,
-        club=club,
-        text=request.POST['text']
-    )
-    film_comment.save()
+    comment_text = request.POST['text']
+    if not comment_text == '':
+        film_comment = FilmComment.objects.create(
+            user=request.user,
+            film=film,
+            club=club,
+            text=comment_text
+        )
+        film_comment.save()
     return HttpResponseRedirect(reverse(
         'democracy:film_detail',
         kwargs={'club_id': club_id,
@@ -766,7 +781,8 @@ def update_film_data(request, club_id, film_id, view_option, order_option):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     filmdb = get_object_or_404(FilmDb, pk=film.filmdb.imdb_id)
-    update_filmdb_omdb_info(filmdb, filmdb.imdb_id)
+    if filmdb.updatable:
+        update_filmdb_omdb_info(filmdb, filmdb.imdb_id)
     return HttpResponseRedirect(reverse(
         'democracy:film_detail',
         kwargs={'club_id': club_id,
@@ -800,13 +816,13 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        def process_film(film, participants, **options):
+        def process_film(film, participants):
             warnings = []
             film_all_votes = film.vote_set.all()
             film_voters = [vote.user for vote in film_all_votes]
             abstentionists = []
-            positive_voters = []
-            negative_voters = []
+            positive_votes = []
+            negative_votes = []
             for participant in participants:
                 if participant not in film_voters:
                     abstentionists.append(participant)
@@ -815,9 +831,9 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                 if vote.user in participants:
                     film_votes.append(vote.choice)
                     if vote.vote_karma is 'positive':
-                        positive_voters.append(vote.user)
+                        positive_votes.append(vote)
                     elif vote.vote_karma is 'negative':
-                        negative_voters.append(vote.user)
+                        negative_votes.append(vote)
                     else:
                         pass
                     if vote.choice == Vote.VETO:
@@ -833,7 +849,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                             'film': film.filmdb.title,
                             'voter': vote.user.username,
                         })
-            voters_meta = (positive_voters, negative_voters, abstentionists)
+            votes_info = (positive_votes, negative_votes, abstentionists)
 
             # TODO: use aggregations to do this count
             n_veto = film_votes.count(Vote.VETO)
@@ -844,7 +860,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
             n_yes = film_votes.count(Vote.YES)
             n_omg = film_votes.count(Vote.OMG)
             if n_veto >= 1:
-                return voters_meta, warnings, -1000, True
+                return votes_info, warnings, -1000, True
             else:
                 points = (
                         - 50 * n_seenno
@@ -854,7 +870,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                         + 10 * n_yes
                         + 20 * n_omg
                 )
-                return voters_meta, warnings, points, False
+                return votes_info, warnings, points, False
 
         films_results = []
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
@@ -885,7 +901,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                 if isinstance(film_duration, int) and film_duration > max_duration:
                     continue
                 else:
-                    voters_meta, warnings, points, veto = process_film(film, participants)
+                    votes_info, warnings, points, veto = process_film(film, participants)
                     if film.proposed_by not in participants:
                         warnings.append({
                             'type': 'proposer missing',
@@ -896,9 +912,9 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
                         'id': film.id,
                         'title': film.filmdb.title,
                         'duration': f'{film_duration} min',
-                        'positive_voters': voters_meta[0],
-                        'negative_voters': voters_meta[1],
-                        'abstentionists': voters_meta[2],
+                        'positive_votes': votes_info[0],
+                        'negative_votes': votes_info[1],
+                        'abstentionists': votes_info[2],
                         'points': points,
                         'veto': veto,
                         'warnings': warnings,

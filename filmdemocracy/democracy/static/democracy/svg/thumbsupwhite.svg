@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="22.671423"
-   height="22.671423"
-   viewBox="0 0 22.671423 22.671423"
+   width="21.246424"
+   height="21.246424"
+   viewBox="0 0 21.246424 21.246424"
    version="1.1"
    id="svg4"
    sodipodi:docname="thumbsupwhite.svg"
@@ -42,9 +42,9 @@
      id="namedview6"
      showgrid="false"
      inkscape:zoom="10.429825"
-     inkscape:cx="12.439619"
-     inkscape:cy="18.868738"
-     inkscape:window-x="0"
+     inkscape:cx="2.6328314"
+     inkscape:cy="4.4012005"
+     inkscape:window-x="960"
      inkscape:window-y="27"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg4"
@@ -53,14 +53,14 @@
      fit-margin-right="0"
      fit-margin-bottom="0" />
   <circle
-     style="opacity:1;fill:#00ff00;fill-opacity:1;stroke:#fffffa;stroke-width:1.42499995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="opacity:1;fill:#00ff00;fill-opacity:1;stroke:none;stroke-width:1.42499995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="path816"
-     cx="11.335711"
-     cy="11.335711"
+     cx="10.623212"
+     cy="10.623212"
      r="10.623212" />
   <g
      id="g820"
-     transform="translate(3.2877728,2.2651898)">
+     transform="translate(2.5752741,1.5526911)">
     <path
        style="fill:#000000;fill-opacity:1;fill-rule:evenodd"
        id="path2"

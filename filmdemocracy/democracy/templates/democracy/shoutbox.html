@@ -80,17 +80,18 @@
         {% endif %}
       </p>
       <div class="small text-muted ml-1 my-0 py-0 post-footer">
-
         {% if not post.deleted %}
         {% if user == post.user or user in club_admins %}
         <form class="" action="{% url 'democracy:delete_shoutbox_post' club.id post.id %}" method="POST">
           {% csrf_token %}
           {{ post.date }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
-          {% trans 'Delete post' %}</label>
+          {% trans 'Delete' %}</label>
           <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">
         </form>
-        {% endif %}
         {% else %}
+        {{ post.date }}
+        {% endif %}
+        {% elif post.deleted %}
         {{ post.date }}
         {% endif %}
       </div>
@@ -156,15 +157,6 @@
      var objDiv = document.getElementById("DivShoutbox");
      objDiv.scrollTop = objDiv.scrollHeight;
 }
-
-
-
-
-
-
-
-
-
 </script>
 
 

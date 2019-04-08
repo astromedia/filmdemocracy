@@ -211,8 +211,8 @@
       </div>
       <div class="col-auto">
         <span class="text-muted">{% trans 'Organized by' %}
-          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
-            <strong>{{ meeting.organizer.username }}</strong>
+          <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
+            {{ meeting.organizer.username }}
           </a>
         </span>
       </div>
@@ -258,9 +258,9 @@
       <strong>{% trans 'Confirmed:' %}</strong>
       {% for member in meeting.members_yes.all %}
       {% if forloop.last %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
       {% else %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
       {% endif %}
 
       {% endfor %}
@@ -271,9 +271,9 @@
       <strong>{% trans 'Interested:' %}</strong>
       {% for member in meeting.members_maybe.all %}
       {% if forloop.last %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
       {% else %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
       {% endif %}
       {% endfor %}
     </div>
@@ -283,9 +283,9 @@
       <strong>{% trans "Can't assist:" %}</strong>
       {% for member in meeting.members_no.all %}
       {% if forloop.last %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
       {% else %}
-      <a class="text-body" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
       {% endif %}
       {% endfor %}
     </div>
@@ -476,8 +476,8 @@
     </div>
     <div class="">
       <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
-        <strong><a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
-          {{ post.user.username }}</a>:</strong>
+        <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
+          {{ post.user.username }}</a>:
         {% if post.deleted %}
         <span class="text-muted"><em>{% trans 'Post deleted.' %}</em></span>
         {% else %}
@@ -542,13 +542,11 @@
     </div>
     <div class="">
       <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
-        <strong>
-          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
+          <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
             {{ comment.user.username }}</a>
-          @
-          <a class="text-body" href="{% url 'democracy:film_detail' club.id comment.film.id 'all' 'title' %}">
-            {{ comment.film.filmdb.title }}</a>:
-        </strong>
+        <strong>@</strong>
+          <a class="strong-link" href="{% url 'democracy:film_detail' club.id comment.film.id 'all' 'title' %}">
+            {{ comment.film.filmdb.title }}</a><strong>:</strong>
         <span>{{ comment.text }}</span>
       </p>
       <p class="small text-muted my-0 ml-1 date">{{ comment.date }}</p>

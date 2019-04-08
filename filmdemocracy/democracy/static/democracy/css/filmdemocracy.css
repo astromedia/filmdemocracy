@@ -17,7 +17,7 @@ body {
   padding-bottom: 5rem;
   min-height: 65rem;
   max-width: 908px;
-  background-color: white;
+  background-color: #fafafa;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.65);
   padding-right: 0;
   padding-left: 0;
@@ -97,6 +97,15 @@ body {
   border-top: 2px solid black;
   z-index: 3;
   padding: 10px;
+}
+
+
+
+/* Link styles
+-------------------------------------------------- */
+
+.strong-link {
+  font-weight: bold;
 }
 
 

@@ -109,6 +109,11 @@ urlpatterns = [
         name='vote_film'
     ),
     path(
+        '<str:club_id>/film/<str:film_id>/delete_vote/&view=<str:view_option>&order=<str:order_option>',
+        views.delete_vote,
+        name='delete_vote'
+    ),
+    path(
         '<str:club_id>/film/<str:film_id>/comment_film/&view=<str:view_option>&order=<str:order_option>',
         views.comment_film,
         name='comment_film'

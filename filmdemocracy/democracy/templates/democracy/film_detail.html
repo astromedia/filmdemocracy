@@ -35,7 +35,8 @@
 
         <!--PROPOSED BY-->
         {% trans 'Proposed by' %}
-        <a class="proposed-by" href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
+        <a class="strong-link green-color blue-color-hover"
+           href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
           <strong>{{ film.proposed_by.username }}</strong></a> {% trans 'on ' %} {{ film.pub_date }}
 
 
@@ -84,7 +85,7 @@
           <div class="col-auto">
             <form class="" action="{% url 'democracy:update_film_data' club.id film.id view_option order_option %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-film-option my-2 mx-auto">
+              <button type="submit" class="btn btn-sm btn-film-option-magic my-2 mx-auto">
                 {% trans 'Request data update' %}
               </button>
             </form>
@@ -96,7 +97,7 @@
           {% if not film.seen %}
           {% if user in club_admins or film.proposed_by == user %}
           <div class="col-auto">
-            <button type="button" class="btn btn-sm btn-film-option btn-outline-danger my-2 mx-auto" data-toggle="modal"
+            <button type="button" class="btn btn-sm btn-film-option-delete my-2 mx-auto" data-toggle="modal"
                     data-target="#DeleteModalCenter">
               {% trans 'Delete film' %}
             </button>
@@ -105,7 +106,7 @@
           {% else %}
           {% if user in club_admins %}
           <div class="col-auto">
-            <button type="button" class="btn btn-sm btn-film-option btn-outline-danger my-2 mx-auto" data-toggle="modal"
+            <button type="button" class="btn btn-sm btn-film-option-delete my-2 mx-auto" data-toggle="modal"
                     data-target="#DeleteModalCenter">
               {% trans 'Delete film' %}
             </button>
@@ -181,27 +182,6 @@
 {% endfor %}
 
 
-<!--<div class="row justify-content-center mt-n2 mb-4 mx-1">-->
-<!--  <div class="col-sm-auto">-->
-<!--    {% if not film.seen %}-->
-<!--    <form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option %}">-->
-<!--      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to candidate films' %}-->
-<!--      </button>-->
-<!--    </form>-->
-<!--    {% elif film.seen %}-->
-<!--    <form class="" action="{% url 'democracy:seen_films' club.id %}">-->
-<!--      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to seen films' %}</button>-->
-<!--    </form>-->
-<!--    {% endif %}-->
-<!--  </div>-->
-<!--  <div class="col-sm-auto">-->
-<!--    <form class="" action="{% url 'democracy:club_detail' club.id %}">-->
-<!--      <button type="submit" class="btn btn-sm btn-block btn-option my-2 mx-auto">{% trans 'Go to club' %}</button>-->
-<!--    </form>-->
-<!--  </div>-->
-<!--</div>-->
-
-
 <nav class="nav-film mx-2 mt-n2">
   <div class="nav nav-pills flex-column flex-sm-row justify-content-center nav-justified" id="nav-tab" role="tablist">
     <a class="nav-item nav-link m-2 active" id="nav-voteorseen-tab" data-toggle="pill" href="#nav-voteorseen"
@@ -272,6 +252,18 @@
     {% endfor %}
 
 
+    {% if film_voted %}
+    <form class="text-center mt-3" action="{% url 'democracy:delete_vote' club.id film.id view_option order_option %}"
+          method="POST">
+      {% csrf_token %}
+
+      <label for="delete-vote" class="badge badge-light pointer-cursor">{% trans 'Delete vote' %}</label><br>
+      <input type="submit" class="invisible" id="delete-vote">
+
+    </form>
+    {% endif %}
+
+
     {% elif film.seen %}
 
 
@@ -326,7 +318,8 @@
 
 
   <!--START: REGISTERED VOTES TAB-->
-  <div class="tab-pane fade px-2" id="nav-registered-votes" role="tabpanel" aria-labelledby="nav-registered-votes-tab">
+  <div class="tab-pane fade px-2" id="nav-registered-votes" role="tabpanel"
+       aria-labelledby="nav-registered-votes-tab">
 
     <h4 class="text-center h4 mt-4 mb-5">{% trans 'Registered votes on film' %}</h4>
 
@@ -336,7 +329,6 @@
     <div class="container-comments mx-auto">
 
       {% for vote in film.vote_set.all %}
-
 
       <div class="media post my-2 mx-2">
         <div class="align-self-start mr-3 user-image">
@@ -349,28 +341,22 @@
                src="{% static 'registration/svg/user_no_profile_image.svg' %}"
                alt="vote.user.profile_image not found">
           {% endif %}
+          {% if vote.vote_karma == 'positive' %}
+          <img class="hand-icon rounded-circle mt-n3 ml-4" style="height: 18px;"
+               src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+          {% elif vote.vote_karma == 'negative' %}
+          <img class="hand-icon rounded-circle mt-n3 ml-4" style="height: 18px;"
+               src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+          {% endif %}
         </div>
         <div class="">
           <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
-            <strong>
-              <a class="text-body" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
-                {{ vote.user.username }}</a>:
-            </strong>
-            {% if vote.vote_karma == 'positive' %}
-            <span class="text-success">{{ vote.get_choice_display }}</span>
-            {% elif vote.vote_karma == 'negative' %}
-            <span class="text-danger">
-          {% if vote.choice == "veto" %}
-          <strong>{{ vote.get_choice_display }}</strong>
-          {% else %}
-          {{ vote.get_choice_display }}
-        </span>
-            {% endif %}
-            {% endif %}
+            <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
+              {{ vote.user.username }}</a>:
+            <span>{{ vote.get_choice_display }}</span>
           </p>
         </div>
       </div>
-
 
       {% endfor %}
 
@@ -415,10 +401,8 @@
         </div>
         <div class="">
           <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
-            <strong>
-              <a class="text-body" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
-                {{ comment.user.username }}</a>:
-            </strong>
+            <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
+              {{ comment.user.username }}</a>:
             {% if comment.deleted %}
             <span class="text-muted"><em>{% trans 'Comment deleted.' %}</em></span>
             {% else %}
@@ -434,11 +418,13 @@
                   method="POST">
               {% csrf_token %}
               {{ comment.date }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
-              {% trans 'Delete comment' %}</label>
+              {% trans 'Delete' %}</label>
               <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">
             </form>
-            {% endif %}
             {% else %}
+            {{ comment.date }}
+            {% endif %}
+            {% elif comment.deleted %}
             {{ comment.date }}
             {% endif %}
           </div>

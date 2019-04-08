@@ -26,11 +26,11 @@
     {% for participant in participants %}
     <div class="col-auto">
       {% if participant.profile_image %}
-      <img class="participant-picture border border-secondary rounded-circle" title="{{ participant.username }}"
+      <img class="participant-picture my-2 border border-secondary rounded-circle" title="{{ participant.username }}"
            src="{{ participant.profile_image.url }}"
            alt="participant.profile_image not found">
       {% else %}
-      <img class="participant-picture border border-secondary rounded-circle" title="{{ participant.username }}"
+      <img class="participant-picture my-2 border border-secondary rounded-circle" title="{{ participant.username }}"
            src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="participant.profile_image not found">
       {% endif %}
     </div>
@@ -72,8 +72,8 @@
 
       <!--TITLE COLUMN-->
       <td class="align-middle">
-        <a class="text-body" href="{% url 'democracy:film_detail' club.id film_results.id 'all' 'title' %}">
-          <strong>{{ film_results.title }}</strong>
+        <a class="strong-link" href="{% url 'democracy:film_detail' club.id film_results.id 'all' 'title' %}">
+          {{ film_results.title }}
         </a>
       </td>
 
@@ -83,130 +83,147 @@
       <!--RESULTS COLUMN-->
       <td class="text-center align-middle">
 
-        <div class="row justify-content-center">
+        <div class='results-box pointer-cursor border border-secondary rounded p-1 m-n1' data-toggle="modal"
+             data-target="#FilmResultsModal_{{ forloop.counter }}">
 
-          {% if film_results.positive_voters|length > 0 %}
-          <div class="col-auto">
-            <div class='pointer-cursor' data-toggle="modal" data-target="#PositiveVotersModal_{{ forloop.counter }}">
-              <strong>{{ film_results.positive_voters|length }}</strong>
-              <img class="ml-1 mt-n1" style="height: 18px;" src="{% static 'democracy/svg/thumbsup.svg'%}">
+          <div class="row justify-content-center">
+
+            {% if film_results.positive_votes|length > 0 %}
+            <div class="col-auto">
+              <strong>{{ film_results.positive_votes|length }}</strong>
+              <img class="ml-1 mt-n1 rounded rounded-circle border border-secondary" style="height: 20px;"
+                   src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
             </div>
-          </div>
-          {% endif %}
+            {% endif %}
 
-          {% if film_results.negative_voters|length > 0 %}
-          <div class="col-auto">
-            <div class='pointer-cursor' data-toggle="modal" data-target="#NegativeVotersModal_{{ forloop.counter }}">
-              <strong>{{ film_results.negative_voters|length }}</strong>
-              <img class="ml-1 mt-n1" style="height: 18px;" src="{% static 'democracy/svg/thumbsdown.svg'%}">
+            {% if film_results.negative_votes|length > 0 %}
+            <div class="col-auto">
+              <strong>{{ film_results.negative_votes|length }}</strong>
+              <img class="ml-1 mt-n1 rounded rounded-circle border border-secondary" style="height: 20px;"
+                   src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
             </div>
-          </div>
-          {% endif %}
+            {% endif %}
 
-          {% if film_results.abstentionists|length > 0 %}
-          <div class="col-auto">
-            <div class='pointer-cursor' data-toggle="modal" data-target="#AbstentionistsModal_{{ forloop.counter }}">
+            {% if film_results.abstentionists|length > 0 %}
+            <div class="col-auto">
               <strong>{{ film_results.abstentionists|length }}</strong>
-              <img class="ml-1 mt-n1" style="height: 21px;" src="{% static 'democracy/svg/question.svg'%}">
+              <img class="ml-1 mt-n1" style="height: 22px;" src="{% static 'democracy/svg/question.svg'%}">
             </div>
-          </div>
 
-          {% endif %}
+            {% endif %}
 
-          {% if film_results.warnings %}
-          <div class="col-auto">
-            <div class='pointer-cursor' data-toggle="modal" data-target="#WarningsModal_{{ forloop.counter }}">
+            {% if film_results.warnings %}
+            <div class="col-auto">
               <strong>{{ film_results.warnings|length }}</strong>
-              <img class="ml-1 mt-n1" style="height: 18px;" src="{% static 'democracy/svg/alert.svg'%}">
+              <img class="ml-1 mt-n1" style="height: 19px;" src="{% static 'democracy/svg/alert.svg'%}">
             </div>
+            {% endif %}
           </div>
-          {% endif %}
         </div>
+
 
       </td>
 
     </tr>
 
 
-    <!--START: POSITIVE VOTERS MODAL-->
-    <div class="modal fade" id="PositiveVotersModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
-         aria-labelledby="PositiveModal_{{ forloop.counter }}_Title" aria-hidden="true">
+    <!--START: RESULTS MODAL-->
+    <div class="modal fade" id="FilmResultsModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
+         aria-labelledby="FilmResultsModal_{{ forloop.counter }}_Title" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="PositiveVotersModal_{{ forloop.counter }}_Title">
-              {% trans 'Want to see:' %} {{ film_results.title }}</h5>
+        <div class="modal-content modal-results">
+          <div class="modal-header modal-results-header">
+            <h5 class="modal-title" id="FilmResultsModal_{{ forloop.counter }}_Title">
+              {% trans 'Results for:' %} {{ film_results.title }}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <div class="row mx-1 justify-content-center">
-              {% for participant in film_results.positive_voters %}
-              <div class="col-auto align-items-center">
-                {% if participant.profile_image %}
-                <img class="voter-picture border border-secondary rounded-circle" title="{{ participant.username }}"
-                     src="{{ participant.profile_image.url }}" alt="participant.profile_image not found">
-                {% else %}
-                <img class="voter-picture border border-secondary rounded-circle" title="{{ participant.username }}"
-                     src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-                     alt="participant.profile_image not found">
-                {% endif %}
-              </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END: POSITIVE VOTERS MODAL-->
+          <div class="modal-body modal-results">
 
-    <!--START: NEGATIVE VOTERS MODAL-->
-    <div class="modal fade" id="NegativeVotersModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
-         aria-labelledby="NegativeModal_{{ forloop.counter }}_Title" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="NegativeVotersModal_{{ forloop.counter }}_Title">
-              {% trans 'Do not want to see:' %} {{ film_results.title }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="row mx-1 justify-content-center">
-              {% for participant in film_results.negative_voters %}
-              <div class="col-auto align-items-center">
-                {% if participant.profile_image %}
-                <img class="voter-picture border border-secondary rounded-circle" title="{{ participant.username }}"
-                     src="{{ participant.profile_image.url }}" alt="participant.profile_image not found">
-                {% else %}
-                <img class="voter-picture border border-secondary rounded-circle" title="{{ participant.username }}"
-                     src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-                     alt="participant.profile_image not found">
-                {% endif %}
-              </div>
-              {% endfor %}
+            <div class="text-center mt-2 mb-4">
+              <strong>{% trans 'Film score:' %}</strong> {{ film_results.points }}
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END: NEGATIVE VOTERS MODAL-->
 
-    <!--START: ABSTENTIONISTS MODAL-->
-    <div class="modal fade" id="AbstentionistsModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
-         aria-labelledby="AbstentionistsModal_{{ forloop.counter }}_Title" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="AbstentionistsModal_{{ forloop.counter }}_Title">
-              {% trans 'Have not voted:' %} {{ film_results.title }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
+            <!--START VOTES-->
+            {% if film_results.positive_votes or film_results.positive_votes %}
+
+            <div class="container-results mx-2">
+
+              <!--START POSITIVE VOTES-->
+              {% for vote in film_results.positive_votes %}
+
+              <div class="media post my-2">
+                <div class="align-self-start mr-3 user-image">
+                  {% if vote.user.profile_image %}
+                  <div>
+                    <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
+                         src="{{ vote.user.profile_image.url }}"
+                         alt="vote.user.profile_image not found">
+                    {% else %}
+                    <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
+                         src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+                         alt="vote.user.profile_image not found">
+                    {% endif %}
+                    <img class="hand-icon rounded-circle mt-n3 ml-4" style="height: 18px;"
+                         src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+                  </div>
+                </div>
+                <div class="">
+                  <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
+                    <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
+                      {{ vote.user.username }}</a>:
+                    <span>{{ vote.get_choice_display }}</span>
+                  </p>
+                </div>
+              </div>
+
+              {% endfor %}
+              <!--END POSITIVE VOTES-->
+
+              <!--START NEGATIVE VOTES-->
+              {% for vote in film_results.negative_votes %}
+
+              <div class="media post my-2">
+                <div class="align-self-start mr-3 user-image">
+                  {% if vote.user.profile_image %}
+                  <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
+                       src="{{ vote.user.profile_image.url }}"
+                       alt="vote.user.profile_image not found">
+                  {% else %}
+                  <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
+                       src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+                       alt="vote.user.profile_image not found">
+                  {% endif %}
+                  <img class="hand-icon rounded-circle mt-n3 ml-4" style="height: 18px;"
+                       src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+                </div>
+                <div class="">
+                  <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
+                    <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
+                      {{ vote.user.username }}</a>:
+                    <span>{{ vote.get_choice_display }}</span>
+                  </p>
+                </div>
+              </div>
+
+              {% endfor %}
+
+            </div>
+            <!--END NEGATIVE VOTES-->
+
+            {% endif %}
+            <!--END VOTES-->
+
+
+            <!--START ABSTENTIONISTS-->
+            {% if film_results.abstentionists %}
+
+            <div class="modal-results-section mx-auto mt-n4">
+              <h3 class="h3">{% trans 'Did not vote' %}</h3>
+              <hr>
+            </div>
+
             <div class="row mx-1 justify-content-center">
               {% for participant in film_results.abstentionists %}
               <div class="col-auto align-items-center">
@@ -221,26 +238,18 @@
               </div>
               {% endfor %}
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END: ABSTENTIONISTS MODAL-->
 
-    <!--START: MODAL WARNING-->
-    <div class="modal fade" id="WarningsModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
-         aria-labelledby="WarningsModal_{{ forloop.counter }}_Title" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="WarningsModal_{{ forloop.counter }}_Title">
-              {% trans 'Warnings for:' %} {{ film_results.title }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <!--START: WARNINGS-->
+            {% endif %}
+            <!--END ABSTENTIONISTS-->
+
+            <!--START WARNING-->
+            {% if film_results.warnings %}
+
+            <div class="modal-results-section mx-auto mt-n4">
+              <h3 class="h3">{% trans 'Warnings' %}</h3>
+              <hr>
+            </div>
+
             {% for warning in film_results.warnings %}
             <div class="text-center my-2 mx-4">
               {% if warning.type == 'veto' %}
@@ -258,12 +267,15 @@
               {% endif %}
             </div>
             {% endfor %}
-            <!--END: WARNINGS-->
+
+            {% endif %}
+            <!--END WARNING-->
+
           </div>
         </div>
       </div>
     </div>
-    <!-- END: MODAL WARNING-->
+    <!-- END: RESULTS MODAL-->
 
 
     {% endfor %}

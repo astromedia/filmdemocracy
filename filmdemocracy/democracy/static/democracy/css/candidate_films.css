@@ -252,8 +252,60 @@ body {
   background: rgba(0, 0, 0, 1) !important;
 }
 
+.results-box {
+  background: white !important;
+}
+
+.results-box:hover {
+  border: 1px solid #282828 !important;
+}
+
+
+
+/* Film results
+-------------------------------------------------- */
+.container-results {
+  max-width: 90%;
+  margin-bottom: 40px;
+  padding: auto;
+}
+
+.modal-results {
+  background-color: #fafafa;
+}
+
+.modal-results-section .h3 {
+  font-size: 15px;
+  margin-bottom: -13px;
+  text-transform: uppercase;
+}
+
+.modal-results-section hr {
+  max-width: 75%;
+  color: gray;
+  background-color: gray;
+  margin-bottom: 20px;
+}
+
+.post .media-body {
+  padding:0px;
+}
+
+.post .user-image img {
+ max-width: 35px;
+ background: rgba(0, 0, 0, 1) !important;
+}
+
+.post .user-image .hand-icon {
+  position:absolute;
+}
+
+.post .post-text {
+  background-color: white;
+}
+
 .voter-picture {
-  width: 90px;
+  width: 35px;
   background: rgba(0, 0, 0, 1) !important;
 }
 

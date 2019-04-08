@@ -126,6 +126,12 @@ class FilmDb(models.Model):
     def faff_url(self):
         return f'https://www.filmaffinity.com/es/film{self.faff_id}.html'
 
+    @property
+    def updatable(self):
+        time_diff_created = datetime.datetime.now().date() - self.created
+        time_diff_updated = self.last_updated - self.created
+        return time_diff_created > 2 * time_diff_updated
+
 
 class Film(models.Model):
     """
