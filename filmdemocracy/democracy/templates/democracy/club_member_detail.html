@@ -78,7 +78,7 @@
     {% for vote in member_votes %}
     <div class="row mx-1 justify-content-center">
       <div class="col-6 text-right">
-        <a class="text-body" href="{% url 'democracy:film_detail' club.id vote.film.id 'all' 'title' %}">
+        <a class="text-body" href="{% url 'democracy:film_detail' club.id vote.film.id 'all' 'title' 'posters' %}">
           <strong>{{ vote.film.filmdb.title }}:</strong></a>
       </div>
       <div class="col-6">
@@ -124,7 +124,7 @@
 
     {% for film in member_seen_films %}
     <div class="text-center">
-      <a class="text-body" href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' %}">
+      <a class="text-body" href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
         <strong>{{ film.filmdb.title }}</strong></a>
     </div>
     {% endfor %}

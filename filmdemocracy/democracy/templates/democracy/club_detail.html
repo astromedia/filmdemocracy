@@ -545,7 +545,7 @@
           <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
             {{ comment.user.username }}</a>
         <strong>@</strong>
-          <a class="strong-link" href="{% url 'democracy:film_detail' club.id comment.film.id 'all' 'title' %}">
+          <a class="strong-link" href="{% url 'democracy:film_detail' club.id comment.film.id 'all' 'title' 'posters' %}">
             {{ comment.film.filmdb.title }}</a><strong>:</strong>
         <span>{{ comment.text }}</span>
       </p>
@@ -580,7 +580,7 @@
           <div class="col-md-auto align-self-center">
             <div class="card">
               <div class="m-auto">
-                <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' %}">
+                <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
                   <img class="card-img mt-auto" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
                 </a>
               </div>
@@ -599,7 +599,7 @@
           <div class="col-md-auto align-self-center">
             <div class="card">
               <div class="m-auto">
-                <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' %}">
+                <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
                   <img class="card-img m-auto" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
                 </a>
               </div>
@@ -643,7 +643,7 @@
     <div class="col-auto align-self-center">
       <div class="card">
         <div class="m-auto">
-          <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' %}">
+          <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
             <img class="card-img" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
           </a>
         </div>

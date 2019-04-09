@@ -14,13 +14,20 @@
 
     <div class="col-md-auto my-2 mr-auto">
 
-      <form class="navigation-option" action="{% url 'democracy:candidate_films' club.id 'all' 'title' %}">
-        {% if page == 'candidate_films' %}
+      {% if page == 'candidate_films' %}
+      <form class="navigation-option" action="{% url 'democracy:candidate_films' club.id view_option order_option display_option %}">
         <button type="submit" class="btn active">{% trans 'Candidate films' %}</button>
-        {% else %}
-        <button type="submit" class="btn">{% trans 'Candidate films' %}</button>
-        {% endif %}
       </form>
+      {% elif page == 'film_detail' %}
+      <form class="navigation-option" action="{% url 'democracy:candidate_films' club.id view_option order_option display_option %}">
+        <button type="submit" class="btn">{% trans 'Candidate films' %}</button>
+      </form>
+      {% else %}
+      <form class="navigation-option" action="{% url 'democracy:candidate_films' club.id 'all' 'title' 'posters' %}">
+        <button type="submit" class="btn">{% trans 'Candidate films' %}</button>
+      </form>
+      {% endif %}
+
 
     </div>
 

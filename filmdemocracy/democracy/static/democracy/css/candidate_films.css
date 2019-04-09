@@ -48,6 +48,30 @@ body {
   width: 13rem;
 }
 
+/* Candidate films list
+-------------------------------------------------- */
+.container-list {
+  max-width: 700px;
+  padding-top: 20px;
+  padding-bottom: 200px;
+  margin-top: 20px;
+  margin-bottom: 0px;
+}
+
+.container-list .media {
+  height: 29px;
+}
+
+.container-list a {
+  color: #A9A9A9;
+  white-space: nowrap;
+}
+
+.container-list .hand-icon {
+  height: 26px;
+  border: 1px solid white !important;
+  background-color: white;
+}
 
 /* Candidate films image hover effect
 -------------------------------------------------- */
