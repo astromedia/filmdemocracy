@@ -35,9 +35,9 @@
 
         <!--PROPOSED BY-->
         {% trans 'Proposed by' %}
-        <a class="strong-link green-color blue-color-hover"
+        <a class="green-color blue-color-hover"
            href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
-          <strong>{{ film.proposed_by.username }}</strong></a> {% trans 'on ' %} {{ film.pub_date }}
+          {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.pub_date }}
 
 
         <div class="row align-items-center my-2">

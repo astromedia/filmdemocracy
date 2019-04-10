@@ -27,7 +27,7 @@
   {% trans 'Propose film' %}
 </button>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center mx-2">
 
   <div class="col-md-auto">
     <div class="dropdown">
@@ -132,7 +132,7 @@
 
     {% for candidate in candidate_films|dictsort:order_option_string %}
 
-    <div class="col align-self-center my-3">
+    <div class="col col-auto align-self-center my-3">
       <div class="card mx-auto">
         {% if candidate.vote == 'positive' %}
         <div class="card-film border positive-vote">
@@ -173,18 +173,37 @@
 <!--END: FILM PANEL-->
 
 
-{% elif display_option == 'list' %}
+    {% elif display_option == 'list' %}
 
 
 <!--END: FILM LIST-->
-<div class="container container-list">
-  <div class="row justify-content-center">
-    <div class="col-auto">
-      <ul class="list-unstyled">
-      {% for candidate in candidate_films|dictsort:order_option_string %}
-        <li class="my-2">
-          <div class="media">
-            {% if candidate.vote == 'positive' %}
+<div class="container container-list mx-auto">
+
+  <table class="table table-borderless table-hover table-sm">
+
+    <thead class="">
+      <tr class="">
+        <th scope="col" class="text-center">{% trans 'Vote' %}</th>
+        <th scope="col" class="">{% trans 'Title' %}</th>
+        {% if order_option == 'date_proposed' %}
+        <th scope="col" class="text-center">{% trans 'Date proposed' %}</th>
+        {% elif order_option == 'year' %}
+        <th scope="col" class="text-center">{% trans 'Year' %}</th>
+        {% elif order_option == 'duration' %}
+        <th scope="col" class="text-center">{% trans 'Duration' %} (min)</th>
+        {% endif %}
+      </tr>
+    </thead>
+
+    <tbody>
+
+    {% for candidate in candidate_films|dictsort:order_option_string %}
+
+      <tr class="">
+
+        <!--VOTE COLUMN-->
+        <td class="text-center align-middle">
+          {% if candidate.vote == 'positive' %}
             <img class="align-self-center rounded-circle hand-icon"
                  src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
             {% elif candidate.vote == 'negative' %}
@@ -194,17 +213,36 @@
             <img class="align-self-center rounded-circle" style="height: 29px;"
                  src="{% static 'democracy/svg/questionwhite.svg'%}">
             {% endif %}
-            <div class="media-body ml-3">
-              <a href="{% url 'democracy:film_detail' club.id candidate.film.id view_option order_option display_option %}">
-                <strong>{{ candidate.film.filmdb.title }}</strong></a>
-            </div>
-          </div>
-        </li>
-      {% endfor %}
-      </ul>
-    </div>
-  </div>
+        </td>
+
+        <!--TITLE COLUMN-->
+        <td class="align-middle">
+          <a href="{% url 'democracy:film_detail' club.id candidate.film.id view_option order_option display_option %}">
+          {{ candidate.film.filmdb.title }}
+          </a>
+        </td>
+
+
+        <!--ORDER BY COLUMN-->
+        <td class="align-middle text-center">
+        {% if order_option == 'date_proposed' %}
+          {{ candidate.film.pub_date.date }}
+        {% elif order_option == 'year' %}
+          {{ candidate.film.filmdb.year }}
+        {% elif order_option == 'duration' %}
+          {{ candidate.film.filmdb.duration }}
+        {% endif %}
+        </td>
+
+      </tr>
+    {% endfor %}
+
+
+    </tbody>
+
+  </table>
 </div>
+
 <!--END: FILM LIST-->
 
 

@@ -34,10 +34,14 @@ body {
 
 /* Candidate films album
 -------------------------------------------------- */
+.container-films-album {
+  width: 95%;
+}
+
 .films-album {
   background-color: transparent;
   padding-top: 50px;
-  padding-bottom: 200px;
+  padding-bottom: 20px;
   padding-left: 50px;
   padding-right: 50px;
   margin-top: 40px;
@@ -53,19 +57,36 @@ body {
 .container-list {
   max-width: 700px;
   padding-top: 20px;
-  padding-bottom: 200px;
+  padding-bottom: 20px;
   margin-top: 20px;
   margin-bottom: 0px;
 }
 
-.container-list .media {
+.container-list table thead{
+  color: #A9A9A9;
+  font-weight: normal;
+}
+
+.container-list table {
+  color: #A9A9A9 !important;
+}
+
+.container-list table tbody tr:hover {
+  color: white;
+}
+
+.container-list  table tbody tr .media {
   height: 29px;
 }
 
-.container-list a {
+.container-list  table tbody tr a {
   color: #A9A9A9;
-  white-space: nowrap;
 }
+
+.container-list  table tbody tr:hover a {
+  color: white;
+}
+
 
 .container-list .hand-icon {
   height: 26px;
