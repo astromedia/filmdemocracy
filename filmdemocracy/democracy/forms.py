@@ -268,6 +268,8 @@ class MeetingsForm(forms.ModelForm):
         required=False,
     )
     send_spam = forms.BooleanField(label='send_spam', required=False)
+    spam_opts = forms.ChoiceField(choices=(('all', ""), ('interested', ""), ('noone', "")),
+                                  label='spam_opts', required=False)
 
     def __init__(self, *args, **kwargs):
         self.club_id = kwargs.pop('club_id', None)
@@ -287,7 +289,7 @@ class MeetingsForm(forms.ModelForm):
 
     class Meta:
         model = Meeting
-        fields = ['name', 'description', 'place', 'date', 'time_start', 'time_end', 'send_spam']
+        fields = ['name', 'description', 'place', 'date', 'time_start', 'time_end', 'send_spam', 'spam_opts']
 
     def clean_date(self):
         date = self.cleaned_data['date']

@@ -163,18 +163,17 @@
 
     </div>
 
-    <!--SEND NOTIFICATION EMAILS-->
-    <div class="form-input-field">
+    <!--START: SEND NOTIFICATION EMAILS-->
+    <div class="form-input-field" style="max-width: 99%">
+
+      <!--NEW MEETING-->
+      {% if new_meeting %}
 
       <div class="row align-items-center justify-content-center">
-        <div class="col col-auto">
-          {% if new_meeting %}
-            <strong>{% trans 'Send notification to club members:' %}</strong>
-          {% else %}
-            <strong>{% trans 'Send notification to members interested in meeting:' %}</strong>
-          {% endif %}
+        <div class="col col-auto my-2">
+          <strong>{% trans 'Send notification to club members:' %}</strong>
         </div>
-        <div class="col col-auto">
+        <div class="col col-auto my-2">
           <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" name="send_spam" id="send_spam"
                    value="send_spam" checked>
@@ -183,7 +182,33 @@
         </div>
       </div>
 
+      <!--EDIT MEETING-->
+      {% else %}
+
+      <div class="row align-items-start justify-content-center">
+        <div class="col col-auto my-2">
+          <strong>{% trans 'Send notification to:' %}</strong>
+        </div>
+        <div class="col col-auto text-left my-2">
+          <div class="custom-control custom-radio">
+            <input type="radio" id="customRadio1" name="spam_opts" value="all" class="custom-control-input" checked>
+            <label class="custom-control-label" for="customRadio1">{% trans 'Club members' %}</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="customRadio2" name="spam_opts" value="interested" class="custom-control-input">
+            <label class="custom-control-label" for="customRadio2">{% trans 'Only members that checked the meeting' %}</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="customRadio3" name="spam_opts" value="noone" class="custom-control-input">
+            <label class="custom-control-label" for="customRadio3">{% trans 'No one' %}</label>
+          </div>
+        </div>
+      </div>
+
+      {% endif %}
+
     </div>
+    <!--END: SEND NOTIFICATION EMAILS-->
 
   </div>
 

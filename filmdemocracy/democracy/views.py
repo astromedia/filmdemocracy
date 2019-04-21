@@ -1090,9 +1090,9 @@ class InviteNewMemberCompleteView(UserPassesTestMixin, generic.TemplateView):
 @method_decorator(login_required, name='dispatch')
 class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     form_class = forms.MeetingsForm
-    subject_template_name = 'democracy/meeting_new_subject.txt'
-    email_template_name = 'democracy/meeting_new_email.html'
-    html_email_template_name = 'democracy/meeting_new_email_html.html'
+    subject_template_name = 'democracy/meetings_new_subject.txt'
+    email_template_name = 'democracy/meetings_new_email.html'
+    html_email_template_name = 'democracy/meetings_new_email_html.html'
     extra_email_context = None
     from_email = 'filmdemocracyweb@gmail.com'
 
@@ -1163,9 +1163,9 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
 @method_decorator(login_required, name='dispatch')
 class MeetingsEditView(UserPassesTestMixin, generic.FormView):
     form_class = forms.MeetingsForm
-    subject_template_name = 'democracy/meeting_edit_subject.txt'
-    email_template_name = 'democracy/meeting_edit_email.html'
-    html_email_template_name = 'democracy/meeting_edit_email_html.html'
+    subject_template_name = 'democracy/meetings_edit_subject.txt'
+    email_template_name = 'democracy/meetings_edit_email.html'
+    html_email_template_name = 'democracy/meetings_edit_email_html.html'
     extra_email_context = None
     from_email = 'filmdemocracyweb@gmail.com'
 
@@ -1204,7 +1204,8 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
         meeting.time_start = form.cleaned_data['time_start']
         meeting.time_end = form.cleaned_data['time_end']
         meeting.save()
-        if form.cleaned_data['send_spam']:
+        spam_opt = form.cleaned_data['spam_opts']
+        if spam_opt == 'all' or spam_opt == 'interested':
             email_opts = {
                 'domain_override': None,
                 'subject_template_name': self.subject_template_name,
@@ -1215,12 +1216,22 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
                 'from_email': self.from_email,
                 'request': self.request,
             }
-            for spammable_members in [meeting.members_yes.all(), meeting.members_maybe.all()]:
+            if spam_opt == 'all':
+                club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+                spammable_members = club.members.filter(is_active=True)
                 form.spam_members(spammable_members, **email_opts)
-            messages.success(
-                self.request,
-                _('Meeting edited! A notification has been sent to members that were interested in it.')
-            )
+                messages.success(
+                    self.request,
+                    _('Meeting edited! A notification has been sent to club members.')
+                )
+            elif spam_opt == 'interested':
+                meeting_members = [meeting.members_yes.all(), meeting.members_maybe.all(), meeting.members_no.all()]
+                for spammable_members in meeting_members:
+                    form.spam_members(spammable_members, **email_opts)
+                messages.success(
+                    self.request,
+                    _('Meeting edited! A notification has been sent to members that were interested in it.')
+                )
         else:
             messages.success(self.request, _('Meeting edited!'))
         return super().form_valid(form)
