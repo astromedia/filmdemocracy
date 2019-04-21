@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-10 22:14+0200\n"
+"POT-Creation-Date: 2019-04-21 23:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,11 +55,11 @@ msgstr "Mandar mensaje con email (opcional)"
 msgid "Description (optional)"
 msgstr "Descripción (opcional)"
 
-#: democracy/forms.py:296
+#: democracy/forms.py:298
 msgid "No much sense on planning now a meeting on the past, sorry."
 msgstr "No tiene mucho sentido planear encuentros en el pasado, lo sentimos."
 
-#: democracy/forms.py:308
+#: democracy/forms.py:310
 msgid "Meetings can't start before they are proposed, sorry."
 msgstr ""
 "Los encuentros no pueden empezar antes de que hayan sido propuestos, lo "
@@ -263,7 +263,7 @@ msgstr "Abrir imdb.com en otra pestaña"
 #: democracy/templates/democracy/film_detail.html:563
 #: democracy/templates/democracy/invite_new_member.html:87
 #: democracy/templates/democracy/invite_new_member_confirm.html:37
-#: democracy/templates/democracy/meetings_form.html:197
+#: democracy/templates/democracy/meetings_form.html:222
 #: democracy/templates/democracy/meetings_list.html:219
 #: registration/templates/registration/account_info.html:166
 #: registration/templates/registration/account_info_edit.html:209
@@ -561,6 +561,7 @@ msgid "Last seen films"
 msgstr "Últimas películas vistas"
 
 #: democracy/templates/democracy/club_detail.html:667
+#: democracy/templates/democracy/meetings_form.html:195
 msgid "Club members"
 msgstr "Miembros del club"
 
@@ -897,74 +898,60 @@ msgstr "te ha invitado a unirte al club de FilmDemocracy llamado:"
 msgid "Follow the link below to join the club:"
 msgstr "Pincha en link de abajo para unirte al club:"
 
-#: democracy/templates/democracy/meeting_edit_email.html:3
-#: democracy/templates/democracy/meeting_edit_email_html.html:3
+#: democracy/templates/democracy/meetings_edit_email.html:3
+#: democracy/templates/democracy/meetings_edit_email_html.html:3
 msgid "The meeting proposed by"
 msgstr "El encuentro propuesto por"
 
-#: democracy/templates/democracy/meeting_edit_email.html:3
-#: democracy/templates/democracy/meeting_edit_email_html.html:3
+#: democracy/templates/democracy/meetings_edit_email.html:3
+#: democracy/templates/democracy/meetings_edit_email_html.html:3
 msgid "in your club"
 msgstr "en tu club"
 
-#: democracy/templates/democracy/meeting_edit_email.html:3
-#: democracy/templates/democracy/meeting_edit_email_html.html:3
+#: democracy/templates/democracy/meetings_edit_email.html:3
+#: democracy/templates/democracy/meetings_edit_email_html.html:3
 msgid "has been modified."
 msgstr "ha sido modificado."
 
-#: democracy/templates/democracy/meeting_edit_email.html:5
-#: democracy/templates/democracy/meeting_edit_email_html.html:5
+#: democracy/templates/democracy/meetings_edit_email.html:5
+#: democracy/templates/democracy/meetings_edit_email_html.html:5
 msgid "This is the updated meeting information:"
 msgstr "Esta es la información actualizada del encuentro:"
 
-#: democracy/templates/democracy/meeting_edit_email.html:10
-#: democracy/templates/democracy/meeting_edit_email_html.html:10
-#: democracy/templates/democracy/meeting_new_email.html:8
-#: democracy/templates/democracy/meeting_new_email_html.html:8
+#: democracy/templates/democracy/meetings_edit_email.html:10
+#: democracy/templates/democracy/meetings_edit_email_html.html:10
+#: democracy/templates/democracy/meetings_new_email.html:8
+#: democracy/templates/democracy/meetings_new_email_html.html:8
 msgid "Where:"
 msgstr "Dónde:"
 
-#: democracy/templates/democracy/meeting_edit_email.html:11
-#: democracy/templates/democracy/meeting_edit_email_html.html:11
-#: democracy/templates/democracy/meeting_new_email.html:9
-#: democracy/templates/democracy/meeting_new_email_html.html:9
+#: democracy/templates/democracy/meetings_edit_email.html:11
+#: democracy/templates/democracy/meetings_edit_email_html.html:11
+#: democracy/templates/democracy/meetings_new_email.html:9
+#: democracy/templates/democracy/meetings_new_email_html.html:9
 msgid "When:"
 msgstr "Cuándo:"
 
-#: democracy/templates/democracy/meeting_edit_email.html:12
-#: democracy/templates/democracy/meeting_edit_email_html.html:12
-#: democracy/templates/democracy/meeting_new_email_html.html:10
+#: democracy/templates/democracy/meetings_edit_email.html:12
+#: democracy/templates/democracy/meetings_edit_email_html.html:12
+#: democracy/templates/democracy/meetings_new_email_html.html:10
 msgid "Starting at: "
 msgstr "Hora de comienzo: "
 
-#: democracy/templates/democracy/meeting_edit_email.html:13
-#: democracy/templates/democracy/meeting_edit_email_html.html:13
-#: democracy/templates/democracy/meeting_new_email_html.html:11
+#: democracy/templates/democracy/meetings_edit_email.html:13
+#: democracy/templates/democracy/meetings_edit_email_html.html:13
+#: democracy/templates/democracy/meetings_new_email_html.html:11
 msgid "Finishing at: "
 msgstr "Hora de finalización: "
 
-#: democracy/templates/democracy/meeting_edit_email.html:15
-#: democracy/templates/democracy/meeting_edit_email_html.html:15
+#: democracy/templates/democracy/meetings_edit_email.html:15
+#: democracy/templates/democracy/meetings_edit_email_html.html:15
 msgid ""
 "In case these changes affect you, follow this link to go to the club and "
 "modify your interest in the meeting:"
 msgstr ""
 "En caso de que estos cambios te afecten, sigue este link para ir al club y "
 "modificar tu interés por el encuentro:"
-
-#: democracy/templates/democracy/meeting_new_email.html:3
-#: democracy/templates/democracy/meeting_new_email_html.html:3
-msgid "has proposed a new meeting for club"
-msgstr "ha propuesto un nuevo encuentro del club"
-
-#: democracy/templates/democracy/meeting_new_email.html:13
-#: democracy/templates/democracy/meeting_new_email_html.html:13
-msgid ""
-"Follow this link to go to the club and confirm assistance or say you're "
-"interested:"
-msgstr ""
-"Sigue este link para ir al club y confirmar tu asistencia o mostrar tu "
-"interés:"
 
 #: democracy/templates/democracy/meetings_form.html:14
 msgid "Organize new meeting"
@@ -975,15 +962,23 @@ msgstr "Organizar nuevo encuentro"
 msgid "Edit meeting"
 msgstr "Editar encuentro"
 
-#: democracy/templates/democracy/meetings_form.html:172
+#: democracy/templates/democracy/meetings_form.html:174
 msgid "Send notification to club members:"
 msgstr "Enviar notificación a los miembros del club:"
 
-#: democracy/templates/democracy/meetings_form.html:174
-msgid "Send notification to members interested in meeting:"
-msgstr "Enviar notificación a los miembros interesados en el encuentro:"
-
 #: democracy/templates/democracy/meetings_form.html:190
+msgid "Send notification to:"
+msgstr "Enviar notificación a:"
+
+#: democracy/templates/democracy/meetings_form.html:199
+msgid "Only members that checked the meeting"
+msgstr "Sólo miembros que se pronunciaron"
+
+#: democracy/templates/democracy/meetings_form.html:203
+msgid "No one"
+msgstr "Nadie"
+
+#: democracy/templates/democracy/meetings_form.html:215
 msgid "Publish"
 msgstr "Publicar"
 
@@ -999,6 +994,20 @@ msgstr "No hay encuentros planeados..."
 #: democracy/templates/democracy/meetings_list.html:242
 msgid "Organize one!"
 msgstr "¡Organiza uno!"
+
+#: democracy/templates/democracy/meetings_new_email.html:3
+#: democracy/templates/democracy/meetings_new_email_html.html:3
+msgid "has proposed a new meeting for club"
+msgstr "ha propuesto un nuevo encuentro del club"
+
+#: democracy/templates/democracy/meetings_new_email.html:13
+#: democracy/templates/democracy/meetings_new_email_html.html:13
+msgid ""
+"Follow this link to go to the club and confirm assistance or say you're "
+"interested:"
+msgstr ""
+"Sigue este link para ir al club y confirmar tu asistencia o mostrar tu "
+"interés:"
 
 #: democracy/templates/democracy/seen_films_list.html:14
 msgid "Seen films"
@@ -1066,7 +1075,11 @@ msgstr ""
 msgid "Meeting planned!"
 msgstr "¡Encuentro programado!"
 
-#: democracy/views.py:1222
+#: democracy/views.py:1225
+msgid "Meeting edited! A notification has been sent to club members."
+msgstr "¡Encuentro editado! Se ha enviado una notificación a los miembros del club."
+
+#: democracy/views.py:1233
 msgid ""
 "Meeting edited! A notification has been sent to members that were interested "
 "in it."
@@ -1074,7 +1087,7 @@ msgstr ""
 "¡Encuentro editado! Se ha enviado una notificación a los miembros que "
 "estaban interesados en éste."
 
-#: democracy/views.py:1225
+#: democracy/views.py:1236
 msgid "Meeting edited!"
 msgstr "¡Encuentro editado!"
 
@@ -1384,6 +1397,9 @@ msgstr ""
 #: templates/terms_and_conditions.html:6
 msgid "Terms and Conditions"
 msgstr "Términos y Condiciones"
+
+#~ msgid "Send notification to members interested in meeting:"
+#~ msgstr "Enviar notificación a los miembros interesados en el encuentro:"
 
 #~ msgid "Want to see:"
 #~ msgstr "Quieren ver:"
