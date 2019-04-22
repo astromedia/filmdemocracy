@@ -27,6 +27,20 @@
 <!--END: WEBSITE INTRO-->
 
 
+<!--START: MESSAGES-->
+{% for message in messages %}
+<div class="container-message mt-4">
+  <div class="alert {{ message.tags }} alert-dismissible text-center mt-n1 mb-4 mx-2" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span class="ml-4"><strong>{{ message }}</strong></span>
+  </div>
+</div>
+{% endfor %}
+<!--END: MESSAGES-->
+
+
 {% if user.is_authenticated %}
 
 

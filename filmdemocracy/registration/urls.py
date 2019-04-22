@@ -45,13 +45,6 @@ urlpatterns = [
         name='account_delete'
     ),
     path(
-        'account/delete/done/',
-        views.AccountDeletedView.as_view(
-            template_name='registration/account_delete_done.html'
-        ),
-        name='account_delete_done'
-    ),
-    path(
         'password_change/',
         auth_views.PasswordChangeView.as_view(
             success_url='/registration/password_change/done/',

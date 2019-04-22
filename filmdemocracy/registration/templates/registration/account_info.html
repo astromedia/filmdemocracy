@@ -162,12 +162,12 @@
         {% trans 'Are you sure about this?' %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">
+        <button type="button" class="btn btn-sm" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form action="{% url 'registration:account_delete' %}" class="text-center">
+        <form method="POST" action="{% url 'registration:account_delete' %}" class="text-center">
           {% csrf_token %}
-          <button method="POST" type="submit" class="btn btn-outline-danger mr-3">
+          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
             {% trans 'Confirm' %}
           </button>
         </form>

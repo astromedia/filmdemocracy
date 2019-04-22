@@ -133,16 +133,9 @@
     {% for candidate in candidate_films|dictsort:order_option_string %}
 
     <div class="col col-auto align-self-center my-3">
-      <div class="card mx-auto">
-        {% if candidate.vote == 'positive' %}
-        <div class="card-film border positive-vote">
-        {% elif candidate.vote == 'negative' %}
-        <div class="card-film border negative-vote">
-        {% else %}
-        <div class="card-film">
-        {% endif %}
+      <div class="card card-film mx-auto">
           <a href="{% url 'democracy:film_detail' club.id candidate.film.id view_option order_option display_option %}">
-            <img class="card-img " src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
+            <img class="card-img" src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
             <div class="overlay">
               <div class="film-title">{{ candidate.film.filmdb.title }}</div>
             </div>
@@ -162,7 +155,6 @@
             </div>
           </div>
           {% endif %}
-        </div>
       </div>
     </div>
 

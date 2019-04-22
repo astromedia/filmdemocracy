@@ -104,15 +104,8 @@ body {
   position:relative;
   text-align:center;
   cursor:default;
-  box-shadow: 0 0px 15px rgba(255, 255, 255, 0.6);
-}
-
-.positive-vote {
-  box-shadow: 0 0px 10px rgba(0, 255, 0, 0.6) !important;
-}
-
-.negative-vote {
-  box-shadow: 0 0px 10px rgba(255, 0, 0, 0.6) !important;
+  background-color: transparent;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
 }
 
 .card-film .card-img {
@@ -139,7 +132,7 @@ body {
   text-align:center;
   position:relative;
   font-size:17px;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,0.65);
   -webkit-transform:translatey(-100px);
   -ms-transform:translatey(-100px);
   transform:translatey(-100px);
@@ -155,13 +148,13 @@ body {
   position: relative;
   font-size: 17px;
   padding: 4px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.65);
 }
 
 .card-film:hover .card-img {
-  -ms-transform:scale(1.1);
-  -webkit-transform:scale(1.1);
-  transform:scale(1.1);
+  -ms-transform:scale(1.05);
+  -webkit-transform:scale(1.05);
+  transform:scale(1.05);
 }
 
 .card-film:hover .overlay {

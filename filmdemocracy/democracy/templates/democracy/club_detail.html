@@ -82,18 +82,7 @@
 <!--END: CLUB BANNER-->
 
 
-<!--START: WARNING MESSAGE-->
-{% if warning_message %}
-<div class="alert alert-danger text-center mt-4 mx-4 alert-dismissible fade show" role="alert">
-  <strong>{{ warning_message }}</strong>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-{% endif %}
-<!--END: WARNING MESSAGE-->
-
-
+<!--START: MESSAGES-->
 {% for message in messages %}
 <div class="container-message mt-4">
   <div class="alert {{ message.tags }} alert-dismissible text-center mt-n1 mb-4 mx-2" role="alert">
@@ -104,6 +93,7 @@
   </div>
 </div>
 {% endfor %}
+<!--END: MESSAGES-->
 
 
 <!--START: NO LOGO MESSAGE-->

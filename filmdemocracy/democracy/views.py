@@ -265,21 +265,19 @@ def leave_club(request, club_id):
     user = request.user
     if user in club_admins:
         if len(club_members) > 1 and len(club_admins) == 1:
-            context['warning_message'] = \
-                _("You must promote other club member "
-                  "to admin before leaving the club.")
-            return render(request, 'democracy/club_detail.html', context)
+            messages.error(request, _("You must promote other club member "
+                                      "to admin before leaving the club."))
+            return HttpResponseRedirect(reverse_lazy(
+                'democracy:club_detail',
+                kwargs={'club_id': club.id}
+            ))
         else:
             club.admin_members.remove(user)
     club.members.remove(user)
     club.save()
-    club_member_info = get_object_or_404(
-        ClubMemberInfo,
-        club=club,
-        member=user,
-    )
+    club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=user)
     club_member_info.delete()
-    # TODO: Message: 'You have successfully left the club.'
+    messages.success(request, _("You have successfully left the club."))
     if len(club_members) == 1:
         club.delete()
     return HttpResponseRedirect(reverse('home'))
@@ -296,14 +294,12 @@ def self_demote(request, club_id):
     user = request.user
     if user in club_admins:
         if len(club_admins) == 1:
-            context['warning_message'] = \
-                _("You must promote other club member "
-                  "to admin before demoting yourself.")
-            return render(request, 'democracy/club_detail.html', context)
+            messages.error(request, _("You must promote other club member "
+                                      "to admin before demoting yourself."))
         else:
             club.admin_members.remove(user)
-    club.save()
-    # TODO: Message: 'You have successfully demoted yourself.'
+            club.save()
+            messages.success(request, _("You have successfully demoted yourself."))
     return HttpResponseRedirect(reverse_lazy(
         'democracy:club_detail',
         kwargs={'club_id': club.id}
@@ -950,7 +946,6 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
-    # TODO: Multiple invitations in one form
     form_class = forms.InviteNewMemberForm
     subject_template_name = 'democracy/invite_new_member_subject.txt'
     email_template_name = 'democracy/invite_new_member_email.html'

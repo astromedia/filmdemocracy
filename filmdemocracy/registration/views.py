@@ -1,8 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
+
 
 from filmdemocracy.registration import forms
 
@@ -17,11 +20,8 @@ def account_delete(request):
     user = request.user
     user.is_active = False
     user.save()
-    return HttpResponseRedirect(reverse('registration:account_delete_done'))
-
-
-class AccountDeletedView(generic.TemplateView):
-    pass
+    messages.success(request, _("Account deleted successfully."))
+    return HttpResponseRedirect(reverse('home'))
 
 
 @method_decorator(login_required, name='dispatch')

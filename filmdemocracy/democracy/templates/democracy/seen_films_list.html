@@ -24,31 +24,26 @@
 
 
 <!--START: FILM PANEL-->
-<div class="album films-album">
+<div class="album films-album mt-n5">
 
   <div class="row justify-content-center">
 
     {% for film in seen_films|dictsort:"seen_date" %}
 
-    <div class="col-md-4 align-self-center my-3">
-      <div class="card mx-auto">
-        <div class="m-auto">
-          <div class="card-film">
-            <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
-              <img class="card-img" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
-              <div class="overlay">
-                <div class="film-title">{{ film.filmdb.title }}</div>
-              </div>
-            </a>
-          </div>
-        </div>
+    <div class="col col-auto align-self-center my-3">
+      <div class="card card-film mx-auto">
+          <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
+            <img class="card-img" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
+            <div class="overlay">
+              <div class="film-title">{{ film.filmdb.title }}</div>
+            </div>
+          </a>
       </div>
     </div>
 
     {% endfor %}
 
   </div>
-
 </div>
 <!--END: FILM PANEL-->
 
