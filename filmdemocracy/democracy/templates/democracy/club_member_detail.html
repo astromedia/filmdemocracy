@@ -100,10 +100,10 @@
 
 
       {% for vote in member_votes %}
-      <div class="row mx-1 mt-2 align-items-center">
+      <div class="row mx-1 mt-md-1 mt-2 align-items-center">
         <div class="col-md-6">
           <div class="float-md-right">
-            <a class="text-body" href="{% url 'democracy:film_detail' club.id vote.film.id 'all' 'title' 'posters' %}">
+            <a class="strong-link" href="{% url 'democracy:film_detail' club.id vote.film.id 'all' 'title' 'posters' %}">
               <strong>{{ vote.film.filmdb.title }}:</strong></a>
           </div>
         </div>
@@ -150,7 +150,7 @@
 
       {% for film in member_seen_films %}
       <div class="text-center mt-1">
-        <a class="text-body" href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
+        <a class="strong-link" href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
           <strong>{{ film.filmdb.title }}</strong></a>
       </div>
       {% endfor %}
