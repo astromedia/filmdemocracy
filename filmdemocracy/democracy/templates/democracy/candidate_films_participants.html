@@ -69,11 +69,13 @@
     <hr>
 
     <!--EXCLUDE FILMS PROPOSED BY MEMBERS NOT PRESENT-->
-      <div class="row align-items-center mx-1 my-2">
-        <div class="col-6 text-right">
-          <strong>{% trans 'Exclude films proposed by members not present:' %}</strong>
+      <div class="row align-items-center mx-1 mt-2">
+        <div class="col-md-6">
+            <div class="float-md-right">
+              <strong>{% trans 'Exclude films proposed by members not present:' %}</strong>
+            </div>
         </div>
-        <div class="col-6 text-left">
+        <div class="col-md-auto my-2">
           <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
                    value="exclude_not_present">
@@ -83,12 +85,16 @@
       </div>
 
     <!--MAX FILM DURATION-->
-      <div class="row align-items-center mx-1 my-2">
-        <div class="col-6 text-right">
-          <strong>{% trans 'Maximum film duration in minutes (optional):' %}</strong>
+      <div class="row align-items-center mx-1 mt-2">
+        <div class="col-md-6">
+          <div class="float-md-right">
+            <strong>{% trans 'Maximum film duration in minutes (optional):' %}</strong>
+          </div>
         </div>
-        <div class="col-6 text-center">
-          <input type="text" style='max-width: 75px' class="form-control" name="max_duration" id="max_duration" value="">
+          <div class="col-md-auto my-2">
+            <div>
+            <input type="text" style='max-width: 75px' class="form-control mx-auto" name="max_duration" id="max_duration" value="">
+          </div>
         </div>
       </div>
 

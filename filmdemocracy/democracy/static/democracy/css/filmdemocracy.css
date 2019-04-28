@@ -251,6 +251,44 @@ a:hover {
   box-shadow: none;
 }
 
+.badge-white-to-black {
+  color: #282828;
+  background-color: white;
+  border: 1px solid rgba(40, 40, 40, 0.5);
+  font-weight: bold;
+}
+
+.badge-white-to-black:hover {
+  color: #fff;
+  background-color: #282828;
+}
+
+.badge-green-to-blue {
+  color: seagreen !important;
+  background-color: transparent;
+  border: 1px solid rgba(46, 139, 87, 0.5);
+  font-weight: bold;
+}
+
+.badge-green-to-blue:hover {
+  color: lightseagreen !important;
+  border: 1px solid rgba(32, 178, 170, 0.5);
+  background-color: transparent;
+}
+
+.badge-outline-danger {
+  color: rgba(200, 0, 0, 1) !important;
+  background-color: transparent;
+  border: 1px solid rgba(200, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+.badge-outline-danger:hover {
+  color: #fff !important;
+  background-color: rgba(200, 0, 0, 1);
+  border: 1px solid rgba(200, 0, 0, 1);
+  background-color: rgba(200, 0, 0, 1);
+}
 
 
 /* Website colors
@@ -358,5 +396,5 @@ a:hover {
 }
 
 hr {
-  max-width: 95% !important;
+  max-width: 90% !important;
 }

@@ -36,7 +36,6 @@
 <h3 class="h3">{% trans 'Account information' %}</h3>
 
 
-<!--START: ACCOUNT INFO-->
 
 <!--PICTURE-->
 <div class="profile-picture">
@@ -49,79 +48,97 @@
   {% endif %}
 </div>
 
-<!--USERNAME-->
-<div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Username:' %}</strong></div>
-  <div class="col-6">{{ user.username }}</div>
-</div>
 
-<!--EMAIL-->
-<div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Email:' %}</strong></div>
-  <div class="col-6">{{ user.email }}</div>
-</div>
+<!--START: ACCOUNT INFO-->
+<div class=" text-center">
 
-<!--PUBLIC EMAIL-->
-<div class="row justify-content-center mt-2">
-  <div class="col-6 text-right"><strong>{% trans 'Public email in clubs:' %}</strong></div>
-  <div class="col-6">
-    {% if user.public_email %}
-    <div class="custom-control custom-switch">
-      <input type="checkbox" class="custom-control-input" disabled checked id="customSwitch1">
-      <label class="custom-control-label" for="customSwitch1"></label>
+  <!--USERNAME-->
+  <div class="row align-items-center mt-3">
+    <div class="col-md-6">
+      <div class="float-md-right">
+        <strong>{% trans 'Username:' %}</strong>
+      </div>
     </div>
-    {% elif not user.public_email %}
-    <div class="custom-control custom-switch">
-      <input type="checkbox" class="custom-control-input" disabled id="customSwitch2">
-      <label class="custom-control-label" for="customSwitch2"></label>
-    </div>
-    {% endif %}
+    <div class="col-md-auto">{{ user.username }}</div>
   </div>
+
+  <!--EMAIL-->
+  <div class="row align-items-center mt-3">
+    <div class="col-md-6">
+      <div class="float-md-right">
+        <strong>{% trans 'Email:' %}</strong>
+      </div>
+      </div>
+      <div class="col-md-auto">{{ user.email }}</div>
+  </div>
+
+  <!--PUBLIC EMAIL-->
+  <div class="row align-items-center mt-3">
+    <div class="col-md-6">
+      <div class="float-md-right">
+        <strong>{% trans 'Public email in clubs:' %}</strong>
+      </div>
+    </div>
+    <div class="col-md-auto">
+      {% if user.public_email %}
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" disabled checked id="customSwitch1">
+        <label class="custom-control-label" for="customSwitch1"></label>
+      </div>
+      {% elif not user.public_email %}
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" disabled id="customSwitch2">
+        <label class="custom-control-label" for="customSwitch2"></label>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!--FIRST NAME-->
+  <!--<div class="row justify-content-center mt-2">-->
+  <!--<div class="col-6 text-right"><strong>{% trans 'First name' %}</strong></div>-->
+  <!--<div class="col-6">{% if user.first_name %}{{ user.first_name }}{% else %}-{% endif %}</div>-->
+  <!--</div>-->
+
+  <!--LAST NAME-->
+  <!--<div class="row justify-content-center mt-2">-->
+  <!--<div class="col-6 text-right"><strong>{% trans 'Last name' %}</strong></div>-->
+  <!--<div class="col-6">{% if user.last_name %}}{{ user.last_name }}{% else %}-{% endif %}</div>-->
+  <!--</div>-->
+
+
+
+  <!--START: ACCOUNT OPTIONS-->
+  <div class="row justify-content-center mt-5">
+
+    <div class="col-sm-auto text-center my-2">
+      <form action="{% url 'registration:account_info_edit' %}">
+        <button type="submit" class="btn btn-sm btn-block btn-green-to-blue btn-profile">
+          {% trans 'Edit profile' %}
+        </button>
+      </form>
+    </div>
+
+    <div class="col-sm-auto text-center my-2">
+      <form action="{% url 'registration:password_change' %}">
+        <button type="submit" class="btn btn-sm btn-block btn-green-to-blue btn-profile">
+          {% trans 'Change password' %}
+        </button>
+      </form>
+    </div>
+
+    <div class="col-sm-auto text-center my-2">
+      <button type="button" class="btn btn-sm btn-block btn-outline-danger btn-profile" data-toggle="modal"
+              data-target="#DeleteModalCenter">
+        {% trans 'Delete account' %}
+      </button>
+    </div>
+
+  </div>
+  <!--START: ACCOUNT OPTIONS-->
+
 </div>
-
-<!--FIRST NAME-->
-<!--<div class="row justify-content-center mt-2">-->
-<!--<div class="col-6 text-right"><strong>{% trans 'First name' %}</strong></div>-->
-<!--<div class="col-6">{% if user.first_name %}{{ user.first_name }}{% else %}-{% endif %}</div>-->
-<!--</div>-->
-
-<!--LAST NAME-->
-<!--<div class="row justify-content-center mt-2">-->
-<!--<div class="col-6 text-right"><strong>{% trans 'Last name' %}</strong></div>-->
-<!--<div class="col-6">{% if user.last_name %}}{{ user.last_name }}{% else %}-{% endif %}</div>-->
-<!--</div>-->
-
 <!--END: ACCOUNT INFO-->
-
-
-<!--START: ACCOUNT OPTIONS-->
-<div class="row justify-content-center mt-5">
-
-  <div class="col-sm-auto text-center my-2">
-    <form action="{% url 'registration:account_info_edit' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-green-to-blue btn-profile">
-        {% trans 'Edit profile' %}
-      </button>
-    </form>
-  </div>
-
-  <div class="col-sm-auto text-center my-2">
-    <form action="{% url 'registration:password_change' %}">
-      <button type="submit" class="btn btn-sm btn-block btn-green-to-blue btn-profile">
-        {% trans 'Change password' %}
-      </button>
-    </form>
-  </div>
-
-  <div class="col-sm-auto text-center my-2">
-    <button type="button" class="btn btn-sm btn-block btn-outline-danger btn-profile" data-toggle="modal"
-            data-target="#DeleteModalCenter">
-      {% trans 'Delete account' %}
-    </button>
-  </div>
-
-</div>
-<!--START: ACCOUNT OPTIONS-->
 
 
 <!-- START MODAL IMAGE -->

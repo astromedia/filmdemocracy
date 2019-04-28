@@ -58,11 +58,10 @@ body {
 }
 
 .member-detail .row {
-  margin-bottom: -16px;
 }
 
 .member-detail hr {
-  max-width: 300px;
+  width: 350px;
   color: gray;
   background-color: gray;
   margin-bottom: 13px;

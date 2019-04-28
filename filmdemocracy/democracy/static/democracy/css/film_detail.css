@@ -50,6 +50,31 @@
   color: #A9A9A9;
 }
 
+#summary {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#summary p.collapse:not(.show) {
+  height: 42px !important;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+#summary p.collapsing {
+  min-height: 42px !important;
+}
+
+#summary a.collapsed:before  {
+  content: '+ ';
+}
+
+#summary a:not(.collapsed):before {
+  content: '- ';
+}
+
 .club-poster-modal {
   max-width: 100%;
 }
@@ -81,21 +106,6 @@
   color: black;
   border: 1px solid gold;
   background-color: gold;
-}
-
-.btn-film-option-delete {
-  font-size: 11px;
-  max-width: 250px;
-  color: #6c737d;
-  background-color: transparent;
-  border: 1px solid #282828;
-  margin: auto;
-}
-
-.btn-film-option-delete:hover {
-  color: white;
-  border: 1px solid red;
-  background-color: red;
 }
 
 

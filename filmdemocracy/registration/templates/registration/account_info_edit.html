@@ -40,7 +40,8 @@
 
 
 <!--START: ACCOUNT INFO FORM-->
-<form class="form-registration form-profile" enctype="multipart/form-data" method="POST" id="formUpload" novalidate>
+<form class="form-registration form-profile text-center" enctype="multipart/form-data" method="POST" id="formUpload"
+      novalidate>
   {% csrf_token %}
 
   <input type="hidden" name="x" id="id_x">
@@ -53,10 +54,12 @@
     <!--PICTURE-->
     <div class="profile-picture">
       {% if user.profile_image %}
-      <img class="rounded-circle pointer-cursor edit-picture" src="{{ user.profile_image.url }}" alt="user.profile_image not found"
+      <img class="rounded-circle pointer-cursor edit-picture" src="{{ user.profile_image.url }}"
+           alt="user.profile_image not found"
            onclick="document.getElementById('id_profile_image').click();">
       {% else %}
-      <img class="rounded-circle pointer-cursor edit-picture" src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+      <img class="rounded-circle pointer-cursor edit-picture"
+           src="{% static 'registration/svg/user_no_profile_image.svg' %}"
            alt="user.profile_image not found" onclick="document.getElementById('id_profile_image').click();">
       {% endif %}
     </div>
@@ -70,8 +73,14 @@
     <div class="form-input-field">
 
       <div class="row">
-        <div class="col-6 text-right"><strong>{% trans 'Username:' %}</strong></div>
-        <div class="col-6">{{ user.username }}</div>
+        <div class="col-md-6">
+          <div class="float-md-right">
+            <strong>{% trans 'Username:' %}</strong>
+          </div>
+        </div>
+        <div class="col-md-auto">
+          {{ user.username }}
+        </div>
       </div>
 
     </div>
@@ -80,9 +89,13 @@
     <div class="form-input-field">
 
       <div class="row align-items-center">
-        <div class="col-6 text-right"><strong>{% trans 'Email:' %}</strong></div>
-        <div class="col-6">
-          <div class="form-email">
+        <div class="col-md-6">
+          <div class="float-md-right">
+            <strong>{% trans 'Email:' %}</strong>
+          </div>
+        </div>
+        <div class="col-md-auto">
+          <div class="form-email mx-auto">
             {% if form.is_bound %}
             {% if form.email.errors %}
             {% render_field form.email class="form-control is-invalid" %}
@@ -107,10 +120,12 @@
     <div class="form-input-field">
 
       <div class="row align-items-center">
-        <div class="col-6 text-right">
-          <strong>{% trans 'Public email in clubs:' %}</strong>
+        <div class="col-md-6">
+          <div class="float-md-right">
+            <strong>{% trans 'Public email in clubs:' %}</strong>
+          </div>
         </div>
-        <div class="col-6">
+        <div class="col-md-auto">
           <div class="custom-control custom-switch">
             {% if user.public_email %}
             <input type="checkbox" class="custom-control-input" name="public_email" id="public_email"
@@ -287,6 +302,9 @@
       });
 
     });
+
+
+
 
 
 

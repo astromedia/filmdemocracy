@@ -34,11 +34,11 @@
       <div class="col-md-9">
 
         <!--PROPOSED BY-->
-        {% trans 'Proposed by' %}
+        <p class="small">{% trans 'Proposed by' %}
         <a class="green-color blue-color-hover"
            href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
           {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.pub_date }}
-
+        </p>
 
         <div class="row align-items-center my-2">
 
@@ -57,7 +57,7 @@
           <div class="col-auto">
             <form class="" action="{% url 'democracy:film_seen' club.id film.id %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-film-option my-2 mx-auto">
+              <button type="submit" class="btn btn-sm btn-film-option my-1 mx-auto">
                 {% trans 'Mark as seen by club' %}
               </button>
             </form>
@@ -71,7 +71,7 @@
           <div class="col-auto">
             <form class="" action="{% url 'democracy:unsee_film' club.id film.id view_option order_option display_option %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-film-option my-2 mx-auto">
+              <button type="submit" class="btn btn-sm btn-film-option my-1 mx-auto">
                 {% trans 'Move back to candidate films' %}
               </button>
             </form>
@@ -80,36 +80,36 @@
           {% endif %}
           <!--END: MARK AS NOT SEEN-->
 
-          <!--START: UPDATE FILMDB-->
-          {% if updatable_db %}
-          <div class="col-auto">
-            <form class="" action="{% url 'democracy:update_film_data' club.id film.id view_option order_option display_option %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-film-option-magic my-2 mx-auto">
-                {% trans 'Request data update' %}
-              </button>
-            </form>
-          </div>
-          {% endif %}
-          <!--END: UPDATE FILMDB-->
+<!--          &lt;!&ndash;START: UPDATE FILMDB&ndash;&gt;-->
+<!--          {% if updatable_db %}-->
+<!--          <div class="col-auto">-->
+<!--            <form class="" action="{% url 'democracy:update_film_data' club.id film.id view_option order_option display_option %}">-->
+<!--              {% csrf_token %}-->
+<!--              <button type="submit" class="btn btn-sm btn-film-option-magic my-2 mx-auto">-->
+<!--                {% trans 'Request data update' %}-->
+<!--              </button>-->
+<!--            </form>-->
+<!--          </div>-->
+<!--          {% endif %}-->
+<!--          &lt;!&ndash;END: UPDATE FILMDB&ndash;&gt;-->
 
           <!--START: DELETE FILM-->
           {% if not film.seen %}
           {% if user in club_admins or film.proposed_by == user %}
           <div class="col-auto">
-            <button type="button" class="btn btn-sm btn-film-option-delete my-2 mx-auto" data-toggle="modal"
+            <a class="badge badge-outline-danger pointer-cursor my-1 mx-auto" data-toggle="modal"
                     data-target="#DeleteModalCenter">
               {% trans 'Delete film' %}
-            </button>
+            </a>
           </div>
           {% endif %}
           {% else %}
           {% if user in club_admins %}
           <div class="col-auto">
-            <button type="button" class="btn btn-sm btn-film-option-delete my-2 mx-auto" data-toggle="modal"
+            <a class="badge badge-outline-danger pointer-cursor my-1 mx-auto" data-toggle="modal"
                     data-target="#DeleteModalCenter">
               {% trans 'Delete film' %}
-            </button>
+            </a>
           </div>
           {% endif %}
           {% endif %}
@@ -133,7 +133,7 @@
               {% trans 'FilmAffinity page' %}
             </a>
             {% elif not film.filmdb.faff_id %}
-            <a data-toggle="modal" data-target="#AddFaffModalCenter" class="badge badge-dark pointer-cursor">
+            <a class="badge badge-green-to-blue pointer-cursor" data-toggle="modal" data-target="#AddFaffModalCenter">
               {% trans 'Add FilmAffinity link' %}
             </a>
 
@@ -151,7 +151,11 @@
         </div>
 
         <!--PLOT-->
-        <p class="text-justify mb-2"><em>{{ film.filmdb.plot }}</em></p>
+        <div id="summary">
+          <p class="text-justify mb-2 collapse" id="collapseSummary"><em>{{ film.filmdb.plot }}</em></p>
+          <a class="collapsed green-color blue-color-hover" data-toggle="collapse" href="#collapseSummary"
+             aria-expanded="false" aria-controls="collapseSummary">{% trans 'Plot' %}</a>
+        </div>
 
         <!--DIRECTOR, WRITER, ACTOR-->
         <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Director' %}:</strong>
@@ -257,7 +261,7 @@
           method="POST">
       {% csrf_token %}
 
-      <label for="delete-vote" class="badge badge-light pointer-cursor">{% trans 'Delete vote' %}</label><br>
+      <label for="delete-vote" class="badge badge-white-to-black pointer-cursor">{% trans 'Delete vote' %}</label><br>
       <input type="submit" class="invisible" id="delete-vote">
 
     </form>

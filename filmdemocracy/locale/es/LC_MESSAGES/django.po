@@ -1140,7 +1140,7 @@ msgstr "Nombre de usuario:"
 #: registration/templates/registration/account_info.html:66
 #: registration/templates/registration/account_info_edit.html:111
 msgid "Public email in clubs:"
-msgstr "Email público en clubs"
+msgstr "Email público en clubs:"
 
 #: registration/templates/registration/account_info.html:84
 #: registration/templates/registration/account_info_edit.html:133

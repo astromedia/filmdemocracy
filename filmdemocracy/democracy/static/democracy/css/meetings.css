@@ -117,7 +117,7 @@ body {
   margin: auto;
   color: #282828;
   background-color: transparent;
-  border: 1px solid #282828;
+  border: 1px solid rgba(40, 40, 40, 0.5);
 }
 
 .meeting-card .btn-assistance:hover {
