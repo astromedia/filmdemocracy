@@ -221,10 +221,11 @@ class InviteNewMemberForm(forms.Form):
             email_message.attach_alternative(html_email, 'text/html')
         email_message.send()
 
-    def save(self, domain_override=None,
-             subject_template_name='democracy/invite_new_member_subject.txt',
-             email_template_name='democracy/invite_new_member_email.html',
-             html_email_template_name='democracy/invite_new_member_email_html.html',
+    def save(self,
+             domain_override=None,
+             subject_template_name='',
+             email_template_name='',
+             html_email_template_name='',
              extra_email_context=None,
              use_https=False, from_email=None, request=None):
         user = request.user
@@ -244,9 +245,9 @@ class InviteNewMemberForm(forms.Form):
             'invitation_text': invitation_text,
             'domain': domain,
             'site_name': site_name,
-            'uinviterid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-            'uclubid': urlsafe_base64_encode(force_bytes(club.pk)).decode(),
-            'uemail': urlsafe_base64_encode(force_bytes(email)).decode(),
+            'uinviterid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'uclubid': urlsafe_base64_encode(force_bytes(club.pk)),
+            'uemail': urlsafe_base64_encode(force_bytes(email)),
             'protocol': 'https' if use_https else 'http',
             **(extra_email_context or {}),
         }

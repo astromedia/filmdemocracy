@@ -158,25 +158,11 @@ urlpatterns = [
         name='invite_new_member'
     ),
     path(
-        'club/<str:club_id>/invite_new_member/done/',
-        views.InviteNewMemberDoneView.as_view(
-            template_name='democracy/invite_new_member_done.html'
-        ),
-        name='invite_new_member_done'
-    ),
-    path(
         'invitation_link/<uinviteridb64>/<uemailb64>/<uclubidb64>/',
         views.InviteNewMemberConfirmView.as_view(
             template_name='democracy/invite_new_member_confirm.html'
         ),
         name='invite_new_member_confirm'
-    ),
-    path(
-        'club/<str:club_id>/invite_new_member/complete/',
-        views.InviteNewMemberCompleteView.as_view(
-            template_name='democracy/invite_new_member_complete.html'
-        ),
-        name='invite_new_member_complete'
     ),
     path(
         'club/<str:club_id>/meetings/organize_new/',

@@ -5,44 +5,56 @@
   text-align: center;
   margin-top: -24px;
   margin-bottom: -11px;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
   background-color: #121317;
   z-index: 4;
   box-shadow: 0 0px 15px rgba(0, 0, 0, 0.75);
+}
+
+.navigation-banner .club-name {
+}
+
+.navigation-banner .club-name a {
+  text-decoration: none;
+}
+
+.navigation-banner .club-name a:hover {
+  color: white !important;
 }
 
 .navigation-banner .row {
   max-width: 880px;
 }
 
+.navigation-banner .navigation-option {
+  margin-top: -1px;
+}
+
 .navigation-banner .navigation-option .btn {
   text-transform: none !important;
   font-weight: normal !important;
   font-size: 17px;
-  min-width: 230px;
+  min-width: 150px;
+  max-width: 250px;
   max-height: 36px;
   color: #6c737d;
   background-color: transparent;
   border: 1px solid #282828;
   padding-top: 2px;
   padding-bottom: 3px;
+  margin: auto;
 }
 
 .navigation-banner .navigation-option .active {
   color: #d1d1d1;
 }
 
-.navigation-banner .navigation-option:hover .btn {
+.navigation-banner .navigation-option .btn:hover {
   color: white;
   border: 1px solid #6c737d;
-}
-
-.navigation-banner .navigation-option a {
-  text-decoration: none;
-}
-
-.navigation-banner .navigation-option:hover a {
-  color: white !important;
 }
 
 .navigation-banner hr {

@@ -42,14 +42,20 @@ body {
   background-color: transparent;
   padding-top: 50px;
   padding-bottom: 20px;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 5%;
+  padding-right: 5%;
   margin-top: 40px;
   margin-bottom: 0px;
 }
 
+.films-album .col {
+  max-width: 45%;
+}
+
 .films-album .card {
   width: 13rem;
+  max-width: 100%;
+
 }
 
 /* Candidate films list
@@ -97,7 +103,6 @@ body {
 /* Candidate films image hover effect
 -------------------------------------------------- */
 .card-film {
-  width:100%;
   height:100%;
   float:left;
   overflow:hidden;
@@ -227,10 +232,15 @@ body {
   text-align: center;
 }
 
+.form-participants .col {
+  max-width: 45%;
+}
+
 .form-participants .card {
   background-color: transparent;
   border-color: transparent;
   width: 8rem;
+  max-width: 100%;
   margin-bottom: 1rem;
 }
 
@@ -279,7 +289,7 @@ body {
 }
 
 .participants-header hr {
-  max-width: 350px;
+  width: 350px;
   color: gray;
   background-color: gray;
   margin-bottom: 20px;
@@ -319,7 +329,7 @@ body {
 }
 
 .modal-results-section hr {
-  max-width: 75%;
+  width: 75%;
   color: gray;
   background-color: gray;
   margin-bottom: 20px;

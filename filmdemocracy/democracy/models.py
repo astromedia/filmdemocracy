@@ -16,10 +16,7 @@ def get_club_logo_path(instance, filename):
 class Club(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5)
     name = models.CharField(_('Club name'), max_length=50)
-    short_description = models.CharField(
-        _('Short description (optional)'),
-        max_length=120
-    )
+    short_description = models.CharField(_('Short description (optional)'), max_length=120)
     panel = MarkdownxField(
         _('Club panel: description, rules, etc. (optional)'),
         max_length=20000,
@@ -43,12 +40,7 @@ class Club(models.Model):
         null=True,
     )
     # TODO: Input image validation.
-    logo = models.ImageField(
-        _('club logo'),
-        upload_to=get_club_logo_path,
-        blank=True,
-        null=True,
-    )
+    logo = models.ImageField(_('club logo'), upload_to=get_club_logo_path, blank=True, null=True)
     members = models.ManyToManyField(User)
     admin_members = models.ManyToManyField(User, related_name='admin_members')
 
@@ -155,13 +147,13 @@ class Vote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    VETO = 'veto'
-    SEENNO = 'seenno'
-    NO = 'no'
-    MEH = 'meh'
-    SEENOK = 'seenok'
-    YES = 'yes'
     OMG = 'omg'
+    YES = 'yes'
+    SEENOK = 'seenok'
+    MEH = 'meh'
+    NO = 'no'
+    SEENNO = 'seenno'
+    VETO = 'veto'
     vote_choices = (
         (OMG, _('I really really want to see it.')),
         (YES, _('I want to see it.')),
@@ -179,6 +171,19 @@ class Vote(models.Model):
             return 'positive'
         elif self.choice in [self.NO, self.SEENNO, self.VETO]:
             return 'negative'
+
+    @property
+    def vote_score(self):
+        vote_score_dict = {
+            self.OMG: 6,
+            self.YES: 5,
+            self.SEENOK: 4,
+            self.MEH: 3,
+            self.NO: 2,
+            self.SEENNO: 1,
+            self.VETO: 0,
+        }
+        return vote_score_dict[self.choice]
 
     def __str__(self):
         return f'{self.user}|{self.film.filmdb.title}|{self.choice}'

@@ -40,24 +40,6 @@ body {
   margin-bottom: -130px;
 }
 
-.club-banner .btn-club-links {
-  text-transform: none !important;
-  font-weight: normal !important;
-  font-size: 17px;
-  min-width: 230px;
-  max-height: 36px;
-  color: #6c737d;
-  background-color: transparent;
-  border: 1px solid #282828;
-  padding-top: 2px;
-  padding-bottom: 3px;
-}
-
-.club-banner .btn-club-links:hover {
-  color: white;
-  border: 1px solid #6c737d;
-}
-
 .admin-utils .btn {
   text-transform: uppercase;
   color: #282828;
@@ -65,7 +47,7 @@ body {
   border: 1px solid #282828;
   font-weight: bold;
   min-width: 140px;
-  max-width: 300px;
+  max-width: 250px;
   margin: auto;
 }
 
@@ -94,12 +76,17 @@ body {
 }
 
 .club-section-title hr {
-  max-width: 450px;
+  width: 450px;
   color: gray;
   background-color: gray;
   margin-bottom: 20px;
 }
 
+.btn-new-meeting {
+  margin: auto;
+  width: 80%;
+  max-width: 250px;
+}
 
 /* Club shoutbox
 -------------------------------------------------- */
@@ -168,7 +155,7 @@ body {
   }
 
 .album hr {
-  max-width: 450px;
+  width: 450px;
   color: gray;
   background-color: gray;
   margin-bottom: 20px;
@@ -179,18 +166,20 @@ body {
 -------------------------------------------------- */
 .films-album {
   padding-bottom: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-top: 0px;
+  padding-left: 5%;
+  padding-right: 5%;
   margin-bottom: -50px;
 }
 
+.films-album .col {
+  max-width: 45%;
+}
+
+
 .films-album .card {
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
   width: 8.5rem;
-  height: 12.5rem;
+  max-width: 100%;
+  height: 12rem;
   border-color: transparent;
   cursor:default;
   background-color: transparent;
@@ -207,14 +196,19 @@ body {
 -------------------------------------------------- */
 .members-album {
   padding-bottom: 40px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 5%;
+  padding-right: 5%;
   margin-top: 0px;
   margin-bottom: -50px;
 }
 
+.members-album .col {
+  max-width: 45%;
+}
+
 .members-album .card {
   width: 135px;
+  max-width: 100%;
   background-color: transparent;
   color: darkgray;
   text-align: center;
