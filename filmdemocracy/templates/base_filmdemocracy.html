@@ -51,56 +51,77 @@
 
       <ul class="navbar-nav ml-auto">
 
-        <li class="nav-item">
-          <a class="nav-link mr-2" href="https://github.com/astromedia/filmdemocracy/" target="blank">
-            <img class="mt-n1" style="min-height: 22px;" src="{% static 'democracy/svg/mark-github.svg'%}">
-          </a>
-        </li>
+        {% if user.is_authenticated %}
 
-        <li class="nav-item">
-          <a class="nav-link mr-2" href="https://www.facebook.com/FilmDemocracy/" target="blank">
-            <img class="mt-n1" style="max-height: 22px;" src="{% static 'democracy/svg/facebook_bnw.svg'%}">
-          </a>
-        </li>
-
-        <li class="nav-item dropdown mr-4">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+        <li class="nav-item dropdown mr-3">
+          <a class="nav-link dropdown-toggle clubs-dropdown" href="#" id="navbarDropdownMenuLinkClub" role="button" data-toggle="dropdown"
              aria-haspopup="true" aria-expanded="false">
-            <img class="mt-n1" style="min-height: 19px;" src="{% static 'democracy/svg/globe_negative.svg'%}">
+            {% trans 'Clubs' %}
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkClub">
+
+            {% for userclub in user.club_set.all %}
+              <a class="dropdown-item py-2 my-0 {% if club == userclub %} active {% endif %}" href="{% url 'democracy:club_detail' userclub.id %}">
+                {{ userclub.name }}
+              </a>
+            {% endfor %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item py-0 my-0 new-club" href="{% url 'democracy:create_club' %}">
+              <small>{% trans 'Create new club' %}</small>
+              </a>
+
+          </div>
+        </li>
+
+        <li class="nav-item mr-3">
+          <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
+            {% if user.profile_image %}
+            <img class="mt-n1 mx-1 rounded-circle" style="max-height: 27px;" src="{{ user.profile_image.url }}"
+                 alt="user.profile_image not found">
+            {% else %}
+            <img class="mt-n1 mx-1" style="max-height: 18px;" src="{% static 'democracy/svg/person.svg'%}">
+            {% endif %}
+            {{ user.username }}
+          </a>
+        </li>
+
+        <li class="nav-item icon">
+          <a class="nav-link" href="https://github.com/astromedia/filmdemocracy/" target="blank">
+            <img class="mt-n1" style="min-height: 18px;" src="{% static 'democracy/svg/mark-github.svg'%}">
+          </a>
+        </li>
+
+        <li class="nav-item icon">
+          <a class="nav-link" href="https://www.facebook.com/FilmDemocracy/" target="blank">
+            <img class="mt-n1" style="max-height: 18px;" src="{% static 'democracy/svg/facebook_bnw.svg'%}">
+          </a>
+        </li>
+
+        <li class="nav-item icon dropdown mr-4">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkLanguage" role="button" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+            <img class="mt-n1" style="min-height: 16px;" src="{% static 'democracy/svg/globe_negative.svg'%}">
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkLanguage">
 
             {% get_current_language as LANGUAGE_CODE %}
             {% get_available_languages as LANGUAGES %}
             {% get_language_info_list for LANGUAGES as languages %}
 
             {% for language in languages %}
-            <form class="dropdown-item" action="{% url 'set_language' %}" method="POST">
-              {% csrf_token %}
-              <label for="language_{{ forloop.counter }}">
-                {{ language.name_local|title }} ({{ language.code }})
-              </label>
+              <form class="dropdown-item {% if language.code == LANGUAGE_CODE %} active {% endif %}" action="{% url 'set_language' %}" method="POST">
+                {% csrf_token %}
+                <label class="pointer-cursor py-1 my-0" for="language_{{ forloop.counter }}">
+                  {{ language.name_local|title }} ({{ language.code }})
+                </label>
 
-              <input type="submit" class="invisible my-n5 mx-n5" name="language"
-                     id="language_{{ forloop.counter }}" value="{{ language.code }}">
-              <input name="next" type="hidden" value="{{ redirect_to }}">
-            </form>
+                <input type="submit" class="invisible" name="language"
+                       id="language_{{ forloop.counter }}" value="{{ language.code }}">
+                <input name="next" type="hidden" value="{{ redirect_to }}">
+              </form>
             {% endfor %}
 
           </div>
-        </li>
-
-        {% if user.is_authenticated %}
-
-        <li class="nav-item active mr-4">
-          <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
-            {% if user.profile_image %}
-            <img class="mt-n1 mx-1 rounded-circle" style="max-height: 27px;" src="{{ user.profile_image.url }}" alt="user.profile_image not found">
-            {% else %}
-            <img class="mt-n1 mx-1" style="max-height: 18px;" src="{% static 'democracy/svg/person.svg'%}">
-            {% endif %}
-            {{ user.username }}
-          </a>
         </li>
 
         <form action="{% url 'registration:user_logout' %}" class="form-inline">
@@ -132,7 +153,7 @@
 </main>
 
 
-<!--START: NAVBAR-->
+<!--START: FOOTER-->
 <footer class="footer">
   <div class="container text-center">
     <span class="text-muted">
@@ -141,7 +162,7 @@
     <span class="text-muted">Copyright © 2019 FilmDemocracy</span>
   </div>
 </footer>
-<!--END: NAVBAR-->
+<!--END: FOOTER-->
 
 
 <!-- Optional JavaScript -->

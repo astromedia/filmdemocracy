@@ -35,26 +35,29 @@ body {
 /* Candidate films album
 -------------------------------------------------- */
 .container-films-album {
-  width: 95%;
+  width: 100%;
 }
 
 .films-album {
   background-color: transparent;
   padding-top: 50px;
   padding-bottom: 20px;
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-left: 2%;
+  padding-right: 2%;
   margin-top: 40px;
   margin-bottom: 0px;
 }
 
 .films-album .col {
-  max-width: 45%;
+  max-width: 29%;
+  padding: 0px;
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
 .films-album .card {
-  width: 13rem;
-  max-width: 100%;
+  width: 100%;
+  max-width: 13rem;
 
 }
 
@@ -233,7 +236,10 @@ body {
 }
 
 .form-participants .col {
-  max-width: 45%;
+  max-width: 29%;
+  padding: 0px;
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
 .form-participants .card {

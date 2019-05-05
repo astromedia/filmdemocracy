@@ -166,13 +166,16 @@ body {
 -------------------------------------------------- */
 .films-album {
   padding-bottom: 20px;
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-left: 2%;
+  padding-right: 2%;
   margin-bottom: -50px;
 }
 
 .films-album .col {
-  max-width: 45%;
+  max-width: 29%;
+  padding: 0px;
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
 
@@ -203,7 +206,10 @@ body {
 }
 
 .members-album .col {
-  max-width: 45%;
+  max-width: 29%;
+  padding: 0px;
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
 .members-album .card {
@@ -212,6 +218,8 @@ body {
   background-color: transparent;
   color: darkgray;
   text-align: center;
+  margin-left: 0px;
+  margin-right: 0px;
   margin-top: 10px;
   margin-bottom: 10px;
   border-color: transparent;
