@@ -157,10 +157,10 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         club_films = Film.objects.filter(club_id=club_id)
         if club_films:
             films_last_pub = club_films.order_by('-pub_date')
-            groups_last_pub = [films_last_pub[i:i+4] for i in [0, 4, 8, 12]]
+            groups_last_pub = [films_last_pub[i:i+3] for i in [0, 3, 6, 9]]
             context['groups_last_pub'] = groups_last_pub
             last_seen = club_films.filter(seen=True)
-            context['films_last_seen'] = last_seen.order_by('-seen_date')[0:5]
+            context['films_last_seen'] = last_seen.order_by('-seen_date')[0:3]
         return context
 
 

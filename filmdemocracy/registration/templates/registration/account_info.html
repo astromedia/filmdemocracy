@@ -36,7 +36,6 @@
 <h3 class="h3">{% trans 'Account information' %}</h3>
 
 
-
 <!--PICTURE-->
 <div class="profile-picture">
   {% if user.profile_image %}
@@ -50,10 +49,10 @@
 
 
 <!--START: ACCOUNT INFO-->
-<div class=" text-center">
+<div class="text-center">
 
   <!--USERNAME-->
-  <div class="row align-items-center mt-3">
+  <div class="row align-items-center mt-3 mx-1">
     <div class="col-md-6">
       <div class="float-md-right">
         <strong>{% trans 'Username:' %}</strong>
@@ -63,17 +62,17 @@
   </div>
 
   <!--EMAIL-->
-  <div class="row align-items-center mt-3">
+  <div class="row align-items-center mt-3 mx-1">
     <div class="col-md-6">
       <div class="float-md-right">
         <strong>{% trans 'Email:' %}</strong>
       </div>
-      </div>
-      <div class="col-md-auto">{{ user.email }}</div>
+    </div>
+    <div class="col-md-auto">{{ user.email }}</div>
   </div>
 
   <!--PUBLIC EMAIL-->
-  <div class="row align-items-center mt-3">
+  <div class="row align-items-center mt-3 mx-1">
     <div class="col-md-6">
       <div class="float-md-right">
         <strong>{% trans 'Public email in clubs:' %}</strong>
@@ -107,9 +106,8 @@
   <!--</div>-->
 
 
-
   <!--START: ACCOUNT OPTIONS-->
-  <div class="row justify-content-center mt-5">
+  <div class="row justify-content-center mt-5 mx-1">
 
     <div class="col-sm-auto text-center my-2">
       <form action="{% url 'registration:account_info_edit' %}">
@@ -128,12 +126,20 @@
     </div>
 
     <div class="col-sm-auto text-center my-2">
-      <button type="button" class="btn btn-sm btn-block btn-outline-danger btn-profile" data-toggle="modal"
-              data-target="#DeleteModalCenter">
-        {% trans 'Delete account' %}
-      </button>
+      <form action="{% url 'registration:user_logout' %}">
+        <button type="submit" class="btn btn-sm btn-block btn-white-to-gray btn-profile">
+          {% trans 'Log out' %}
+        </button>
+      </form>
     </div>
 
+  </div>
+
+  <div class="text-center my-4">
+    <button type="button" class="badge badge-outline-danger pointer-cursor" data-toggle="modal"
+            data-target="#DeleteModalCenter">
+      {% trans 'Delete account' %}
+    </button>
   </div>
   <!--START: ACCOUNT OPTIONS-->
 

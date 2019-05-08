@@ -57,7 +57,7 @@
           <div class="col-auto">
             <form class="" action="{% url 'democracy:film_seen' club.id film.id %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-film-option my-1 mx-auto">
+              <button type="submit" class="badge badge-black-to-white film-option my-1 mx-auto">
                 {% trans 'Mark as seen by club' %}
               </button>
             </form>
@@ -71,7 +71,7 @@
           <div class="col-auto">
             <form class="" action="{% url 'democracy:unsee_film' club.id film.id view_option order_option display_option %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-film-option my-1 mx-auto">
+              <button type="submit" class="badge badge-black-to-white film-option my-1 mx-auto">
                 {% trans 'Move back to candidate films' %}
               </button>
             </form>

@@ -526,14 +526,14 @@
   <h3 class="h3">{% trans 'Last proposed films' %}</h3>
   <hr>
 
-  <div id="carouselControls" class="carousel slide mt-3" data-ride="carousel" data-interval="4000">
+  <div id="carouselControls" class="carousel slide mt-n4 mt-md-4" data-ride="carousel" data-interval="4000">
     <div class="carousel-inner">
 
       {% for group in groups_last_pub %}
 
       {% if forloop.first %}
       <div class="carousel-item active">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mx-1">
           {% for film in group %}
           <div class="col col-md-auto align-self-center">
             <div class="card my-2 mx-auto">
@@ -552,7 +552,7 @@
 
       {% if group %}
       <div class="carousel-item">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mx-1">
           {% for film in group %}
           <div class="col col-md-auto align-self-center">
             <div class="card my-2 mx-auto">
@@ -582,6 +582,15 @@
       <span class="sr-only">Next</span>
     </a>
   </div>
+
+  <!--LINK TO SEEN FILMS-->
+  <div class="text-center mt-n3 mt-md-3">
+    <a class="badge badge-black-to-white" href="{% url 'democracy:candidate_films' club.id 'all' 'title' 'posters' %}">
+      {% trans 'Check all candidate films' %}
+    </a>
+  </div>
+
+
 </div>
 {% endif %}
 <!--END: LAST PROPOSED FILMS ALBUM-->
@@ -589,17 +598,17 @@
 
 <!--START: LAST SEEN FILMS ALBUM-->
 {% if films_last_seen %}
-<div class="album films-album">
+<div class="album films-album ">
 
   <h3 class="h3">{% trans 'Last seen films' %}</h3>
   <hr>
 
-  <div class="row justify-content-center mt-3">
+  <div class="row justify-content-center mx-1 mt-n4 mt-md-4">
 
     {% for film in films_last_seen %}
 
     <div class="col col-md-auto align-self-center align-items-center">
-      <div class="card my-2 mx-auto">
+      <div class="card mx-auto my-2">
         <div class="m-auto">
           <a href="{% url 'democracy:film_detail' club.id film.id 'all' 'title' 'posters' %}">
             <img class="card-img" src="{{ film.filmdb.poster_url }}" alt="film.poster not found">
@@ -613,8 +622,8 @@
   </div>
 
   <!--LINK TO SEEN FILMS-->
-  <div class="text-center mt-3">
-    <a class="badge badge-green-to-blue" href="{% url 'democracy:seen_films' club.id %}">
+  <div class="text-center mt-n3 mt-md-3">
+    <a class="badge badge-black-to-white" href="{% url 'democracy:seen_films' club.id %}">
       {% trans 'Check all films seen by club' %}
     </a>
   </div>

@@ -79,7 +79,7 @@
   max-width: 100%;
 }
 
-.btn-film-option {
+.film-option {
   font-size: 11px;
   max-width: 250px;
   color: #6c737d;
@@ -88,24 +88,9 @@
   margin: auto;
 }
 
-.btn-film-option:hover {
+.film-option:hover {
   color: white;
   border: 1px solid #6c737d;
-}
-
-.btn-film-option-magic {
-  font-size: 11px;
-  max-width: 250px;
-  color: #D4AF37;
-  background-color: transparent;
-  border: 1px solid gold;
-  margin: auto;
-}
-
-.btn-film-option-magic:hover {
-  color: black;
-  border: 1px solid gold;
-  background-color: gold;
 }
 
 

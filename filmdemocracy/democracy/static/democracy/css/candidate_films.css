@@ -156,7 +156,7 @@ body {
   position: relative;
   font-size: 17px;
   padding: 4px;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.0);
 }
 
 .card-film:hover .card-img {

@@ -21,7 +21,7 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <!-- General FilmDemocracy website style -->
-  <link rel="stylesheet" type="text/css" href="{% static 'democracy/css/filmdemocracy.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'democracy/css/base_filmdemocracy.css' %}">
 
   <!-- Custom styles for child templates -->
   {% block styles %}
@@ -34,76 +34,90 @@
 </head>
 <body>
 
-
 <!--START: NAVBAR-->
-<nav class="navbar navbar-expand-md navbar-dark navbar-color fixed-top navbar-shadow">
+<nav class="navbar navbar-expand navbar-dark navbar-color fixed-top navbar-shadow p-0">
 
   <div class="container navbar-container">
 
-    <a class="navbar-brand" href="{% url 'home' %}">
-      <img class="d-md-none .d-lg-block" height="24" src="{% static 'democracy/svg/webname_greengray_short.svg'%}">
-      <img class="d-none d-md-block" height="24" src="{% static 'democracy/svg/webname_greengray.svg'%}">
+    <a class="navbar-brand ml-md-5 ml-3 align-self-center" href="{% url 'home' %}">
+      <img class="d-md-none .d-lg-block" height="26" src="{% static 'democracy/svg/webname_greengray_short.svg'%}">
+      <img class="d-none d-md-block" height="26" src="{% static 'democracy/svg/webname_greengray.svg'%}">
     </a>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"-->
+    <!--            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">-->
+    <!--      <span class="navbar-toggler-icon"></span>-->
+    <!--    </button>-->
 
-    <div class="collapse navbar-collapse" id="navbarCollapse">
+    <!--    <div class="collapse navbar-collapse" id="navbarCollapse">-->
 
-      <ul class="navbar-nav ml-auto">
+    {% if user.is_authenticated %}
 
-        {% if user.is_authenticated %}
+    <ul class="navbar-nav ml-auto">
 
-        <li class="nav-item dropdown mr-3 ">
-          <a class="nav-link dropdown-toggle clubs-dropdown" href="#" id="navbarDropdownMenuLinkClub" role="button"
-             data-toggle="dropdown"
-             aria-haspopup="true" aria-expanded="false">
-            {% trans 'Clubs' %}
+
+      <li class="nav-item dropdown mx-md-4 mx-3 align-self-center">
+        <a class="nav-link dropdown-toggle clubs-dropdown"  href="#" id="navbarDropdownMenuLinkClub" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
+          {% trans 'Clubs' %}
+        </a>
+        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLinkClub">
+
+          {% for userclub in user.club_set.all %}
+          <a class="dropdown-item py-2 my-0 {% if club == userclub %} active {% endif %}"
+             href="{% url 'democracy:club_detail' userclub.id %}">
+            {{ userclub.name }}
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkClub">
+          {% endfor %}
 
-            {% for userclub in user.club_set.all %}
-            <a class="dropdown-item py-2 my-0 {% if club == userclub %} active {% endif %}"
-               href="{% url 'democracy:club_detail' userclub.id %}">
-              {{ userclub.name }}
-            </a>
-            {% endfor %}
-            <a class="dropdown-item py-1 my-1 new-club" href="{% url 'democracy:create_club' %}">
-              <small>{% trans 'Create new club' %}</small>
-            </a>
-
-          </div>
-        </li>
-
-        <li class="nav-item mr-3">
-          <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
-            {% if user.profile_image %}
-            <img class="mx-1 rounded-circle" style="max-height: 27px;" src="{{ user.profile_image.url }}"
-                 alt="user.profile_image not found">
-            {% else %}
-            <img class="mx-1" style="max-height: 18px;" src="{% static 'democracy/svg/person.svg'%}">
-            {% endif %}
-            {{ user.username }}
+          <a class="dropdown-item py-1 my-1 new-club" href="{% url 'democracy:create_club' %}">
+            <small>{% trans 'Create new club' %}</small>
           </a>
-        </li>
 
-        <form action="{% url 'registration:user_logout' %}" class="form-inline">
-          <button type="submit" class="btn btn-sm btn-logout">{% trans 'Log out' %}</button>
-        </form>
+        </div>
+      </li>
 
-        {% else %}
+      <li class="nav-item mx-4 d-none d-md-block align-self-center">
+        <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
+          {% if user.profile_image %}
+          <img class="mr-1 rounded-circle" style="height: 35px;" src="{{ user.profile_image.url }}"
+               alt="user.profile_image not found">
+          {% else %}
+          <img class="mr-1 rounded " style="max-height: 18px;" src="{% static 'democracy/svg/person.svg'%}">
+          {% endif %}
+          {{ user.username }}
+        </a>
+      </li>
 
-        <form action="{% url 'registration:user_login' %}" class="form-inline">
-          <button type="submit" class="btn btn-sm btn-login">{% trans 'Log in' %}</button>
-        </form>
+      <li class="nav-item mx-3 d-md-none .d-lg-block align-self-center">
+        <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
+          {% if user.profile_image %}
+          <img class="rounded-circle" style="max-height: 35px;" src="{{ user.profile_image.url }}"
+               alt="user.profile_image not found">
+          {% else %}
+          <img class="" style="max-height: 18px;" src="{% static 'democracy/svg/person.svg'%}">
+          {% endif %}
+        </a>
+      </li>
 
-        {% endif %}
+      <li class="nav-item mx-md-4 mx-3 mr-md-5 align-self-center">
+        <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
+          <img class="" style="max-height: 30px; margin-bottom:2px;" src="{% static 'democracy/svg/bell_white.svg'%}"
+               alt="bell image not found">
+        </a>
+      </li>
 
-      </ul>
+    </ul>
 
-    </div>
+    {% else %}
+
+    <form action="{% url 'registration:user_login' %}" class="form-inline mx-md-4 mx-3">
+      <button type="submit" class="btn btn-sm btn-login">{% trans 'Log in' %}</button>
+    </form>
+
+    {% endif %}
+
+    <!--    </div>-->
 
   </div>
 
@@ -139,32 +153,32 @@
 
       <div class="col-auto dropup">
 
-          <a class="icon dropdown-toggle lang-dropdown mr-n2" href="#" id="navbarDropdownMenuLinkLanguage" role="button"
-             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img class="" style="min-height: 16px;" src="{% static 'democracy/svg/globe_negative.svg'%}">
-          </a>
+        <a class="icon dropdown-toggle lang-dropdown mr-n2" href="#" id="navbarDropdownMenuLinkLanguage" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img class="" style="min-height: 16px;" src="{% static 'democracy/svg/globe_negative.svg'%}">
+        </a>
 
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLinkLanguage">
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLinkLanguage">
 
-            {% get_current_language as LANGUAGE_CODE %}
-            {% get_available_languages as LANGUAGES %}
-            {% get_language_info_list for LANGUAGES as languages %}
+          {% get_current_language as LANGUAGE_CODE %}
+          {% get_available_languages as LANGUAGES %}
+          {% get_language_info_list for LANGUAGES as languages %}
 
-            {% for language in languages %}
-            <form class="dropdown-item {% if language.code == LANGUAGE_CODE %} active {% endif %}"
-                  action="{% url 'set_language' %}" method="POST">
-              {% csrf_token %}
-              <label class="pointer-cursor py-1 my-0" for="language_{{ forloop.counter }}">
-                {{ language.name_local|title }} ({{ language.code }})
-              </label>
+          {% for language in languages %}
+          <form class="dropdown-item {% if language.code == LANGUAGE_CODE %} active {% endif %}"
+                action="{% url 'set_language' %}" method="POST">
+            {% csrf_token %}
+            <label class="pointer-cursor py-1 my-0" for="language_{{ forloop.counter }}">
+              {{ language.name_local|title }} ({{ language.code }})
+            </label>
 
-              <input type="submit" class="invisible" name="language"
-                     id="language_{{ forloop.counter }}" value="{{ language.code }}">
-              <input name="next" type="hidden" value="{{ redirect_to }}">
-            </form>
-            {% endfor %}
+            <input type="submit" class="invisible" name="language"
+                   id="language_{{ forloop.counter }}" value="{{ language.code }}">
+            <input name="next" type="hidden" value="{{ redirect_to }}">
+          </form>
+          {% endfor %}
 
-          </div>
+        </div>
       </div>
 
     </div>
