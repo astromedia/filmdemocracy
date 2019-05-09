@@ -56,7 +56,7 @@
     <ul class="navbar-nav ml-auto">
 
 
-      <li class="nav-item dropdown mx-md-4 mx-3 align-self-center">
+      <li class="nav-item dropdown mx-md-3 mx-2 align-self-center">
         <a class="nav-link dropdown-toggle clubs-dropdown"  href="#" id="navbarDropdownMenuLinkClub" role="button"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
           {% trans 'Clubs' %}
@@ -77,7 +77,7 @@
         </div>
       </li>
 
-      <li class="nav-item mx-4 d-none d-md-block align-self-center">
+      <li class="nav-item mx-3 d-none d-md-block align-self-center">
         <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
           {% if user.profile_image %}
           <img class="mr-1 rounded-circle" style="height: 35px;" src="{{ user.profile_image.url }}"
@@ -89,7 +89,7 @@
         </a>
       </li>
 
-      <li class="nav-item mx-3 d-md-none .d-lg-block align-self-center">
+      <li class="nav-item mx-2 d-md-none .d-lg-block align-self-center">
         <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
           {% if user.profile_image %}
           <img class="rounded-circle" style="max-height: 35px;" src="{{ user.profile_image.url }}"
@@ -100,8 +100,8 @@
         </a>
       </li>
 
-      <li class="nav-item mx-md-4 mx-3 mr-md-5 align-self-center">
-        <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
+      <li class="nav-item mr-md-4 mx-2 mr-md-5 align-self-center">
+        <a class="nav-link user-info" href="#">
           <img class="" style="max-height: 30px; margin-bottom:2px;" src="{% static 'democracy/svg/bell_white.svg'%}"
                alt="bell image not found">
         </a>
