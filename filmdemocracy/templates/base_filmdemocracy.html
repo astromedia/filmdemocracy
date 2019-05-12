@@ -40,8 +40,8 @@
   <div class="container navbar-container">
 
     <a class="navbar-brand ml-md-5 ml-3 align-self-center" href="{% url 'home' %}">
-      <img class="d-md-none .d-lg-block" height="26" src="{% static 'democracy/svg/webname_greengray_short.svg'%}">
-      <img class="d-none d-md-block" height="26" src="{% static 'democracy/svg/webname_greengray.svg'%}">
+      <img class="d-md-none .d-lg-block" src="{% static 'democracy/svg/webname_greengray_short.svg'%}">
+      <img class="d-none d-md-block" src="{% static 'democracy/svg/webname_greengray.svg'%}">
     </a>
 
     <!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"-->
@@ -56,56 +56,103 @@
     <ul class="navbar-nav ml-auto">
 
 
+      <!--START: CLUBS-->
       <li class="nav-item dropdown mx-md-3 mx-2 align-self-center">
-        <a class="nav-link dropdown-toggle clubs-dropdown"  href="#" id="navbarDropdownMenuLinkClub" role="button"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
-          {% trans 'Clubs' %}
+
+        <a class="nav-link nav-icon dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkChat"
+           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img class="" src="{% static 'democracy/svg/chat_bubble.svg'%}">
         </a>
-        <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdownMenuLinkClub">
+
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkChat">
 
           {% for userclub in user.club_set.all %}
-          <a class="dropdown-item py-2 my-0 {% if club == userclub %} active {% endif %}"
+          <a class="dropdown-item py-3"
+             href="{% url 'democracy:shoutbox' userclub.id %}">
+            {{ userclub.name }}
+          </a>
+          {% endfor %}
+
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item py-2 my-1 new-club" href="#">
+            <small>{% trans 'New Chat' %}</small>
+          </a>
+
+        </div>
+
+      </li>
+      <!--END: CLUBS-->
+
+
+      <!--START: CLUBS-->
+      <li class="nav-item dropdown mx-md-3 mx-2 align-self-center">
+
+        <a class="nav-link nav-icon nav-icon-rounded dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkClub"
+           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img class="" src="{% static 'democracy/svg/people.svg'%}">
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkClub">
+
+          {% for userclub in user.club_set.all %}
+          <a class="dropdown-item py-3 {% if club == userclub %} active {% endif %}"
              href="{% url 'democracy:club_detail' userclub.id %}">
             {{ userclub.name }}
           </a>
           {% endfor %}
 
-          <a class="dropdown-item py-1 my-1 new-club" href="{% url 'democracy:create_club' %}">
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item py-2 my-1 new-club" href="{% url 'democracy:create_club' %}">
             <small>{% trans 'Create new club' %}</small>
           </a>
 
         </div>
-      </li>
 
-      <li class="nav-item mx-3 d-none d-md-block align-self-center">
-        <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
+      </li>
+      <!--END: CLUBS-->
+
+
+      <!--START: USER, ONLY SHOWN IN LARGE DISPLAYS-->
+      <li class="d-none d-md-block nav-item mx-3 align-self-center">
+
+        <a class="nav-link user-icon nav-icon-rounded" href="{% url 'registration:account_info' %}">
           {% if user.profile_image %}
-          <img class="mr-1 rounded-circle" style="height: 35px;" src="{{ user.profile_image.url }}"
+          <img class="mr-1 rounded-circle" src="{{ user.profile_image.url }}"
                alt="user.profile_image not found">
           {% else %}
-          <img class="mr-1 rounded " style="max-height: 18px;" src="{% static 'democracy/svg/person.svg'%}">
+          <img class="mr-1 rounded" src="{% static 'democracy/svg/person.svg'%}">
           {% endif %}
           {{ user.username }}
         </a>
-      </li>
 
-      <li class="nav-item mx-2 d-md-none .d-lg-block align-self-center">
-        <a class="nav-link user-info" href="{% url 'registration:account_info' %}">
+      </li>
+      <!--END: USER, ONLY SHOWN IN LARGE DISPLAYS-->
+
+
+      <!--START: USER, ONLY SHOWN IN SMALL DISPLAYS-->
+      <li class="d-md-none .d-lg-block nav-item mx-2 align-self-center">
+
+        <a class="nav-link user-icon nav-icon-rounded" href="{% url 'registration:account_info' %}">
           {% if user.profile_image %}
-          <img class="rounded-circle" style="max-height: 35px;" src="{{ user.profile_image.url }}"
-               alt="user.profile_image not found">
+          <img class="mr-1 rounded-circle" src="{{ user.profile_image.url }}" alt="user.profile_image not found">
           {% else %}
-          <img class="" style="max-height: 18px;" src="{% static 'democracy/svg/person.svg'%}">
+          <img class="" src="{% static 'democracy/svg/person.svg'%}">
           {% endif %}
         </a>
-      </li>
 
-      <li class="nav-item mr-md-4 mx-2 mr-md-5 align-self-center">
-        <a class="nav-link user-info" href="#">
-          <img class="" style="max-height: 30px; margin-bottom:2px;" src="{% static 'democracy/svg/bell_white.svg'%}"
-               alt="bell image not found">
-        </a>
       </li>
+      <!--END: USER, ONLY SHOWN IN SMALL DISPLAYS-->
+
+
+      <!--START: NOTIFICATIONS-->
+      <li class="nav-item mr-md-4 mx-2 mr-md-5 align-self-center">
+
+        <a class="nav-link nav-icon" href="#">
+          <img class="" src="{% static 'democracy/svg/bell_white.svg'%}" alt="bell image not found">
+        </a>
+
+      </li>
+      <!--END: NOTIFICATIONS-->
 
     </ul>
 
@@ -134,7 +181,7 @@
 
 
 <!--START: FOOTER-->
-<footer class="footer">
+<footer class="footer global-footer">
   <div class="container text-center">
 
     <div class="row justify-content-center mb-1 mt-n1">
@@ -153,7 +200,7 @@
 
       <div class="col-auto dropup">
 
-        <a class="icon dropdown-toggle lang-dropdown mr-n2" href="#" id="navbarDropdownMenuLinkLanguage" role="button"
+        <a class="icon dropdown-toggle lang-dropdown mr-n2" id="navbarDropdownMenuLinkLanguage" role="button"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img class="" style="min-height: 16px;" src="{% static 'democracy/svg/globe_negative.svg'%}">
         </a>

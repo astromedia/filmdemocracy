@@ -33,8 +33,12 @@ body {
 
 /* Navbar top fixed styles
 -------------------------------------------------- */
+
+
+/* Navbar general styles */
+
 .navbar {
-  min-height: 50px;
+  height: 3.5rem;
 }
 
 .navbar-color {
@@ -50,60 +54,84 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
 }
 
+/* Navbar icon styles */
+
+.navbar-brand img {
+  max-height: 30px;
+}
+
+.navbar .nav-item .nav-icon {
+  opacity: 0.80;
+}
+
+.navbar .nav-item .nav-icon img {
+  max-height: 35px;
+}
+
+.navbar .nav-item .nav-icon-rounded img {
+  border: 1px solid white;
+  border-radius: 1000px;
+  padding: 1px;
+}
+
+.navbar .nav-item .nav-icon:active {
+  opacity: 1;
+}
+
+.navbar .nav-item .nav-icon:focus {
+  opacity: 1;
+}
+
+.navbar .nav-item .nav-icon:hover {
+  opacity: 1;
+}
+
+.navbar .nav-item .user-icon img {
+  max-height: 35px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 1000px;
+  padding: 1px;
+}
+
+.navbar .nav-item .user-icon img:hover {
+  border: 1px solid rgba(255, 255, 255, 1);
+}
+
+/* Navbar dropdown menu styles */
+
+.navbar .nav-item .dropdown-toggle::after {
+  display:none;
+}
+
+.navbar .dropdown {
+  position: initial;
+}
+
 .navbar .nav-item .dropdown-menu {
-  background-color: #07080a;
-}
-
-.navbar .nav-item .dropdown-menu .dropdown-item {
-  color: #A9A9A9;
-  background-color: transparent;
-}
-
-.navbar .nav-item .dropdown-menu .dropdown-item:hover {
-  color: #d1d1d1;
-  font-weight: bold;
-  background-color: transparent;
+  width: 96%;
+  max-width: 908px;
+  margin-left: 2%;
+  margin-right: 2%;
+  overflow: hidden;
 }
 
 .navbar .nav-item .dropdown-menu .active {
-  color: #d1d1d1;
+  color: black;
   font-weight: bold;
-  background-color: transparent;
+  background-color: #d1d1d1;
 }
 
-.navbar .nav-item .clubs-dropdown {
-  text-transform: uppercase;
-  font-size: 14px;
+.navbar .nav-item .dropdown-menu .dropdown-item:hover {
   font-weight: bold;
-  color: #d1d1d1;
-}
-
-.navbar .nav-item .clubs-dropdown:active {
-  color: #d1d1d1;
-}
-
-.navbar .nav-item .clubs-dropdown:focus {
-  color: #d1d1d1;
-}
-
-.navbar .nav-item .clubs-dropdown:hover {
-  color: #fff;
 }
 
 .dropdown-menu .new-club {
   color: seagreen !important;
+
 }
 
 .dropdown-menu .new-club:hover {
   color: lightseagreen !important;
-}
-
-.dropdown-menu .new-club {
-  background-color: transparent !important;
-}
-
-.navbar .nav-item .user-info img {
-  border: 0px solid black;
 }
 
 .navbar .nav-item .user-info {
@@ -132,7 +160,7 @@ body {
 /* Sticky footer styles
 -------------------------------------------------- */
 
-.footer {
+.global-footer {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -145,25 +173,25 @@ body {
 }
 
 .footer .icon img {
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .footer .icon:hover img {
   opacity: 1;
 }
 
-.footer .nav-item .clubs-dropdown {
-  text-transform: uppercase;
-  font-size: 14px;
-  margin-top: 1px;
-  font-weight: bold;
-  color: #d1d1d1;
+.footer .dropdown-toggle::after {
+    display:none;
 }
 
 .footer .dropdown-menu .active {
   color: black;
   font-weight: bold;
   background-color: #d1d1d1;
+}
+
+.footer .dropdown-menu .dropdown-item:hover {
+  font-weight: bold;
 }
 
 .footer .lang-dropdown {

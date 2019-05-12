@@ -2,45 +2,106 @@
 /* General page styles
 -------------------------------------------------- */
 
-body {
+/* General page structure
+-------------------------------------------------- */
+
+html {
+  position: relative;
   height: 100%;
 }
 
-.container-base {
+body {
   min-height: 0;
-  background-color: #fafafa;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.btn-cancel {
-  text-align: center;
-  margin-top: 0px;
-  margin-bottom: -20px;
+.container-base {
+  max-width: 600px;
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 3.5rem;
+  margin-bottom: 0;
 }
 
-.h3 {
+.chat-banner {
+  position: relative;
+  max-width: 600px;
   text-align: center;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 0px;
+  padding-top: 12px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #121317;
+  z-index: 4;
+  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.75);
+}
+
+.chat-banner a {
+  color: #d1d1d1;
+  text-decoration: none;
+}
+
+.chat-banner a:hover {
+  color: white !important;
 }
 
 .container-shoutbox {
   position: relative;
-  max-width: 50rem;
-  min-height: 37.5rem;
-  max-height: 33.5rem;
-  padding-top: 30px;
-  padding-bottom: 5px;
-  margin-top: 0px;
+  height: calc(var(--vh, 1vh) * 100 - 175px);
   margin-left: auto;
   margin-right: auto;
   z-index: 2;
+  padding-left: 0;
+  padding-right: 0;
+  background: url("/static/democracy/chat_background.png");
+  background-position: left top;
+  background-repeat: repeat;
+  background-attachment: fixed;
 }
 
+.container-shoutbox {
+  position: relative;
+  max-height: calc(100vh - 127px);
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 2;
+  padding-left: 0;
+  padding-right: 0;
+  background: url("/static/democracy/chat_background.png");
+  background-position: left top;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+
+footer {
+  display:none;
+}
 
 /* Posts
 -------------------------------------------------- */
+.date-bubble {
+  max-width: 200px;
+  font-size: 12px;
+  background-color: #ededed;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  min-width: 105px;
+}
+
 .post .media-body {
-  padding:0px;
+  padding: 0px;
+}
+
+.post:hover {
+  cursor: pointer;
+}
+
+.post:hover .post-bubble {
+  background-color: #c3e2ff !important;
 }
 
 .post .user-image img {
@@ -48,38 +109,72 @@ body {
  background: rgba(0, 0, 0, 1) !important;
 }
 
-.post .post-text {
-  background-color: white;
+.post .green-chat{
+  background-color: #d4ffc3 !important;
 }
 
-.post .post-footer {
-  opacity: 0.7;
+.post .post-bubble {
+  background-color: white;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  min-width: 105px;
+}
+
+.post .post-text {
+  font-size: 14px;
+  line-height: 18px; /* Vertically center the text there */
+  max-width: 80vw;
+  word-wrap: break-word !important;
+}
+
+.post .post-time {
+  position: relative;
+  margin-top: -13px;
+  margin-right: -10px;
+}
+
+.post .post-delete {
+  opacity: 0.8;
   max-height: 20px;
 }
 
-.post .post-footer form {
-  margin-top: -2px;
+.post .post-delete label:hover {
+  color: red;
 }
 
-.post .post-footer label:hover {
-  color: red;
+.post .post-delete label:hover {
+  display: ;
 }
 
 
 /* Post Form
 -------------------------------------------------- */
 
+.footer {
+  background-color: #fff;
+  position: relative;
+  bottom: 0;
+}
+
 .form-post {
-  max-width: 52rem;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
-.form-post .user-image img {
- max-width: 45px !important;
- background: rgba(0, 0, 0, 1) !important;
+.form-inline .input-group {
+  width: 100%;
+  margin: 10px;
 }
 
-.form-post form {
-  width: 99%
+.footer .form-control {
+  padding: 0px;
+  margin-right: 10px;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+}
+
+.footer textarea {
+  border: none;
 }
