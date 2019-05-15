@@ -16,8 +16,8 @@
 <!--START: CHAT BANNER-->
 <div class="container-fluid chat-banner text-center">
 
-  <div>
-    <a style='font-size: 19px' href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+  <div class="club-title px-2 rounded-pill">
+    <a href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
   </div>
 
 </div>
@@ -25,7 +25,7 @@
 
 
 <!--START: SHOUTBOX CONTAINER-->
-  <div class="container container-shoutbox overflow-auto" id="DivShoutbox">
+  <div class="container-shoutbox overflow-auto" id="DivShoutbox">
 
   {% if posts %}
 
@@ -159,7 +159,7 @@
   {% endif %}
 
 
-</div>
+  </div>
 <!--END: SHOUTBOX CONTAINER-->
 
 
@@ -173,10 +173,11 @@
           {% csrf_token %}
 
           <div class="input-group">
-            <textarea class="form-control" aria-label="With textarea" name="text"
-                      placeholder="{% trans 'Say something...' %}"></textarea>
-            <button type="submit" class="p-2 align-self-end btn btn-sm btn-green-to-blue rounded-circle">
-              <img style="max-height: 25px" src="{% static 'democracy/svg/send.svg'%}">
+            <textarea class="form-control" aria-label="With textarea" name="text" id="TextArea"
+                      oninput='this.style.height = this.scrollHeight + "px";'
+                      placeholder="{% trans 'Message' %}"></textarea>
+            <button type="submit" class="p-1 align-self-end btn btn-sm btn-green-to-blue rounded-circle">
+              <img style="max-height: 22px" src="{% static 'democracy/svg/send.svg'%}">
             </button>
           </div>
 
@@ -206,6 +207,5 @@ window.addEventListener('resize', () => {
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 });
 </script>
-
 
 {% endblock %}

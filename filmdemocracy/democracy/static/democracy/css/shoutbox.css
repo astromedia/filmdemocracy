@@ -31,18 +31,24 @@ body {
   position: relative;
   max-width: 600px;
   text-align: center;
-  margin-bottom: 0px;
-  padding-top: 12px;
+  margin-bottom: -50px;
+  padding-top: 11px;
   padding-bottom: 10px;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: #121317;
+  background-color: transparent;
   z-index: 4;
-  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.75);
 }
 
-.chat-banner a {
-  color: #d1d1d1;
+.chat-banner .club-title {
+  pointer: hover;
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.chat-banner .club-title a {
+  font-size: 19px;
+  color: #fff;
   text-decoration: none;
 }
 
@@ -52,26 +58,13 @@ body {
 
 .container-shoutbox {
   position: relative;
-  height: calc(var(--vh, 1vh) * 100 - 175px);
   margin-left: auto;
   margin-right: auto;
+  height: calc(var(--vh, 1vh) * 100 - 107px);
   z-index: 2;
   padding-left: 0;
   padding-right: 0;
-  background: url("/static/democracy/chat_background.png");
-  background-position: left top;
-  background-repeat: repeat;
-  background-attachment: fixed;
-}
-
-.container-shoutbox {
-  position: relative;
-  max-height: calc(100vh - 127px);
-  margin-left: auto;
-  margin-right: auto;
-  z-index: 2;
-  padding-left: 0;
-  padding-right: 0;
+  padding-top: 50px;
   background: url("/static/democracy/chat_background.png");
   background-position: left top;
   background-repeat: repeat;
@@ -184,4 +177,6 @@ footer {
 
 .footer textarea {
   border: none;
+  height: 30px;
+  max-height: 150px;
 }
