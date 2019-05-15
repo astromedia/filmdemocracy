@@ -33,7 +33,7 @@ urlpatterns = [
         name='club_detail'
     ),
     path(
-        'club/<str:club_id>/member/<str:user_id>',
+        'club/<str:club_id>/member/<str:user_id>/',
         views.ClubMemberDetailView.as_view(
             template_name='democracy/club_member_detail.html'
         ),
@@ -64,7 +64,7 @@ urlpatterns = [
         name='promote_members'
     ),
     path(
-        '<str:club_id>/candidate_films/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/candidate_films/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.CandidateFilmsView.as_view(
             template_name='democracy/candidate_films_list.html'
         ),
@@ -92,54 +92,54 @@ urlpatterns = [
         name='vote_results'
     ),
     path(
-        '<str:club_id>/candidate_films/add_new_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/candidate_films/add_new_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.add_new_film,
         name='add_new_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.FilmDetailView.as_view(
             template_name='democracy/film_detail.html'
         ),
         name='film_detail'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/vote_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/vote_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.vote_film,
         name='vote_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/delete_vote/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/delete_vote/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.delete_vote,
         name='delete_vote'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/comment_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/comment_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.comment_film,
         name='comment_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/delete_comment/<str:comment_id>&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/delete_comment/<str:comment_id>&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.delete_film_comment,
         name='delete_film_comment'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/delete_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/delete_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.delete_film,
         name='delete_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/unsee_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/unsee_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.unsee_film,
         name='unsee_film'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/update_film_data/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/update_film_data/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.update_film_data,
         name='update_film_data'
     ),
     path(
-        '<str:club_id>/film/<str:film_id>/add_filmaffinity_url/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>',
+        '<str:club_id>/film/<str:film_id>/add_filmaffinity_url/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.add_filmaffinity_url,
         name='add_filmaffinity_url'
     ),
@@ -196,20 +196,44 @@ urlpatterns = [
         name='meetings_list'
     ),
     path(
-        'club/<str:club_id>/shoutbox/',
-        views.ShoutboxView.as_view(
-            template_name='democracy/shoutbox.html'
+        'chat/club/<str:club_id>/',
+        views.ChatClubView.as_view(
+            template_name='democracy/chat_club.html'
         ),
-        name='shoutbox'
+        name='chatclub'
     ),
     path(
-        'club/<str:club_id>/shoutbox/post/<str:in_shoutbox_view>',
-        views.post_in_shoutbox,
-        name='post_in_shoutbox'
+        'chat/club/<str:club_id>/post/',
+        views.post_in_chatclub,
+        name='post_in_chatclub'
     ),
     path(
-        'club/<str:club_id>/shoutbox/delete_post/<str:post_id>',
-        views.delete_shoutbox_post,
-        name='delete_shoutbox_post'
+        'chat/club/<str:club_id>/delete_post/<str:post_id>/',
+        views.delete_chatclub_post,
+        name='delete_chatclub_post'
+    ),
+    path(
+        'chat/contacts/',
+        views.ChatContactsView.as_view(
+            template_name='democracy/chat_contacts.html'
+        ),
+        name='contacts'
+    ),
+    path(
+        'chat/user/<str:chatuser_id>/',
+        views.ChatUsersView.as_view(
+            template_name='democracy/chat_users.html'
+        ),
+        name='chatusers'
+    ),
+    path(
+        'chat/user/<str:chatuser_id>/post/',
+        views.post_in_chatusers,
+        name='post_in_chatusers'
+    ),
+    path(
+        'chat/user/<str:chatuser_id>/delete_post/<str:post_id>/',
+        views.delete_chatusers_post,
+        name='delete_chatusers_post'
     ),
 ]

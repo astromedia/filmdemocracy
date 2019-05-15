@@ -56,7 +56,7 @@
     <ul class="navbar-nav ml-auto">
 
 
-      <!--START: CLUBS-->
+      <!--START: CHATS-->
       <li class="nav-item dropdown mx-md-3 mx-2 align-self-center">
 
         <a class="nav-link nav-icon dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkChat"
@@ -64,24 +64,81 @@
           <img class="" src="{% static 'democracy/svg/chat_bubble.svg'%}">
         </a>
 
+        {% if user.club_set.all or user.chat_user.all %}
+
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkChat">
 
+          <!--START: CLUBS CHATS-->
           {% for userclub in user.club_set.all %}
-          <a class="dropdown-item py-3"
-             href="{% url 'democracy:shoutbox' userclub.id %}">
-            {{ userclub.name }}
+          <a class="dropdown-item py-0" href="{% url 'democracy:chatclub' userclub.id %}">
+            <div class="media">
+
+              {% if userclub.logo %}
+              <img class="align-self-center border border-secondary rounded-circle mr-2"
+                   src="{{ userclub.logo.url }}" alt="club.logo not found">
+              {% else %}
+              <img class="align-self-center border border-secondary rounded-circle mr-2"
+                   src="{% static 'democracy/club_no_logo.png' %}"
+                   alt="userclub.logo not found">
+              {% endif %}
+
+              <div class="media-body align-self-center p-0 m-0">
+                <span style="font-weight: bold;">{{ userclub.name }}</span><br>
+                {% with last_post=userclub.chatclubinfo_set.all.0.last_post %}
+                <span class="second-line club-chat-poster">{{ last_post.user_sender.username }}:</span>
+                <span class="second-line text-muted">{{ last_post.text }}</span>
+                {% endwith %}
+              </div>
+
+            </div>
           </a>
           {% endfor %}
+          <!--END: CLUBS CHATS-->
 
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item py-2 my-1 new-club" href="#">
-            <small>{% trans 'New Chat' %}</small>
+
+          <!--START: USERS CHATS-->
+          {% for chat_opened in user.chat_user.all %}
+          <a class="dropdown-item py-0" href="{% url 'democracy:chatusers' chat_opened.user_known.id %}">
+            <div class="media chat_item">
+
+              {% if chat_opened.user_known.profile_image %}
+              <img class="align-self-center border border-secondary rounded-circle mr-2"
+                   src="{{ chat_opened.user_known.profile_image.url }}" alt="chat_opened.user_known.profile_image not found">
+              {% else %}
+              <img class="align-self-center border border-secondary rounded-circle mr-2"
+                   src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+                   alt="chat_opened.user_known.profile_image not found">
+              {% endif %}
+
+              <div class="media-body align-self-center p-0 m-0">
+                <span style="font-weight: bold;">{{ chat_opened.user_known.username }}</span><br>
+                <span class="second-line text-muted">
+                  {{ chat_opened.last_post.text }}
+                </span>
+              </div>
+
+            </div>
           </a>
+          {% endfor %}
+          <!--END: USERS CHATS-->
+
+          <div class="dropdown-divider"></div>
+
+          <!--START: CONTACTS-->
+          <a class="dropdown-item extra-item p-0 m-0 text-center" href="{% url 'democracy:contacts' %}">
+            <strong class="align-self-center">
+              {% trans 'Contacts' %}
+            </strong>
+          </a>
+          <!--END: CONTACTS-->
 
         </div>
 
+          {% endif %}
+
       </li>
-      <!--END: CLUBS-->
+      <!--END: CHATS-->
 
 
       <!--START: CLUBS-->
@@ -94,16 +151,39 @@
 
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkClub">
 
-          {% for userclub in user.club_set.all %}
-          <a class="dropdown-item py-3 {% if club == userclub %} active {% endif %}"
-             href="{% url 'democracy:club_detail' userclub.id %}">
-            {{ userclub.name }}
-          </a>
-          {% endfor %}
+          {% if user.club_set.all %}
+
+            {% for userclub in user.club_set.all %}
+
+            <a class="dropdown-item py-0 {% if club == userclub %} active {% endif %}"
+               href="{% url 'democracy:club_detail' userclub.id %}">
+              <div class="media">
+
+                {% if userclub.logo %}
+                <img class="align-self-center border border-secondary rounded-circle mr-2"
+                     src="{{ userclub.logo.url }}" alt="club.logo not found">
+                {% else %}
+                <img class="align-self-center border border-secondary rounded-circle mr-2"
+                     src="{% static 'democracy/club_no_logo.png' %}"
+                     alt="userclub.logo not found">
+                {% endif %}
+
+                <div class="media-body align-self-center p-0 m-0">
+                  <span style="font-weight: bold;">{{ userclub.name }}</span>
+                </div>
+
+              </div>
+            </a>
+
+
+            {% endfor %}
 
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item py-2 my-1 new-club" href="{% url 'democracy:create_club' %}">
-            <small>{% trans 'Create new club' %}</small>
+
+          {% endif %}
+
+          <a class="dropdown-item py-0 m-0 extra-item text-center" href="{% url 'democracy:create_club' %}">
+            <strong>{% trans 'Create new club' %}</strong>
           </a>
 
         </div>
@@ -120,7 +200,7 @@
           <img class="mr-1 rounded-circle" src="{{ user.profile_image.url }}"
                alt="user.profile_image not found">
           {% else %}
-          <img class="mr-1 rounded" src="{% static 'democracy/svg/person.svg'%}">
+          <img class="mr-1 rounded-circle" src="{% static 'democracy/svg/person.svg'%}">
           {% endif %}
           {{ user.username }}
         </a>

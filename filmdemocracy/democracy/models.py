@@ -52,15 +52,46 @@ class Club(models.Model):
         return markdownify(str(self.panel))
 
 
-class ShoutboxPost(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class ChatClubPost(models.Model):
+    user_sender = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     date = models.DateTimeField('comment date', auto_now_add=True)
+    edited = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     text = models.CharField(max_length=5000)
 
     def __str__(self):
-        return f'{self.user}|{self.text}'
+        return f'{self.club}|{self.user_sender}|{self.date}|{self.text}'
+
+
+class ChatClubInfo(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    last_post = models.ForeignKey(ChatClubPost, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f'{self.club}|{self.last_post.date}'
+
+
+class ChatUsersPost(models.Model):
+    user_sender = models.ForeignKey(User, related_name='user_sender', on_delete=models.CASCADE)
+    user_receiver = models.ForeignKey(User, related_name='user_receiver', on_delete=models.CASCADE)
+    date = models.DateTimeField('comment date', auto_now_add=True)
+    edited = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False)
+    text = models.CharField(max_length=5000)
+
+    def __str__(self):
+        return f'{self.user_sender}|{self.user_receiver}|{self.date}|{self.text}'
+
+
+class ChatUsersInfo(models.Model):
+    user = models.ForeignKey(User, related_name='chat_user', on_delete=models.CASCADE)
+    user_known = models.ForeignKey(User, related_name='chat_user_known', on_delete=models.CASCADE)
+    created_date = models.DateField('chat created date', auto_now_add=True)
+    last_post = models.ForeignKey(ChatUsersPost, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f'{self.user}|{self.user_known}|{self.last_post.date}'
 
 
 class ClubMemberInfo(models.Model):

@@ -31,25 +31,33 @@ body {
   position: relative;
   max-width: 600px;
   text-align: center;
-  margin-bottom: -50px;
-  padding-top: 11px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
+  margin-top: 10px;
+  margin-bottom: -45px;
   background-color: transparent;
   z-index: 4;
 }
 
-.chat-banner .club-title {
+.chat-banner .row {
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.chat-banner .chat-title {
   pointer: hover;
   display: inline-block;
+  font-size: 19px;
+  color: #fff;
   background-color: rgba(0, 0, 0, 0.75);
 }
 
-.chat-banner .club-title a {
-  font-size: 19px;
+.chat-banner .chat-title a {
   color: #fff;
   text-decoration: none;
+}
+
+.chat-banner img {
+ max-height: 35px;
+ background: rgba(0, 0, 0, 1) !important;
 }
 
 .chat-banner a:hover {
@@ -60,7 +68,7 @@ body {
   position: relative;
   margin-left: auto;
   margin-right: auto;
-  height: calc(var(--vh, 1vh) * 100 - 107px);
+  height: calc(var(--vh, 1vh) * 100 - 108px);
   z-index: 2;
   padding-left: 0;
   padding-right: 0;
@@ -180,3 +188,28 @@ footer {
   height: 30px;
   max-height: 150px;
 }
+
+
+/* Post Form
+-------------------------------------------------- */
+
+.container-contacts {
+  text-decoration: none;
+}
+
+.container-contacts a {
+  text-decoration: none;
+}
+
+.container-contacts .contact {
+  color: black;
+}
+
+.container-contacts .contact:hover {
+  background-color: #dfdfe1;
+}
+
+.container-contacts .contact img {
+  max-width: 48px;
+}
+

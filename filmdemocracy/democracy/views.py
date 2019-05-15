@@ -19,7 +19,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
 from filmdemocracy.democracy.models import Club, ClubMemberInfo
-from filmdemocracy.democracy.models import ShoutboxPost, Meeting
+from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
 from filmdemocracy.settings import OMDB_API_KEY
@@ -46,6 +46,17 @@ def user_is_organizer_check(request, club_id, meeting_id):
     meeting = get_object_or_404(Meeting, pk=meeting_id)
     club_members = club.members.filter(is_active=True)
     return user in club_members and user == meeting.organizer
+
+
+def users_know_each_other_check(request, chatuser_id):
+    user = request.user
+    chat_user = get_object_or_404(User, pk=chatuser_id)
+    common_clubs = user.club_set.all() & chat_user.club_set.all()
+    chat_opened = ChatUsersInfo.objects.filter(user=user, user_known=chat_user)
+    if common_clubs.exists() or chat_opened.exists():
+        return True
+    else:
+        return False
 
 
 def add_club_context(request, context, club_id):
@@ -125,6 +136,7 @@ class CreateClubView(generic.FormView):
         new_club.admin_members.add(user)
         new_club.members.add(user)
         new_club.save()
+        _ = ChatClubInfo.objects.create(club=new_club)
         messages.success(self.request, _(f"New club created!"))
         club_member_info = ClubMemberInfo.objects.create(club=new_club, member=user)
         club_member_info.save()
@@ -148,9 +160,6 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
             context['extra_meetings'] = len(club_meetings) > 3
-        posts = ShoutboxPost.objects.filter(club=self.kwargs['club_id'])
-        if posts:
-            context['posts'] = posts.order_by('-date')[:5]
         last_comments = FilmComment.objects.filter(club_id=club_id, deleted=False)
         if last_comments:
             context['last_comments'] = last_comments.order_by('-date')[0:5]
@@ -1196,7 +1205,7 @@ class MeetingsListView(UserPassesTestMixin, generic.TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ShoutboxView(UserPassesTestMixin, generic.TemplateView):
+class ChatClubView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
         return user_is_club_member_check(self.request, self.kwargs['club_id'])
@@ -1204,32 +1213,101 @@ class ShoutboxView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context = add_club_context(self.request, context, self.kwargs['club_id'])
-        posts = ShoutboxPost.objects.filter(club=self.kwargs['club_id'])
+        posts = ChatClubPost.objects.filter(club=self.kwargs['club_id'])
         context['posts'] = posts.order_by('-date')[:1000]
         return context
 
 
 @login_required
-def post_in_shoutbox(request, club_id, in_shoutbox_view):
+def post_in_chatclub(request, club_id):
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
     club = get_object_or_404(Club, pk=club_id)
     post_text = request.POST['text']
-    if not post_text == '':
-        post = ShoutboxPost.objects.create(user=request.user, club=club, text=post_text)
+    if not post_text.lstrip() == '':
+        post = ChatClubPost.objects.create(user_sender=request.user, club=club, text=post_text)
         post.save()
-    if in_shoutbox_view == 'True':
-        return HttpResponseRedirect(reverse('democracy:shoutbox', kwargs={'club_id': club_id}))
-    else:
-        return HttpResponseRedirect(reverse('democracy:club_detail', kwargs={'club_id': club_id}))
+        chat_info, _ = ChatClubInfo.objects.get_or_create(club=club)  # TODO: change to get_or_404 in pro version
+        chat_info.last_post = post
+        chat_info.save()
+    return HttpResponseRedirect(reverse('democracy:chatclub', kwargs={'club_id': club_id}))
 
 
 @login_required
-def delete_shoutbox_post(request, club_id, post_id):
-    post = get_object_or_404(ShoutboxPost, id=post_id)
+def delete_chatclub_post(request, club_id, post_id):
+    post = get_object_or_404(ChatClubPost, id=post_id)
     if request.user != post.user:
         if not user_is_club_admin_check(request, club_id):
             return HttpResponseForbidden()
     post.deleted = True
     post.save()
-    return HttpResponseRedirect(reverse('democracy:shoutbox', kwargs={'club_id': club_id}))
+    return HttpResponseRedirect(reverse('democracy:chatclub', kwargs={'club_id': club_id}))
+
+
+@method_decorator(login_required, name='dispatch')
+class ChatContactsView(generic.TemplateView):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        user_clubs = user.club_set.all()
+        unique_contacts = []
+        for club in user_clubs:
+            for contact in club.members.filter(is_active=True).exclude(pk=self.request.user.id):
+                unique_contacts.append(contact)
+        unique_contacts = set(unique_contacts)
+        contacts_info = []
+        for contact in unique_contacts:
+            common_clubs = []
+            for club in user_clubs:
+                if contact in club.members.filter(is_active=True):
+                    common_clubs.append(club)
+            contacts_info.append({
+                'contact': contact,
+                'common_clubs': common_clubs
+            })
+            context['contacts_info'] = contacts_info
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class ChatUsersView(UserPassesTestMixin, generic.TemplateView):
+
+    def test_func(self):
+        return users_know_each_other_check(self.request, self.kwargs['chatuser_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        chat_user = get_object_or_404(User, pk=self.kwargs['chatuser_id'])
+        context['chat_user'] = chat_user
+        posts_a = ChatUsersPost.objects.filter(user_sender=self.request.user, user_receiver=chat_user)
+        posts_b = ChatUsersPost.objects.filter(user_sender=chat_user, user_receiver=self.request.user)
+        posts = posts_a | posts_b
+        context['posts'] = posts.order_by('-date')[:1000]
+        return context
+
+
+@login_required
+def post_in_chatusers(request, chatuser_id):
+    if not users_know_each_other_check(request, chatuser_id):
+        return HttpResponseForbidden()
+    chat_user = get_object_or_404(User, pk=chatuser_id)
+    post_text = request.POST['text']
+    if not post_text.lstrip() == '':
+        post = ChatUsersPost.objects.create(user_sender=request.user, user_receiver=chat_user, text=post_text)
+        post.save()
+        for users_tuple in [(request.user, chat_user), (chat_user, request.user)]:
+            chat_info, _ = ChatUsersInfo.objects.get_or_create(user=users_tuple[0], user_known=users_tuple[1])
+            chat_info.last_post = post
+            chat_info.save()
+    return HttpResponseRedirect(reverse('democracy:chatusers', kwargs={'chatuser_id': chatuser_id}))
+
+
+@login_required
+def delete_chatusers_post(request, post_id):
+    post = get_object_or_404(ChatUsersPost, id=post_id)
+    if request.user != post.user:
+        return HttpResponseForbidden()
+    post.deleted = True
+    post.save()
+    return HttpResponseRedirect(reverse('democracy:chatusers', kwargs={'chatuser_id': post.user_receiver.id}))

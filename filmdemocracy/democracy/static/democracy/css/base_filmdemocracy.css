@@ -118,20 +118,45 @@ body {
 .navbar .nav-item .dropdown-menu .active {
   color: black;
   font-weight: bold;
-  background-color: #d1d1d1;
+  background-color: #d1d1d1 !important;
+}
+
+.navbar .nav-item .dropdown-menu .dropdown-item .media {
+  min-height: 60px;
+}
+
+.navbar .nav-item .dropdown-menu .dropdown-item .media-body {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar .nav-item .dropdown-menu .dropdown-item .second-line {
+  font-size: 15px;
+}
+
+.navbar .nav-item .dropdown-menu .dropdown-item .club-chat-poster {
+  color: #344a8d;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item:hover {
-  font-weight: bold;
+  background-color: #dfdfe1;
 }
 
-.dropdown-menu .new-club {
+.navbar .nav-item .dropdown-menu .dropdown-item .media img {
+  max-width: 48px;
+  max-height: 48px;
+}
+
+.dropdown-menu .extra-item {
   color: seagreen !important;
-
+  line-height: 60px;
 }
 
-.dropdown-menu .new-club:hover {
+.dropdown-menu .extra-item:hover {
   color: lightseagreen !important;
+  background-color: transparent !important;
+
 }
 
 .navbar .nav-item .user-info {

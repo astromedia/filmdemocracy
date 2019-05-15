@@ -1,0 +1,49 @@
+{% extends "base_filmdemocracy.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'democracy/css/chats.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Chat Contacts' %}{% endblock %}
+
+{% block pagecontent %}
+
+
+<div class="container container-contacts p-0 m-0">
+
+  {% for contact_info in contacts_info %}
+
+  <a class="m-0 p-0" href="{% url 'democracy:chatusers' contact_info.contact.id %}">
+
+    <div class="media contact p-2 pl-3">
+
+      {% if contact_info.contact.profile_image %}
+      <img class="align-self-center border border-secondary rounded-circle mr-2"
+           src="{{ contact_info.contact.profile_image.url }}" alt="contact_info.contact.profile_image not found">
+      {% else %}
+      <img class="align-self-center border border-secondary rounded-circle mr-2"
+           src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+           alt="contact_info.contact.profile_image not found">
+      {% endif %}
+
+      <div class="media-body align-self-center p-0 m-0">
+        <span style="font-weight: bold;">{{ contact_info.contact.username }}</span><br>
+        <span class="small text-muted">
+          {% for club in contact_info.common_clubs %}{% if not forloop.first %}, {% endif %}{{ club.name }}{% endfor %}
+        </span>
+      </div>
+
+    </div>
+
+  </a>
+
+  {% endfor %}
+
+</div>
+
+
+{% endblock %}

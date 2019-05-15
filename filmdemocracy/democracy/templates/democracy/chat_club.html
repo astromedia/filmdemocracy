@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/shoutbox.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/chats.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Club Shoutbox' %}{% endblock %}
@@ -16,8 +16,26 @@
 <!--START: CHAT BANNER-->
 <div class="container-fluid chat-banner text-center">
 
-  <div class="club-title px-2 rounded-pill">
-    <a href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+  <div class="row justify-content-center align-items-center m-0 p-0">
+
+    <div class="col col-auto mr-n3">
+
+      {% if club.logo %}
+      <img class="border border-secondary rounded-circle" src="{{ club.logo.url }}" alt="club.logo not found">
+      {% else %}
+      <img class="border border-secondary rounded-circle" src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
+      {% endif %}
+
+    </div>
+
+    <div class="col col-auto ml-n2">
+
+      <div class="chat-title px-2 rounded-pill media-body">
+        <a href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+      </div>
+
+    </div>
+
   </div>
 
 </div>
@@ -44,8 +62,8 @@
   <!--      &lt;!&ndash;NAME AND DATE&ndash;&gt;-->
   <!--      <div class="row">-->
   <!--        <div class="col-auto mr-auto username">-->
-  <!--          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">-->
-  <!--            <strong>{{ post.user.username }}</strong></a>-->
+  <!--          <a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user_sender.id %}">-->
+  <!--            <strong>{{ post.user_sender.username }}</strong></a>-->
   <!--        </div>-->
   <!--        <div class="col-auto date">-->
   <!--          <span class="small text-muted">{{ post.date }}</span>-->
@@ -80,18 +98,18 @@
 
   <div class="media post my-1 mx-2">
 
-    {% if not user == post.user %}
+    {% if not user == post.user_sender %}
 
-    {% ifchanged post.user %}
+    {% ifchanged post.user_sender %}
 
     <!--START: USER IMAGE-->
     <div class="align-self-start mr-1 mb-n2 user-image">
-      {% if post.user.profile_image %}
-      <img class="border border-secondary rounded-circle" title="{{ post.user.username }}"
-           src="{{ post.user.profile_image.url }}" alt="post.user.profile_image not found">
+      {% if post.user_sender.profile_image %}
+      <img class="border border-secondary rounded-circle" title="{{ post.user_sender.username }}"
+           src="{{ post.user_sender.profile_image.url }}" alt="post.user_sender.profile_image not found">
       {% else %}
-      <img class="border border-secondary rounded-circle" title="{{ post.user.username }}"
-           src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="post.user.profile_image not found">
+      <img class="border border-secondary rounded-circle" title="{{ post.user_sender.username }}"
+           src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="post.user_sender.profile_image not found">
       {% endif %}
     </div>
     <!--END: USER IMAGE-->
@@ -106,13 +124,13 @@
 
 
     <!--START: POST-->
-    <div class="{% if user == post.user %} ml-auto {% endif %}">
+    <div class="{% if user == post.user_sender %} ml-auto {% endif %}">
 
-      <div id="post-bubble" class="mt-0 pb-0 post-bubble pt-1 pl-2 pr-3 rounded-lg {% if user == post.user %} green-chat {% endif %}">
+      <div id="post-bubble" class="mt-0 pb-0 post-bubble pt-1 pl-2 pr-3 rounded-lg {% if user == post.user_sender %} green-chat {% endif %}">
         <div class="post-text">
-          {% if not user == post.user %}
-          <div class="pb-1"><a class="text-body poster-name" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
-            {{ post.user.username }}</a></div>
+          {% if not user == post.user_sender %}
+          <div class="pb-1"><a class="text-body poster-name" href="{% url 'democracy:club_member_detail' club.id post.user_sender.id %}">
+            {{ post.user_sender.username }}</a></div>
           {% endif %}
           {% if post.deleted %}
           <span class="text-muted"><em>{% trans 'Post deleted.' %}</em></span>
@@ -128,7 +146,7 @@
 <!--      <div class="small post-delete mx-1">-->
 <!--        {% if not post.deleted %}-->
 
-<!--            <form style="padding-top: 2px;" class="{% if user == post.user %}text-right{% endif %}" action="{% url 'democracy:delete_shoutbox_post' club.id post.id %}" method="POST">-->
+<!--            <form style="padding-top: 2px;" class="{% if user == post.user_sender %}text-right{% endif %}" action="{% url 'democracy:delete_chatclub_post' club.id post.id %}" method="POST">-->
 <!--              {% csrf_token %}-->
 
 <!--              <label id="post-delete-label" style="display:none;" for="delete-post_{{ forloop.counter }}" class="pointer-cursor mx-2">{% trans 'Delete' %}</label>-->
@@ -169,7 +187,7 @@
     <!--START: POST FORM-->
       <div class="form-post">
 
-        <form class="form-inline" action="{% url 'democracy:post_in_shoutbox' club.id 'True' %}" method="POST">
+        <form class="form-inline" action="{% url 'democracy:post_in_chatclub' club.id %}" method="POST">
           {% csrf_token %}
 
           <div class="input-group">

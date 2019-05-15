@@ -22,7 +22,6 @@
   <!--SHORT DESCRIPTION-->
   <div class="lead text-muted short-description mt-1 mb-3">{{ club.short_description }}</div>
 
-
   <!--LOGO-->
   <div class="logo">
     {% if club.logo %}
@@ -32,7 +31,6 @@
     <img class="shadow" src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
     {% endif %}
   </div>
-
 
 </div>
 <!--END: CLUB BANNER-->
@@ -378,13 +376,6 @@
 
 {% endif %}
 <!--END: NEXT 3 CLUB MEETINGS-->
-
-
-<!--START: SHOUTBOX-->
-<!--  <div class="text-center mt-3">-->
-<!--    <a class="small badge badge-white-to-black" href="{% url 'democracy:shoutbox' club.id %}">{% trans 'Check all messages' %}</a>-->
-<!--  </div>-->
-<!--END: SHOUTBOX-->
 
 
 <!--START: CLUB DESCRIPTION-->

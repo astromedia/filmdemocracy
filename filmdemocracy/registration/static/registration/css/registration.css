@@ -86,7 +86,6 @@ body {
 }
 
 .overlay {
-  max-width: 70px;
   text-align: center;
   margin-top: -148px;
   margin-bottom: 68px;
@@ -94,6 +93,8 @@ body {
 }
 
 .overlay img {
+  background: rgba(0, 0, 0, 0.7);
+  max-width: 70px;
   padding: 10px;
 }
 
