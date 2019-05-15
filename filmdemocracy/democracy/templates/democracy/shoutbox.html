@@ -16,9 +16,9 @@
 <!--START: CHAT BANNER-->
 <div class="container-fluid chat-banner text-center">
 
-    <a style='font-size: 19px' href="{% url 'democracy:club_detail' club.id %}">
-      {{ club.name }}
-    </a>
+  <div>
+    <a style='font-size: 19px' href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+  </div>
 
 </div>
 <!--END: CHAT BANNER-->
@@ -69,8 +69,10 @@
 
     {% ifchanged post.date|date %}
 
-    <div class="date-bubble my-2 py-1 rounded-lg text-center mx-auto">
+    <div class="text-center">
+    <div class="date-bubble px-2 text-center rounded-pill">
       {{ post.date|date }}
+    </div>
     </div>
 
     {% endifchanged %}
@@ -109,8 +111,8 @@
       <div id="post-bubble" class="mt-0 pb-0 post-bubble pt-1 pl-2 pr-3 rounded-lg {% if user == post.user %} green-chat {% endif %}">
         <div class="post-text">
           {% if not user == post.user %}
-          <strong><a class="text-body" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
-            {{ post.user.username }}</a>:</strong>
+          <div class="pb-1"><a class="text-body poster-name" href="{% url 'democracy:club_member_detail' club.id post.user.id %}">
+            {{ post.user.username }}</a></div>
           {% endif %}
           {% if post.deleted %}
           <span class="text-muted"><em>{% trans 'Post deleted.' %}</em></span>
@@ -118,7 +120,7 @@
           <span>{{ post.text }}</span>
           {% endif %}
           <span style="display:inline-block; width: 20px;"></span>
-          <div class="post-time text-muted small text-right">{{ post.date|date:"H:i" }}</div>
+          <div class="post-time text-muted text-right">{{ post.date|date:"H:i" }}</div>
         </div>
       </div>
 

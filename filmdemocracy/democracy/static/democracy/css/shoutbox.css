@@ -38,7 +38,7 @@ body {
   padding-right: 10px;
   background-color: #121317;
   z-index: 4;
-  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.75);
 }
 
 .chat-banner a {
@@ -85,11 +85,11 @@ footer {
 /* Posts
 -------------------------------------------------- */
 .date-bubble {
-  max-width: 200px;
-  font-size: 12px;
-  background-color: #ededed;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
-  min-width: 105px;
+  display: inline-block;
+  width: auto;
+  font-size: 14px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .post .media-body {
@@ -110,7 +110,7 @@ footer {
 }
 
 .post .green-chat{
-  background-color: #d4ffc3 !important;
+  background-color: #effedd !important;
 }
 
 .post .post-bubble {
@@ -120,13 +120,20 @@ footer {
 }
 
 .post .post-text {
-  font-size: 14px;
+  color: black;
+  font-size: 15px;
   line-height: 18px; /* Vertically center the text there */
   max-width: 80vw;
   word-wrap: break-word !important;
 }
 
+.post .post-text .poster-name {
+  font-size: 13px;
+  font-weight: bold;
+}
+
 .post .post-time {
+  font-size: 11px;
   position: relative;
   margin-top: -13px;
   margin-right: -10px;
