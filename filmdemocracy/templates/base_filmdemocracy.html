@@ -57,7 +57,7 @@
 
 
       <!--START: CHATS-->
-      <li class="nav-item dropdown mx-md-3 mx-2 align-self-center">
+      <li class="nav-item dropdown mx-md-3 mx-1 align-self-center">
 
         <a class="nav-link nav-icon dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkChat"
            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -70,7 +70,7 @@
 
           <!--START: CLUBS CHATS-->
           {% for userclub in user.club_set.all %}
-          <a class="dropdown-item py-0" href="{% url 'democracy:chatclub' userclub.id %}">
+          <a class="dropdown-item py-0 px-3" href="{% url 'democracy:chatclub' userclub.id %}">
             <div class="media">
 
               {% if userclub.logo %}
@@ -99,7 +99,7 @@
 
           <!--START: USERS CHATS-->
           {% for chat_opened in user.chat_user.all %}
-          <a class="dropdown-item py-0" href="{% url 'democracy:chatusers' chat_opened.user_known.id %}">
+          <a class="dropdown-item py-0 px-3" href="{% url 'democracy:chatusers' chat_opened.user_known.id %}">
             <div class="media chat_item">
 
               {% if chat_opened.user_known.profile_image %}
@@ -126,7 +126,7 @@
           <div class="dropdown-divider"></div>
 
           <!--START: CONTACTS-->
-          <a class="dropdown-item extra-item p-0 m-0 text-center" href="{% url 'democracy:contacts' %}">
+          <a class="dropdown-item extra-item py-0 px-3 m-0 text-center" href="{% url 'democracy:contacts' %}">
             <strong class="align-self-center">
               {% trans 'Contacts' %}
             </strong>
@@ -142,7 +142,7 @@
 
 
       <!--START: CLUBS-->
-      <li class="nav-item dropdown mx-md-3 mx-2 align-self-center">
+      <li class="nav-item dropdown mx-md-3 mx-1 align-self-center">
 
         <a class="nav-link nav-icon nav-icon-rounded dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkClub"
            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -155,7 +155,7 @@
 
             {% for userclub in user.club_set.all %}
 
-            <a class="dropdown-item py-0 {% if club == userclub %} active {% endif %}"
+            <a class="dropdown-item py-0 px-3 {% if club == userclub and page != 'chat'%} active {% endif %}"
                href="{% url 'democracy:club_detail' userclub.id %}">
               <div class="media">
 
@@ -182,7 +182,7 @@
 
           {% endif %}
 
-          <a class="dropdown-item py-0 m-0 extra-item text-center" href="{% url 'democracy:create_club' %}">
+          <a class="dropdown-item py-0 px-3 m-0 extra-item text-center" href="{% url 'democracy:create_club' %}">
             <strong>{% trans 'Create new club' %}</strong>
           </a>
 
@@ -193,7 +193,7 @@
 
 
       <!--START: USER, ONLY SHOWN IN LARGE DISPLAYS-->
-      <li class="d-none d-md-block nav-item mx-3 align-self-center">
+      <li class="d-none d-md-block nav-item mx-1 align-self-center">
 
         <a class="nav-link user-icon nav-icon-rounded" href="{% url 'registration:account_info' %}">
           {% if user.profile_image %}
@@ -202,7 +202,7 @@
           {% else %}
           <img class="mr-1 rounded-circle" src="{% static 'democracy/svg/person.svg'%}">
           {% endif %}
-          {{ user.username }}
+          <span>{{ user.username }}</span>
         </a>
 
       </li>
@@ -210,7 +210,7 @@
 
 
       <!--START: USER, ONLY SHOWN IN SMALL DISPLAYS-->
-      <li class="d-md-none .d-lg-block nav-item mx-2 align-self-center">
+      <li class="d-md-none .d-lg-block nav-item mx-1 align-self-center">
 
         <a class="nav-link user-icon nav-icon-rounded" href="{% url 'registration:account_info' %}">
           {% if user.profile_image %}
@@ -225,7 +225,7 @@
 
 
       <!--START: NOTIFICATIONS-->
-      <li class="nav-item mr-md-4 mx-2 mr-md-5 align-self-center">
+      <li class="nav-item mr-3 mx-1 mr-md-5 align-self-center">
 
         <a class="nav-link nav-icon" href="#">
           <img class="" src="{% static 'democracy/svg/bell_white.svg'%}" alt="bell image not found">

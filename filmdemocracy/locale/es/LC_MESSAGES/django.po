@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-12 19:05+0200\n"
+"POT-Creation-Date: 2019-05-17 00:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,7 +51,7 @@ msgstr "Email"
 msgid "Send message with email (optional)"
 msgstr "Mandar mensaje con email (opcional)"
 
-#: democracy/forms.py:268 democracy/models.py:79
+#: democracy/forms.py:268 democracy/models.py:110
 msgid "Description (optional)"
 msgstr "Descripción (opcional)"
 
@@ -77,55 +77,55 @@ msgstr "Panel del club: descripción, reglas, etc. (opcional)"
 msgid "club logo"
 msgstr "logo del club"
 
-#: democracy/models.py:78
+#: democracy/models.py:109
 msgid "Name"
 msgstr "Nombre"
 
-#: democracy/models.py:78
+#: democracy/models.py:109
 msgid "Club meeting"
 msgstr "Encuentro del club"
 
-#: democracy/models.py:81
+#: democracy/models.py:112
 msgid "Place"
 msgstr "Lugar"
 
-#: democracy/models.py:82
+#: democracy/models.py:113
 msgid "Date"
 msgstr "Fecha"
 
-#: democracy/models.py:83
+#: democracy/models.py:114
 msgid "Start time (optional)"
 msgstr "Hora de comienzo (opcional)"
 
-#: democracy/models.py:84
+#: democracy/models.py:115
 msgid "End time (optional)"
 msgstr "Hora de finalización (opcional)"
 
-#: democracy/models.py:158
+#: democracy/models.py:189
 msgid "I really really want to see it."
 msgstr "Tengo muchas muchas ganas de verla."
 
-#: democracy/models.py:159
+#: democracy/models.py:190
 msgid "I want to see it."
 msgstr "Quiero verla."
 
-#: democracy/models.py:160
+#: democracy/models.py:191
 msgid "I've seen it, but I wouldn't mind seeing it."
 msgstr "La he visto, pero no me importaría verla."
 
-#: democracy/models.py:161
+#: democracy/models.py:192
 msgid "Meh... I could see it."
 msgstr "Pse... podría verla."
 
-#: democracy/models.py:162
+#: democracy/models.py:193
 msgid "I don't want to see it."
 msgstr "No quiero verla."
 
-#: democracy/models.py:163
+#: democracy/models.py:194
 msgid "I've seen it, and I don't want to see it again."
 msgstr "La he visto, y no quiero volver a verla."
 
-#: democracy/models.py:164
+#: democracy/models.py:195
 msgid "Veto!"
 msgstr "¡Veto!"
 
@@ -155,18 +155,18 @@ msgid "Show"
 msgstr "Mostrar"
 
 #: democracy/templates/democracy/candidate_films_list.html:41
-#: democracy/views.py:359
+#: democracy/views.py:368
 msgid "All"
 msgstr "Todas"
 
 #: democracy/templates/democracy/candidate_films_list.html:44
-#: democracy/views.py:361
+#: democracy/views.py:370
 msgid "Not voted"
 msgstr "No votadas"
 
 #: democracy/templates/democracy/candidate_films_list.html:48
 #: democracy/templates/democracy/candidate_films_list.html:49
-#: democracy/views.py:363
+#: democracy/views.py:372
 msgid "Only voted"
 msgstr "Sólo votadas"
 
@@ -176,32 +176,32 @@ msgstr "Ordenar"
 
 #: democracy/templates/democracy/candidate_films_list.html:64
 #: democracy/templates/democracy/candidate_films_list.html:180
-#: democracy/views.py:366
+#: democracy/views.py:375
 msgid "Title"
 msgstr "Título"
 
 #: democracy/templates/democracy/candidate_films_list.html:68
 #: democracy/templates/democracy/candidate_films_list.html:69
 #: democracy/templates/democracy/candidate_films_list.html:182
-#: democracy/views.py:369
+#: democracy/views.py:378
 msgid "Date proposed"
 msgstr "Fecha propuesta"
 
 #: democracy/templates/democracy/candidate_films_list.html:71
 #: democracy/templates/democracy/candidate_films_list.html:184
-#: democracy/templates/democracy/film_detail.html:147 democracy/views.py:372
+#: democracy/templates/democracy/film_detail.html:147 democracy/views.py:381
 msgid "Year"
 msgstr "Año"
 
 #: democracy/templates/democracy/candidate_films_list.html:75
 #: democracy/templates/democracy/candidate_films_list.html:186
 #: democracy/templates/democracy/candidate_films_vote_results.html:61
-#: democracy/templates/democracy/film_detail.html:148 democracy/views.py:375
+#: democracy/templates/democracy/film_detail.html:148 democracy/views.py:384
 msgid "Duration"
 msgstr "Duración"
 
 #: democracy/templates/democracy/candidate_films_list.html:79
-#: democracy/views.py:378
+#: democracy/views.py:387
 msgid "My vote"
 msgstr "Mi voto"
 
@@ -211,13 +211,13 @@ msgstr "Vista"
 
 #: democracy/templates/democracy/candidate_films_list.html:96
 #: democracy/templates/democracy/candidate_films_list.html:97
-#: democracy/views.py:380
+#: democracy/views.py:389
 msgid "Posters"
 msgstr "Posters"
 
 #: democracy/templates/democracy/candidate_films_list.html:100
 #: democracy/templates/democracy/candidate_films_list.html:101
-#: democracy/views.py:382
+#: democracy/views.py:391
 msgid "List"
 msgstr "Lista"
 
@@ -251,9 +251,9 @@ msgstr "Abrir imdb.com en otra pestaña"
 #: democracy/templates/democracy/candidate_films_list.html:292
 #: democracy/templates/democracy/candidate_films_participants.html:109
 #: democracy/templates/democracy/candidate_films_seen.html:114
-#: democracy/templates/democracy/club_detail.html:354
-#: democracy/templates/democracy/club_detail.html:674
-#: democracy/templates/democracy/club_detail.html:709
+#: democracy/templates/democracy/club_detail.html:352
+#: democracy/templates/democracy/club_detail.html:665
+#: democracy/templates/democracy/club_detail.html:700
 #: democracy/templates/democracy/club_kick_members.html:71
 #: democracy/templates/democracy/club_promote_members.html:94
 #: democracy/templates/democracy/edit_club_create.html:122
@@ -400,179 +400,196 @@ msgstr ""
 "strong>, y no está presente.\n"
 "            "
 
-#: democracy/templates/democracy/club_detail.html:61
+#: democracy/templates/democracy/chat_club.html:11
+#: democracy/templates/democracy/chat_users.html:11
+msgid "Club Shoutbox"
+msgstr "Chat del Club"
+
+#: democracy/templates/democracy/chat_club.html:76
+#: democracy/templates/democracy/chat_club.html:136
+#: democracy/templates/democracy/chat_users.html:77
+msgid "Post deleted."
+msgstr "Mensaje borrado."
+
+#: democracy/templates/democracy/chat_club.html:152
+#: democracy/templates/democracy/club_detail.html:312
+#: democracy/templates/democracy/film_detail.html:425
+#: democracy/templates/democracy/meetings_list.html:179
+msgid "Delete"
+msgstr "Eliminar"
+
+#: democracy/templates/democracy/chat_club.html:195
+#: democracy/templates/democracy/chat_users.html:119
+msgid "Message"
+msgstr "Mensaje"
+
+#: democracy/templates/democracy/chat_contacts.html:11
+#: templates/base_filmdemocracy.html:131
+msgid "Contacts"
+msgstr "Contactos"
+
+#: democracy/templates/democracy/club_detail.html:59
 msgid "Your club doesn't have a logo yet!"
 msgstr "¡Tu club todavía no tiene logo!"
 
-#: democracy/templates/democracy/club_detail.html:64
+#: democracy/templates/democracy/club_detail.html:62
 msgid "Complete club info"
 msgstr "Completar info del club"
 
-#: democracy/templates/democracy/club_detail.html:80
+#: democracy/templates/democracy/club_detail.html:78
 msgid "Club admin utilities"
 msgstr "Herramientas de admin"
 
-#: democracy/templates/democracy/club_detail.html:94
+#: democracy/templates/democracy/club_detail.html:92
 #: democracy/templates/democracy/edit_club_info.html:12
 #: democracy/templates/democracy/edit_club_info.html:40
 msgid "Edit club info"
 msgstr "Editar info"
 
-#: democracy/templates/democracy/club_detail.html:102
+#: democracy/templates/democracy/club_detail.html:100
 #: democracy/templates/democracy/edit_club_panel.html:12
 #: democracy/templates/democracy/edit_club_panel.html:43
 msgid "Edit club panel"
 msgstr "Editar panel"
 
-#: democracy/templates/democracy/club_detail.html:110
+#: democracy/templates/democracy/club_detail.html:108
 msgid "Promote to admin"
 msgstr "Ascender a admin"
 
-#: democracy/templates/democracy/club_detail.html:118
+#: democracy/templates/democracy/club_detail.html:116
 #: democracy/templates/democracy/club_kick_members.html:12
 msgid "Kick members"
 msgstr "Echar a miembros"
 
-#: democracy/templates/democracy/club_detail.html:126
-#: democracy/templates/democracy/club_detail.html:664
+#: democracy/templates/democracy/club_detail.html:124
+#: democracy/templates/democracy/club_detail.html:655
 msgid "Self-demote"
 msgstr "Auto-degradarse"
 
-#: democracy/templates/democracy/club_detail.html:141
+#: democracy/templates/democracy/club_detail.html:139
 msgid "Next club meetings"
 msgstr "Próximos encuentros del club"
 
-#: democracy/templates/democracy/club_detail.html:150
+#: democracy/templates/democracy/club_detail.html:148
 #: democracy/templates/democracy/meetings_form.html:24
 msgid "Organize meeting"
 msgstr "Organizar encuentro"
 
-#: democracy/templates/democracy/club_detail.html:169
+#: democracy/templates/democracy/club_detail.html:167
 #: democracy/templates/democracy/meetings_list.html:33
 msgid "Organized by"
 msgstr "Organizado por"
 
-#: democracy/templates/democracy/club_detail.html:214
+#: democracy/templates/democracy/club_detail.html:212
 #: democracy/templates/democracy/meetings_list.html:79
 msgid "Confirmed:"
 msgstr "Confirmados:"
 
-#: democracy/templates/democracy/club_detail.html:227
+#: democracy/templates/democracy/club_detail.html:225
 #: democracy/templates/democracy/meetings_list.html:92
 msgid "Interested:"
 msgstr "Interesados:"
 
-#: democracy/templates/democracy/club_detail.html:239
+#: democracy/templates/democracy/club_detail.html:237
 #: democracy/templates/democracy/meetings_list.html:104
 msgid "Can't assist:"
 msgstr "No pueden asistir:"
 
-#: democracy/templates/democracy/club_detail.html:261
-#: democracy/templates/democracy/club_detail.html:265
+#: democracy/templates/democracy/club_detail.html:259
+#: democracy/templates/democracy/club_detail.html:263
 #: democracy/templates/democracy/meetings_list.html:126
 #: democracy/templates/democracy/meetings_list.html:130
 msgid "Confirm assistance"
 msgstr "Confirmar asistencia"
 
-#: democracy/templates/democracy/club_detail.html:279
-#: democracy/templates/democracy/club_detail.html:283
+#: democracy/templates/democracy/club_detail.html:277
+#: democracy/templates/democracy/club_detail.html:281
 #: democracy/templates/democracy/meetings_list.html:144
 #: democracy/templates/democracy/meetings_list.html:148
 msgid "I'm interested"
 msgstr "Estoy interesado"
 
-#: democracy/templates/democracy/club_detail.html:297
-#: democracy/templates/democracy/club_detail.html:301
+#: democracy/templates/democracy/club_detail.html:295
+#: democracy/templates/democracy/club_detail.html:299
 #: democracy/templates/democracy/meetings_list.html:162
 #: democracy/templates/democracy/meetings_list.html:166
 msgid "I can't assist"
 msgstr "No puedo asistir"
 
-#: democracy/templates/democracy/club_detail.html:314
-#: democracy/templates/democracy/film_detail.html:425
-#: democracy/templates/democracy/meetings_list.html:179
-#: democracy/templates/democracy/shoutbox.html:132
-msgid "Delete"
-msgstr "Eliminar"
-
-#: democracy/templates/democracy/club_detail.html:324
+#: democracy/templates/democracy/club_detail.html:322
 #: democracy/templates/democracy/meetings_list.html:189
 msgid "Edit"
 msgstr "Editar"
 
-#: democracy/templates/democracy/club_detail.html:344
+#: democracy/templates/democracy/club_detail.html:342
 #: democracy/templates/democracy/meetings_list.html:209
 msgid "Delete meeting"
 msgstr "Eliminar encuentro"
 
-#: democracy/templates/democracy/club_detail.html:350
-#: democracy/templates/democracy/club_detail.html:702
+#: democracy/templates/democracy/club_detail.html:348
+#: democracy/templates/democracy/club_detail.html:693
 #: democracy/templates/democracy/meetings_list.html:215
 #: registration/templates/registration/account_info.html:185
 msgid "Are you sure about this?"
 msgstr "¿Estás seguro de esto?"
 
-#: democracy/templates/democracy/club_detail.html:359
-#: democracy/templates/democracy/club_detail.html:679
-#: democracy/templates/democracy/club_detail.html:714
+#: democracy/templates/democracy/club_detail.html:357
+#: democracy/templates/democracy/club_detail.html:670
+#: democracy/templates/democracy/club_detail.html:705
 #: democracy/templates/democracy/film_detail.html:534
 #: democracy/templates/democracy/meetings_list.html:224
 #: registration/templates/registration/account_info.html:194
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: democracy/templates/democracy/club_detail.html:374
+#: democracy/templates/democracy/club_detail.html:372
 msgid "Check all meetings"
 msgstr "Ver todos los encuentros"
 
-#: democracy/templates/democracy/club_detail.html:385
-msgid "Check all messages"
-msgstr "Ver todos los mensajes"
-
-#: democracy/templates/democracy/club_detail.html:393
+#: democracy/templates/democracy/club_detail.html:384
 msgid "Club panel"
 msgstr "Panel del club"
 
-#: democracy/templates/democracy/club_detail.html:408
+#: democracy/templates/democracy/club_detail.html:399
 msgid "Last comments on films"
 msgstr "Últimos comentarios de películas"
 
-#: democracy/templates/democracy/club_detail.html:455
+#: democracy/templates/democracy/club_detail.html:446
 msgid "Last proposed films"
 msgstr "Últimas películas propuestas"
 
-#: democracy/templates/democracy/club_detail.html:518
+#: democracy/templates/democracy/club_detail.html:509
 msgid "Check all candidate films"
 msgstr "Ver todas las películas propuestas"
 
-#: democracy/templates/democracy/club_detail.html:532
+#: democracy/templates/democracy/club_detail.html:523
 msgid "Last seen films"
 msgstr "Últimas películas vistas"
 
-#: democracy/templates/democracy/club_detail.html:556
+#: democracy/templates/democracy/club_detail.html:547
 msgid "Check all films seen by club"
 msgstr "Ver las películas vistas por el club"
 
-#: democracy/templates/democracy/club_detail.html:570
+#: democracy/templates/democracy/club_detail.html:561
 #: democracy/templates/democracy/meetings_form.html:195
 msgid "Club members"
 msgstr "Miembros del club"
 
-#: democracy/templates/democracy/club_detail.html:613
+#: democracy/templates/democracy/club_detail.html:604
 #: democracy/templates/democracy/invite_new_member.html:12
 msgid "Invite new member"
 msgstr "Invitar a alguien"
 
-#: democracy/templates/democracy/club_detail.html:625
-#: democracy/templates/democracy/club_detail.html:696
+#: democracy/templates/democracy/club_detail.html:616
+#: democracy/templates/democracy/club_detail.html:687
 msgid "Leave club"
 msgstr "Abandonar club"
 
-#: democracy/templates/democracy/club_detail.html:670
+#: democracy/templates/democracy/club_detail.html:661
 msgid "Are you sure you don't want to be an admin anymore?"
 msgstr "¿Seguro que ya no quieres ser un admin del club?"
 
-#: democracy/templates/democracy/club_detail.html:704
+#: democracy/templates/democracy/club_detail.html:695
 msgid ""
 "You are the only member of the club; if you leave, the club will disappear!"
 msgstr "Eres el único miembro del club; si te vas, ¡el club desaparecerá!"
@@ -630,7 +647,7 @@ msgstr "Ascender"
 
 #: democracy/templates/democracy/edit_club_create.html:11
 #: democracy/templates/democracy/edit_club_create.html:39
-#: templates/base_filmdemocracy.html:106
+#: templates/base_filmdemocracy.html:186
 msgid "Create new club"
 msgstr "Crear nuevo club"
 
@@ -998,98 +1015,85 @@ msgstr "(Hall of fame)"
 msgid "No film has been seen in the club yet..."
 msgstr "Todavía no se ha visto ninguna película en el club..."
 
-#: democracy/templates/democracy/shoutbox.html:11
-msgid "Club Shoutbox"
-msgstr "Chat del Club"
-
-#: democracy/templates/democracy/shoutbox.html:58
-#: democracy/templates/democracy/shoutbox.html:116
-msgid "Post deleted."
-msgstr "Mensaje borrado."
-
-#: democracy/templates/democracy/shoutbox.html:175
-msgid "Say something..."
-msgstr "Escribe algo..."
-
-#: democracy/views.py:128
+#: democracy/views.py:140
 msgid "New club created!"
 msgstr "¡Nuevo club creado!"
 
-#: democracy/views.py:236
+#: democracy/views.py:245
 msgid "You must promote other club member to admin before leaving the club."
 msgstr "Tienes que ascender a otro miembro a admin antes de dejar el club."
 
-#: democracy/views.py:244
+#: democracy/views.py:253
 msgid "Done. You have left the club."
 msgstr "Hecho. Has abandonado el club."
 
-#: democracy/views.py:261
+#: democracy/views.py:270
 msgid "You must promote other club member to admin before demoting yourself."
 msgstr "Tienes que ascender a otro miembro a admin antes de degradarte."
 
-#: democracy/views.py:265
+#: democracy/views.py:274
 msgid "Done. You have demoted yourself."
 msgstr "Hecho. Ya no eres admin del club."
 
-#: democracy/views.py:463
+#: democracy/views.py:472
 msgid "New film added! Be the first to vote it!"
 msgstr "¡Nueva película añadida! ¡Vótala antes que nadie!"
 
-#: democracy/views.py:473
+#: democracy/views.py:482
 msgid "The IMDb url does not seem to be valid."
 msgstr "La url de IMDb no parece ser válida."
 
-#: democracy/views.py:475
+#: democracy/views.py:484
 msgid "That film is already in the candidate list!"
 msgstr "¡Esa película ya está en la lista de candidatas!"
 
-#: democracy/views.py:644
+#: democracy/views.py:653
 msgid "Link to FilmAffinity added!"
 msgstr "¡Link a FilmAffinity añadido!"
 
-#: democracy/views.py:646
+#: democracy/views.py:655
 msgid "Invalid FilmAffinity url!"
 msgstr "¡url de FilmAffinity no válida!"
 
-#: democracy/views.py:721
+#: democracy/views.py:730
 msgid "This film is already in the candidate list! Delete it or leave it."
 msgstr "¡Esa película ya está en la lista de candidatas! Bórrala o déjala."
 
-#: democracy/views.py:851
+#: democracy/views.py:860
 msgid "Invalid maximum film duration input! Filter not applied."
 msgstr "¡Duración máxima de película no válida! El filtro no se ha aplicado."
 
-#: democracy/views.py:924
+#: democracy/views.py:933
 msgid "An invitation email has been sent to: "
 msgstr "Un email de invitación ha sido enviado a: "
 
-#: democracy/views.py:987
+#: democracy/views.py:996
 msgid "Congratulations! You have are now a proud member of the club!"
 msgstr "¡Enhorabuena! ¡Ahora eres un orgulloso miembro del club!"
 
-#: democracy/views.py:1056
+#: democracy/views.py:1065
 msgid "Meeting planned! A notification has been sent to club members."
 msgstr ""
 "¡Encuentro programado! Se ha enviado una notificación a los miembros del "
 "club."
 
-#: democracy/views.py:1058
+#: democracy/views.py:1067
 msgid "Meeting planned!"
 msgstr "¡Encuentro programado!"
 
-#: democracy/views.py:1119
+#: democracy/views.py:1128
 msgid "Meeting edited! A notification has been sent to club members."
 msgstr ""
 "¡Encuentro editado! Se ha enviado una notificación a los miembros del club."
 
-#: democracy/views.py:1126
+#: democracy/views.py:1135
 msgid ""
 "Meeting edited! A notification has been sent to members interested in it."
 msgstr ""
 "¡Encuentro editado! Se ha enviado una notificación a los miembros "
 "interesados en éste."
 
-#: democracy/views.py:1129
+#: democracy/views.py:1138
 msgid "Meeting edited!"
 msgstr "¡Encuentro editado!"
 
@@ -1261,7 +1265,7 @@ msgstr "Tu nueva contraseña ha sido establecida."
 #: registration/templates/registration/user_login.html:11
 #: registration/templates/registration/user_login.html:67
 #: registration/templates/registration/user_login.html:130
-#: templates/base_filmdemocracy.html:162 templates/home.html:102
+#: templates/base_filmdemocracy.html:242 templates/home.html:102
 msgid "Log in"
 msgstr "Iniciar sesión"
 
@@ -1333,19 +1337,15 @@ msgstr "terminos y condiciones"
 msgid "Account deleted successfully."
 msgstr "Cuenta borrada con éxito."
 
-#: settings.py:118
+#: settings.py:124
 msgid "English"
 msgstr "Inglés"
 
-#: settings.py:119
+#: settings.py:125
 msgid "Spanish"
 msgstr "Español"
 
-#: templates/base_filmdemocracy.html:78
-msgid "New Chat"
-msgstr ""
-
-#: templates/base_filmdemocracy.html:234
+#: templates/base_filmdemocracy.html:314
 msgid "Website under testing"
 msgstr "Pagina en construcción"
 
@@ -1392,6 +1392,12 @@ msgstr ""
 #: templates/terms_and_conditions.html:6
 msgid "Terms and Conditions"
 msgstr "Términos y Condiciones"
+
+#~ msgid "Check all messages"
+#~ msgstr "Ver todos los mensajes"
+
+#~ msgid "Say something..."
+#~ msgstr "Escribe algo..."
 
 #~ msgid "Club shoutbox"
 #~ msgstr "Chat del Club"

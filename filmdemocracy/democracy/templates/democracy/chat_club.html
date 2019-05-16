@@ -31,7 +31,7 @@
     <div class="col col-auto ml-n2">
 
       <div class="chat-title px-2 rounded-pill media-body">
-        <a href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+        {{ club.name }}
       </div>
 
     </div>
@@ -192,7 +192,6 @@
 
           <div class="input-group">
             <textarea class="form-control" aria-label="With textarea" name="text" id="TextArea"
-                      oninput='this.style.height = this.scrollHeight + "px";'
                       placeholder="{% trans 'Message' %}"></textarea>
             <button type="submit" class="p-1 align-self-end btn btn-sm btn-green-to-blue rounded-circle">
               <img style="max-height: 22px" src="{% static 'democracy/svg/send.svg'%}">

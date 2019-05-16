@@ -68,7 +68,7 @@ body {
   position: relative;
   margin-left: auto;
   margin-right: auto;
-  height: calc(var(--vh, 1vh) * 100 - 108px);
+  height: calc(var(--vh, 1vh) * 100 - 150px);
   z-index: 2;
   padding-left: 0;
   padding-right: 0;
@@ -185,8 +185,7 @@ footer {
 
 .footer textarea {
   border: none;
-  height: 30px;
-  max-height: 150px;
+  height: 72px;
 }
 
 

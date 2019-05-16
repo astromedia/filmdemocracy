@@ -93,8 +93,17 @@ body {
   padding: 1px;
 }
 
-.navbar .nav-item .user-icon img:hover {
+.navbar .nav-item .user-icon:hover img {
   border: 1px solid rgba(255, 255, 255, 1);
+}
+
+.navbar .nav-item .user-icon span {
+  opacity: 0.8 !important;
+  color: white !important;
+}
+
+.navbar .nav-item .user-icon:hover span {
+  opacity: 1 !important;
 }
 
 /* Navbar dropdown menu styles */

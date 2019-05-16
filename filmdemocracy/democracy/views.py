@@ -1212,9 +1212,10 @@ class ChatClubView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page'] = 'chat'
         context = add_club_context(self.request, context, self.kwargs['club_id'])
         posts = ChatClubPost.objects.filter(club=self.kwargs['club_id'])
-        context['posts'] = posts.order_by('-date')[:1000]
+        context['posts'] = posts.order_by('-date')[:1000]  # TODO
         return context
 
 
@@ -1278,6 +1279,7 @@ class ChatUsersView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page'] = 'chat'
         chat_user = get_object_or_404(User, pk=self.kwargs['chatuser_id'])
         context['chat_user'] = chat_user
         posts_a = ChatUsersPost.objects.filter(user_sender=self.request.user, user_receiver=chat_user)
