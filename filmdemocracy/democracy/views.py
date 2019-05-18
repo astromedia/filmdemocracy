@@ -791,6 +791,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page'] = 'vote_results'
 
         def process_film(film, participants):
             warnings = []

@@ -17,10 +17,10 @@
 
 
 <!--START: CLUB BANNER-->
-<div class="container-fluid club-banner shadow">
+<div class="container-fluid club-banner">
 
   <!--SHORT DESCRIPTION-->
-  <div class="lead text-muted short-description mt-1 mb-3">{{ club.short_description }}</div>
+  <div class="lead text-muted short-description pt-3 mb-3">{{ club.short_description }}</div>
 
   <!--LOGO-->
   <div class="logo">
@@ -612,7 +612,7 @@
 
   <!--LEAVE BUTTON-->
   <div class="text-center my-5">
-    <a class="badge badge-outline-danger pointer-cursor" data-toggle="modal" data-target="#LeaveModal">
+    <a class="badge badge-outline-danger pointer-cursor mb-4" data-toggle="modal" data-target="#LeaveModal">
       {% trans 'Leave club' %}
     </a>
   </div>
@@ -713,25 +713,6 @@
   </div>
 </div>
 <!--END: MODAL LEAVE-->
-
-
-
-<script>
-window.onscroll = function() {scrollFunction()};
-
-function scrollFunction() {
-  if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 400) {
-    document.getElementById("btn-back-to-top").style.display = "block";
-  } else {
-    document.getElementById("btn-back-to-top").style.display = "none";
-  }
-}
-
-function topFunction() {
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
-</script>
 
 
 {% endblock %}

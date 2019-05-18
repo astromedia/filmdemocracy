@@ -590,9 +590,9 @@ hr {
 #btn-back-to-top {
   display: none;
   position: fixed;
-  bottom: 20px;
-  width: 150px;
-  left: calc(50% - 75px);
+  bottom: 120px;
+  width: 200px;
+  left: calc(50% - 100px);
   z-index: 99;
   border: none;
   outline: none;

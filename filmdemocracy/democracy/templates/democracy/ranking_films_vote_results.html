@@ -293,9 +293,7 @@
 <!--END: VOTING RESULTS-->
 
 
-<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Back to club' %}</button>
-</form>
+<button onclick="topFunction()" id="btn-back-to-top" title="Go to top">↥ {% trans 'Back to top' %} ↥</button>
 
 
 {% endblock %}

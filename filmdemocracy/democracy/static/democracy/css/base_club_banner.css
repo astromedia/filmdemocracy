@@ -1,66 +1,58 @@
+
 /* Club banner style
 -------------------------------------------------- */
-.navigation-banner {
-  position: relative;
+.club-banner-navigation {
+  position: -webkit-sticky; /* Safari */
+  position: sticky !important;
+  top: 7px;
   text-align: center;
-  margin-top: -24px;
-  margin-bottom: -11px;
-  padding-top: 10px;
-  padding-bottom: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
+  width: 100%;
+  padding-top: 15px;
+  margin-top: -20px;
+  padding-bottom: 3px;
+  margin-bottom: 0px;
   background-color: #121317;
   z-index: 4;
-  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.75);
 }
 
-.navigation-banner .club-name {
+.club-banner-navigation-shadow {
+  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.75) !important;
 }
 
-.navigation-banner .club-name a {
+.club-banner-navigation a {
+  font-size: 19px;
+  color: #d1d1d1;
   text-decoration: none;
 }
 
-.navigation-banner .club-name a:hover {
+.club-banner-navigation a:hover {
   color: white !important;
 }
 
-.navigation-banner .row {
-  max-width: 880px;
+.club-banner-links {
+  padding-top: 8px;
+  padding-bottom: 5px;
+  width: 600px;
+  max-width: 100%;
+  z-index: 99;
 }
 
-.navigation-banner .navigation-option {
-  margin-top: -1px;
-}
-
-.navigation-banner .navigation-option .btn {
-  text-transform: none !important;
+.club-banner-links .banner-link .btn {
   font-weight: normal !important;
   font-size: 17px;
   min-width: 150px;
   max-width: 250px;
   max-height: 36px;
-  color: #6c737d;
-  background-color: transparent;
-  border: 1px solid #282828;
-  padding-top: 2px;
-  padding-bottom: 3px;
-  margin: auto;
-}
-
-.navigation-banner .navigation-option .active {
   color: #d1d1d1;
+  background-color: #121317;
+  border: 1px solid #525252;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
 }
 
-.navigation-banner .navigation-option .btn:hover {
+.club-banner-links .banner-link .btn:hover {
   color: white;
   border: 1px solid #6c737d;
-}
-
-.navigation-banner hr {
-  max-width: 0px;
-  color: #505050;
-  background-color: #505050;
-  margin-top: 5px;
-  margin-bottom: -11px;
 }
