@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-17 00:56+0200\n"
+"POT-Creation-Date: 2019-05-18 16:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,119 +141,102 @@ msgid "Ranking"
 msgstr "Ranking"
 
 #: democracy/templates/democracy/candidate_films_list.html:15
-#: democracy/templates/democracy/candidate_films_list.html:20
+#: democracy/templates/democracy/candidate_films_list.html:21
 msgid "Candidate films"
 msgstr "Películas candidatas"
 
-#: democracy/templates/democracy/candidate_films_list.html:27
-#: democracy/templates/democracy/candidate_films_list.html:277
+#: democracy/templates/democracy/candidate_films_list.html:29
+#: democracy/templates/democracy/candidate_films_list.html:303
 msgid "Propose film"
 msgstr "Proponer película"
 
-#: democracy/templates/democracy/candidate_films_list.html:37
-msgid "Show"
-msgstr "Mostrar"
-
-#: democracy/templates/democracy/candidate_films_list.html:41
+#: democracy/templates/democracy/candidate_films_list.html:49
 #: democracy/views.py:368
 msgid "All"
 msgstr "Todas"
 
-#: democracy/templates/democracy/candidate_films_list.html:44
+#: democracy/templates/democracy/candidate_films_list.html:54
 #: democracy/views.py:370
 msgid "Not voted"
 msgstr "No votadas"
 
-#: democracy/templates/democracy/candidate_films_list.html:48
-#: democracy/templates/democracy/candidate_films_list.html:49
-#: democracy/views.py:372
-msgid "Only voted"
-msgstr "Sólo votadas"
-
 #: democracy/templates/democracy/candidate_films_list.html:59
-msgid "Order"
-msgstr "Ordenar"
+#: democracy/templates/democracy/candidate_films_list.html:175
+#: democracy/views.py:372
+msgid "Voted"
+msgstr "Votada"
 
-#: democracy/templates/democracy/candidate_films_list.html:64
-#: democracy/templates/democracy/candidate_films_list.html:180
+#: democracy/templates/democracy/candidate_films_list.html:80
+#: democracy/templates/democracy/candidate_films_list.html:209
 #: democracy/views.py:375
 msgid "Title"
 msgstr "Título"
 
-#: democracy/templates/democracy/candidate_films_list.html:68
-#: democracy/templates/democracy/candidate_films_list.html:69
-#: democracy/templates/democracy/candidate_films_list.html:182
+#: democracy/templates/democracy/candidate_films_list.html:85
+#: democracy/templates/democracy/candidate_films_list.html:211
 #: democracy/views.py:378
-msgid "Date proposed"
-msgstr "Fecha propuesta"
+msgid "Proposed"
+msgstr "Propuesta"
 
-#: democracy/templates/democracy/candidate_films_list.html:71
-#: democracy/templates/democracy/candidate_films_list.html:184
+#: democracy/templates/democracy/candidate_films_list.html:90
+#: democracy/templates/democracy/candidate_films_list.html:213
 #: democracy/templates/democracy/film_detail.html:147 democracy/views.py:381
 msgid "Year"
 msgstr "Año"
 
-#: democracy/templates/democracy/candidate_films_list.html:75
-#: democracy/templates/democracy/candidate_films_list.html:186
-#: democracy/templates/democracy/candidate_films_vote_results.html:61
-#: democracy/templates/democracy/film_detail.html:148 democracy/views.py:384
+#: democracy/templates/democracy/candidate_films_list.html:95
+#: democracy/templates/democracy/candidate_films_list.html:215
+#: democracy/templates/democracy/film_detail.html:148
+#: democracy/templates/democracy/ranking_films_vote_results.html:61
+#: democracy/views.py:384
 msgid "Duration"
 msgstr "Duración"
 
-#: democracy/templates/democracy/candidate_films_list.html:79
+#: democracy/templates/democracy/candidate_films_list.html:100
 #: democracy/views.py:387
 msgid "My vote"
 msgstr "Mi voto"
 
-#: democracy/templates/democracy/candidate_films_list.html:91
-msgid "Display"
-msgstr "Vista"
-
-#: democracy/templates/democracy/candidate_films_list.html:96
-#: democracy/templates/democracy/candidate_films_list.html:97
+#: democracy/templates/democracy/candidate_films_list.html:121
 #: democracy/views.py:389
 msgid "Posters"
 msgstr "Posters"
 
-#: democracy/templates/democracy/candidate_films_list.html:100
-#: democracy/templates/democracy/candidate_films_list.html:101
+#: democracy/templates/democracy/candidate_films_list.html:126
 #: democracy/views.py:391
 msgid "List"
 msgstr "Lista"
 
-#: democracy/templates/democracy/candidate_films_list.html:147
-msgid "Voted"
-msgstr "Votada"
-
-#: democracy/templates/democracy/candidate_films_list.html:179
+#: democracy/templates/democracy/candidate_films_list.html:208
 msgid "Vote"
 msgstr "Voto"
 
-#: democracy/templates/democracy/candidate_films_list.html:250
+#: democracy/templates/democracy/candidate_films_list.html:278
 msgid "There are no candidate films... Propose one!"
 msgstr "No hay películas candidatas... ¡Propón una!"
 
-#: democracy/templates/democracy/candidate_films_list.html:254
-msgid "Move along, nothing to see here..."
-msgstr "Muévanse, nada que ver aquí..."
+#: democracy/templates/democracy/candidate_films_list.html:280
+msgid "Seems like you have voted all films... congratulations!"
+msgstr "Parece que has votado todas las películas... ¡enhorabuena!"
 
-#: democracy/templates/democracy/candidate_films_list.html:263
-#: democracy/templates/democracy/candidate_films_vote_results.html:297
-#: democracy/templates/democracy/meetings_list.html:252
-#: democracy/templates/democracy/seen_films_list.html:63
-msgid "Back to club"
-msgstr "Volver al club"
+#: democracy/templates/democracy/candidate_films_list.html:282
+msgid "You have not voted any film yet... shame on you."
+msgstr "No has votado ninguna película... vergüenza debería darte."
 
-#: democracy/templates/democracy/candidate_films_list.html:286
+#: democracy/templates/democracy/candidate_films_list.html:290
+#: democracy/templates/democracy/club_detail.html:625
+msgid "Back to top"
+msgstr "Volver arriba"
+
+#: democracy/templates/democracy/candidate_films_list.html:312
 msgid "Open imdb.com in a new tab"
 msgstr "Abrir imdb.com en otra pestaña"
 
-#: democracy/templates/democracy/candidate_films_list.html:292
-#: democracy/templates/democracy/candidate_films_participants.html:109
+#: democracy/templates/democracy/candidate_films_list.html:318
 #: democracy/templates/democracy/candidate_films_seen.html:114
 #: democracy/templates/democracy/club_detail.html:352
-#: democracy/templates/democracy/club_detail.html:665
-#: democracy/templates/democracy/club_detail.html:700
+#: democracy/templates/democracy/club_detail.html:668
+#: democracy/templates/democracy/club_detail.html:703
 #: democracy/templates/democracy/club_kick_members.html:71
 #: democracy/templates/democracy/club_promote_members.html:94
 #: democracy/templates/democracy/edit_club_create.html:122
@@ -265,6 +248,7 @@ msgstr "Abrir imdb.com en otra pestaña"
 #: democracy/templates/democracy/invite_new_member_confirm.html:37
 #: democracy/templates/democracy/meetings_form.html:222
 #: democracy/templates/democracy/meetings_list.html:219
+#: democracy/templates/democracy/ranking_films_participants.html:107
 #: registration/templates/registration/account_info.html:189
 #: registration/templates/registration/account_info_edit.html:224
 #: registration/templates/registration/account_info_edit.html:242
@@ -275,39 +259,9 @@ msgstr "Abrir imdb.com en otra pestaña"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: democracy/templates/democracy/candidate_films_list.html:297
+#: democracy/templates/democracy/candidate_films_list.html:323
 msgid "Submit"
 msgstr "Añadir"
-
-#: democracy/templates/democracy/candidate_films_participants.html:13
-#: democracy/templates/democracy/candidate_films_vote_results.html:23
-msgid "Participants"
-msgstr "Participantes"
-
-#: democracy/templates/democracy/candidate_films_participants.html:18
-#: democracy/templates/democracy/candidate_films_vote_results.html:18
-msgid "Film ranking"
-msgstr "Ranking de películas"
-
-#: democracy/templates/democracy/candidate_films_participants.html:19
-msgid "Who is present? Click on their picture and count their votes."
-msgstr "¿Quién está presente? Pincha en sus fotos y cuenta sus votos."
-
-#: democracy/templates/democracy/candidate_films_participants.html:68
-msgid "Ranking options"
-msgstr "Opciones del ranking"
-
-#: democracy/templates/democracy/candidate_films_participants.html:75
-msgid "Exclude films proposed by members not present:"
-msgstr "Excluir películas propuestas por miembros ausentes:"
-
-#: democracy/templates/democracy/candidate_films_participants.html:91
-msgid "Maximum film duration in minutes (optional):"
-msgstr "Duración máxima de la película en minutos (opcional):"
-
-#: democracy/templates/democracy/candidate_films_participants.html:103
-msgid "Count votes"
-msgstr "Contar votos"
 
 #: democracy/templates/democracy/candidate_films_seen.html:12
 msgid "Mark film as seen"
@@ -328,77 +282,6 @@ msgstr "¿Quién estuvo presente?"
 #: democracy/templates/democracy/candidate_films_seen.html:107
 msgid "Seen!"
 msgstr "¡Vista!"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:13
-msgid "Voting results"
-msgstr "Resultados de la votación"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:60
-msgid "Film"
-msgstr "Película"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:62
-msgid "Results"
-msgstr "Resultado"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:137
-msgid "Results for:"
-msgstr "Resultados para:"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:145
-msgid "Film score:"
-msgstr "Puntuación película:"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:157
-msgid "Votes:"
-msgstr "Votos:"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:232
-msgid "Did not vote:"
-msgstr "No han votado:"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:257
-msgid "Warnings:"
-msgstr "Avisos:"
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:263
-#, python-format
-msgid ""
-"\n"
-"              <strong>%(user)s</strong> vetoed the film <strong>%(film)s</"
-"strong>.\n"
-"              "
-msgstr ""
-"\n"
-"            <strong>%(user)s</strong> ha vetado la película <strong>"
-"%(film)s</strong>.\n"
-"            "
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:267
-#, python-format
-msgid ""
-"\n"
-"              Remember that <strong>%(user)s</strong> really really wants to "
-"see <strong>%(film)s</strong>.\n"
-"              "
-msgstr ""
-"\n"
-"            Recordad que <strong>%(user)s</strong> tiene muchas muchas ganas "
-"de ver <strong>%(film)s</strong>.\n"
-"            "
-
-#: democracy/templates/democracy/candidate_films_vote_results.html:271
-#, python-format
-msgid ""
-"\n"
-"              Keep in mind that <strong>%(user)s</strong> proposed <strong>"
-"%(film)s</strong>, and is not present.\n"
-"              "
-msgstr ""
-"\n"
-"            Recordad que <strong>%(user)s</strong> propuso <strong>%(film)s</"
-"strong>, y no está presente.\n"
-"            "
 
 #: democracy/templates/democracy/chat_club.html:11
 #: democracy/templates/democracy/chat_users.html:11
@@ -462,7 +345,7 @@ msgid "Kick members"
 msgstr "Echar a miembros"
 
 #: democracy/templates/democracy/club_detail.html:124
-#: democracy/templates/democracy/club_detail.html:655
+#: democracy/templates/democracy/club_detail.html:658
 msgid "Self-demote"
 msgstr "Auto-degradarse"
 
@@ -527,15 +410,15 @@ msgid "Delete meeting"
 msgstr "Eliminar encuentro"
 
 #: democracy/templates/democracy/club_detail.html:348
-#: democracy/templates/democracy/club_detail.html:693
+#: democracy/templates/democracy/club_detail.html:696
 #: democracy/templates/democracy/meetings_list.html:215
 #: registration/templates/registration/account_info.html:185
 msgid "Are you sure about this?"
 msgstr "¿Estás seguro de esto?"
 
 #: democracy/templates/democracy/club_detail.html:357
-#: democracy/templates/democracy/club_detail.html:670
-#: democracy/templates/democracy/club_detail.html:705
+#: democracy/templates/democracy/club_detail.html:673
+#: democracy/templates/democracy/club_detail.html:708
 #: democracy/templates/democracy/film_detail.html:534
 #: democracy/templates/democracy/meetings_list.html:224
 #: registration/templates/registration/account_info.html:194
@@ -581,15 +464,15 @@ msgid "Invite new member"
 msgstr "Invitar a alguien"
 
 #: democracy/templates/democracy/club_detail.html:616
-#: democracy/templates/democracy/club_detail.html:687
+#: democracy/templates/democracy/club_detail.html:690
 msgid "Leave club"
 msgstr "Abandonar club"
 
-#: democracy/templates/democracy/club_detail.html:661
+#: democracy/templates/democracy/club_detail.html:664
 msgid "Are you sure you don't want to be an admin anymore?"
 msgstr "¿Seguro que ya no quieres ser un admin del club?"
 
-#: democracy/templates/democracy/club_detail.html:695
+#: democracy/templates/democracy/club_detail.html:698
 msgid ""
 "You are the only member of the club; if you leave, the club will disappear!"
 msgstr "Eres el único miembro del club; si te vas, ¡el club desaparecerá!"
@@ -999,6 +882,117 @@ msgstr "No hay encuentros planeados..."
 msgid "Organize one!"
 msgstr "¡Organiza uno!"
 
+#: democracy/templates/democracy/meetings_list.html:252
+#: democracy/templates/democracy/ranking_films_vote_results.html:297
+#: democracy/templates/democracy/seen_films_list.html:63
+msgid "Back to club"
+msgstr "Volver al club"
+
+#: democracy/templates/democracy/ranking_films_participants.html:13
+#: democracy/templates/democracy/ranking_films_vote_results.html:23
+msgid "Participants"
+msgstr "Participantes"
+
+#: democracy/templates/democracy/ranking_films_participants.html:19
+#: democracy/templates/democracy/ranking_films_vote_results.html:18
+msgid "Film ranking"
+msgstr "Ranking de películas"
+
+#: democracy/templates/democracy/ranking_films_participants.html:23
+msgid "Who is present?"
+msgstr "¿Quién está presente?"
+
+#: democracy/templates/democracy/ranking_films_participants.html:24
+msgid "Click on their picture and count their votes."
+msgstr "Pincha en sus fotos y cuenta sus votos."
+
+#: democracy/templates/democracy/ranking_films_participants.html:66
+msgid "Ranking options"
+msgstr "Opciones del ranking"
+
+#: democracy/templates/democracy/ranking_films_participants.html:73
+msgid "Exclude films proposed by members not present:"
+msgstr "Excluir películas propuestas por miembros ausentes:"
+
+#: democracy/templates/democracy/ranking_films_participants.html:89
+msgid "Maximum film duration in minutes (optional):"
+msgstr "Duración máxima de la película en minutos (opcional):"
+
+#: democracy/templates/democracy/ranking_films_participants.html:101
+msgid "Count votes"
+msgstr "Contar votos"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:13
+msgid "Voting results"
+msgstr "Resultados de la votación"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:60
+msgid "Film"
+msgstr "Película"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:62
+msgid "Results"
+msgstr "Resultado"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:137
+msgid "Results for:"
+msgstr "Resultados para:"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:145
+msgid "Film score:"
+msgstr "Puntuación película:"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:157
+msgid "Votes:"
+msgstr "Votos:"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:232
+msgid "Did not vote:"
+msgstr "No han votado:"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:257
+msgid "Warnings:"
+msgstr "Avisos:"
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:263
+#, python-format
+msgid ""
+"\n"
+"              <strong>%(user)s</strong> vetoed the film <strong>%(film)s</"
+"strong>.\n"
+"              "
+msgstr ""
+"\n"
+"            <strong>%(user)s</strong> ha vetado la película <strong>"
+"%(film)s</strong>.\n"
+"            "
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:267
+#, python-format
+msgid ""
+"\n"
+"              Remember that <strong>%(user)s</strong> really really wants to "
+"see <strong>%(film)s</strong>.\n"
+"              "
+msgstr ""
+"\n"
+"            Recordad que <strong>%(user)s</strong> tiene muchas muchas ganas "
+"de ver <strong>%(film)s</strong>.\n"
+"            "
+
+#: democracy/templates/democracy/ranking_films_vote_results.html:271
+#, python-format
+msgid ""
+"\n"
+"              Keep in mind that <strong>%(user)s</strong> proposed <strong>"
+"%(film)s</strong>, and is not present.\n"
+"              "
+msgstr ""
+"\n"
+"            Recordad que <strong>%(user)s</strong> propuso <strong>%(film)s</"
+"strong>, y no está presente.\n"
+"            "
+
 #: democracy/templates/democracy/seen_films_list.html:14
 msgid "Seen films"
 msgstr "Películas vistas"
@@ -1393,6 +1387,24 @@ msgstr ""
 msgid "Terms and Conditions"
 msgstr "Términos y Condiciones"
 
+#~ msgid "Show"
+#~ msgstr "Mostrar"
+
+#~ msgid "Only voted"
+#~ msgstr "Sólo votadas"
+
+#~ msgid "Order"
+#~ msgstr "Ordenar"
+
+#~ msgid "Date proposed"
+#~ msgstr "Fecha propuesta"
+
+#~ msgid "Display"
+#~ msgstr "Vista"
+
+#~ msgid "Move along, nothing to see here..."
+#~ msgstr "Muévanse, nada que ver aquí..."
+
 #~ msgid "Check all messages"
 #~ msgstr "Ver todos los mensajes"
 
@@ -1455,9 +1467,6 @@ msgstr "Términos y Condiciones"
 
 #~ msgid "FilmAffinity url (optional)"
 #~ msgstr "url de FilmAffinity (opcional)"
-
-#~ msgid "Propose"
-#~ msgstr "Proponer"
 
 #~ msgid "Select seen film"
 #~ msgstr "Selecciona la película vista"

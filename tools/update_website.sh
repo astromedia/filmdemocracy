@@ -9,6 +9,9 @@
 
 #### SETTINGS ####
 
+WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+MAIN_DIR=${WORKDIR}/..
+
 DB_SERVICE=filmdemocracy_db_1
 WEB_SERVICE=filmdemocracy_web_1
 APPS_DIR=filmdemocracy
@@ -24,10 +27,10 @@ ask() {
     # https://gist.github.com/davejamesmiller/1965569
     local prompt default reply
 
-    if [ "${2:-}" = "Y" ]; then
+    if [[ "${2:-}" = "Y" ]]; then
         prompt="Y/n"
         default=Y
-    elif [ "${2:-}" = "N" ]; then
+    elif [[ "${2:-}" = "N" ]]; then
         prompt="y/N"
         default=N
     else
@@ -44,7 +47,7 @@ ask() {
         read reply </dev/tty
 
         # Default?
-        if [ -z "$reply" ]; then
+        if [[ -z "$reply" ]]; then
             reply=$default
         fi
 
@@ -85,6 +88,8 @@ function update_website()
 }
 
 
+cd MAIN_DIR
+
 # FETCH CODE
 
 echo -e "\nFetching code from github..."
@@ -96,11 +101,11 @@ REMOTE=$(git rev-parse "$UPSTREAM")
 
 # TEST IF UPDATE NEEDED
 
-if [ $1 == '--force' ]; then
+if [[ $1 == '--force' ]]; then
     echo -e "\nStarting update"
     update_website
 else
-    if [ $LOCAL = $REMOTE ]; then
+    if [[ ${LOCAL} = ${REMOTE} ]]; then
         echo -e "\nCode is up-to-date, no need to update"
         
     else

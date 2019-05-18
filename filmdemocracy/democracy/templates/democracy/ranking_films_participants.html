@@ -7,7 +7,7 @@
 {% block styles %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
-<link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/ranking.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Participants' %}{% endblock %}
@@ -15,9 +15,14 @@
 {% block content %}
 
 
-<h1 class="display-4">{% trans 'Film ranking' %}</h1>
-<h5 class="h5">{% trans 'Who is present? Click on their picture and count their votes.' %}</h5>
+<div class="page-title">
+  <span>{% trans 'Film ranking' %}</span>
+</div>
 
+<div class="page-subtitle">
+  <span>{% trans 'Who is present?' %}</span><br>
+  <span>{% trans 'Click on their picture and count their votes.' %}</span>
+</div>
 
 <form class="form-participants" action="{% url 'democracy:vote_results' club.id %}" method="GET">
   {% csrf_token %}
@@ -33,8 +38,8 @@
         <div class="col col-auto">
           <div class="card">
 
+            <input type="checkbox" name="participants" id="participants{{ forloop.counter }}" value="{{ member.id }}">
             <label for="participants{{ forloop.counter }}">
-              <div class="hovereffect-participant">
                 {% if member.profile_image %}
                 <img class="card-img-top rounded-circle border border-secondary" src="{{ member.profile_image.url }}"
                      alt="member.profile_image not found">
@@ -42,16 +47,9 @@
                 <img class="card-img-top rounded-circle border border-secondary"
                      src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="member.profile_image not found">
                 {% endif %}
-              </div>
             </label>
 
-            <div class="custom-control custom-checkbox mx-auto mb-1">
-              <input type="checkbox" class="custom-control-input" name="participants"
-                     id="participants{{ forloop.counter }}" value="{{ member.id }}">
-              <label class="custom-control-label" for="participants{{ forloop.counter }}">
-                <small>{{ member.username }}</small>
-              </label>
-            </div>
+            <span>{{ member.username }}</span>
 
           </div>
         </div>
@@ -69,36 +67,36 @@
     <hr>
 
     <!--EXCLUDE FILMS PROPOSED BY MEMBERS NOT PRESENT-->
-      <div class="row align-items-center mx-1 mt-2">
-        <div class="col-md-6">
-            <div class="float-md-right">
-              <strong>{% trans 'Exclude films proposed by members not present:' %}</strong>
-            </div>
-        </div>
-        <div class="col-md-auto my-2">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
-                   value="exclude_not_present">
-            <label class="custom-control-label" for="exclude_not_present"></label>
+    <div class="row align-items-center mx-1 mt-2">
+      <div class="col-md-6">
+          <div class="float-md-right">
+            <strong>{% trans 'Exclude films proposed by members not present:' %}</strong>
           </div>
+      </div>
+      <div class="col-md-auto my-2">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
+                 value="exclude_not_present">
+          <label class="custom-control-label" for="exclude_not_present"></label>
         </div>
       </div>
+    </div>
 
     <!--MAX FILM DURATION-->
-      <div class="row align-items-center mx-1 mt-2">
-        <div class="col-md-6">
-          <div class="float-md-right">
-            <strong>{% trans 'Maximum film duration in minutes (optional):' %}</strong>
-          </div>
-        </div>
-          <div class="col-md-auto my-2">
-            <div>
-            <input type="text" style='max-width: 75px' class="form-control mx-auto" name="max_duration" id="max_duration" value="">
-          </div>
+    <div class="row align-items-center mx-1 mt-2">
+      <div class="col-md-6">
+        <div class="float-md-right">
+          <strong>{% trans 'Maximum film duration in minutes (optional):' %}</strong>
         </div>
       </div>
-
+      <div class="col-md-auto my-2">
+        <div>
+          <input type="text" style='max-width: 75px' class="form-control mx-auto" name="max_duration" id="max_duration" value="">
+        </div>
+      </div>
     </div>
+
+  </div>
 
   <input class="btn btn-lg btn-block btn-green-to-blue" type="submit" value="{% trans 'Count votes' %}">
 

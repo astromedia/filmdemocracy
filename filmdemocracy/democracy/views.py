@@ -369,13 +369,13 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         elif view_option == 'not_voted':
             context['view_option_tag'] = _("Not voted")
         elif view_option == 'only_voted':
-            context['view_option_tag'] = _("Only voted")
+            context['view_option_tag'] = _("Voted")
         if order_option == 'title':
             context['order_option_string'] = "film.filmdb.title"
             context['order_option_tag'] = _("Title")
         elif order_option == 'date_proposed':
             context['order_option_string'] = "film.pub_date"
-            context['order_option_tag'] = _("Date proposed")
+            context['order_option_tag'] = _("Proposed")
         elif order_option == 'year':
             context['order_option_string'] = "film.filmdb.year"
             context['order_option_tag'] = _("Year")

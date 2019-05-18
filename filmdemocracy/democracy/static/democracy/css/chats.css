@@ -158,6 +158,8 @@ footer {
 -------------------------------------------------- */
 
 .footer {
+  position:fixed;
+  bottom: 0;
   background-color: #fff;
   position: relative;
   bottom: 0;
@@ -188,8 +190,12 @@ footer {
   height: 72px;
 }
 
+.form-post img {
+  max-height: 27px
+}
 
-/* Post Form
+
+/* Contacts
 -------------------------------------------------- */
 
 .container-contacts {

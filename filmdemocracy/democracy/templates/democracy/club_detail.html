@@ -622,6 +622,9 @@
 <!--END: CLUB MEMBERS PANEL-->
 
 
+<button onclick="topFunction()" id="btn-back-to-top" title="Go to top">↥ {% trans 'Back to top' %} ↥</button>
+
+
 <!--START: MODAL LOGO-->
 {% if club.logo %}
 <div class="modal fade" id="ClubLogoModal" tabindex="-1" role="dialog">
@@ -710,6 +713,25 @@
   </div>
 </div>
 <!--END: MODAL LEAVE-->
+
+
+
+<script>
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 400) {
+    document.getElementById("btn-back-to-top").style.display = "block";
+  } else {
+    document.getElementById("btn-back-to-top").style.display = "none";
+  }
+}
+
+function topFunction() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+</script>
 
 
 {% endblock %}

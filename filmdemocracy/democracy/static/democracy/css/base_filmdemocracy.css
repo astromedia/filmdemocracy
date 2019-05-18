@@ -564,3 +564,51 @@ a:hover {
 hr {
   max-width: 90% !important;
 }
+
+.page-title {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.page-subtitle {
+  margin-top: -15px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.dark-title {
+  color: darkgray;
+}
+
+
+/* Back to top button
+-------------------------------------------------- */
+
+#btn-back-to-top {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  width: 150px;
+  left: calc(50% - 75px);
+  z-index: 99;
+  border: none;
+  outline: none;
+  color: black;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 0px solid #282828;
+}
+
+#btn-back-to-top:hover {
+  color: #fff;
+  text-decoration: none;
+  border: 0px solid #282828;
+  background-color: #282828;
+}

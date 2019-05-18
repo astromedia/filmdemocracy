@@ -80,14 +80,14 @@ urlpatterns = [
     path(
         '<str:club_id>/candidate_films/participants/',
         views.ParticipantsView.as_view(
-            template_name='democracy/candidate_films_participants.html'
+            template_name='democracy/ranking_films_participants.html'
         ),
         name='participants'
     ),
     path(
         '<str:club_id>/candidate_films/vote_results/',
         views.VoteResultsView.as_view(
-            template_name='democracy/candidate_films_vote_results.html'
+            template_name='democracy/ranking_films_vote_results.html'
         ),
         name='vote_results'
     ),
