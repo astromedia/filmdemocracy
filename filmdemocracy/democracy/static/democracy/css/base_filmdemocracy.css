@@ -122,6 +122,7 @@ body {
   margin-left: 2%;
   margin-right: 2%;
   overflow: hidden;
+  padding: 2px;
 }
 
 .navbar .nav-item .dropdown-menu .active {
@@ -216,6 +217,14 @@ body {
 
 .footer .dropdown-toggle::after {
     display:none;
+}
+
+.footer .dropdown-menu {
+  padding: 2px;
+}
+
+.footer .dropdown-menu .dropdown-item {
+  padding: 12px 18px;
 }
 
 .footer .dropdown-menu .active {
@@ -590,7 +599,7 @@ hr {
 #btn-back-to-top {
   display: none;
   position: fixed;
-  bottom: 120px;
+  bottom: 20px;
   width: 200px;
   left: calc(50% - 100px);
   z-index: 99;
@@ -598,8 +607,9 @@ hr {
   outline: none;
   color: black;
   cursor: pointer;
-  padding: 10px;
-  border-radius: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 3px;
   font-size: 15px;
   font-weight: bold;
   text-transform: uppercase;

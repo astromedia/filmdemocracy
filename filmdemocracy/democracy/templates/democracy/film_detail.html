@@ -15,10 +15,10 @@
 {% block content %}
 
 <!--START: FILM BANNER-->
-<div class="container-fluid container-film-banner shadow">
+<div class="container-fluid container-film-banner mx-0 px-0">
 
   <!--TITLE-->
-  <h1 class="film-title text-center">{{ film.filmdb.title }}</h1>
+  <p class="film-title text-center">{{ film.filmdb.title }}</p>
 
   <div class="container film-data">
 
@@ -31,138 +31,61 @@
       </div>
 
       <!--START: INFO-->
-      <div class="col-md-9">
+      <div class="col-md-9 px-0">
+
 
         <!--PROPOSED BY-->
-        <p class="small">{% trans 'Proposed by' %}
+        <p class="small text-center">{% trans 'Proposed by' %}
         <a class="green-color blue-color-hover"
            href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
-          {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.pub_date }}
+          {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.pub_date|date:"d M Y" }}
         </p>
-
-        <div class="row align-items-center my-2">
-
-          <!--START: REPORT PROBLEM-->
-          <!--<div class="col-auto">-->
-          <!--<form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option display_option %}">-->
-          <!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
-          <!--{% trans 'Report problem with film info' %}-->
-          <!--</button>-->
-          <!--</form>-->
-          <!--</div>-->
-          <!--END: REPORT PROBLEM-->
-
-          <!--START: MARK AS SEEN-->
-          {% if not film.seen %}
-          <div class="col-auto">
-            <form class="" action="{% url 'democracy:film_seen' club.id film.id %}">
-              {% csrf_token %}
-              <button type="submit" class="badge badge-black-to-white film-option my-1 mx-auto">
-                {% trans 'Mark as seen by club' %}
-              </button>
-            </form>
-          </div>
-          {% endif %}
-          <!--END: MARK AS SEEN-->
-
-          <!--START: MARK AS NOT SEEN-->
-          {% if film.seen %}
-          {% if user in club_admins %}
-          <div class="col-auto">
-            <form class="" action="{% url 'democracy:unsee_film' club.id film.id view_option order_option display_option %}">
-              {% csrf_token %}
-              <button type="submit" class="badge badge-black-to-white film-option my-1 mx-auto">
-                {% trans 'Move back to candidate films' %}
-              </button>
-            </form>
-          </div>
-          {% endif %}
-          {% endif %}
-          <!--END: MARK AS NOT SEEN-->
-
-<!--          &lt;!&ndash;START: UPDATE FILMDB&ndash;&gt;-->
-<!--          {% if updatable_db %}-->
-<!--          <div class="col-auto">-->
-<!--            <form class="" action="{% url 'democracy:update_film_data' club.id film.id view_option order_option display_option %}">-->
-<!--              {% csrf_token %}-->
-<!--              <button type="submit" class="btn btn-sm btn-film-option-magic my-2 mx-auto">-->
-<!--                {% trans 'Request data update' %}-->
-<!--              </button>-->
-<!--            </form>-->
-<!--          </div>-->
-<!--          {% endif %}-->
-<!--          &lt;!&ndash;END: UPDATE FILMDB&ndash;&gt;-->
-
-          <!--START: DELETE FILM-->
-          {% if not film.seen %}
-          {% if user in club_admins or film.proposed_by == user %}
-          <div class="col-auto">
-            <a class="badge badge-outline-danger pointer-cursor my-1 mx-auto" data-toggle="modal"
-                    data-target="#DeleteModalCenter">
-              {% trans 'Delete film' %}
-            </a>
-          </div>
-          {% endif %}
-          {% else %}
-          {% if user in club_admins %}
-          <div class="col-auto">
-            <a class="badge badge-outline-danger pointer-cursor my-1 mx-auto" data-toggle="modal"
-                    data-target="#DeleteModalCenter">
-              {% trans 'Delete film' %}
-            </a>
-          </div>
-          {% endif %}
-          {% endif %}
-          <!--END: DELETE FILM-->
-
-        </div>
 
 
         <!--DATABASE LINKS-->
-        <div class="row mb-2">
+        <div class="row mb-1 mx-0">
 
-          <div class="col-auto">
-            <a href="{{ film.filmdb.imdb_url }}" class="green-color blue-color-hover" target="blank">
-              {% trans 'IMDb page' %}
+          <div class="col col-sm-6 pl-0">
+            <a href="{{ film.filmdb.imdb_url }}" class="badge badge-green-to-blue pointer-cursor" target="blank">
+              {% trans 'IMDb' %}
             </a>
           </div>
 
-          <div class="col-auto">
+          <div class="col col-sm-6 pl-0">
             {% if film.filmdb.faff_id %}
-            <a class="mx-1 green-color blue-color-hover" href="{{ film.filmdb.faff_url }}" target="blank">
-              {% trans 'FilmAffinity page' %}
+            <a class="badge badge-green-to-blue pointer-cursor" href="{{ film.filmdb.faff_url }}" target="blank">
+              {% trans 'FilmAffinity' %}
             </a>
             {% elif not film.filmdb.faff_id %}
             <a class="badge badge-green-to-blue pointer-cursor" data-toggle="modal" data-target="#AddFaffModalCenter">
               {% trans 'Add FilmAffinity link' %}
             </a>
-
             {% endif %}
           </div>
 
         </div>
 
         <!--MISC INFO-->
-        <div class="row mb-3">
-          <div class="col-auto"><strong>{% trans 'Year' %}</strong>: {{ film.filmdb.year }}</div>
-          <div class="col-auto"><strong>{% trans 'Duration' %}</strong>: {{ film_duration }}</div>
-          <div class="col-auto"><strong>{% trans 'Rated' %}</strong>: {{ film.filmdb.rated }}</div>
-          <div class="col-auto"><strong>{% trans 'Country' %}</strong>: {{ film.filmdb.country }}</div>
+        <div class="row mt-3 mb-1 mx-0">
+          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Year' %}</strong>: {{ film.filmdb.year }}</div>
+          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Rated' %}</strong>: {{ film.filmdb.rated }}</div>
+          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Duration' %}</strong>: {{ film_duration }}</div>
+          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Country' %}</strong>: {{ film.filmdb.country }}</div>
         </div>
 
         <!--PLOT-->
         <div id="summary">
-          <p class="text-justify mb-2 collapse" id="collapseSummary"><em>{{ film.filmdb.plot }}</em></p>
-          <a class="collapsed green-color blue-color-hover" data-toggle="collapse" href="#collapseSummary"
+          <p class="text-justify mb-0 collapse" id="collapseSummary"><em>{{ film.filmdb.plot }}</em></p>
+          <a class="collapsed green-color blue-color-hover ml-3" data-toggle="collapse" href="#collapseSummary"
              aria-expanded="false" aria-controls="collapseSummary">{% trans 'Plot' %}</a>
         </div>
 
         <!--DIRECTOR, WRITER, ACTOR-->
-        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Director' %}:</strong>
+        <p class="my-1" style="padding-left:20px; text-indent: -20px"><strong>{% trans 'Director' %}:</strong>
           {{ film.filmdb.director }}</p>
-        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Writer' %}:</strong>
+        <p class="my-1" style="padding-left:20px; text-indent: -20px"><strong>{% trans 'Writer' %}:</strong>
           {{ film.filmdb.writer }}</p>
-        <p class="my-1" style="padding-left:63px; text-indent: -63px"><strong>{% trans 'Cast' %}:</strong>
+        <p class="my-1" style="padding-left:20px; text-indent: -20px"><strong>{% trans 'Cast' %}:</strong>
           {{ film.filmdb.actors }}</p>
 
       </div>
@@ -186,7 +109,67 @@
 {% endfor %}
 
 
-<nav class="nav-film mx-2 mt-n2">
+<!--START: REPORT PROBLEM-->
+<!--<div class="col-auto">-->
+<!--<form class="" action="{% url 'democracy:candidate_films' club.id view_option order_option display_option %}">-->
+<!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
+<!--{% trans 'Report problem with film info' %}-->
+<!--</button>-->
+<!--</form>-->
+<!--</div>-->
+<!--END: REPORT PROBLEM-->
+
+
+<!--START: MARK AS SEEN-->
+{% if not film.seen %}
+  <form class="text-center" action="{% url 'democracy:film_seen' club.id film.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
+      {% trans 'Mark as seen by club' %}
+    </button>
+  </form>
+{% endif %}
+<!--END: MARK AS SEEN-->
+
+
+<!--START: MARK AS NOT SEEN-->
+{% if film.seen %}
+{% if user in club_admins %}
+  <form class="text-center" action="{% url 'democracy:unsee_film' club.id film.id view_option order_option display_option %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
+      {% trans 'Move back to candidate films' %}
+    </button>
+  </form>
+{% endif %}
+{% endif %}
+<!--END: MARK AS NOT SEEN-->
+
+
+<!--START: DELETE FILM-->
+{% if not film.seen %}
+{% if user in club_admins or film.proposed_by == user %}
+<div class="text-center">
+  <a class="badge badge-outline-danger pointer-cursor my-2" data-toggle="modal"
+          data-target="#DeleteModalCenter">
+    {% trans 'Delete film' %}
+  </a>
+</div>
+{% endif %}
+{% else %}
+{% if user in club_admins %}
+<div class="text-center">
+  <a class="badge badge-outline-danger pointer-cursor my-2" data-toggle="modal"
+          data-target="#DeleteModalCenter">
+    {% trans 'Delete film' %}
+  </a>
+</div>
+{% endif %}
+{% endif %}
+<!--END: DELETE FILM-->
+
+
+<nav class="nav-film mx-2 mt-2">
   <div class="nav nav-pills flex-column flex-sm-row justify-content-center nav-justified" id="nav-tab" role="tablist">
     <a class="nav-item nav-link m-2 active" id="nav-voteorseen-tab" data-toggle="pill" href="#nav-voteorseen"
        role="tab" aria-controls="nav-voteorseen" aria-selected="true">

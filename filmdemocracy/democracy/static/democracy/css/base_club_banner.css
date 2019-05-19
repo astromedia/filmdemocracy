@@ -39,15 +39,16 @@
 
 .club-banner-links .banner-link .btn {
   font-weight: normal !important;
-  font-size: 17px;
+  font-size: 15px;
   min-width: 150px;
   max-width: 250px;
   max-height: 36px;
   color: #d1d1d1;
   background-color: #121317;
-  border: 1px solid #525252;
+  border: 1px solid #6c737d;
   padding-top: 5px;
   padding-bottom: 5px;
+  border-radius: 3px;
   margin: auto;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
 }

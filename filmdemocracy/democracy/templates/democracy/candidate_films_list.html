@@ -36,7 +36,7 @@
   <div class="col-md-auto filter">
     <div class="dropdown">
 
-      <button class="btn btn-sm btn-block btn-gray-to-color dropdown-toggle mx-auto"
+      <button class="btn btn-sm btn-block dropdown-toggle mx-auto"
               type="button" id="dropdownMenuButtonView" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
         {{ view_option_tag }}
@@ -48,12 +48,12 @@
            href="{% url 'democracy:candidate_films' club.id 'all' order_option display_option %}">
           {% trans 'All' %}
         </a>
-
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if view_option == 'not_voted' %}active{% endif %}"
            href="{% url 'democracy:candidate_films' club.id 'not_voted' order_option display_option %}">
           {% trans 'Not voted' %}
         </a>
-
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if view_option == 'only_voted' %}active{% endif %}"
            href="{% url 'democracy:candidate_films' club.id 'only_voted' order_option display_option %}">
           {% trans 'Voted' %}
@@ -67,7 +67,7 @@
   <div class="col-md-auto filter">
     <div class="dropdown">
 
-      <button class="btn btn-sm btn-block btn-gray-to-color dropdown-toggle mx-auto"
+      <button class="btn btn-sm btn-block dropdown-toggle mx-auto"
               type="button" id="dropdownMenuButtonOrder" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
         {{ order_option_tag }}
@@ -79,22 +79,22 @@
            href="{% url 'democracy:candidate_films' club.id view_option 'title' display_option %}">
           {% if order_option == 'title' %}<strong>{% trans 'Title' %}</strong>{% else %}{% trans 'Title' %}{% endif %}
         </a>
-
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if order_option == 'date_proposed' %}active{% endif %}"
            href="{% url 'democracy:candidate_films' club.id view_option 'date_proposed' display_option %}">
           {% trans 'Proposed' %}
         </a>
-
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if order_option == 'year' %}active{% endif %}"
            href="{% url 'democracy:candidate_films' club.id view_option 'year' display_option %}">
           {% trans 'Year' %}
         </a>
-
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if order_option == 'duration' %}active{% endif %}"
            href="{% url 'democracy:candidate_films' club.id view_option 'duration' display_option %}">
           {% trans 'Duration' %}
         </a>
-
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if order_option == 'user_vote' %}active{% endif %}"
            href="{% url 'democracy:candidate_films' club.id view_option 'user_vote' display_option %}">
           {% trans 'My vote' %}
@@ -108,7 +108,7 @@
   <div class="col-md-auto filter">
     <div class="dropdown">
 
-      <button class="btn btn-sm btn-block btn-gray-to-color dropdown-toggle mx-auto"
+      <button class="btn btn-sm btn-block dropdown-toggle mx-auto"
               type="button" id="dropdownMenuButtonDisplay" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
         {{ display_option_tag }}
@@ -120,7 +120,7 @@
            href="{% url 'democracy:candidate_films' club.id view_option order_option 'posters' %}">
           {% trans 'Posters' %}
         </a>
-
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if display_option == 'list' %}active{% endif %}"
            href="{% url 'democracy:candidate_films' club.id view_option order_option 'list' %}">
           {% trans 'List' %}
@@ -287,7 +287,7 @@
 {% endif %}
 
 
-<button onclick="topFunction()" id="btn-back-to-top" title="Go to top">↥ {% trans 'Back to top' %} ↥</button>
+<button onclick="topFunction()" id="btn-back-to-top" title="Go to top">&#8613 {% trans 'Back to top' %} &#8613</button>
 
 
 <!--START: MODAL ADD FILM-->

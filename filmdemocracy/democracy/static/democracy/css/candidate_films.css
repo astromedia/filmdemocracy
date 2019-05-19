@@ -21,10 +21,27 @@ body {
   padding-top: 3px;
   padding-bottom: 3px;
   font-size: 13px;
+  color: darkgray;
+  background-color: #121317;
+  border: 1px solid #282828;
+}
+
+.filter-options .btn:hover {
+  color: white;
+  border: 1px solid #6c737d;
+}
+
+.filter-options .dropdown-menu {
+  padding: 2px;
 }
 
 .filter-options .dropdown-menu .dropdown-item {
-  padding: 10px;
+  padding: 12px 18px;
+}
+
+.filter-options .dropdown-menu .dropdown-divider {
+  padding: 0;
+  margin: 0;
 }
 
 .filter-options .dropdown-menu .dropdown-item:hover {
