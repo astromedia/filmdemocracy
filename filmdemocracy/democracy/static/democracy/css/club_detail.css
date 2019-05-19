@@ -80,11 +80,6 @@ body {
   margin-bottom: 20px;
 }
 
-.btn-new-meeting {
-  margin: auto;
-  width: 80%;
-  max-width: 250px;
-}
 
 /* Club shoutbox
 -------------------------------------------------- */
@@ -238,4 +233,50 @@ body {
   border: 3px solid lightseagreen;
   background-color: lightseagreen;
   border-radius: 200px;
+}
+
+
+/* Button new options
+-------------------------------------------------- */
+
+
+#btn-new-options {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  z-index: 99;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px;
+  border: 0px solid #282828;
+  transition: all 0.3s ease-in-out;
+  background-color: seagreen;
+}
+
+#btn-new-options img {
+  width: 25px;
+}
+
+#btn-new-options:hover {
+  -ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+  transform: rotate(90deg);
+}
+
+#new-options-menu {
+  margin-bottom: 10px;
+  border: 2px solid seagreen;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
+}
+
+#new-options-menu img {
+  max-width: 48px;
+  max-height: 48px;
+  background-color: seagreen;
+}
+
+#new-options-menu span {
+  font-weight: bold;
 }

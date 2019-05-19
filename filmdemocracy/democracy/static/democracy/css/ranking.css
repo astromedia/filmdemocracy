@@ -116,8 +116,16 @@ body {
 
 /* Film ranking
 -------------------------------------------------- */
-.table-ranking {
+
+.btn-new-ranking {
+  margin: auto;
+  width: 80%;
+  max-width: 250px;
+}
+
+.container-table {
   max-width: 100%;
+  padding: 2px;
 }
 
 .participants-header {

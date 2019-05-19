@@ -146,29 +146,6 @@
 <!--END: MARK AS NOT SEEN-->
 
 
-<!--START: DELETE FILM-->
-{% if not film.seen %}
-{% if user in club_admins or film.proposed_by == user %}
-<div class="text-center">
-  <a class="badge badge-outline-danger pointer-cursor my-2" data-toggle="modal"
-          data-target="#DeleteModalCenter">
-    {% trans 'Delete film' %}
-  </a>
-</div>
-{% endif %}
-{% else %}
-{% if user in club_admins %}
-<div class="text-center">
-  <a class="badge badge-outline-danger pointer-cursor my-2" data-toggle="modal"
-          data-target="#DeleteModalCenter">
-    {% trans 'Delete film' %}
-  </a>
-</div>
-{% endif %}
-{% endif %}
-<!--END: DELETE FILM-->
-
-
 <nav class="nav-film mx-2 mt-2">
   <div class="nav nav-pills flex-column flex-sm-row justify-content-center nav-justified" id="nav-tab" role="tablist">
     <a class="nav-item nav-link m-2 active" id="nav-voteorseen-tab" data-toggle="pill" href="#nav-voteorseen"
@@ -468,6 +445,31 @@
 
 
 </div>
+
+
+
+<!--START: DELETE FILM-->
+{% if not film.seen %}
+{% if user in club_admins or film.proposed_by == user %}
+<div class="text-center">
+  <a class="badge badge-outline-danger pointer-cursor my-5" data-toggle="modal"
+          data-target="#DeleteModalCenter">
+    {% trans 'Delete film' %}
+  </a>
+</div>
+{% endif %}
+{% else %}
+{% if user in club_admins %}
+<div class="text-center">
+  <a class="badge badge-outline-danger pointer-cursor my-5" data-toggle="modal"
+          data-target="#DeleteModalCenter">
+    {% trans 'Delete film' %}
+  </a>
+</div>
+{% endif %}
+{% endif %}
+<!--END: DELETE FILM-->
+
 
 
 <!-- START MODAL POSTER -->

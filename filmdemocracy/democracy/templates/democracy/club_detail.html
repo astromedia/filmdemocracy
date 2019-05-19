@@ -135,23 +135,13 @@
 
 
 <!--START: NEXT 3 CLUB MEETINGS-->
+{% if next_meetings %}
+
+
 <div class="club-section-title">
   <h3 class="h3">{% trans 'Next club meetings' %}</h3>
   <hr>
 </div>
-
-
-<!--LINK TO NEW MEETING-->
-<div class="my-2 btn-new-meeting">
-  <form action="{% url 'democracy:meetings_new' club.id %}">
-    <button type="submit" class="btn btn-block btn-sm btn-green-to-blue">
-      {% trans 'Organize meeting' %}
-    </button>
-  </form>
-</div>
-
-
-{% if next_meetings %}
 
 
 {% for meeting in next_meetings %}
@@ -589,24 +579,6 @@
     </div>
     {% endfor %}
 
-
-    <!--INVITE NEW MEMBER-->
-    <div class="col col-auto align-self-center">
-      <div class="card text-center">
-        <a href="{% url 'democracy:invite_new_member' club.id %}">
-          <div class="member-image">
-            <img class="card-img-top rounded-circle" src="{% static 'registration/svg/invite_user_image.svg' %}"
-                 alt="member.profile_image not found">
-          </div>
-        </a>
-
-        <div>
-          <small>{% trans 'Invite new member' %}</small>
-        </div>
-
-      </div>
-    </div>
-
   </div>
 
 
@@ -622,7 +594,63 @@
 <!--END: CLUB MEMBERS PANEL-->
 
 
-<button onclick="topFunction()" id="btn-back-to-top" title="Go to top">&#8613 {% trans 'Back to top' %} &#8613</button>
+<!--START: ADD NEW-->
+<a class="pointer-cursor rounded-circle"
+   id="btn-new-options" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <img class="" src="{% static 'democracy/svg/add.svg'%}">
+</a>
+
+
+<div id="new-options-menu" class="dropdown-menu py-0" aria-labelledby="btn-new-options">
+
+  <!--START: NEW FILM-->
+  <a class="dropdown-item py-2 px-3" href="#">
+    <div class="media">
+
+      <img class="align-self-center border border-secondary rounded-circle mr-2"
+           src="{% static 'registration/svg/invite_user_image.svg' %}">
+
+      <div class="media-body align-self-center p-0 m-0">
+        <span>{% trans 'Propose new film' %}</span>
+      </div>
+
+    </div>
+  </a>
+
+  <div class="dropdown-divider p-0 m-0"></div>
+
+  <!--START: NEW MEETING-->
+  <a class="dropdown-item py-2 px-3" href="{% url 'democracy:meetings_new' club.id %}">
+    <div class="media">
+
+      <img class="align-self-center border border-secondary rounded-circle mr-2 p-1"
+           src="{% static 'democracy/popcorn.png' %}">
+
+      <div class="media-body align-self-center p-0 m-0">
+        <span>{% trans 'Organize new meeting' %}</span>
+      </div>
+
+    </div>
+  </a>
+
+  <div class="dropdown-divider p-0 m-0"></div>
+
+  <!--START: INVITE NEW MEMBER-->
+  <a class="dropdown-item py-2 px-3" href="{% url 'democracy:invite_new_member' club.id %}">
+    <div class="media">
+
+      <img class="align-self-center border border-secondary rounded-circle mr-2"
+           src="{% static 'registration/svg/invite_user_image.svg' %}">
+
+      <div class="media-body align-self-center p-0 m-0">
+        <span>{% trans 'Invite someone to club' %}</span>
+      </div>
+
+    </div>
+  </a>
+
+</div>
+<!--START: ADD NEW-->
 
 
 <!--START: MODAL LOGO-->

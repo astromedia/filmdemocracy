@@ -122,7 +122,8 @@ body {
   margin-left: 2%;
   margin-right: 2%;
   overflow: hidden;
-  padding: 2px;
+  border: 2px solid #282828;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
 }
 
 .navbar .nav-item .dropdown-menu .active {
@@ -156,6 +157,7 @@ body {
 .navbar .nav-item .dropdown-menu .dropdown-item .media img {
   max-width: 48px;
   max-height: 48px;
+  background: rgba(0, 0, 0, 1) !important;
 }
 
 .dropdown-menu .extra-item {

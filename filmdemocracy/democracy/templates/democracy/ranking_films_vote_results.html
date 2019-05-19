@@ -15,7 +15,24 @@
 {% block content %}
 
 
-<h1 class="display-4">{% trans 'Film ranking' %}</h1>
+<div class="page-title">
+  <span>{% trans 'Film ranking' %}</span>
+</div>
+
+
+<div class="page-subtitle">
+  <span>{% trans 'The people have spoken' %}</span><br>
+</div>
+
+
+<!--LINK TO NEW MEETING-->
+<div class="my-2 btn-new-ranking">
+  <form action="{% url 'democracy:participants' club.id %}">
+    <button type="submit" class="btn btn-block btn-green-to-blue">
+      {% trans 'Generate new ranking' %}
+    </button>
+  </form>
+</div>
 
 
 <!--START: PARTICIPANTS-->
@@ -52,8 +69,8 @@
 
 <!--START: VOTING RESULTS-->
 
-<div class="container p-1 m-0" style="max-width: 100%">
-  <table class="table table-hover table-ranking">
+<div class="container container-table">
+  <table class="table table-hover">
     <thead class="thead-light">
     <tr>
       <!--<th scope="col" class="text-center"><span class="">#</span></th>-->

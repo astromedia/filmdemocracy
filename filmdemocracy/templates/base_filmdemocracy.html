@@ -66,7 +66,7 @@
 
         {% if user.club_set.all or user.chat_user.all %}
 
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkChat">
+        <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkChat">
 
           <!--START: CLUBS CHATS-->
           {% for userclub in user.club_set.all %}
@@ -95,7 +95,7 @@
           {% endfor %}
           <!--END: CLUBS CHATS-->
 
-          <div class="dropdown-divider"></div>
+          <div class="dropdown-divider p-0 m-0"></div>
 
           <!--START: USERS CHATS-->
           {% for chat_opened in user.chat_user.all %}
@@ -123,7 +123,7 @@
           {% endfor %}
           <!--END: USERS CHATS-->
 
-          <div class="dropdown-divider"></div>
+          <div class="dropdown-divider p-0 m-0"></div>
 
           <!--START: CONTACTS-->
           <a class="dropdown-item extra-item py-0 px-3 m-0 text-center" href="{% url 'democracy:contacts' %}">
@@ -149,7 +149,7 @@
           <img class="" src="{% static 'democracy/svg/people.svg'%}">
         </a>
 
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkClub">
+        <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkClub">
 
           {% if user.club_set.all %}
 
@@ -175,10 +175,9 @@
               </div>
             </a>
 
-
             {% endfor %}
 
-          <div class="dropdown-divider"></div>
+          <div class="dropdown-divider p-0 m-0"></div>
 
           {% endif %}
 
