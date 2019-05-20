@@ -604,11 +604,11 @@
 <div id="new-options-menu" class="dropdown-menu py-0" aria-labelledby="btn-new-options">
 
   <!--START: NEW FILM-->
-  <a class="dropdown-item py-2 px-3" href="#">
+  <a class="dropdown-item py-2 px-3" href="{% url 'democracy:add_new_film' club.id %}">
     <div class="media">
 
-      <img class="align-self-center border border-secondary rounded-circle mr-2"
-           src="{% static 'registration/svg/invite_user_image.svg' %}">
+      <img class="align-self-center rounded-circle mr-2"
+           src="{% static 'democracy/svg/camera.svg' %}">
 
       <div class="media-body align-self-center p-0 m-0">
         <span>{% trans 'Propose new film' %}</span>
@@ -623,8 +623,8 @@
   <a class="dropdown-item py-2 px-3" href="{% url 'democracy:meetings_new' club.id %}">
     <div class="media">
 
-      <img class="align-self-center border border-secondary rounded-circle mr-2 p-1"
-           src="{% static 'democracy/popcorn.png' %}">
+      <img class="align-self-center rounded-circle mr-2 p-0"
+           src="{% static 'democracy/svg/cinema.svg' %}">
 
       <div class="media-body align-self-center p-0 m-0">
         <span>{% trans 'Organize new meeting' %}</span>
@@ -639,8 +639,8 @@
   <a class="dropdown-item py-2 px-3" href="{% url 'democracy:invite_new_member' club.id %}">
     <div class="media">
 
-      <img class="align-self-center border border-secondary rounded-circle mr-2"
-           src="{% static 'registration/svg/invite_user_image.svg' %}">
+      <img class="align-self-center rounded-circle mr-2"
+           src="{% static 'democracy/svg/invite_user_image.svg' %}">
 
       <div class="media-body align-self-center p-0 m-0">
         <span>{% trans 'Invite someone to club' %}</span>

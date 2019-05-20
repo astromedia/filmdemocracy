@@ -290,48 +290,6 @@
 <button onclick="topFunction()" id="btn-back-to-top" title="Go to top">&#8613 {% trans 'Back to top' %} &#8613</button>
 
 
-<!--START: MODAL ADD FILM-->
-<div class="modal fade" id="AddFilmModalCenter" tabindex="-1" role="dialog"
-     aria-labelledby="AddFilmModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <form method="POST" action="{% url 'democracy:add_new_film' club.id view_option order_option display_option %}"
-            class="text-center">
-        {% csrf_token %}
-
-        <div class="modal-header">
-          <h5 class="modal-title" id="AddFilmModalCenterTitle">{% trans 'Propose film' %}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="form-group m-4">
-          <input class="form-control" type="text" placeholder="IMDb url" id="imdb_url" name="imdb_url"
-                 aria-describedby="IMDbWeb">
-          <a href="https://www.imdb.com/" target="blank" id="IMDbWeb" class="form-text text-left ml-2">
-            <small>{% trans 'Open imdb.com in a new tab' %}</small>
-          </a>
-        </div>
-        <div class="modal-footer">
-
-          <button type="button" class="btn btn-sm mr-3" data-dismiss="modal">
-            {% trans 'Cancel' %}
-          </button>
-
-
-          <button type="submit" class="btn btn-sm btn-green-to-blue mr-3">
-            {% trans 'Submit' %}
-          </button>
-
-        </div>
-      </form>
-
-    </div>
-  </div>
-</div>
-<!--END: MODAL ADD FILM-->
-
-
 <script>
 window.onscroll = function() {scrollFunction()};
 

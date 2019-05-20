@@ -92,10 +92,17 @@ urlpatterns = [
         name='vote_results'
     ),
     path(
-        '<str:club_id>/candidate_films/add_new_film/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
-        views.add_new_film,
+        'club/<str:club_id>/add_new_film/',
+        views.AddNewFilmView.as_view(
+            template_name='democracy/add_new_film.html'
+        ),
         name='add_new_film'
     ),
+    # path(
+    #     '<str:club_id>/add_new_film/add/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
+    #     views.add_new_film,
+    #     name='add_new_film'
+    # ),
     path(
         '<str:club_id>/film/<str:film_id>/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.FilmDetailView.as_view(
@@ -133,11 +140,11 @@ urlpatterns = [
         views.unsee_film,
         name='unsee_film'
     ),
-    path(
-        '<str:club_id>/film/<str:film_id>/update_film_data/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
-        views.update_film_data,
-        name='update_film_data'
-    ),
+    # path(
+    #     '<str:club_id>/film/<str:film_id>/update_film_data/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
+    #     views.update_film_data,
+    #     name='update_film_data'
+    # ),
     path(
         '<str:club_id>/film/<str:film_id>/add_filmaffinity_url/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
         views.add_filmaffinity_url,
