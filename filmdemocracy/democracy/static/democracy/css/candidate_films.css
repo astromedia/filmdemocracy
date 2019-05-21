@@ -32,7 +32,13 @@ body {
 }
 
 .filter-options .dropdown-menu {
-  padding: 2px;
+  width: 96%;
+  max-width: 908px;
+  margin-left: 2%;
+  margin-right: 2%;
+  overflow: hidden;
+  border: 2px solid #282828;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
 }
 
 .filter-options .dropdown-menu .dropdown-item {

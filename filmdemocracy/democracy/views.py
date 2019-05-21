@@ -457,7 +457,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
                         'display_option': 'posters'}
             )
         else:
-            messages.error(self.request, _('Sorry, could not find film in database, try later...'))
+            messages.error(self.request, _('Sorry, we could not find that film in the database, try later...'))
             return reverse_lazy(
                 'democracy:add_new_film',
                 kwargs={'club_id': self.kwargs['club_id']}
