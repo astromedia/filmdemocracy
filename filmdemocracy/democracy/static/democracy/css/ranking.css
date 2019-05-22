@@ -42,58 +42,10 @@ body {
   margin-top: 30px;
 }
 
-
-/* Participants card
--------------------------------------------------- */
-.form-participants .card input[type="checkbox"][id^="participants"] {
-  display: none;
-}
-
-.form-participants .card {
-  background-color: transparent;
-  border-color: transparent;
-  width: 8rem;
-  max-width: 100%;
-  margin-bottom: 1rem;
-}
-
-.form-participants .card label {
-  display: block;
-  position: relative;
-  cursor: pointer;
-}
-
-.form-participants .card label:before {
-  display: none;
-}
-
-.form-participants .card label img {
-  width:100%;
-  height:100%;
-  background: rgba(0, 0, 0, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  transform-origin: 50% 50%;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
-}
-
-.form-participants .card label img:hover {
-}
-
-.form-participants .card :checked + label img {
-  background-color: lightseagreen;
+.form-select-members .card :checked + label img {
+  background-color: lightseagreen !important;
   border: 5px solid lightseagreen !important;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.8);
-  transform: scale(0.85);
 }
-
-.form-participants .card span {
-  margin-top: -5px;
-  font-size: 13px;
-}
-
 
 /* Ranking options header
 -------------------------------------------------- */

@@ -104,7 +104,7 @@ class CreateClubView(generic.FormView):
 
     def get_success_url(self):
         # TODO: redirect to club view
-        return reverse('home')
+        return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.new_club.id})
 
     @staticmethod
     def random_id_generator():
@@ -131,10 +131,10 @@ class CreateClubView(generic.FormView):
         new_club.admin_members.add(user)
         new_club.members.add(user)
         new_club.save()
-        _ = ChatClubInfo.objects.create(club=new_club)
+        self.new_club = new_club
+        ChatClubInfo.objects.create(club=new_club)
         messages.success(self.request, _(f"New club created!"))
-        club_member_info = ClubMemberInfo.objects.create(club=new_club, member=user)
-        club_member_info.save()
+        ClubMemberInfo.objects.create(club=new_club, member=user)
         return super().form_valid(form)
 
 
@@ -286,7 +286,10 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
         return kwargs
 
     def get_success_url(self):
-        return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
+        if self.success:
+            return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
+        elif not self.success:
+            return reverse_lazy('democracy:kick_members', kwargs={'club_id': self.kwargs['club_id']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -298,13 +301,22 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_admins = club.admin_members.all()
         kicked_members = form.cleaned_data['members']
-        for member in kicked_members:
-            if member in club_admins:
-                club.admin_members.remove(member)
-            club.members.remove(member)
-            club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
-            club_member_info.delete()
-        club.save()
+        if kicked_members:
+            for member in kicked_members:
+                if member in club_admins:
+                    club.admin_members.remove(member)
+                club.members.remove(member)
+                club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
+                club_member_info.delete()
+            club.save()
+            if len(kicked_members) == 1:
+                messages.success(self.request, _("Member successfully kicked from club."))
+            else:
+                messages.success(self.request, _("Members successfully kicked from club."))
+            self.success = True
+        else:
+            messages.error(self.request, _("You haven't selected anyone to kick!"))
+            self.success = False
         return super().form_valid(form)
 
 
@@ -324,7 +336,10 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
         return kwargs
 
     def get_success_url(self):
-        return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
+        if self.success:
+            return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
+        elif not self.success:
+            return reverse_lazy('democracy:promote_members', kwargs={'club_id': self.kwargs['club_id']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -335,9 +350,18 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
     def form_valid(self, form):
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         promoted_members = form.cleaned_data['members']
-        for member in promoted_members:
-            club.admin_members.add(member)
-        club.save()
+        if promoted_members:
+            for member in promoted_members:
+                club.admin_members.add(member)
+            club.save()
+            if len(promoted_members) == 1:
+                messages.success(self.request, _("Member successfully promoted to admin."))
+            else:
+                messages.success(self.request, _("Members successfully promoted to admin."))
+            self.success = True
+        else:
+            messages.error(self.request, _("You haven't selected anyone to promote!"))
+            self.success = False
         return super().form_valid(form)
 
 
@@ -447,7 +471,6 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
 
     def get_success_url(self):
         if self.success:
-            messages.success(self.request, _('New film added! Be the first to vote it!'))
             return reverse_lazy(
                 'democracy:film_detail',
                 kwargs={'club_id': self.kwargs['club_id'],
@@ -457,7 +480,6 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
                         'display_option': 'posters'}
             )
         else:
-            messages.error(self.request, _('Sorry, we could not find that film in the database, try later...'))
             return reverse_lazy(
                 'democracy:add_new_film',
                 kwargs={'club_id': self.kwargs['club_id']}
@@ -484,22 +506,29 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
         user = self.request.user
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         imdb_key = form.cleaned_data['imdb_url']
-        filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_key)
-        if created or (not created and not filmdb.title):
-            self.success = update_filmdb_omdb_info(filmdb, imdb_key)
+        if Film.objects.filter(club=club.id, imdb_id=imdb_key, seen=False):
+            messages.error(self.request, _('That film is already in the candidate list!'))
+            self.success = False
         else:
-            self.success = True
-        if self.success:
-            new_film_id = self.random_film_id_generator(club.id)
-            film = Film.objects.create(
-                id=f'{club.id}{new_film_id}',
-                imdb_id=imdb_key,
-                proposed_by=user,
-                club=club,
-                filmdb=filmdb,
-            )
-            film.save()
-            self.film_id = film.id
+            filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_key)
+            if created or (not created and not filmdb.title):
+                self.success = update_filmdb_omdb_info(filmdb, imdb_key)
+                if not self.success:
+                    messages.error(self.request, _('Sorry, we could not find that film in the database, try later...'))
+            else:
+                self.success = True
+            if self.success:
+                new_film_id = self.random_film_id_generator(club.id)
+                film = Film.objects.create(
+                    id=f'{club.id}{new_film_id}',
+                    imdb_id=imdb_key,
+                    proposed_by=user,
+                    club=club,
+                    filmdb=filmdb,
+                )
+                film.save()
+                self.film_id = film.id
+                messages.success(self.request, _('New film added! Be the first to vote it!'))
         return super().form_valid(form)
 
 
@@ -717,7 +746,7 @@ def add_filmaffinity_url(request, club_id, film_id, view_option, order_option, d
         filmdb.save()
         messages.success(request, _('Link to FilmAffinity added!'))
     except ValueError:
-        messages.warning(request, _('Invalid FilmAffinity url!'))
+        messages.error(request, _('Invalid FilmAffinity url!'))
     return HttpResponseRedirect(reverse(
         'democracy:film_detail',
         kwargs={'club_id': club_id,
@@ -792,7 +821,7 @@ def unsee_film(request, club_id, film_id, view_option, order_option, display_opt
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     if Film.objects.filter(club=club_id, imdb_id=film.filmdb.imdb_id, seen=False):
-        messages.warning(request, _('This film is already in the candidate list! Delete it or leave it.'))
+        messages.error(request, _('This film is already in the candidate list! Delete it or leave it.'))
         return HttpResponseRedirect(reverse(
             'democracy:film_detail',
             kwargs={'club_id': club_id,
@@ -914,7 +943,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
 
         films_results = []
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        participants = [get_object_or_404(User, id=id) for id in self.request.GET.getlist('participants')]
+        participants = [get_object_or_404(User, id=id) for id in self.request.GET.getlist('members')]
         exclude_not_present = self.request.GET.get('exclude_not_present')
         max_duration_input = self.request.GET.get('max_duration')
         if max_duration_input == '':
@@ -923,7 +952,7 @@ class VoteResultsView(UserPassesTestMixin, generic.TemplateView):
             try:
                 max_duration = int(max_duration_input)
             except ValueError:
-                messages.warning(self.request, _('Invalid maximum film duration input! Filter not applied.'))
+                messages.error(self.request, _('Invalid maximum film duration input! Filter not applied.'))
                 max_duration = 999
         club_films = Film.objects.filter(club_id=club.id, seen=False)
         for film in club_films:
@@ -996,7 +1025,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
             'request': self.request,
         }
         form.save(**email_opts)
-        messages.success(self.request, _('An invitation email has been sent to: ') + form.cleaned_data['email'] + '!')
+        messages.success(self.request, _('An invitation email has been sent to: ') + form.cleaned_data['email'])
         return super().form_valid(form)
 
     def get_success_url(self):

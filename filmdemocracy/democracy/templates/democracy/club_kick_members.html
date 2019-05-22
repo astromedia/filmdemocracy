@@ -1,5 +1,6 @@
 {% extends "democracy/base_club_banner.html" %}
 {% load static %}
+{% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
 
@@ -7,6 +8,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/club_admin_utils.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/select_members.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Kick members' %}{% endblock %}
@@ -14,54 +16,54 @@
 {% block content %}
 
 
-<!--START: KICK MEMBERS FORM-->
-<h3 class="h3">{% trans 'Kick members from club' %}</h3>
+<div class="page-title">
+  <span>{% trans 'Kick members from club' %}</span>
+</div>
 
-<form class="form-admin-utils" method="POST" novalidate>
+<div class="page-subtitle">
+  <span>{% trans 'With great power comes great responsibility' %}</span>
+</div>
+
+
+<!--START: KICK MEMBERS FORM-->
+<form class="form-admin-utils form-select-members form-kick-members" method="POST" novalidate>
   {% csrf_token %}
 
   <div class="container-fluid">
+
     <div class="row justify-content-center">
 
       {% for member in club_members %}
       {% if member != user %}
-      <div class="col-auto">
+
+      <div class="col col-auto">
         <div class="card">
 
-          <label for="member_{{ forloop.counter }}">
-            <div class="hovereffect-member-kick">
+          <input type="checkbox" name="members" id="member{{ forloop.counter }}" value="{{ member.pk }}">
+          <label for="member{{ forloop.counter }}">
               {% if member.profile_image %}
-              <img class="card-img-top border border-secondary" src="{{ member.profile_image.url }}"
+              <img class="card-img-top rounded-circle border border-secondary" src="{{ member.profile_image.url }}"
                    alt="member.profile_image not found">
               {% else %}
-              <img class="card-img-top border border-secondary"
+              <img class="card-img-top rounded-circle border border-secondary"
                    src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="member.profile_image not found">
               {% endif %}
-              <div class="overlay"></div>
-              {% if member in club_admins %}
-              <div class="alert alert-success admin_member border border-secondary">
-                <strong>club admin</strong>
-              </div>
-              {% endif %}
-            </div>
           </label>
-
-          <div class="custom-control custom-checkbox mx-auto mb-1">
-            <input type="checkbox" class="custom-control-input" name="members"
-                   id="member_{{ forloop.counter }}" value="{{ member.pk }}">
-            <label class="custom-control-label" for="member_{{ forloop.counter }}">
-              <small>{{ member.username }}</small></label>
-          </div>
+          {% if member in club_admins %}
+          <span class="alert alert-success admin-member border border-secondary py-0 px-1"><strong>club admin</strong></span>
+          {% endif %}
+          <span>{{ member.username }}</span>
 
         </div>
       </div>
+
       {% endif %}
       {% endfor %}
 
     </div>
   </div>
 
-  <input class="btn btn-submit btn-danger" type="submit" value="{% trans 'Kick' %}">
+  <input class="btn btn-block btn-danger" type="submit" value="{% trans 'Kick' %}">
 
 </form>
 <!--END: KICK MEMBERS FORM-->

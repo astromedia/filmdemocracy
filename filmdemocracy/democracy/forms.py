@@ -123,11 +123,7 @@ class FilmAddNewForm(forms.ModelForm):
         super(FilmAddNewForm, self).__init__(*args, **kwargs)
 
     def clean_imdb_url(self):
-        imdb_key = process_imdb_url(self)
-        if Film.objects.filter(club=self.club_id, imdb_id=imdb_key, seen=False):
-            raise forms.ValidationError(_("That film is already in the candidate list!"))
-        else:
-            return imdb_key
+        return process_imdb_url(self)
 
 
 # class FilmAddFilmAffForm(forms.ModelForm):

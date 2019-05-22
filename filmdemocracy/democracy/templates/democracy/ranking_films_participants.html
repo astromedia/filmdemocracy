@@ -8,6 +8,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/ranking.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/select_members.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Participants' %}{% endblock %}
@@ -24,7 +25,8 @@
   <span>{% trans 'Click on their picture and count their votes.' %}</span>
 </div>
 
-<form class="form-participants" action="{% url 'democracy:vote_results' club.id %}" method="GET">
+
+<form class="form-participants form-select-members" action="{% url 'democracy:vote_results' club.id %}" method="GET">
   {% csrf_token %}
 
 
@@ -38,8 +40,8 @@
         <div class="col col-auto">
           <div class="card">
 
-            <input type="checkbox" name="participants" id="participants{{ forloop.counter }}" value="{{ member.id }}">
-            <label for="participants{{ forloop.counter }}">
+            <input type="checkbox" name="members" id="member{{ forloop.counter }}" value="{{ member.id }}">
+            <label for="member{{ forloop.counter }}">
                 {% if member.profile_image %}
                 <img class="card-img-top rounded-circle border border-secondary" src="{{ member.profile_image.url }}"
                      alt="member.profile_image not found">

@@ -1,5 +1,6 @@
 {% extends "democracy/base_club_banner.html" %}
 {% load static %}
+{% load staticfiles %}
 {% load widget_tweaks %}
 {% load i18n %}
 
@@ -7,6 +8,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/club_admin_utils.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/select_members.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Promote members to admin' %}{% endblock %}
@@ -14,66 +16,43 @@
 {% block content %}
 
 
-<!--START: PROMOTE MEMBERS FORM-->
-<h3 class="h3">{% trans 'Promote members to admin' %}</h3>
+<div class="page-title">
+  <span>{% trans 'Promote members to admin' %}</span>
+</div>
 
-<form class="form-admin-utils" method="POST" novalidate>
+
+<!--START: PROMOTE MEMBERS FORM-->
+<form class="form-admin-utils form-select-members form-promote-members" method="POST" novalidate>
   {% csrf_token %}
 
   <div class="container-fluid">
+
     <div class="row justify-content-center">
 
       {% for member in club_members %}
       {% if member != user %}
+
       <div class="col-auto">
         <div class="card">
 
-          <label for="member_{{ forloop.counter }}">
-
-            {% if member in club_admins %}
-
-            <div class="hovereffect-member-promote" style="cursor: not-allowed;">
+          {% if member in club_admins %}
+          <input type="checkbox" name="members" id="member{{ forloop.counter }}" value="{{ member.pk }}" checked disabled>
+          {% else %}
+          <input type="checkbox" name="members" id="member{{ forloop.counter }}" value="{{ member.pk }}">
+          {% endif %}
+          <label for="member{{ forloop.counter }}" class="{% if member in club_admins %}not-allowed{% endif %}">
               {% if member.profile_image %}
-              <img class="card-img-top border border-secondary" src="{{ member.profile_image.url }}"
-                   alt="member.profile_image not found">
+              <img class="card-img-top rounded-circle border border-secondary"
+                   src="{{ member.profile_image.url }}" alt="member.profile_image not found">
               {% else %}
-              <img class="card-img-top border border-secondary"
+              <img class="card-img-top rounded-circle border border-secondary"
                    src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="member.profile_image not found">
               {% endif %}
-              <div class="alert alert-success admin_member border border-secondary">
-                <strong>club admin</strong>
-              </div>
-            </div>
-
-            {% else %}
-
-            <div class="hovereffect-member-promote">
-              {% if member.profile_image %}
-              <img class="card-img-top border border-secondary" src="{{ member.profile_image.url }}"
-                   alt="member.profile_image not found">
-              {% else %}
-              <img class="card-img-top border border-secondary"
-                   src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="member.profile_image not found">
-              {% endif %}
-              <div class="overlay"></div>
-            </div>
-
-            {% endif %}
-
           </label>
-
-          <div class="custom-control custom-checkbox mx-auto mb-1">
-            {% if member in club_admins %}
-            <input type="checkbox" class="custom-control-input" name="members"
-                   id="member_{{ forloop.counter }}" value="{{ member.pk }}" checked disabled>
-            {% else %}
-            <input type="checkbox" class="custom-control-input" name="members"
-                   id="member_{{ forloop.counter }}" value="{{ member.pk }}">
-            {% endif %}
-
-            <label class="custom-control-label" for="member_{{ forloop.counter }}">
-              <small>{{ member.username }}</small></label>
-          </div>
+          {% if member in club_admins %}
+          <div class="alert alert-success admin-member border border-secondary mx-auto"><strong>club admin</strong></div>
+          {% endif %}
+          <span>{{ member.username }}</span>
 
         </div>
       </div>
@@ -84,7 +63,7 @@
     </div>
   </div>
 
-  <input class="btn btn-submit btn-green-to-blue" type="submit" value="{% trans 'Promote' %}">
+  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Promote' %}">
 
 </form>
 <!--END: PROMOTE MEMBERS FORM-->
