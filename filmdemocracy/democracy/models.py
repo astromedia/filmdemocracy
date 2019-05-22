@@ -52,6 +52,14 @@ class Club(models.Model):
         return markdownify(str(self.panel))
 
 
+class InvitationLink(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    invited_email = models.EmailField(max_length=254)
+
+    def __str__(self):
+        return f"{self.user_inviting}|{self.club}|{self.invited_email}"
+
+
 class ChatClubPost(models.Model):
     user_sender = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)

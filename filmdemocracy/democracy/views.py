@@ -18,7 +18,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, ClubMemberInfo
+from filmdemocracy.democracy.models import Club, ClubMemberInfo, InvitationLink
 from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
@@ -650,7 +650,7 @@ def vote_film(request, club_id, film_id, view_option, order_option, display_opti
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     club = get_object_or_404(Club, pk=club_id)
-    user_vote, _ = Vote.objects.get_or_create(user=request.user, film=film, club=club)
+    user_vote, tmp = Vote.objects.get_or_create(user=request.user, film=film, club=club)
     user_vote.choice = request.POST['choice']
     user_vote.save()
     return HttpResponseRedirect(reverse(
@@ -1025,6 +1025,9 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
             'request': self.request,
         }
         form.save(**email_opts)
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        invitation_link, tmp = InvitationLink.objects.get_or_create(club=club, invited_email=form.cleaned_data['email'])
+        invitation_link.save()
         messages.success(self.request, _('An invitation email has been sent to: ') + form.cleaned_data['email'])
         return super().form_valid(form)
 
@@ -1050,12 +1053,12 @@ class InviteNewMemberConfirmView(generic.FormView):
         self.validlink = False
         user = self.request.user
         inviter = self.get_object(User, self.kwargs['uinviteridb64'])
-        email = str(urlsafe_base64_decode(self.kwargs['uemailb64']), 'utf-8')
+        invited_email = str(urlsafe_base64_decode(self.kwargs['uemailb64']), 'utf-8')
         club = self.get_object(Club, self.kwargs['uclubidb64'])
-
-        if club is not None and user.email == email:
+        if club is not None and user.email == invited_email:
             club_members = club.members.filter(is_active=True)
-            if inviter in club_members and user not in club_members:
+            invitation_link = InvitationLink.objects.filter(club=club, invited_email=user.email)
+            if inviter in club_members and user not in club_members and invitation_link:
                 self.validlink = True
                 return super().dispatch(*args, **kwargs)
         # Display the "invitation link not valid" error page.
@@ -1088,6 +1091,8 @@ class InviteNewMemberConfirmView(generic.FormView):
             club.save()
             club_member_info = ClubMemberInfo.objects.create(club=club, member=user)
             club_member_info.save()
+            invitation_link = InvitationLink.objects.get(club=club, invited_email=user.email)
+            invitation_link.delete()
         messages.success(self.request, _('Congratulations! You have are now a proud member of the club!'))
         return super().form_valid(form)
 
@@ -1323,7 +1328,7 @@ def post_in_chatclub(request, club_id):
     if not post_text.lstrip() == '':
         post = ChatClubPost.objects.create(user_sender=request.user, club=club, text=post_text)
         post.save()
-        chat_info, _ = ChatClubInfo.objects.get_or_create(club=club)  # TODO: change to get_or_404 in pro version
+        chat_info, tmp = ChatClubInfo.objects.get_or_create(club=club)  # TODO: change to get_or_404 in pro version
         chat_info.last_post = post
         chat_info.save()
     return HttpResponseRedirect(reverse('democracy:chatclub', kwargs={'club_id': club_id}))
@@ -1394,7 +1399,7 @@ def post_in_chatusers(request, chatuser_id):
         post = ChatUsersPost.objects.create(user_sender=request.user, user_receiver=chat_user, text=post_text)
         post.save()
         for users_tuple in [(request.user, chat_user), (chat_user, request.user)]:
-            chat_info, _ = ChatUsersInfo.objects.get_or_create(user=users_tuple[0], user_known=users_tuple[1])
+            chat_info, tmp = ChatUsersInfo.objects.get_or_create(user=users_tuple[0], user_known=users_tuple[1])
             chat_info.last_post = post
             chat_info.save()
     return HttpResponseRedirect(reverse('democracy:chatusers', kwargs={'chatuser_id': chatuser_id}))
