@@ -6,7 +6,6 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
-
 from filmdemocracy.registration import forms
 
 
@@ -18,8 +17,18 @@ class SignUpView(generic.CreateView):
 @login_required
 def account_delete(request):
     user = request.user
-    user.is_active = False
-    user.save()
+    user_clubs = user.club_set.all()
+    for club in user_clubs:
+        club_members = club.members.filter(is_active=True)
+        club_admins = club.admin_members.filter(is_active=True)
+        if len(club_members) == 1:
+            club.delete()
+        elif user in club_admins and len(club_admins) == 1 and len(club_members) > 1:
+            for member in club_members:
+                club.admin_members.add(member)
+            club.save()
+            # TODO: add notification that only admin in club left
+    user.delete()
     messages.success(request, _("Account deleted successfully."))
     return HttpResponseRedirect(reverse('home'))
 

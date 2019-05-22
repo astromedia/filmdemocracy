@@ -36,9 +36,14 @@
 
         <!--PROPOSED BY-->
         <p class="small text-center">{% trans 'Proposed by' %}
-        <a class="green-color blue-color-hover"
+
+          {% if film.proposed_by %}
+          <a class="green-color blue-color-hover"
            href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
           {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.pub_date|date:"d M Y" }}
+          {% else %}
+          {% trans 'a club ex-member' %} {% trans 'on ' %} {{ film.pub_date|date:"d M Y" }}
+          {% endif %}
         </p>
 
 

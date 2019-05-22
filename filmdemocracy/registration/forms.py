@@ -17,8 +17,7 @@ class SignupForm(UserCreationForm):
         agree_terms = self.cleaned_data['agree_terms']
         if not agree_terms:
             raise forms.ValidationError(
-                _("You must agree to the "
-                  "terms and conditions to create an account.")
+                _("You must agree to the terms and conditions to create an account.")
             )
         return agree_terms
 

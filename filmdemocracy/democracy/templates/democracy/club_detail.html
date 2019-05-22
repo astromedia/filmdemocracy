@@ -141,9 +141,13 @@
       </div>
       <div class="col-auto">
         <span class="text-muted">{% trans 'Organized by' %}
+          {% if meeting.organizer %}
           <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
             {{ meeting.organizer.username }}
           </a>
+          {% else %}
+          {% trans 'a club ex-member' %}
+          {% endif %}
         </span>
       </div>
     </div>
@@ -539,14 +543,12 @@
 
   <div class="row justify-content-center">
 
-    <!--MEMBER-->
-
     {% for member in club_members %}
-    <div class="col col-auto align-self-center">
-      <div class="card text-center">
+
+    <div class="col col-auto">
+      <div class="card">
 
         <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
-          <div class="member-image">
             {% if member.profile_image %}
             <img class="card-img-top rounded-circle" src="{{ member.profile_image.url }}"
                  alt="member.profile_image not found">
@@ -554,15 +556,13 @@
             <img class="card-img-top rounded-circle" src="{% static 'registration/svg/user_no_profile_image.svg' %}"
                  alt="member.profile_image not found">
             {% endif %}
-          </div>
         </a>
 
-        <div>
-          <small>{{ member.username }}</small>
-        </div>
+        <span>{{ member.username }}</span>
 
       </div>
     </div>
+
     {% endfor %}
 
   </div>
