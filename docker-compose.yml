@@ -5,7 +5,7 @@ services:
     image: postgres
   web:
     build: .
-    command: ./tools/start_website.sh
+    command: ./scripts/start_website.sh
     volumes:
       - .:/code:z
     ports:

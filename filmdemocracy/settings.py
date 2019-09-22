@@ -14,6 +14,7 @@ import os
 
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
+
 from filmdemocracy.secrets import SECRET_KEY, OMDB_API_KEY, EMAIL_HOST_PASSWORD
 
 
@@ -164,8 +165,8 @@ DEFAULT_FROM_EMAIL = 'filmdemocracyweb@gmail.com'
 
 AUTH_USER_MODEL = 'registration.User'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "local/media")
+MEDIA_URL = '/db_media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "local/db_media")
 
 
 # Custom Bootstrap messages

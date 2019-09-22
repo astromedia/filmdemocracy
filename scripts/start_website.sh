@@ -3,7 +3,7 @@
 
 #### SETTINGS ####
 
-APPS_DIR=filmdemocracy
+APPS_DIR='filmdemocracy'
 declare -a WEB_APPS=("registration" "democracy")
 
 
@@ -11,17 +11,18 @@ declare -a WEB_APPS=("registration" "democracy")
 #### START WEBSITE ####
 #######################
 
+WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-for WEB_APP in ${WEB_APPS[@]}; do
+for WEB_APP in "${WEB_APPS[@]}"; do
   python manage.py makemigrations ${WEB_APP}
 done
 
 python manage.py migrate
 
-cd ${APPS_DIR}
+cd ${APPS_DIR} || exit
 django-admin compilemessages
-cd ..
 
+cd ${WORKDIR} || exit
 python manage.py runserver 0.0.0.0:8000
 
 exit 0
