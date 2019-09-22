@@ -84,7 +84,7 @@
           <!--START: CLUBS CHATS-->
           {% for userclub in user.club_set.all %}
           <a class="dropdown-item py-0 px-3" href="{% url 'democracy:chatclub' userclub.id %}">
-            <div class="media">
+            <div class="media chat-item">
 
               {% if userclub.logo %}
               <img class="align-self-center border border-secondary rounded-circle mr-2"
@@ -98,8 +98,10 @@
               <div class="media-body align-self-center p-0 m-0">
                 <span style="font-weight: bold;">{{ userclub.name }}</span><br>
                 {% with last_post=userclub.chatclubinfo_set.all.0.last_post %}
-                <span class="second-line club-chat-poster">{{ last_post.user_sender.username }}:</span>
+                {% if last_post %}
+                <span class="second-line club-chat-poster"><strong>{{ last_post.user_sender.username }}:</strong></span>
                 <span class="second-line text-muted">{{ last_post.text }}</span>
+                {% endif %}
                 {% endwith %}
               </div>
 
@@ -113,15 +115,14 @@
           <!--START: USERS CHATS-->
           {% for chat_opened in user.chat_user.all %}
           <a class="dropdown-item py-0 px-3" href="{% url 'democracy:chatusers' chat_opened.user_known.id %}">
-            <div class="media chat_item">
+            <div class="media chat-item">
 
               {% if chat_opened.user_known.profile_image %}
               <img class="align-self-center border border-secondary rounded-circle mr-2"
                    src="{{ chat_opened.user_known.profile_image.url }}" alt="chat_opened.user_known.profile_image not found">
               {% else %}
               <img class="align-self-center border border-secondary rounded-circle mr-2"
-                   src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-                   alt="chat_opened.user_known.profile_image not found">
+                   src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="chat_opened.user_known.profile_image not found">
               {% endif %}
 
               <div class="media-body align-self-center p-0 m-0">
@@ -168,9 +169,9 @@
 
             {% for userclub in user.club_set.all %}
 
-            <a class="dropdown-item py-0 px-3 {% if club == userclub and page != 'chat'%} active {% endif %}"
+            <a class="dropdown-item py-0 px-3 {% if club == userclub and page != 'chat' %} active {% endif %}"
                href="{% url 'democracy:club_detail' userclub.id %}">
-              <div class="media">
+              <div class="media club-item">
 
                 {% if userclub.logo %}
                 <img class="align-self-center border border-secondary rounded-circle mr-2"
@@ -237,14 +238,154 @@
 
 
       <!--START: NOTIFICATIONS-->
-      <li class="nav-item mr-3 mx-1 mr-md-5 align-self-center">
+      <li class="nav-item dropdown mr-3 mx-1 mr-md-5 align-self-center">
 
-        <a class="nav-link nav-icon" href="#">
-          <img class="" src="{% static 'democracy/svg/bell_white.svg'%}" alt="bell image not found">
-        </a>
+          <a class="nav-link nav-icon dropdown-toggle pointer-cursor" id="navbarDropdownNotifications"
+             role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img class="" src="{% static 'democracy/svg/bell_white.svg'%}" alt="bell image not found">
+          </a>
+
+        {% if notifications.list %}
+
+          {% if notifications.unread_count > 0 %}
+          <div class="badge-count text-center">
+            <span>{{ notifications.unread_count }}</span>
+          </div>
+          {% endif %}
+
+        <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownNotifications">
+
+          {% if notifications.list %}
+
+          {% for ntf in notifications.list %}
+
+          <a class="dropdown-item py-0 px-3 {% if not notification.read_date %} active {% endif %}"
+             href="{% url 'democracy:notification_dispatcher' %}">
+            <div class="media notification-item">
+
+              {% if ntf.activator %}
+              {% if ntf.activator.profile_image %}
+              <img class="align-self-center border border-secondary rounded-circle mr-2"
+                   src="{{ notification.activator.profile_image.url }}" alt="notification.activator.profile_image not found">
+              {% else %}
+              <img class="align-self-center border border-secondary rounded-circle mr-2"
+                   src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="notification.activator.profile_image not found">
+              {% endif %}
+              {% endif %}
+
+              <div class="media-body align-self-center p-0 m-0 text-muted">
+                <span>{{ ntf.club }}</span><br>
+                <span class="second-line">
+
+                  {% if ntf.type == 'joined' %}
+
+                    {% blocktrans with new_member=ntf.activator %}
+                      {{ new_member }} joined the club.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'promoted' %}
+
+                    {% blocktrans with promoter=ntf.activator promoted=ntf.passive_object_name %}
+                      {{ promoted }} was promoted to admin by {{ promoter }}.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'promoted_self' %}
+
+                    {% blocktrans with promoter=ntf.activator %}
+                      You were promoted to admin by {{ promoter }}.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'left' %}
+
+                    {% blocktrans with ex_member=ntf.activator %}
+                      {{ ex_member }} left the club.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'addedfilm' %}
+
+                    {% blocktrans with proposer=ntf.activator film=ntf.passive_object_name %}
+                      {{ proposer }} added a film: {{ film }}.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'addedfilms' %}
+
+                    {% blocktrans with proposer=ntf.activator count=ntf.counter %}
+                      {{ proposer }} added {{ count }} new films.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'seenfilm' %}
+
+                    {% blocktrans with marker_member=ntf.activator film=ntf.passive_object_name %}
+                      {{ marker_member }} marked the film {{ film }} as seen.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'organmeet' %}
+
+                    {% blocktrans with organizer=ntf.activator meeting=ntf.passive_object_name %}
+                      {{ organizer }} organized a new meeting: {{ meeting }}.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'commfilm' %}
+
+                    {% blocktrans with commenter=ntf.activator film=ntf.passive_object_name %}
+                      {{ commenter }} made a comment on your film {{ film }}.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'commfilms' %}
+
+                    {% blocktrans with count=ntf.counter film=ntf.passive_object_name %}
+                      Your film {{ film }} has {{ count }} new comments.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'commcomm' %}
+
+                    {% blocktrans with commenter=ntf.activator film=ntf.passive_object_name %}
+                      {{ commenter }} made a comment on the film {{ film }}.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'commcomms' %}
+
+                    {% blocktrans with count=ntf.counter film=ntf.passive_object_name %}
+                      The film {{ film }} has {{ count }} new comments.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'kicked' %}
+
+                    {% blocktrans with kicker=ntf.activator member=ntf.passive_object_name %}
+                      {{ member }} was kicked from the club by {{ kicker }}.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'kicked_self' %}
+
+                    {% blocktrans with kicker=ntf.activator %}
+                      You were kicked from the club by {{ kicker }}.
+                    {% endblocktrans %}
+
+                  {% endif %}
+
+                </span>
+              </div>
+
+            </div>
+          </a>
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          {% endfor %}
+
+          <a class="dropdown-item py-0 px-3 m-0 extra-item text-center" href="#">
+            <strong>{% trans 'Mark all as read' %}</strong>
+          </a>
+
+          {% endif %}
+
+        </div>
+
+        {% endif %}
 
       </li>
       <!--END: NOTIFICATIONS-->
+
 
     </ul>
 

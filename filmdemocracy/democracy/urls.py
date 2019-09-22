@@ -5,6 +5,11 @@ from filmdemocracy.democracy import views
 app_name = 'democracy'
 urlpatterns = [
     path(
+        'notification_dispatcher/',
+        views.notification_dispatcher,
+        name='notification_dispatcher'
+    ),
+    path(
         'club/create_club/',
         views.CreateClubView.as_view(
             template_name='democracy/edit_club_create.html'

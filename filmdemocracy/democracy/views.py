@@ -18,7 +18,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, ClubMemberInfo, InvitationLink
+from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, InvitationLink
 from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
@@ -66,6 +66,131 @@ def add_club_context(request, context, club_id):
     context['club_admins'] = club.admin_members.filter(is_active=True)
     context['user'] = request.user
     return context
+
+
+def notifications_context(request):
+
+    if request.user.is_anonymous:
+        return {}
+
+    def ntf_message(_ntf, _type, _url, _ntf_ids, _passive_object_name=None, _counter=0):
+        return {
+            'type': _type,
+            'activator': _ntf.activator.username,
+            'passive_object_name': _passive_object_name,
+            'counter': _counter,
+            'club': _ntf.club.name,
+            'date': _ntf.date,
+            'url': _url,
+            'read': _ntf.read,
+            'ntf_ids': _ntf_ids,
+        }
+
+    unread_count = 0
+    notification_messages = []
+
+    user_notifications = Notification.objects.filter(recipient=request.user)
+    ntfs_joined = user_notifications.filter(type=Notification.JOINED)
+    ntfs_left = user_notifications.filter(type=Notification.LEFT)
+    ntfs_organmeet = user_notifications.filter(type=Notification.ORGAN_MEET)
+    ntfs_seenfilm = user_notifications.filter(type=Notification.SEEN_FILM)
+    ntfs_promoted = user_notifications.filter(type=Notification.PROMOTED)
+    ntfs_kicked = user_notifications.filter(type=Notification.KICKED)
+    ntfs_group_addedfilm = user_notifications.filter(type=Notification.ADDED_FILM).order_by('-date')
+    ntfs_group_commfilm = user_notifications.filter(type=Notification.COMM_FILM).order_by('-date')
+    ntfs_group_commcomm = user_notifications.filter(type=Notification.COMM_COMM).order_by('-date')
+
+    # Notifications: JOINED, LEFT, ORGAN_MEET
+    for ntf in ntfs_joined | ntfs_left | ntfs_organmeet:
+        if not ntf.read:
+            unread_count += 1
+        url = reverse('democracy:club_detail', kwargs={'club_id': ntf.club.id})
+        notification_messages.append(ntf_message(ntf, ntf.type, url, ntf.id))
+
+    # Notifications: SEEN_FILM
+    for ntf in ntfs_seenfilm:
+        if not ntf.read:
+            unread_count += 1
+        url = reverse('democracy:film_detail', kwargs={'club_id': ntf.club.id,
+                                                       'film_id': ntf.object_film.id,
+                                                       'view_option': 'all',
+                                                       'order_option': 'title',
+                                                       'display_option': 'posters'})
+        notification_messages.append(ntf_message(ntf, ntf.type, url, ntf.id, ntf.object_film.filmdb.title))
+
+    # Notifications: PROMOTED, KICKED
+    for ntf in ntfs_promoted | ntfs_kicked:
+        if not ntf.read:
+            unread_count += 1
+        if ntf.object_member == request.user:
+            ntf_type = ntf.type + '_self'
+        else:
+            ntf_type = ntf.type
+        if ntf_type in ['promoted', 'promoted_self']:
+            url = reverse('democracy:club_member_detail', kwargs={'club_id': ntf.club.id,
+                                                                  'user_id': ntf.object_member.pk})
+        elif ntf_type == 'kicked':
+            url = reverse('democracy:club_detail', kwargs={'club_id': ntf.club.id})
+        else:
+            url = reverse('democracy:home')
+        notification_messages.append(ntf_message(ntf, ntf_type, url, ntf.id, ntf.object_member.username))
+
+    # Notifications: ADDED_FILM
+    for i, ntfs_subgroup in enumerate([ntfs_group_addedfilm.filter(read=True), ntfs_group_addedfilm.filter(read=False)]):
+        ntf_activators = set(ntf.activator for ntf in ntfs_subgroup)
+        for ntf_activator in ntf_activators:
+            ntf_activator_group = ntfs_subgroup.filter(activator=ntf_activator.id)
+            ntf = ntf_activator_group.last()
+            if len(ntf_activator_group) > 1:
+                counter = len(ntf_activator_group)
+                ntf_type = ntf.type + 's'
+                url = reverse('democracy:candidate_films', kwargs={'club_id': ntf.club.id,
+                                                                   'view_option': 'all',
+                                                                   'order_option': 'title',
+                                                                   'display_option': 'posters'})
+            else:
+                counter = 0
+                ntf_type = ntf.type
+                url = reverse('democracy:film_detail', kwargs={'club_id': ntf.club.id,
+                                                               'film_id': ntf.object_film.id,
+                                                               'view_option': 'all',
+                                                               'order_option': 'title',
+                                                               'display_option': 'posters'})
+            if i == 1:
+                if not ntf.read:
+                    unread_count += 1
+            notification_messages.append(ntf_message(ntf, ntf_type, url, ntf.id, ntf.object_film.filmdb.title, counter))
+
+    # Notifications: COMM_FILM, COMM_COMM
+    for ntfs_group in [ntfs_group_commfilm, ntfs_group_commcomm]:
+        for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
+            ntf_films = set(ntf.object_film for ntf in ntfs_subgroup)
+            for ntf_film in ntf_films:
+                ntf_film_group = ntfs_subgroup.filter(object_film=ntf_film.id)
+                ntf = ntf_film_group.last()
+                if len(ntf_film_group) > 1:
+                    counter = len(ntf_film_group)
+                    ntf_type = ntf.type + 's'
+                else:
+                    counter = 0
+                    ntf_type = ntf.type
+                url = reverse('democracy:film_detail', kwargs={'club_id': ntf.club.id,
+                                                               'film_id': ntf.object_film.id,
+                                                               'view_option': 'all',
+                                                               'order_option': 'title',
+                                                               'display_option': 'posters'})
+                if i == 1:
+                    if not ntf.read:
+                        unread_count += 1
+                notification_messages.append(ntf_message(ntf, ntf_type, url, ntf.id, ntf.object_film.filmdb.title, counter))
+
+        return {'notifications': {'list': notification_messages, 'unread_count': unread_count}}
+
+
+@login_required
+def notification_dispatcher(request):
+    url = reverse('democracy:home')
+    return HttpResponseRedirect(url)
 
 
 def update_filmdb_omdb_info(filmdb, imdb_id):
@@ -243,11 +368,13 @@ def leave_club(request, club_id):
             club.admin_members.remove(user)
     club.members.remove(user)
     club.save()
+    Notification.objects.filter(club=club, recipient=user).delete()
     club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=user)
     club_member_info.delete()
     messages.success(request, _("Done. You have left the club."))
-    if len(club_members) == 1:
+    if not club.members.filter(is_active=True):
         club.delete()
+        Notification.objects.filter(club=club).delete()
     return HttpResponseRedirect(reverse('home'))
 
 
@@ -297,6 +424,19 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
         context = add_club_context(self.request, context, club_id)
         return context
 
+    @staticmethod
+    def create_notifications(user, club, kicked_members):
+        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        for kicked in kicked_members:
+            for member in club_members:
+                Notification.objects.create(
+                    type=Notification.KICKED,
+                    activator=user,
+                    club=club,
+                    object_member=kicked,
+                    recipient=member,
+                )
+
     def form_valid(self, form):
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         club_admins = club.admin_members.all()
@@ -308,7 +448,9 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
                 club.members.remove(member)
                 club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
                 club_member_info.delete()
+                Notification.objects.filter(club=club, recipient=member).delete()
             club.save()
+            self.create_notifications(self.request.user, club, kicked_members)
             if len(kicked_members) == 1:
                 messages.success(self.request, _("Member successfully kicked from club."))
             else:
@@ -347,6 +489,19 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
         context = add_club_context(self.request, context, club_id)
         return context
 
+    @staticmethod
+    def create_notifications(user, club, promoted_members):
+        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        for promoted in promoted_members:
+            for member in club_members:
+                Notification.objects.create(
+                    type=Notification.PROMOTED,
+                    activator=user,
+                    club=club,
+                    object_member=promoted,
+                    recipient=member,
+                )
+
     def form_valid(self, form):
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         promoted_members = form.cleaned_data['members']
@@ -354,6 +509,7 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
             for member in promoted_members:
                 club.admin_members.add(member)
             club.save()
+            self.create_notifications(self.request.user, club, promoted_members)
             if len(promoted_members) == 1:
                 messages.success(self.request, _("Member successfully promoted to admin."))
             else:
@@ -502,6 +658,18 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
         free_ids = [i for i in range(1, 99999) if i not in films_ids]
         return f'{random.choice(free_ids):05d}'
 
+    @staticmethod
+    def create_notifications(user, club, film):
+        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        for member in club_members:
+            Notification.objects.create(
+                type=Notification.ADDED_FILM,
+                activator=user,
+                club=club,
+                object_film=film,
+                recipient=member,
+            )
+
     def form_valid(self, form):
         user = self.request.user
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
@@ -527,62 +695,10 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
                     filmdb=filmdb,
                 )
                 film.save()
+                self.create_notifications(user, club, film)
                 self.film_id = film.id
                 messages.success(self.request, _('New film added! Be the first to vote it!'))
         return super().form_valid(form)
-
-
-# @login_required
-# def add_new_film(request, club_id, view_option, order_option, display_option):
-#     if not user_is_club_member_check(request, club_id):
-#         return HttpResponseForbidden()
-#     imdb_url = request.POST.get('imdb_url')
-#     try:
-#         if 'imdb' not in imdb_url:
-#             raise ValueError
-#         url_list = imdb_url.split('/')
-#         title_position = url_list.index('title')
-#         imdb_key = url_list[title_position + 1]
-#         if 'tt' not in imdb_key or len(imdb_key) is not 9:
-#             raise ValueError
-#         else:
-#             imdb_id = imdb_key.replace('tt', '')
-#             if Film.objects.filter(club=club_id, imdb_id=imdb_id, seen=False):
-#                 raise KeyError
-#             else:
-#                 filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_id)
-#                 if created or (not created and not filmdb.title):
-#                     update_filmdb_omdb_info(filmdb, imdb_id)
-#                 club = get_object_or_404(Club, pk=club_id)
-#                 new_film_id = random_id_generator(club_id)
-#                 film = Film.objects.create(
-#                     id=f'{club_id}{new_film_id}',
-#                     imdb_id=imdb_id,
-#                     proposed_by=request.user,
-#                     club=club,
-#                     filmdb=filmdb,
-#                 )
-#                 film.save()
-#
-#                 return HttpResponseRedirect(reverse(
-#                     'democracy:film_detail',
-#                     kwargs={'club_id': club_id,
-#                             'film_id': film.id,
-#                             'view_option': view_option,
-#                             'order_option': order_option,
-#                             'display_option': display_option}
-#                 ))
-#     except ValueError:
-#         messages.warning(request, _('The IMDb url does not seem to be valid.'))
-#     except KeyError:
-#         messages.warning(request, _("That film is already in the candidate list!"))
-#     return HttpResponseRedirect(reverse(
-#         'democracy:candidate_films',
-#         kwargs={'club_id': club_id,
-#                 'view_option': view_option,
-#                 'order_option': order_option,
-#                 'display_option': display_option}
-#     ))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -682,6 +798,32 @@ def delete_vote(request, club_id, film_id, view_option, order_option, display_op
 
 @login_required
 def comment_film(request, club_id, film_id, view_option, order_option, display_option):
+
+    def create_notifications(_user, _club, _film):
+        proposer = _film.proposed_by
+        film_commenters = [fc.user for fc in FilmComment.objects.filter(film=_film, deleted=False)]
+
+        # Notification to film proposer:
+        if _user != proposer:
+            Notification.objects.create(
+                type=Notification.COMM_FILM,
+                activator=_user,
+                club=_club,
+                object_film=_film,
+                recipient=proposer,
+            )
+
+        # Notifications to people that commented on that film before (film_commenters):
+        for commenter in film_commenters:
+            if commenter != proposer and commenter != _user:
+                Notification.objects.create(
+                    type=Notification.COMM_COMM,
+                    activator=_user,
+                    club=_club,
+                    recipient=commenter,
+                    object_film=_film,
+                )
+
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
@@ -690,6 +832,7 @@ def comment_film(request, club_id, film_id, view_option, order_option, display_o
     if not comment_text == '':
         film_comment = FilmComment.objects.create(user=request.user, film=film, club=club, text=comment_text)
         film_comment.save()
+        create_notifications(request.user, club, film)
     return HttpResponseRedirect(reverse(
         'democracy:film_detail',
         kwargs={'club_id': club_id,
@@ -781,7 +924,20 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
         kwargs.update({'club_members': club.members.filter(is_active=True)})
         return kwargs
 
+    @staticmethod
+    def create_notifications(user, club, film):
+        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        for member in club_members:
+            Notification.objects.create(
+                type=Notification.SEEN_FILM,
+                activator=user,
+                club=club,
+                recipient=member,
+                object_film=film,
+            )
+
     def form_valid(self, form):
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         film = get_object_or_404(Film, id=self.kwargs['film_id'])
         film.seen_date = form.cleaned_data['seen_date']
         members = form.cleaned_data['members']
@@ -789,6 +945,8 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
             film.seen_by.add(member)
         film.seen = True
         film.save()
+        self.create_notifications(self.request.user, club, film)
+        messages.success(self.request, _('Film marked as seen.'))
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -802,8 +960,10 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
 
 @login_required
 def delete_film(request, club_id, film_id, view_option, order_option, display_option):
+
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
+    club = get_object_or_404(Club, pk=club_id)
     film = get_object_or_404(Film, pk=film_id)
     film.delete()
     return HttpResponseRedirect(reverse(
@@ -842,24 +1002,6 @@ def unsee_film(request, club_id, film_id, view_option, order_option, display_opt
                     'order_option': order_option,
                     'display_option': display_option}
         ))
-
-
-# @login_required
-# def update_film_data(request, club_id, film_id, view_option, order_option, display_option):
-#     if not user_is_club_member_check(request, club_id):
-#         return HttpResponseForbidden()
-#     film = get_object_or_404(Film, pk=film_id)
-#     filmdb = get_object_or_404(FilmDb, pk=film.filmdb.imdb_id)
-#     if filmdb.updatable:
-#         update_filmdb_omdb_info(filmdb, filmdb.imdb_id)
-#     return HttpResponseRedirect(reverse(
-#         'democracy:film_detail',
-#         kwargs={'club_id': club_id,
-#                 'film_id': film_id,
-#                 'view_option': view_option,
-#                 'order_option': order_option,
-#                 'display_option': display_option}
-#     ))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -1082,6 +1224,12 @@ class InviteNewMemberConfirmView(generic.FormView):
             context.update({'form': None, 'validlink': False})
         return context
 
+    @staticmethod
+    def create_notifications(user, club):
+        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        for member in club_members:
+            Notification.objects.create(type=Notification.JOINED, activator=user, club=club, recipient=member,)
+
     def form_valid(self, form):
         user = self.request.user
         club = self.get_object(Club, self.kwargs['uclubidb64'])
@@ -1091,6 +1239,7 @@ class InviteNewMemberConfirmView(generic.FormView):
             club.save()
             club_member_info = ClubMemberInfo.objects.create(club=club, member=user)
             club_member_info.save()
+            self.create_notifications(user, club)
             invitation_link = InvitationLink.objects.get(club=club, invited_email=user.email)
             invitation_link.delete()
         messages.success(self.request, _('Congratulations! You have are now a proud member of the club!'))
@@ -1134,6 +1283,18 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
         free_ids = [i for i in range(1, 9999) if i not in meetings_ids]
         return f'{random.choice(free_ids):04d}'
 
+    @staticmethod
+    def create_notifications(user, club, meeting):
+        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        for member in club_members:
+            Notification.objects.create(
+                type=Notification.ORGAN_MEET,
+                activator=user,
+                club=club,
+                object_meeting=meeting,
+                recipient=member,
+            )
+
     def form_valid(self, form):
         user = self.request.user
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
@@ -1149,6 +1310,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
             time_end=form.cleaned_data['time_end'],
         )
         new_meeting.save()
+        self.create_notifications(user, club, new_meeting)
         if form.cleaned_data['send_spam']:
             email_opts = {
                 'domain_override': None,
@@ -1162,7 +1324,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
             }
             spammable_members = club.members.filter(is_active=True)
             form.spam_members(spammable_members, **email_opts)
-            messages.success(self.request, _('Meeting planned! A notification has been sent to club members.'))
+            messages.success(self.request, _('Meeting planned! A notification email has been sent to club members.'))
         else:
             messages.success(self.request, _('Meeting planned!'))
         return super().form_valid(form)
@@ -1225,14 +1387,14 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
                 club = get_object_or_404(Club, pk=self.kwargs['club_id'])
                 spammable_members = club.members.filter(is_active=True)
                 form.spam_members(spammable_members, **email_opts)
-                messages.success(self.request, _('Meeting edited! A notification has been sent to club members.'))
+                messages.success(self.request, _('Meeting edited! A notification email has been sent to club members.'))
             elif spam_opt == 'interested':
                 meeting_members = [meeting.members_yes.all(), meeting.members_maybe.all(), meeting.members_no.all()]
                 for spammable_members in meeting_members:
                     form.spam_members(spammable_members, **email_opts)
                 messages.success(
                     self.request,
-                    _('Meeting edited! A notification has been sent to members interested in it.')
+                    _('Meeting edited! A notification email has been sent to members interested in it.')
                 )
         else:
             messages.success(self.request, _('Meeting edited!'))
@@ -1285,6 +1447,7 @@ def delete_meeting(request, club_id, meeting_id):
     admin_check = user_is_club_admin_check(request, club_id)
     if not organizer_check and not admin_check:
         return HttpResponseForbidden()
+    club = get_object_or_404(Club, pk=club_id)
     meeting = get_object_or_404(Meeting, pk=meeting_id)
     meeting.delete()
     return HttpResponseRedirect(reverse('democracy:club_detail', kwargs={'club_id': club_id}))

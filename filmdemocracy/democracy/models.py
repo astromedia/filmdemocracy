@@ -57,7 +57,7 @@ class InvitationLink(models.Model):
     invited_email = models.EmailField(max_length=254)
 
     def __str__(self):
-        return f"{self.user_inviting}|{self.club}|{self.invited_email}"
+        return f"{self.club}|{self.invited_email}"
 
 
 class ChatClubPost(models.Model):
@@ -238,3 +238,38 @@ class FilmComment(models.Model):
 
     def __str__(self):
         return f'{self.user}|{self.film.filmdb.title}|{self.text}'
+
+
+class Notification(models.Model):
+    JOINED = 'joined'
+    PROMOTED = 'promoted'
+    LEFT = 'left'
+    ADDED_FILM = 'addedfilm'
+    SEEN_FILM = 'seenfilm'
+    ORGAN_MEET = 'organmeet'
+    COMM_FILM = 'commfilm'
+    COMM_COMM = 'commcomm'
+    KICKED = 'kicked'
+    notification_choices = (
+        (JOINED, 'Member joined the club'),
+        (PROMOTED, 'Member promoted to admin.'),
+        (LEFT, "Member left the club."),
+        (ADDED_FILM, 'Member added new film.'),
+        (SEEN_FILM, "Member marked film as seen by club."),
+        (ORGAN_MEET, "Member organized a new club meeting."),
+        (COMM_FILM, "Member commented in film proposed by user."),
+        (COMM_COMM, 'Member commented in film commented by user.'),
+        (KICKED, 'Member kicked other member from club.'),
+    )
+    type = models.CharField(max_length=9, choices=notification_choices)
+    activator = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='active_member')
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='club')
+    object_member = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='passive_member')
+    object_film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, related_name='passive_film')
+    object_meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, null=True, related_name='passive_meeting')
+    date = models.DateTimeField(auto_now_add=True)
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipient')
+    read = models.BooleanField('notification read', default=False)
+
+    def __str__(self):
+        return f"{self.activator.username}|{self.club}|{self.type}|{self.date}|{self.recipient.username}"
