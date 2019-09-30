@@ -16,6 +16,7 @@ def get_club_logo_path(instance, filename):
 class Club(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5)
     name = models.CharField(_('Club name'), max_length=50)
+    created_date = models.DateField('club created date', auto_now_add=True)
     short_description = models.CharField(_('Short description (optional)'), max_length=120)
     panel = MarkdownxField(
         _('Club panel: description, rules, etc. (optional)'),
@@ -63,13 +64,13 @@ class InvitationLink(models.Model):
 class ChatClubPost(models.Model):
     user_sender = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    date = models.DateTimeField('comment date', auto_now_add=True)
+    datetime = models.DateTimeField('comment datetime', auto_now_add=True)
     edited = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     text = models.CharField(max_length=5000)
 
     def __str__(self):
-        return f'{self.club}|{self.user_sender}|{self.date}|{self.text}'
+        return f'{self.club}|{self.user_sender}|{self.datetime}|{self.text}'
 
 
 class ChatClubInfo(models.Model):
@@ -77,19 +78,19 @@ class ChatClubInfo(models.Model):
     last_post = models.ForeignKey(ChatClubPost, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f'{self.club}|{self.last_post.date}'
+        return f'{self.club}|{self.last_post.datetime}'
 
 
 class ChatUsersPost(models.Model):
     user_sender = models.ForeignKey(User, related_name='user_sender', on_delete=models.CASCADE)
     user_receiver = models.ForeignKey(User, related_name='user_receiver', on_delete=models.CASCADE)
-    date = models.DateTimeField('comment date', auto_now_add=True)
+    datetime = models.DateTimeField('comment datetime', auto_now_add=True)
     edited = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     text = models.CharField(max_length=5000)
 
     def __str__(self):
-        return f'{self.user_sender}|{self.user_receiver}|{self.date}|{self.text}'
+        return f'{self.user_sender}|{self.user_receiver}|{self.datetime}|{self.text}'
 
 
 class ChatUsersInfo(models.Model):
@@ -99,7 +100,7 @@ class ChatUsersInfo(models.Model):
     last_post = models.ForeignKey(ChatUsersPost, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f'{self.user}|{self.user_known}|{self.last_post.date}'
+        return f'{self.user}|{self.user_known}|{self.last_post.datetime}'
 
 
 class ClubMemberInfo(models.Model):
@@ -124,6 +125,7 @@ class Meeting(models.Model):
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')
     members_no = models.ManyToManyField(User, related_name='members_no')
+    created_datetime = models.DateTimeField('meeting created datetime', auto_now_add=True)
 
     def __str__(self):
         return f'{self.id}|{self.name}'
@@ -143,7 +145,7 @@ class FilmDb(models.Model):
     country = models.CharField(default='', max_length=1000)
     language = models.CharField(default='', max_length=1000)
     plot = models.CharField(default='', max_length=5000)
-    created = models.DateField('db created date', auto_now_add=True)
+    created_date = models.DateField('db created date', auto_now_add=True)
     last_updated = models.DateField('last db update date', auto_now=True)
 
     def __str__(self):
@@ -159,21 +161,19 @@ class FilmDb(models.Model):
 
     @property
     def updatable(self):
-        time_diff_created = datetime.datetime.now().date() - self.created
-        time_diff_updated = self.last_updated - self.created
+        time_diff_created = datetime.datetime.now().date() - self.created_date
+        time_diff_updated = self.last_updated - self.created_date
         return time_diff_created > 2 * time_diff_updated
 
 
 class Film(models.Model):
-    """
-    Film proposed by user in club. Obtains info from FilmDb.
-    """
+    """ Film proposed by user in club. Obtains info from FilmDb. """
     id = models.CharField(primary_key=True, unique=True, max_length=10)  # 5(club)+5
     imdb_id = models.CharField('IMDb id', max_length=7)
     proposed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     filmdb = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
-    pub_date = models.DateTimeField('date published', auto_now_add=True)
+    pub_datetime = models.DateTimeField('published datetime', auto_now_add=True)
     seen = models.BooleanField(default=False)
     seen_by = models.ManyToManyField(User, related_name='seen_by')
     seen_date = models.DateField('date seen', null=True, blank=True)
@@ -232,7 +232,7 @@ class FilmComment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    date = models.DateTimeField('comment date', auto_now_add=True)
+    datetime = models.DateTimeField('comment datetime', auto_now_add=True)
     deleted = models.BooleanField(default=False)
     text = models.CharField(max_length=5000)
 
@@ -267,9 +267,9 @@ class Notification(models.Model):
     object_member = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='passive_member')
     object_film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, related_name='passive_film')
     object_meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, null=True, related_name='passive_meeting')
-    date = models.DateTimeField(auto_now_add=True)
+    datetime = models.DateTimeField('notification datetime', auto_now_add=True)
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipient')
     read = models.BooleanField('notification read', default=False)
 
     def __str__(self):
-        return f"{self.activator.username}|{self.club}|{self.type}|{self.date}|{self.recipient.username}"
+        return f"{self.activator.username}|{self.club}|{self.type}|{self.datetime}|{self.recipient.username}"

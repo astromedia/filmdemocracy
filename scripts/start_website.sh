@@ -22,7 +22,7 @@ python manage.py migrate
 cd ${APPS_DIR} || exit
 django-admin compilemessages
 
-cd ${WORKDIR} || exit
+cd ${WORKDIR}/.. || exit
 python manage.py runserver 0.0.0.0:8000
 
 exit 0

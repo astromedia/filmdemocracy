@@ -5,43 +5,38 @@ from filmdemocracy.democracy import views
 app_name = 'democracy'
 urlpatterns = [
     path(
-        'notification_dispatcher/',
+        'notification_dispatcher/<str:ntf_type>/<str:ntf_club_id>/<str:ntf_object_id>/<str:ntf_ids>/',
         views.notification_dispatcher,
         name='notification_dispatcher'
     ),
     path(
+        'notification_cleaner/',
+        views.notification_cleaner,
+        name='notification_cleaner'
+    ),
+    path(
         'club/create_club/',
-        views.CreateClubView.as_view(
-            template_name='democracy/edit_club_create.html'
-        ),
+        views.CreateClubView.as_view(template_name='democracy/edit_club_create.html'),
         name='create_club'
     ),
     path(
         'club/<str:club_id>/edit_info/',
-        views.EditClubInfoView.as_view(
-            template_name='democracy/edit_club_info.html'
-        ),
+        views.EditClubInfoView.as_view(template_name='democracy/edit_club_info.html'),
         name='edit_club_info'
     ),
     path(
         'club/<str:club_id>/edit_panel/',
-        views.EditClubPanelView.as_view(
-            template_name='democracy/edit_club_panel.html'
-        ),
+        views.EditClubPanelView.as_view(template_name='democracy/edit_club_panel.html'),
         name='edit_club_panel'
     ),
     path(
         'club/<str:club_id>/',
-        views.ClubDetailView.as_view(
-            template_name='democracy/club_detail.html'
-        ),
+        views.ClubDetailView.as_view(template_name='democracy/club_detail.html'),
         name='club_detail'
     ),
     path(
         'club/<str:club_id>/member/<str:user_id>/',
-        views.ClubMemberDetailView.as_view(
-            template_name='democracy/club_member_detail.html'
-        ),
+        views.ClubMemberDetailView.as_view(template_name='democracy/club_member_detail.html'),
         name='club_member_detail'
     ),
     path(
@@ -56,9 +51,7 @@ urlpatterns = [
     ),
     path(
         'club/<str:club_id>/kick_members/',
-        views.KickMembersView.as_view(
-            template_name='democracy/club_kick_members.html'
-        ),
+        views.KickMembersView.as_view(template_name='democracy/club_kick_members.html'),
         name='kick_members'
     ),
     path(
@@ -70,37 +63,27 @@ urlpatterns = [
     ),
     path(
         '<str:club_id>/candidate_films/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
-        views.CandidateFilmsView.as_view(
-            template_name='democracy/candidate_films_list.html'
-        ),
+        views.CandidateFilmsView.as_view(template_name='democracy/candidate_films_list.html'),
         name='candidate_films'
     ),
     path(
         '<str:club_id>/candidate_films/film_seen/<str:film_id>/',
-        views.FilmSeenView.as_view(
-            template_name='democracy/candidate_films_seen.html'
-        ),
+        views.FilmSeenView.as_view(template_name='democracy/candidate_films_seen.html'),
         name='film_seen'
     ),
     path(
         '<str:club_id>/candidate_films/participants/',
-        views.ParticipantsView.as_view(
-            template_name='democracy/ranking_films_participants.html'
-        ),
+        views.ParticipantsView.as_view(template_name='democracy/ranking_films_participants.html'),
         name='participants'
     ),
     path(
         '<str:club_id>/candidate_films/vote_results/',
-        views.VoteResultsView.as_view(
-            template_name='democracy/ranking_films_vote_results.html'
-        ),
+        views.VoteResultsView.as_view(template_name='democracy/ranking_films_vote_results.html'),
         name='vote_results'
     ),
     path(
         'club/<str:club_id>/add_new_film/',
-        views.AddNewFilmView.as_view(
-            template_name='democracy/add_new_film.html'
-        ),
+        views.AddNewFilmView.as_view(template_name='democracy/add_new_film.html'),
         name='add_new_film'
     ),
     # path(
@@ -110,9 +93,7 @@ urlpatterns = [
     # ),
     path(
         '<str:club_id>/film/<str:film_id>/&view=<str:view_option>&order=<str:order_option>&display=<str:display_option>/',
-        views.FilmDetailView.as_view(
-            template_name='democracy/film_detail.html'
-        ),
+        views.FilmDetailView.as_view(template_name='democracy/film_detail.html'),
         name='film_detail'
     ),
     path(
@@ -157,30 +138,22 @@ urlpatterns = [
     ),
     path(
         '<str:club_id>/seen_films/',
-        views.SeenFilmsView.as_view(
-            template_name='democracy/seen_films_list.html'
-        ),
+        views.SeenFilmsView.as_view(template_name='democracy/seen_films_list.html'),
         name='seen_films'
     ),
     path(
         'club/<str:club_id>/invite_new_member/',
-        views.InviteNewMemberView.as_view(
-            template_name='democracy/invite_new_member.html'
-        ),
+        views.InviteNewMemberView.as_view(template_name='democracy/invite_new_member.html'),
         name='invite_new_member'
     ),
     path(
         'invitation_link/<uinviteridb64>/<uemailb64>/<uclubidb64>/',
-        views.InviteNewMemberConfirmView.as_view(
-            template_name='democracy/invite_new_member_confirm.html'
-        ),
+        views.InviteNewMemberConfirmView.as_view(template_name='democracy/invite_new_member_confirm.html'),
         name='invite_new_member_confirm'
     ),
     path(
         'club/<str:club_id>/meetings/organize_new/',
-        views.MeetingsNewView.as_view(
-            template_name='democracy/meetings_form.html'
-        ),
+        views.MeetingsNewView.as_view(template_name='democracy/meetings_form.html'),
         name='meetings_new'
     ),
     path(
@@ -195,23 +168,17 @@ urlpatterns = [
     ),
     path(
         'club/<str:club_id>/meetings/<str:meeting_id>/edit/',
-        views.MeetingsEditView.as_view(
-            template_name='democracy/meetings_form.html'
-        ),
+        views.MeetingsEditView.as_view(template_name='democracy/meetings_form.html'),
         name='meetings_edit'
     ),
     path(
         'club/<str:club_id>/meetings/list/',
-        views.MeetingsListView.as_view(
-            template_name='democracy/meetings_list.html'
-        ),
+        views.MeetingsListView.as_view(template_name='democracy/meetings_list.html'),
         name='meetings_list'
     ),
     path(
         'chat/club/<str:club_id>/',
-        views.ChatClubView.as_view(
-            template_name='democracy/chat_club.html'
-        ),
+        views.ChatClubView.as_view(template_name='democracy/chat_club.html'),
         name='chatclub'
     ),
     path(
@@ -226,16 +193,12 @@ urlpatterns = [
     ),
     path(
         'chat/contacts/',
-        views.ChatContactsView.as_view(
-            template_name='democracy/chat_contacts.html'
-        ),
+        views.ChatContactsView.as_view(template_name='democracy/chat_contacts.html'),
         name='contacts'
     ),
     path(
         'chat/user/<str:chatuser_id>/',
-        views.ChatUsersView.as_view(
-            template_name='democracy/chat_users.html'
-        ),
+        views.ChatUsersView.as_view(template_name='democracy/chat_users.html'),
         name='chatusers'
     ),
     path(

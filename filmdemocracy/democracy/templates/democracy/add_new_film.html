@@ -33,7 +33,7 @@
     <input class="form-control" type="text" placeholder="IMDb url" id="imdb_url" name="imdb_url"
            aria-describedby="IMDbWeb">
     <a href="https://www.imdb.com/" target="blank" id="IMDbWeb" class="form-text text-left ml-2">
-      <small>{% trans 'Open imdb.com in a new tab' %}</small>
+      <small>{% trans 'Go to imdb.com' %}</small>
     </a>
 
   </div>
@@ -44,7 +44,7 @@
 <!--END: ADD NEW FILM FORM-->
 
 
-<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
+<form class="btn-cancel" action="{{ request.META.HTTP_REFERER }}">
   <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 

@@ -29,8 +29,6 @@
 <!--  {% trans 'Propose film' %}-->
 <!--</button>-->
 
-
-
 <div class="row justify-content-center filter-options">
 
   <div class="col-md-auto filter">
@@ -263,7 +261,10 @@
 
 <div class="text-center text-muted mt-5">
   {% if view_option == 'all' %}
-    <span>{% trans 'There are no candidate films... Propose one!' %}</span><br>
+    <span>{% trans 'There are no candidate films...' %}</span><br>
+    <a class="misc-text mx-1 green-color blue-color-hover" href="{% url 'democracy:add_new_film' club.id %}">
+    {% trans 'Propose one!' %}
+    </a>
   {% elif view_option == 'not_voted' %}
     <span>{% trans 'Seems like you have voted all films... congratulations!' %}</span>
   {% elif view_option == 'only_voted' %}
@@ -275,7 +276,18 @@
 {% endif %}
 
 
-<button onclick="topFunction()" id="btn-back-to-top" title="Go to top">&#8613 {% trans 'Back to top' %} &#8613</button>
+<!--START: ADD NEW-->
+<a class="pointer-cursor rounded-circle" id="btn-new-options" role="button" href="{% url 'democracy:add_new_film' club.id %}">
+  <img class="align-self-center rounded-circle" src="{% static 'democracy/svg/camera.svg'%}">
+</a>
+<!--END: ADD NEW-->
+
+
+<!--START: BACK TO TOP-->
+<a class="pointer-cursor rounded-circle" id="btn-back-to-top" onclick="topFunction()" role="button" title="Go to top" >
+  <img class="" src="{% static 'democracy/svg/back_to_top.svg'%}">
+</a>
+<!--START: BACK TO TOP-->
 
 
 <script>

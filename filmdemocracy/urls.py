@@ -41,16 +41,12 @@ urlpatterns += i18n_patterns(
     ),
     path(
         'home/',
-        views.HomeView.as_view(
-            template_name='home.html'
-        ),
+        views.HomeView.as_view(template_name='home.html'),
         name='home'
     ),
     path(
         'terms_and_conditions/',
-        views.TermsAndConditionsView.as_view(
-            template_name='terms_and_conditions.html'
-        ),
+        views.TermsAndConditionsView.as_view(template_name='terms_and_conditions.html'),
         name='terms_and_conditions'
     ),
 )

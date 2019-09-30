@@ -11,34 +11,14 @@ def get_profile_image_path(instance, filename):
 
 class User(AbstractUser):
     # TODO: Add country field: https://pypi.org/project/django-countries/
-    email = models.EmailField(
-        _('email'),
-        unique=True,
-    )
-    username = models.CharField(
-        _('username'),
-        max_length=20,
-        unique=False,
-    )
+    email = models.EmailField(_('email'), unique=True,)
+    username = models.CharField(_('username'), max_length=20, unique=False,)
     public_email = models.BooleanField(_('Public email in clubs'), default=False)
-    first_name = models.CharField(
-        _('first name'),
-        max_length=30,
-        null=True,
-        blank=True,
-    )
-    last_name = models.CharField(
-        _('last name'),
-        max_length=150,
-        null=True,
-        blank=True,
-    )
-    profile_image = models.ImageField(
-        _('user profile image'),
-        upload_to=get_profile_image_path,
-        blank=True,
-        null=True
-    )
+    first_name = models.CharField(_('first name'), max_length=30, null=True, blank=True,)
+    last_name = models.CharField(_('last name'), max_length=150, null=True, blank=True,)
+    profile_image = models.ImageField(_('user profile image'), upload_to=get_profile_image_path, blank=True, null=True)
+    joined_date = models.DateField('user created date', auto_now_add=True)
+    last_updated = models.DateField('user last update date', auto_now=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

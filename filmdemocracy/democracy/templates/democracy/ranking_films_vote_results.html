@@ -300,7 +300,11 @@
 <!--END: VOTING RESULTS-->
 
 
-<button onclick="topFunction()" id="btn-back-to-top" title="Go to top">↥ {% trans 'Back to top' %} ↥</button>
+<!--START: BACK TO TOP-->
+<a class="pointer-cursor rounded-circle" id="btn-back-to-top" onclick="topFunction()" role="button" title="Go to top" >
+  <img class="" src="{% static 'democracy/svg/back_to_top.svg'%}">
+</a>
+<!--START: BACK TO TOP-->
 
 
 {% endblock %}

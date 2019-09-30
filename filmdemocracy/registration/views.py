@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
@@ -12,6 +13,11 @@ from filmdemocracy.registration import forms
 class SignUpView(generic.CreateView):
     form_class = forms.SignupForm
     success_url = reverse_lazy('registration:user_login')
+
+    def form_valid(self, form):
+        messages.success(self.request, _("Account created successfully.\nWelcome to FilmDemocracy!"
+                                         "\nPlease now login with your new credentials to continue."))
+        return super().form_valid(form)
 
 
 @login_required

@@ -15,7 +15,7 @@ import os
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 
-from filmdemocracy.secrets import SECRET_KEY, OMDB_API_KEY, EMAIL_HOST_PASSWORD
+from filmdemocracy.secrets import SECRET_KEY, EMAIL_HOST_PASSWORD
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -72,7 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'filmdemocracy.democracy.views.notifications_context',
+                'filmdemocracy.democracy.context_processors.notifications',
             ],
         },
     },
@@ -117,6 +117,7 @@ AUTH_PASSWORD_VALIDATORS = []
 #     },
 # ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -143,6 +144,7 @@ TIME_ZONE = 'Europe/Madrid'  # TODO: use pytz
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "filmdemocracy/static/")
 
+
 # Login redirect
 
 LOGIN_URL = '/registration/login/'
@@ -159,6 +161,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'filmdemocracyweb'
 # EMAIL_HOST_PASSWORD = 'gmail_password'
 DEFAULT_FROM_EMAIL = 'filmdemocracyweb@gmail.com'
+
 
 # Using a custom user model when starting a project
 # https://docs.djangoproject.com/en/2.1/topics/auth/customizing/#extending-the-existing-user-model

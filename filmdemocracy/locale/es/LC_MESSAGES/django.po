@@ -140,8 +140,8 @@ msgid "Propose new film"
 msgstr "Proponer película"
 
 #: democracy/templates/democracy/add_new_film.html:36
-msgid "Open imdb.com in a new tab"
-msgstr "Abrir imdb.com en otra pestaña"
+msgid "Go to imdb.com"
+msgstr "Ir a imdb.com"
 
 #: democracy/templates/democracy/add_new_film.html:41
 msgid "Submit"

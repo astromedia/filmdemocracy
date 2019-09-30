@@ -296,4 +296,14 @@ body {
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 
+/* Button new options
+-------------------------------------------------- */
+#btn-new-options {
+  padding: 0px;
+}
 
+#btn-new-options img {
+  width: 48px;
+  height: 48px;
+  background-color: seagreen;
+}

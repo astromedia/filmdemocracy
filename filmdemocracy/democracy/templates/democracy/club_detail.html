@@ -45,7 +45,7 @@
       <strong>{% trans "Your club doesn't have a logo yet!" %}</strong>
     </div>
     <div class="col-md-auto">
-      <a class="ml-3" href="{% url 'democracy:edit_club_info' club.id %}">{% trans 'Complete club info' %}</a>
+      <a class="" href="{% url 'democracy:edit_club_info' club.id %}">{% trans 'Complete club info' %}</a>
     </div>
   </div>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -61,7 +61,7 @@
 {% if user in club_admins %}
 
 <div class="club-section-title">
-  <h3 class="h3">{% trans 'Club admin utilities' %}</h3>
+  <h3 class="h3">{% trans 'Admin utilities' %}</h3>
   <hr>
 </div>
 
@@ -125,7 +125,7 @@
 
 
 <div class="club-section-title">
-  <h3 class="h3">{% trans 'Next club meetings' %}</h3>
+  <h3 class="h3">{% trans 'Next meetings' %}</h3>
   <hr>
 </div>
 
@@ -361,7 +361,7 @@
 <!--START: CLUB DESCRIPTION-->
 
 <div class="club-section-title">
-  <h3 class="h3">{% trans 'Club panel' %}</h3>
+  <h3 class="h3">{% trans 'Panel' %}</h3>
   <hr>
 </div>
 
@@ -483,13 +483,6 @@
     </a>
   </div>
 
-  <!--LINK TO SEEN FILMS-->
-  <div class="text-center mt-n3 mt-md-3">
-    <a class="badge badge-black-to-white" href="{% url 'democracy:candidate_films' club.id 'all' 'title' 'posters' %}">
-      {% trans 'Check all candidate films' %}
-    </a>
-  </div>
-
 
 </div>
 {% endif %}
@@ -538,7 +531,7 @@
 <!--PICTURES-->
 <div class="album members-album">
 
-  <h3 class="h3">{% trans 'Club members' %}</h3>
+  <h3 class="h3">{% trans 'Members' %}</h3>
   <hr>
 
   <div class="row justify-content-center">
@@ -570,7 +563,7 @@
 
   <!--LEAVE BUTTON-->
   <div class="text-center my-5">
-    <a class="badge badge-outline-danger pointer-cursor mb-4" data-toggle="modal" data-target="#LeaveModal">
+    <a class="text-danger text-decoration-none pointer-cursor mb-4" style="font-size: 13px;" data-toggle="modal" data-target="#LeaveModal">
       {% trans 'Leave club' %}
     </a>
   </div>
