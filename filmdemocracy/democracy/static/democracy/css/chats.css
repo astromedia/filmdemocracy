@@ -73,7 +73,7 @@ body {
   padding-left: 0;
   padding-right: 0;
   padding-top: 50px;
-  background: url("/static/democracy/chat_background.png");
+  background: url("/static/democracy/images/chat_background.png");
   background-position: left top;
   background-repeat: repeat;
   background-attachment: fixed;

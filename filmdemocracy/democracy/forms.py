@@ -64,23 +64,25 @@ class PromoteMembersForm(forms.ModelForm):
         self.fields['members'].queryset = promotable_members
 
 
-def process_imdb_url(form):
-    """
-    Validate that the url is a valid IMDb url and return IMDb id.
-    """
-    imdb_url = form.cleaned_data['imdb_url']
+def process_imdb_input(form):
+    """ Validate that the input is a valid IMDb film url or key and return IMDb id. """
+    # TODO: do this using regexps
+    imdb_input = form.cleaned_data['imdb_input']
     try:
-        if 'imdb' not in imdb_url:
-            raise ValueError
-        url_list = imdb_url.split('/')
-        title_position = url_list.index('title')
-        imdb_key = url_list[title_position + 1]
-        if 'tt' not in imdb_key or len(imdb_key) is not 9:
-            raise ValueError
+        if 'imdb' in imdb_input:
+            url_list = imdb_input.split('/')
+            title_position = url_list.index('title')
+            imdb_key = url_list[title_position + 1]
+            imdb_key = imdb_key.replace('tt', '')
+        elif 'imdb' not in imdb_input and 'tt' in imdb_input and len(imdb_input) is 9:
+            imdb_key = imdb_input.replace('tt', '')
+        elif 'imdb' not in imdb_input and 'tt' not in imdb_input and len(imdb_input) is 7:
+            imdb_key = imdb_input
         else:
-            return imdb_key.replace('tt', '')
+            raise ValueError
+        return imdb_key
     except ValueError:
-        raise forms.ValidationError(_("The IMDb url does not seem to be valid."))
+        raise forms.ValidationError(_("The IMDb film url or key does not seem to be valid."))
 
 
 # def process_faff_url(form):
@@ -112,18 +114,18 @@ def process_imdb_url(form):
 
 
 class FilmAddNewForm(forms.ModelForm):
-    imdb_url = forms.CharField(max_length=200, label=_('IMDb url'),)
+    imdb_input = forms.CharField(max_length=200, label=_('IMDb film url or key'),)
 
     class Meta:
         model = Film
-        fields = ['imdb_url']
+        fields = ['imdb_input']
 
     def __init__(self, *args, **kwargs):
         self.club_id = kwargs.pop('club_id', None)
         super(FilmAddNewForm, self).__init__(*args, **kwargs)
 
-    def clean_imdb_url(self):
-        return process_imdb_url(self)
+    def clean_imdb_input(self):
+        return process_imdb_input(self)
 
 
 # class FilmAddFilmAffForm(forms.ModelForm):
@@ -286,9 +288,7 @@ class MeetingsForm(forms.ModelForm):
     def clean_date(self):
         date = self.cleaned_data['date']
         if date < timezone.now().date():
-            raise forms.ValidationError(
-                _("No much sense on planning now a meeting on the past, sorry.")
-            )
+            raise forms.ValidationError(_("No much sense on planning now a meeting on the past, sorry."))
         return date
 
     def clean_time_start(self):
@@ -298,9 +298,7 @@ class MeetingsForm(forms.ModelForm):
             if date == timezone.now().date():
                 time_start = self.cleaned_data['time_start']
                 if time_start < timezone.now().time():
-                    raise forms.ValidationError(
-                        _("Meetings can't start before they are proposed, sorry.")
-                    )
+                    raise forms.ValidationError(_("Meetings can't start before they are proposed, sorry."))
         return self.cleaned_data['time_start']
 
     @staticmethod

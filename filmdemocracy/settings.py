@@ -30,7 +30,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 
 # TODO: This value is not safe for production usage. https://docs.djangoproject.com/en/1.11/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -64,7 +64,7 @@ ROOT_URLCONF = 'filmdemocracy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'filmdemocracy/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'filmdemocracy/global/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,11 +72,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'filmdemocracy.democracy.context_processors.notifications',
+                'filmdemocracy.context_processors.notifications',
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'filmdemocracy.wsgi.application'
 
@@ -121,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = []
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LOCALE_PATHS = [os.path.join(BASE_DIR, "filmdemocracy/locale")]
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'filmdemocracy/locale')]
 
 LANGUAGES = [
     ('en', _('English')),
@@ -142,7 +143,12 @@ TIME_ZONE = 'Europe/Madrid'  # TODO: use pytz
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "filmdemocracy/static/")
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'filmdemocracy/static/')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'filmdemocracy/global/static'),
+]
 
 
 # Login redirect
@@ -154,12 +160,12 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Dev email backend
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'filmdemocracyweb'
-# EMAIL_HOST_PASSWORD = 'gmail_password'
+# EMAIL_HOST_PASSWORD = 'gmail password'
 DEFAULT_FROM_EMAIL = 'filmdemocracyweb@gmail.com'
 
 
@@ -169,7 +175,7 @@ DEFAULT_FROM_EMAIL = 'filmdemocracyweb@gmail.com'
 AUTH_USER_MODEL = 'registration.User'
 
 MEDIA_URL = '/db_media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "local/db_media")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'local/db_media')
 
 
 # Custom Bootstrap messages

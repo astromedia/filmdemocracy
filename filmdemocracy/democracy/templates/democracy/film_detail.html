@@ -212,7 +212,7 @@
 
 
     {% if film_voted %}
-    <form class="text-center mt-3" action="{% url 'democracy:delete_vote' club.id film.id view_option order_option display_option %}"
+    <form class="text-center mt-4" action="{% url 'democracy:delete_vote' club.id film.id view_option order_option display_option %}"
           method="POST">
       {% csrf_token %}
 
@@ -446,18 +446,16 @@
 <!--START: DELETE FILM-->
 {% if not film.seen %}
 {% if user in club_admins or film.proposed_by == user %}
-<div class="text-center">
-  <a class="badge badge-outline-danger pointer-cursor my-5" data-toggle="modal"
-          data-target="#DeleteModalCenter">
+<div class="text-center my-4">
+  <a class="text-danger text-decoration-none pointer-cursor" style="font-size: 13px;" data-toggle="modal" data-target="#DeleteModalCenter">
     {% trans 'Delete film' %}
   </a>
 </div>
 {% endif %}
 {% else %}
 {% if user in club_admins %}
-<div class="text-center">
-  <a class="badge badge-outline-danger pointer-cursor my-5" data-toggle="modal"
-          data-target="#DeleteModalCenter">
+<div class="text-center my-4">
+  <a class="text-danger text-decoration-none pointer-cursor" style="font-size: 13px;" data-toggle="modal" data-target="#DeleteModalCenter">
     {% trans 'Delete film' %}
   </a>
 </div>

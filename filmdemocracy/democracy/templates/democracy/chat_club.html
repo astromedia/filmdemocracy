@@ -1,4 +1,4 @@
-{% extends "base_filmdemocracy.html" %}
+{% extends "global/base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -23,7 +23,7 @@
       {% if club.logo %}
       <img class="border border-secondary rounded-circle" src="{{ club.logo.url }}" alt="club.logo not found">
       {% else %}
-      <img class="border border-secondary rounded-circle" src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
+      <img class="border border-secondary rounded-circle" src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo not found">
       {% endif %}
 
     </div>

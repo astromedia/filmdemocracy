@@ -1,4 +1,4 @@
-{% extends "base_filmdemocracy.html" %}
+{% extends "global/base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -74,7 +74,7 @@
         {% trans 'Club logo (optional):' %}
       </div>
       <div class="logo">
-        <img src="{% static 'democracy/club_no_logo.png' %}" alt="user.profile_image not found">
+        <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="user.profile_image not found">
       </div>
       <div class="form-logo">
         <div class="custom-file">

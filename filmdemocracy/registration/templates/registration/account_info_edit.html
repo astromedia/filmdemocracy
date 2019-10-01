@@ -1,4 +1,4 @@
-{% extends "base_filmdemocracy.html" %}
+{% extends "global/base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -6,7 +6,7 @@
 {% block styles %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'registration/css/registration.css' %}">
-<link rel="stylesheet" href="{% static 'registration/css/cropper.min.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/cropper.min.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Edit account information' %}{% endblock %}
@@ -246,7 +246,7 @@
 {% block javascript %}
 <!--START: CROPPER SCRIPT-->
 <!--https://github.com/Foliotek/Croppie-->
-<script src="{% static 'democracy/js/cropper.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'global/js/cropper.min.js' %}" crossorigin="anonymous"></script>
 <script>
     $(function () {
 

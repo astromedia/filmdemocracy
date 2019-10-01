@@ -466,7 +466,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     def form_valid(self, form):
         user = self.request.user
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        imdb_key = form.cleaned_data['imdb_url']
+        imdb_key = form.cleaned_data['imdb_input']
         if Film.objects.filter(club=club.id, imdb_id=imdb_key, seen=False):
             messages.error(self.request, _('That film is already in the candidate list!'))
             self.success = False
@@ -475,7 +475,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
             if created or (not created and not filmdb.title):
                 self.success = update_filmdb_omdb_info(filmdb)
                 if not self.success:
-                    messages.error(self.request, _('Sorry, we could not find that film in the database, try later...'))
+                    messages.error(self.request, _('Sorry, we could not find that film in the database...'))
             else:
                 self.success = True
             if self.success:
@@ -499,7 +499,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
     model = Film
 
     @staticmethod
-    def choice_karma_dict(vote_choice):
+    def choice_karma_mapper(vote_choice):
         vote_karma_dict = {
             Vote.OMG: 'positive',
             Vote.YES: 'positive',
@@ -540,7 +540,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
             choice_dict[choice[0]] = {
                 'choice': choice[0],
                 'choice_text': choice[1],
-                'choice_karma': self.choice_karma_dict(choice[0]),
+                'choice_karma': self.choice_karma_mapper(choice[0]),
                 'choice_voted': False,
             }
         try:

@@ -1,12 +1,12 @@
-{% extends "base_filmdemocracy.html" %}
+{% extends "global/base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/home.css' %}">
-<link rel="stylesheet" href="{% static 'democracy/css/dark_background.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'global/css/dark_background.css' %}">
 {% endblock %}
 
 {% block title %}Home{% endblock %}
@@ -47,7 +47,7 @@
         {% if club.logo %}
         <img src="{{ club.logo.url }}" alt="club.logo not found">
         {% else %}
-        <img src="{% static 'democracy/club_no_logo.png' %}" alt="club.logo not found">
+        <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo not found">
         <div class="overlay py-auto">
           <h5 class="py-auto">{{ club.name }}</h5>
         </div>
@@ -66,7 +66,7 @@
   <div class="col-sm-auto m-3 align-self-center">
     <div class="new-club-logo">
       <a href="{% url 'democracy:create_club' %}">
-        <img src="{% static 'democracy/new_club.png' %}" alt="club.logo not found" class="card-img">
+        <img src="{% static 'democracy/images/new_club.png' %}" alt="club.logo not found" class="card-img">
       </a>
     </div>
   </div>
