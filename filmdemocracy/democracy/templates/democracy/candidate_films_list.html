@@ -148,7 +148,7 @@
 
     <div class="col col-auto align-self-center p-0 my-2">
       <div class="card card-film">
-          <a href="{% url 'democracy:film_detail' club.id candidate.film.id view_option order_option display_option %}">
+          <a href="{% url 'democracy:film_detail' candidate.film.id candidate.film.filmdb.slug view_option order_option display_option %}">
             <img class="card-img" src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
             <div class="overlay">
               <div class="film-title">{{ candidate.film.filmdb.title }}</div>
@@ -225,7 +225,7 @@
 
         <!--TITLE COLUMN-->
         <td class="align-middle">
-          <a href="{% url 'democracy:film_detail' club.id candidate.film.id view_option order_option display_option %}">
+          <a href="{% url 'democracy:film_detail' candidate.film.id candidate.film.filmdb.slug view_option order_option display_option %}">
           {{ candidate.film.filmdb.title }}
           </a>
         </td>

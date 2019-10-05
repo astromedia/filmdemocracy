@@ -232,7 +232,7 @@ msgstr "Año"
 #: democracy/templates/democracy/candidate_films_list.html:95
 #: democracy/templates/democracy/candidate_films_list.html:203
 #: democracy/templates/democracy/film_detail.html:77
-#: democracy/templates/democracy/ranking_films_vote_results.html:68
+#: democracy/templates/democracy/ranking_results.html:68
 #: democracy/views.py:403
 msgid "Duration"
 msgstr "Duración"
@@ -269,7 +269,7 @@ msgid "You have not voted any film yet... shame on you."
 msgstr "No has votado ninguna película... vergüenza debería darte."
 
 #: democracy/templates/democracy/candidate_films_list.html:278
-#: democracy/templates/democracy/ranking_films_vote_results.html:303
+#: democracy/templates/democracy/ranking_results.html:303
 msgid "Back to top"
 msgstr "Volver arriba"
 
@@ -906,81 +906,81 @@ msgstr "¡Organiza uno!"
 msgid "Back to club"
 msgstr "Volver al club"
 
-#: democracy/templates/democracy/ranking_films_participants.html:14
-#: democracy/templates/democracy/ranking_films_vote_results.html:40
+#: democracy/templates/democracy/ranking_participants.html:14
+#: democracy/templates/democracy/ranking_results.html:40
 msgid "Participants"
 msgstr "Participantes"
 
-#: democracy/templates/democracy/ranking_films_participants.html:20
-#: democracy/templates/democracy/ranking_films_vote_results.html:19
+#: democracy/templates/democracy/ranking_participants.html:20
+#: democracy/templates/democracy/ranking_results.html:19
 msgid "Film ranking"
 msgstr "Ranking de películas"
 
-#: democracy/templates/democracy/ranking_films_participants.html:24
+#: democracy/templates/democracy/ranking_participants.html:24
 msgid "Who is present?"
 msgstr "¿Quién está presente?"
 
-#: democracy/templates/democracy/ranking_films_participants.html:25
+#: democracy/templates/democracy/ranking_participants.html:25
 msgid "Click on their picture and count their votes."
 msgstr "Pincha en sus fotos y cuenta sus votos."
 
-#: democracy/templates/democracy/ranking_films_participants.html:67
+#: democracy/templates/democracy/ranking_participants.html:67
 msgid "Ranking options"
 msgstr "Opciones del ranking"
 
-#: democracy/templates/democracy/ranking_films_participants.html:74
+#: democracy/templates/democracy/ranking_participants.html:74
 msgid "Exclude films proposed by members not present:"
 msgstr "Excluir películas propuestas por miembros ausentes:"
 
-#: democracy/templates/democracy/ranking_films_participants.html:90
+#: democracy/templates/democracy/ranking_participants.html:90
 msgid "Maximum film duration in minutes (optional):"
 msgstr "Duración máxima de la película en minutos (opcional):"
 
-#: democracy/templates/democracy/ranking_films_participants.html:102
+#: democracy/templates/democracy/ranking_participants.html:102
 msgid "Count votes"
 msgstr "Contar votos"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:13
+#: democracy/templates/democracy/ranking_results.html:13
 msgid "Voting results"
 msgstr "Resultados de la votación"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:24
+#: democracy/templates/democracy/ranking_results.html:24
 msgid "The people have spoken"
 msgstr "El pueblo ha hablado"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:32
+#: democracy/templates/democracy/ranking_results.html:32
 msgid "Generate new ranking"
 msgstr "Generar nuevo ranking"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:67
+#: democracy/templates/democracy/ranking_results.html:67
 msgid "Film"
 msgstr "Película"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:69
+#: democracy/templates/democracy/ranking_results.html:69
 msgid "Results"
 msgstr "Resultado"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:144
+#: democracy/templates/democracy/ranking_results.html:144
 msgid "Results for:"
 msgstr "Resultados para:"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:152
+#: democracy/templates/democracy/ranking_results.html:152
 msgid "Film score:"
 msgstr "Puntuación película:"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:164
+#: democracy/templates/democracy/ranking_results.html:164
 msgid "Votes:"
 msgstr "Votos:"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:239
+#: democracy/templates/democracy/ranking_results.html:239
 msgid "Did not vote:"
 msgstr "No han votado:"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:264
+#: democracy/templates/democracy/ranking_results.html:264
 msgid "Warnings:"
 msgstr "Avisos:"
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:270
+#: democracy/templates/democracy/ranking_results.html:270
 #, python-format
 msgid ""
 "\n"
@@ -993,7 +993,7 @@ msgstr ""
 "%(film)s</strong>.\n"
 "            "
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:274
+#: democracy/templates/democracy/ranking_results.html:274
 #, python-format
 msgid ""
 "\n"
@@ -1006,7 +1006,7 @@ msgstr ""
 "de ver <strong>%(film)s</strong>.\n"
 "            "
 
-#: democracy/templates/democracy/ranking_films_vote_results.html:278
+#: democracy/templates/democracy/ranking_results.html:278
 #, python-format
 msgid ""
 "\n"

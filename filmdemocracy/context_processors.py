@@ -1,4 +1,4 @@
-from filmdemocracy.democracy.utils import NotificationsHelper
+from filmdemocracy.utils import NotificationsHelper
 
 
 def notifications(request):

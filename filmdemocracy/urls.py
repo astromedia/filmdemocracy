@@ -49,6 +49,16 @@ urlpatterns += i18n_patterns(
         views.TermsAndConditionsView.as_view(template_name='global/terms_and_conditions.html'),
         name='terms_and_conditions'
     ),
+    path(
+        'notification_dispatcher/<str:ntf_type>/<str:ntf_club_id>/<str:ntf_object_id>/<str:ntf_ids>/',
+        views.notification_dispatcher,
+        name='notification_dispatcher'
+    ),
+    path(
+        'notification_cleaner/',
+        views.notification_cleaner,
+        name='notification_cleaner'
+    ),
 )
 
 
