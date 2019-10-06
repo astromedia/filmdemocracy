@@ -45,15 +45,17 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         return vote_karma_dict[vote_choice]
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        club_id = extract_club_id(self.kwargs['film_id'])
+        return user_is_club_member_check(self.request, club_id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = add_club_context(self.request, context, self.kwargs['club_id'])
+        club_id = extract_club_id(self.kwargs['film_id'])
+        context = add_club_context(self.request, context, club_id)
         context['page'] = 'film_detail'
-        context['view_option'] = self.kwargs['view_option']
-        context['order_option'] = self.kwargs['order_option']
-        context['display_option'] = self.kwargs['display_option']
+        context['view_option'] = self.kwargs['view_option'] if 'view_option' in self.kwargs else 'all'
+        context['order_option'] = self.kwargs['order_option'] if 'order_option' in self.kwargs else 'title'
+        context['display_option'] = self.kwargs['display_option'] if 'display_option' in self.kwargs else 'posters'
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
         context['updatable_db'] = film.filmdb.updatable
@@ -66,7 +68,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
                 context['film_duration'] = film.filmdb.duration.replace('min', ' min')
             else:
                 context['film_duration'] = film.filmdb.duration
-        film_comments = FilmComment.objects.filter(club=self.kwargs['club_id'], film=self.kwargs['film_id'])
+        film_comments = FilmComment.objects.filter(club=club_id, film=self.kwargs['film_id'])
         context['film_comments'] = film_comments.order_by('datetime')
         choice_dict = {}
         for choice in Vote.vote_choices:
@@ -87,7 +89,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
 
 
 @login_required
-def vote_film(request, film_id, view_option, order_option, display_option):
+def vote_film(request, film_id, view_option='all', order_option='title', display_option='posters'):
     club_id = extract_club_id(film_id)
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
@@ -106,7 +108,7 @@ def vote_film(request, film_id, view_option, order_option, display_option):
 
 
 @login_required
-def delete_vote(request, film_id, view_option, order_option, display_option):
+def delete_vote(request, film_id, view_option='all', order_option='title', display_option='posters'):
     club_id = extract_club_id(film_id)
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
@@ -125,7 +127,7 @@ def delete_vote(request, film_id, view_option, order_option, display_option):
 
 
 @login_required
-def comment_film(request, film_id, view_option, order_option, display_option):
+def comment_film(request, film_id, view_option='all', order_option='title', display_option='posters'):
 
     def create_notifications(_user, _club, _film):
         proposer = _film.proposed_by
@@ -169,7 +171,7 @@ def comment_film(request, film_id, view_option, order_option, display_option):
 
 
 @login_required
-def delete_film_comment(request, film_id, comment_id, view_option, order_option, display_option):
+def delete_film_comment(request, film_id, comment_id, view_option='all', order_option='title', display_option='posters'):
     club_id = extract_club_id(film_id)
     film = get_object_or_404(Film, pk=film_id)
     film_comment = get_object_or_404(FilmComment, id=comment_id)
@@ -189,7 +191,7 @@ def delete_film_comment(request, film_id, comment_id, view_option, order_option,
 
 
 @login_required
-def add_filmaffinity_url(request, film_id, view_option, order_option, display_option):
+def add_filmaffinity_url(request, film_id, view_option='all', order_option='title', display_option='posters'):
     club_id = extract_club_id(film_id)
     film = get_object_or_404(Film, pk=film_id)
     faff_url = request.POST.get('faff_url')
@@ -233,7 +235,8 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmSeenForm
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        club_id = extract_club_id(self.kwargs['film_id'])
+        return user_is_club_member_check(self.request, club_id)
 
     def get_success_url(self):
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
@@ -241,15 +244,16 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
             'democracy:film_detail',
             kwargs={'film_id': film.id,
                     'film_slug': film.filmdb.slug,
-                    'view_option': 'all',
-                    'order_option': 'title',
-                    'display_option': 'posters'}
+                    'view_option': self.kwargs['view_option'] if 'view_option' in self.kwargs else 'all',
+                    'order_option': self.kwargs['order_option'] if 'order_option' in self.kwargs else 'title',
+                    'display_option': self.kwargs['display_option'] if 'display_option' in self.kwargs else 'posters'}
         )
 
     def get_form_kwargs(self):
         kwargs = super(FilmSeenView, self).get_form_kwargs()
         kwargs.update({'film_id': self.kwargs['film_id']})
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club_id = extract_club_id(self.kwargs['film_id'])
+        club = get_object_or_404(Club, pk=club_id)
         kwargs.update({'club_members': club.members.filter(is_active=True)})
         return kwargs
 
@@ -264,7 +268,8 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
                                         object_film=film)
 
     def form_valid(self, form):
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club_id = extract_club_id(self.kwargs['film_id'])
+        club = get_object_or_404(Club, pk=club_id)
         film = get_object_or_404(Film, id=self.kwargs['film_id'])
         film.seen_date = form.cleaned_data['seen_date']
         members = form.cleaned_data['members']
@@ -278,19 +283,19 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        club_id = extract_club_id(self.kwargs['film_id'])
         context['film'] = get_object_or_404(Film, pk=self.kwargs['film_id'])
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, pk=club_id)
         context['club'] = club
         context['club_members'] = club.members.filter(is_active=True)
         return context
 
 
 @login_required
-def delete_film(request, film_id, view_option, order_option, display_option):
+def delete_film(request, film_id, view_option='all', order_option='title', display_option='posters'):
     club_id = extract_club_id(film_id)
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
-    club = get_object_or_404(Club, pk=club_id)
     film = get_object_or_404(Film, pk=film_id)
     film.delete()
     return HttpResponseRedirect(reverse(
@@ -303,7 +308,7 @@ def delete_film(request, film_id, view_option, order_option, display_option):
 
 
 @login_required
-def unsee_film(request, film_id, view_option, order_option, display_option):
+def unsee_film(request, film_id, view_option='all', order_option='title', display_option='posters'):
     club_id = extract_club_id(film_id)
     if not user_is_club_admin_check(request, club_id):
         return HttpResponseForbidden()

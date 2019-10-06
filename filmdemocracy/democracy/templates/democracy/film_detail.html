@@ -117,7 +117,7 @@
 
 <!--START: MARK AS SEEN-->
 {% if not film.seen %}
-  <form class="text-center" action="{% url 'democracy:film_seen' film.id film.filmdb.slug %}">
+  <form class="text-center" method="POST" action="{% url 'democracy:film_seen' film.id view_option order_option display_option %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
       {% trans 'Mark as seen by club' %}
@@ -130,7 +130,7 @@
 <!--START: MARK AS NOT SEEN-->
 {% if film.seen %}
 {% if user in club_admins %}
-  <form class="text-center" action="{% url 'democracy:unsee_film' film.id view_option order_option display_option %}">
+  <form class="text-center" method="POST" action="{% url 'democracy:unsee_film' film.id view_option order_option display_option %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
       {% trans 'Move back to candidate films' %}
@@ -173,7 +173,7 @@
 
     {% for choice, choice_dict in vote_choices.items %}
     <div class="text-center">
-      <form action="{% url 'democracy:vote_film' film.id view_option order_option display_option %}" method="POST">
+      <form method="POST" action="{% url 'democracy:vote_film' film.id view_option order_option display_option %}">
         {% csrf_token %}
 
         <!--POSITIVE BUTTON-->
