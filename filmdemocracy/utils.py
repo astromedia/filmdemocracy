@@ -450,17 +450,11 @@ class NotificationsHelper:
     def dispatch_url_film(club_id=None, ntf_object_id=None):
         film = get_object_or_404(Film, pk=ntf_object_id)
         return reverse('democracy:film_detail', kwargs={'film_id': film.id,
-                                                        'film_slug': film.filmdb.slug,
-                                                        'view_option': 'all',
-                                                        'order_option': 'title',
-                                                        'display_option': 'posters'})
+                                                        'film_slug': film.filmdb.slug})
 
     @staticmethod
     def dispatch_url_films(club_id=None, ntf_object_id=None):
-        return reverse('democracy:candidate_films', kwargs={'club_id': club_id,
-                                                            'view_option': 'all',
-                                                            'order_option': 'title',
-                                                            'display_option': 'posters'})
+        return reverse('democracy:candidate_films', kwargs={'club_id': club_id})
 
 
 def time_ago_format(datetime_diff):

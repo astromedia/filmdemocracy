@@ -1,4 +1,6 @@
-from django.urls import include, path
+import itertools
+
+from django.urls import include, path, re_path
 
 from filmdemocracy.democracy.views import club as club_views
 from filmdemocracy.democracy.views import film as film_views
@@ -13,7 +15,23 @@ FULL_MEETINGS_ID_N_DIGITS = CLUB_ID_N_DIGITS + MEETING_ID_N_DIGITS
 app_name = 'democracy'
 
 
-candidate_films_view_options = '?view=<str:view_option>?order=<str:order_option>?display=<str:display_option>/'
+# def path_with_candidate_films_view_opts(base_url, view, name):
+#     options_string = '&view=<str:view_opt>&order=<str:order_opt>&display=<str:display_opt>'
+#     return [path(base_url, view, name=name), path(base_url + options_string, view, name=name)]
+
+
+def path_with_candidate_films_view_options(base_url, view, name):
+    paths = []
+    options = [
+        '?view=<str:view_opt>/',
+        '?order=<str:order_opt>/',
+        '?display=<str:display_opt>/',
+        ]
+    possible_combinations = set(list(itertools.combinations(options + ['', '', ''], len(options))))
+    for combination in possible_combinations:
+        combination_url = base_url + ''.join(list(combination))
+        paths.append(path(combination_url, view, name=name))
+    return paths
 
 
 club_urlpatterns = [
@@ -69,11 +87,6 @@ club_urlpatterns = [
             name='promote_members'
         ),
         path(
-            'candidate_films/' + candidate_films_view_options,
-            club_views.CandidateFilmsView.as_view(template_name='democracy/candidate_films_list.html'),
-            name='candidate_films'
-        ),
-        path(
             'ranking/participants/',
             club_views.RankingParticipantsView.as_view(template_name='democracy/ranking_participants.html'),
             name='ranking_participants'
@@ -97,60 +110,65 @@ club_urlpatterns = [
             'invite_new_member/',
             club_views.InviteNewMemberView.as_view(template_name='democracy/invite_new_member.html'),
             name='invite_new_member'
-        ),
-        ])
+        )] +
+        path_with_candidate_films_view_options(
+            'candidate_films/',
+            club_views.CandidateFilmsView.as_view(template_name='democracy/candidate_films_list.html'),
+            name='candidate_films'
+        )
+        )
      )
 ]
 
 
 film_urlpatterns = [
-    path('film/<str:film_id>/', include([
-        path(
-            'vote_film/' + candidate_films_view_options,
+    path('film/<str:film_id>/', include(
+        path_with_candidate_films_view_options(
+            'vote_film/',
             film_views.vote_film,
             name='vote_film'
-        ),
-        path(
-            'delete_film/' + candidate_films_view_options,
+        ) +
+        path_with_candidate_films_view_options(
+            'delete_film/',
             film_views.delete_film,
             name='delete_film'
-        ),
-        path(
-            'unsee_film/' + candidate_films_view_options,
+        ) +
+        path_with_candidate_films_view_options(
+            'unsee_film/',
             film_views.unsee_film,
             name='unsee_film'
-        ),
-        path(
-            'add_filmaffinity_url/' + candidate_films_view_options,
+        ) +
+        path_with_candidate_films_view_options(
+            'add_filmaffinity_url/',
             film_views.add_filmaffinity_url,
             name='add_filmaffinity_url'
-        ),
-        path(
-            'delete_vote/' + candidate_films_view_options,
+        ) +
+        path_with_candidate_films_view_options(
+            'delete_vote/',
             film_views.delete_vote,
             name='delete_vote'
-        ),
-        path(
-            'comment_film/' + candidate_films_view_options,
+        ) +
+        path_with_candidate_films_view_options(
+            'comment_film/',
             film_views.comment_film,
             name='comment_film'
-        ),
-        path(
-            'delete_comment/<str:comment_id>/' + candidate_films_view_options,
+        ) +
+        path_with_candidate_films_view_options(
+            'delete_comment/<str:comment_id>/',
             film_views.delete_film_comment,
             name='delete_film_comment'
-        ),
-        path(
-            '<str:film_slug>/' + candidate_films_view_options,
+        ) +
+        path_with_candidate_films_view_options(
+            '<str:film_slug>/',
             film_views.FilmDetailView.as_view(template_name='democracy/film_detail.html'),
             name='film_detail'
-        ),
-        path(
-            'film_seen/' + candidate_films_view_options,
+        ) +
+        path_with_candidate_films_view_options(
+            'film_seen/',
             film_views.FilmSeenView.as_view(template_name='democracy/candidate_films_seen.html'),
             name='film_seen'
-        ),
-        ])
+        )
+        )
     )
 ]
 

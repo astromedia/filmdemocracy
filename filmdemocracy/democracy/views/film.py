@@ -53,9 +53,9 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         club_id = extract_club_id(self.kwargs['film_id'])
         context = add_club_context(self.request, context, club_id)
         context['page'] = 'film_detail'
-        context['view_option'] = self.kwargs['view_option'] if 'view_option' in self.kwargs else 'all'
-        context['order_option'] = self.kwargs['order_option'] if 'order_option' in self.kwargs else 'title'
-        context['display_option'] = self.kwargs['display_option'] if 'display_option' in self.kwargs else 'posters'
+        context['view_opt'] = self.kwargs['view_opt'] if 'view_opt' in self.kwargs else 'all'
+        context['order_opt'] = self.kwargs['order_opt'] if 'order_opt' in self.kwargs else 'title'
+        context['display_opt'] = self.kwargs['display_opt'] if 'display_opt' in self.kwargs else 'posters'
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
         context['updatable_db'] = film.filmdb.updatable
@@ -89,7 +89,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
 
 
 @login_required
-def vote_film(request, film_id, view_option='all', order_option='title', display_option='posters'):
+def vote_film(request, film_id, view_opt='all', order_opt='title', display_opt='posters'):
     club_id = extract_club_id(film_id)
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
@@ -101,14 +101,14 @@ def vote_film(request, film_id, view_option='all', order_option='title', display
     return HttpResponseRedirect(reverse(
         'democracy:candidate_films',
         kwargs={'club_id': club_id,
-                'view_option': view_option,
-                'order_option': order_option,
-                'display_option': display_option}
+                'view_opt': view_opt,
+                'order_opt': order_opt,
+                'display_opt': display_opt}
     ))
 
 
 @login_required
-def delete_vote(request, film_id, view_option='all', order_option='title', display_option='posters'):
+def delete_vote(request, film_id, view_opt='all', order_opt='title', display_opt='posters'):
     club_id = extract_club_id(film_id)
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
@@ -120,14 +120,14 @@ def delete_vote(request, film_id, view_option='all', order_option='title', displ
         'democracy:film_detail',
         kwargs={'film_id': film.id,
                 'film_slug': film.filmdb.slug,
-                'view_option': view_option,
-                'order_option': order_option,
-                'display_option': display_option}
+                'view_opt': view_opt,
+                'order_opt': order_opt,
+                'display_opt': display_opt}
     ))
 
 
 @login_required
-def comment_film(request, film_id, view_option='all', order_option='title', display_option='posters'):
+def comment_film(request, film_id, view_opt='all', order_opt='title', display_opt='posters'):
 
     def create_notifications(_user, _club, _film):
         proposer = _film.proposed_by
@@ -164,14 +164,14 @@ def comment_film(request, film_id, view_option='all', order_option='title', disp
         'democracy:film_detail',
         kwargs={'film_id': film.id,
                 'film_slug': film.filmdb.slug,
-                'view_option': view_option,
-                'order_option': order_option,
-                'display_option': display_option}
+                'view_opt': view_opt,
+                'order_opt': order_opt,
+                'display_opt': display_opt}
     ))
 
 
 @login_required
-def delete_film_comment(request, film_id, comment_id, view_option='all', order_option='title', display_option='posters'):
+def delete_film_comment(request, film_id, comment_id, view_opt='all', order_opt='title', display_opt='posters'):
     club_id = extract_club_id(film_id)
     film = get_object_or_404(Film, pk=film_id)
     film_comment = get_object_or_404(FilmComment, id=comment_id)
@@ -184,14 +184,14 @@ def delete_film_comment(request, film_id, comment_id, view_option='all', order_o
         'democracy:film_detail',
         kwargs={'film_id': film.id,
                 'film_slug': film.filmdb.slug,
-                'view_option': view_option,
-                'order_option': order_option,
-                'display_option': display_option}
+                'view_opt': view_opt,
+                'order_opt': order_opt,
+                'display_opt': display_opt}
     ))
 
 
 @login_required
-def add_filmaffinity_url(request, film_id, view_option='all', order_option='title', display_option='posters'):
+def add_filmaffinity_url(request, film_id, view_opt='all', order_opt='title', display_opt='posters'):
     club_id = extract_club_id(film_id)
     film = get_object_or_404(Film, pk=film_id)
     faff_url = request.POST.get('faff_url')
@@ -224,9 +224,9 @@ def add_filmaffinity_url(request, film_id, view_option='all', order_option='titl
         'democracy:film_detail',
         kwargs={'film_id': film.id,
                 'film_slug': film.filmdb.slug,
-                'view_option': view_option,
-                'order_option': order_option,
-                'display_option': display_option}
+                'view_opt': view_opt,
+                'order_opt': order_opt,
+                'display_opt': display_opt}
     ))
 
 
@@ -244,9 +244,9 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
             'democracy:film_detail',
             kwargs={'film_id': film.id,
                     'film_slug': film.filmdb.slug,
-                    'view_option': self.kwargs['view_option'] if 'view_option' in self.kwargs else 'all',
-                    'order_option': self.kwargs['order_option'] if 'order_option' in self.kwargs else 'title',
-                    'display_option': self.kwargs['display_option'] if 'display_option' in self.kwargs else 'posters'}
+                    'view_opt': self.kwargs['view_opt'] if 'view_opt' in self.kwargs else None,
+                    'order_opt': self.kwargs['order_opt'] if 'order_opt' in self.kwargs else None,
+                    'display_opt': self.kwargs['display_opt'] if 'display_opt' in self.kwargs else None}
         )
 
     def get_form_kwargs(self):
@@ -292,7 +292,7 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
 
 
 @login_required
-def delete_film(request, film_id, view_option='all', order_option='title', display_option='posters'):
+def delete_film(request, film_id, view_opt='all', order_opt='title', display_opt='posters'):
     club_id = extract_club_id(film_id)
     if not user_is_club_member_check(request, club_id):
         return HttpResponseForbidden()
@@ -301,14 +301,14 @@ def delete_film(request, film_id, view_option='all', order_option='title', displ
     return HttpResponseRedirect(reverse(
         'democracy:candidate_films',
         kwargs={'club_id': club_id,
-                'view_option': view_option,
-                'order_option': order_option,
-                'display_option': display_option}
+                'view_opt': view_opt,
+                'order_opt': order_opt,
+                'display_opt': display_opt}
     ))
 
 
 @login_required
-def unsee_film(request, film_id, view_option='all', order_option='title', display_option='posters'):
+def unsee_film(request, film_id, view_opt='all', order_opt='title', display_opt='posters'):
     club_id = extract_club_id(film_id)
     if not user_is_club_admin_check(request, club_id):
         return HttpResponseForbidden()
@@ -319,9 +319,9 @@ def unsee_film(request, film_id, view_option='all', order_option='title', displa
             'democracy:film_detail',
             kwargs={'film_id': film.id,
                     'film_slug': film.filmdb.slug,
-                    'view_option': view_option,
-                    'order_option': order_option,
-                    'display_option': display_option}
+                    'view_opt': view_opt,
+                    'order_opt': order_opt,
+                    'display_opt': display_opt}
         ))
     else:
         film.seen = False
@@ -331,7 +331,7 @@ def unsee_film(request, film_id, view_option='all', order_option='title', displa
         return HttpResponseRedirect(reverse(
             'democracy:candidate_films',
             kwargs={'club_id': club_id,
-                    'view_option': view_option,
-                    'order_option': order_option,
-                    'display_option': display_option}
+                    'view_opt': view_opt,
+                    'order_opt': order_opt,
+                    'display_opt': display_opt}
         ))

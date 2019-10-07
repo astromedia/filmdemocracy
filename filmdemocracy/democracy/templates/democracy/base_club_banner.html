@@ -27,9 +27,9 @@
             action="{% if page == 'candidate_films' %}
                     {% url 'democracy:club_detail' club.id %}
                     {% elif page == 'film_detail' %}
-                    {% url 'democracy:candidate_films' club.id view_option order_option display_option %}
+                    {% url 'democracy:candidate_films' club_id=club.id view_opt=view_opt order_opt=order_opt display_opt=display_opt %}
                     {% else %}
-                    {% url 'democracy:candidate_films' club.id 'all' 'title' 'posters' %}
+                    {% url 'democracy:candidate_films' club_id=club.id %}
                     {% endif %}">
 
         <button type="submit" class="btn btn-block">

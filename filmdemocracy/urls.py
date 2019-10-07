@@ -32,15 +32,15 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path(
+        '',
+        include('filmdemocracy.democracy.urls')
+    ),
+    path(
         'registration/',
         include('filmdemocracy.registration.urls')
     ),
     path(
-        'democracy/',
-        include('filmdemocracy.democracy.urls')
-    ),
-    path(
-        'home/',
+        '',
         views.HomeView.as_view(template_name='global/home.html'),
         name='home'
     ),

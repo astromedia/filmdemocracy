@@ -4,6 +4,7 @@ import datetime
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
+from django.urls import reverse_lazy
 
 from filmdemocracy.registration.models import User
 from markdownx.models import MarkdownxField
@@ -21,7 +22,7 @@ def get_club_logo_path(instance, filename):
 
 class Club(models.Model):
     DEFAULT_PANEL_STRING = """
-    ## A sample club panel written in markdown
+    \r\n## A sample club panel written in markdown
     \r\n
     \r\n---
     \r\n
@@ -209,6 +210,10 @@ class Film(models.Model):
 
     def __str__(self):
         return f'{self.id}|{self.filmdb.title}'
+
+    @property
+    def share_link(self):
+        return reverse_lazy('democracy:film_detail', kwargs={'film_id': self.id, 'film_slug': self.filmdb.slug})
 
 
 class Vote(models.Model):

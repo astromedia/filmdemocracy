@@ -320,37 +320,37 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
         club_films = Film.objects.filter(club_id=club.id, seen=False)
-        view_option = self.kwargs['view_option']
-        order_option = self.kwargs['order_option']
-        display_option = self.kwargs['display_option']
-        context['view_option'] = self.kwargs['view_option']
-        context['order_option'] = self.kwargs['order_option']
-        context['display_option'] = self.kwargs['display_option']
-        if view_option == 'all':
-            context['view_option_tag'] = _("All")
-        elif view_option == 'not_voted':
-            context['view_option_tag'] = _("Not voted")
-        elif view_option == 'only_voted':
-            context['view_option_tag'] = _("Voted")
-        if order_option == 'title':
-            context['order_option_string'] = "film.filmdb.title"
-            context['order_option_tag'] = _("Title")
-        elif order_option == 'date_proposed':
-            context['order_option_string'] = "film.pub_datetime"
-            context['order_option_tag'] = _("Proposed")
-        elif order_option == 'year':
-            context['order_option_string'] = "film.filmdb.year"
-            context['order_option_tag'] = _("Year")
-        elif order_option == 'duration':
-            context['order_option_string'] = "duration"
-            context['order_option_tag'] = _("Duration")
-        elif order_option == 'user_vote':
-            context['order_option_string'] = "vote_points"
-            context['order_option_tag'] = _("My vote")
-        if display_option == 'posters':
-            context['display_option_tag'] = _("Posters")
-        elif display_option == 'list':
-            context['display_option_tag'] = _("List")
+        view_opt = self.kwargs['view_opt'] if 'view_opt' in self.kwargs else 'all'
+        order_opt = self.kwargs['order_opt'] if 'order_opt' in self.kwargs else 'title'
+        display_opt = self.kwargs['display_opt'] if 'display_opt' in self.kwargs else 'posters'
+        context['view_opt'] = view_opt
+        context['order_opt'] = order_opt
+        context['display_opt'] = display_opt
+        if view_opt == 'all':
+            context['view_opt_tag'] = _("All")
+        elif view_opt == 'not_voted':
+            context['view_opt_tag'] = _("Not voted")
+        elif view_opt == 'only_voted':
+            context['view_opt_tag'] = _("Voted")
+        if order_opt == 'title':
+            context['order_opt_string'] = "film.filmdb.title"
+            context['order_opt_tag'] = _("Title")
+        elif order_opt == 'date_proposed':
+            context['order_opt_string'] = "film.pub_datetime"
+            context['order_opt_tag'] = _("Proposed")
+        elif order_opt == 'year':
+            context['order_opt_string'] = "film.filmdb.year"
+            context['order_opt_tag'] = _("Year")
+        elif order_opt == 'duration':
+            context['order_opt_string'] = "duration"
+            context['order_opt_tag'] = _("Duration")
+        elif order_opt == 'user_vote':
+            context['order_opt_string'] = "vote_points"
+            context['order_opt_tag'] = _("My vote")
+        if display_opt == 'posters':
+            context['display_opt_tag'] = _("Posters")
+        elif display_opt == 'list':
+            context['display_opt_tag'] = _("List")
         candidate_films = []
         for film in club_films:
             try:
@@ -364,7 +364,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
                     film_duration = 0
             film_voters = [vote.user.username for vote in film.vote_set.all()]
             if self.request.user.username in film_voters:
-                if view_option == 'all' or view_option == 'only_voted':
+                if view_opt == 'all' or view_opt == 'only_voted':
                     user_vote = get_object_or_404(Vote, user=self.request.user, film=film)
                     candidate_films.append({
                         'film': film,
@@ -373,7 +373,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
                         'duration': film_duration,
                         'vote': user_vote.vote_karma,
                     })
-            elif view_option != 'only_voted':
+            elif view_opt != 'only_voted':
                 candidate_films.append({
                     'film': film,
                     'voted': False,
@@ -419,9 +419,9 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
                 'democracy:film_detail',
                 kwargs={'film_id': film.id,
                         'film_slug': film.filmdb.slug,
-                        'view_option': 'all',
-                        'order_option': 'title',
-                        'display_option': 'posters'}
+                        'view_opt': 'all',
+                        'order_opt': 'title',
+                        'display_opt': 'posters'}
             )
         else:
             return reverse_lazy(
