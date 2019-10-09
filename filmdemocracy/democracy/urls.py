@@ -1,5 +1,3 @@
-import itertools
-
 from django.urls import include, path, re_path
 
 from filmdemocracy.democracy.views import club as club_views
@@ -8,30 +6,18 @@ from filmdemocracy.democracy.views import chat as chat_views
 from filmdemocracy.democracy.views import meetings as meetings_views
 from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS, MEETING_ID_N_DIGITS
 
-FULL_FILM_ID_N_DIGITS = CLUB_ID_N_DIGITS + FILM_ID_N_DIGITS
-FULL_MEETINGS_ID_N_DIGITS = CLUB_ID_N_DIGITS + MEETING_ID_N_DIGITS
-
 
 app_name = 'democracy'
 
 
-# def path_with_candidate_films_view_opts(base_url, view, name):
-#     options_string = '&view=<str:view_opt>&order=<str:order_opt>&display=<str:display_opt>'
-#     return [path(base_url, view, name=name), path(base_url + options_string, view, name=name)]
+FULL_FILM_ID_N_DIGITS = CLUB_ID_N_DIGITS + FILM_ID_N_DIGITS
+FULL_MEETINGS_ID_N_DIGITS = CLUB_ID_N_DIGITS + MEETING_ID_N_DIGITS
 
 
-def path_with_candidate_films_view_options(base_url, view, name):
-    paths = []
-    options = [
-        '?view=<str:view_opt>/',
-        '?order=<str:order_opt>/',
-        '?display=<str:display_opt>/',
-        ]
-    possible_combinations = set(list(itertools.combinations(options + ['', '', ''], len(options))))
-    for combination in possible_combinations:
-        combination_url = base_url + ''.join(list(combination))
-        paths.append(path(combination_url, view, name=name))
-    return paths
+options_regexp = r'(?:&view=(?P<view_opt>[a-zA-Z_]+))?(?:&order=(?P<order_opt>[a-zA-Z_]+))?(?:&display=(?P<display_opt>[a-zA-Z_]+))?/?$'
+club_regexp = r'(?P<club_id>[0-9]{{{club_id_n_digits}}})/'.format(club_id_n_digits=CLUB_ID_N_DIGITS)
+film_regexp = r'(?P<film_id>[0-9]{{{full_film_id_n_digits}}})/'.format(full_film_id_n_digits=FULL_FILM_ID_N_DIGITS)
+meeting_regexp = r'(?P<meeting_id>[0-9]{{{full_meetings_id_n_digits}}})/'.format(full_meetings_id_n_digits=FULL_MEETINGS_ID_N_DIGITS)
 
 
 club_urlpatterns = [
@@ -45,7 +31,7 @@ club_urlpatterns = [
         club_views.InviteNewMemberConfirmView.as_view(template_name='democracy/invite_new_member_confirm.html'),
         name='invite_new_member_confirm'
     ),
-    path('club/<str:club_id>/', include([
+    re_path('club/' + club_regexp, include([
         path(
             '',
             club_views.ClubDetailView.as_view(template_name='democracy/club_detail.html'),
@@ -110,71 +96,71 @@ club_urlpatterns = [
             'invite_new_member/',
             club_views.InviteNewMemberView.as_view(template_name='democracy/invite_new_member.html'),
             name='invite_new_member'
-        )] +
-        path_with_candidate_films_view_options(
-            'candidate_films/',
+        ),
+        re_path(
+            r'candidate_films/' + options_regexp,
             club_views.CandidateFilmsView.as_view(template_name='democracy/candidate_films_list.html'),
             name='candidate_films'
-        )
-        )
+        ),
+        ])
      )
 ]
 
 
 film_urlpatterns = [
-    path('film/<str:film_id>/', include(
-        path_with_candidate_films_view_options(
-            'vote_film/',
+    re_path('film/' + film_regexp, include([
+        re_path(
+            r'vote_film/' + options_regexp,
             film_views.vote_film,
             name='vote_film'
-        ) +
-        path_with_candidate_films_view_options(
-            'delete_film/',
+        ),
+        re_path(
+            r'delete_film/' + options_regexp,
             film_views.delete_film,
             name='delete_film'
-        ) +
-        path_with_candidate_films_view_options(
-            'unsee_film/',
+        ),
+        re_path(
+            r'unsee_film/' + options_regexp,
             film_views.unsee_film,
             name='unsee_film'
-        ) +
-        path_with_candidate_films_view_options(
-            'add_filmaffinity_url/',
+        ),
+        re_path(
+            r'add_filmaffinity_url/' + options_regexp,
             film_views.add_filmaffinity_url,
             name='add_filmaffinity_url'
-        ) +
-        path_with_candidate_films_view_options(
-            'delete_vote/',
+        ),
+        re_path(
+            r'delete_vote/' + options_regexp,
             film_views.delete_vote,
             name='delete_vote'
-        ) +
-        path_with_candidate_films_view_options(
-            'comment_film/',
+        ),
+        re_path(
+            r'comment_film/' + options_regexp,
             film_views.comment_film,
             name='comment_film'
-        ) +
-        path_with_candidate_films_view_options(
-            'delete_comment/<str:comment_id>/',
+        ),
+        re_path(
+            r'delete_comment/(?P<comment_id>[0-9]+)/' + options_regexp,
             film_views.delete_film_comment,
             name='delete_film_comment'
-        ) +
-        path_with_candidate_films_view_options(
-            '<str:film_slug>/',
+        ),
+        re_path(
+            r'(?P<film_slug>[a-z-]+)/' + options_regexp,
             film_views.FilmDetailView.as_view(template_name='democracy/film_detail.html'),
             name='film_detail'
-        ) +
-        path_with_candidate_films_view_options(
-            'film_seen/',
+        ),
+        re_path(
+            r'film_seen/' + options_regexp,
             film_views.FilmSeenView.as_view(template_name='democracy/candidate_films_seen.html'),
             name='film_seen'
-        )
-        )
+        ),
+        ])
     )
 ]
 
 
 meetings_urlpatterns = [
-    path('club/<str:club_id>/meetings/', include([
+    re_path('club/' + club_regexp + 'meetings/', include([
         path(
             '',
             meetings_views.MeetingsListView.as_view(template_name='democracy/meetings_list.html'),
@@ -185,21 +171,24 @@ meetings_urlpatterns = [
             meetings_views.MeetingsNewView.as_view(template_name='democracy/meetings_form.html'),
             name='meetings_new'
         ),
-        path(
-            '<str:meeting_id>/edit/',
-            meetings_views.MeetingsEditView.as_view(template_name='democracy/meetings_form.html'),
-            name='meetings_edit'
-        ),
-        path(
-            '<str:meeting_id>/assistance/',
-            meetings_views.meeting_assistance,
-            name='meeting_assistance'
-        ),
-        path(
-            '<str:meeting_id>/delete/',
-            meetings_views.delete_meeting,
-            name='delete_meeting'
-        ),
+        re_path(meeting_regexp, include([
+            path(
+                'edit/',
+                meetings_views.MeetingsEditView.as_view(template_name='democracy/meetings_form.html'),
+                name='meetings_edit'
+            ),
+            path(
+                'assistance/',
+                meetings_views.meeting_assistance,
+                name='meeting_assistance'
+            ),
+            path(
+                'delete/',
+                meetings_views.delete_meeting,
+                name='delete_meeting'
+            ),
+            ])
+        )
         ])
      )
 ]
@@ -207,40 +196,46 @@ meetings_urlpatterns = [
 
 chat_urlpatterns = [
     path(
-        'chat/club/<str:club_id>/',
-        chat_views.ChatClubView.as_view(template_name='democracy/chat_club.html'),
-        name='chatclub'
-    ),
-    path(
-        'chat/club/<str:club_id>/post/',
-        chat_views.post_in_chatclub,
-        name='post_in_chatclub'
-    ),
-    path(
-        'chat/club/<str:club_id>/delete_post/<str:post_id>/',
-        chat_views.delete_chatclub_post,
-        name='delete_chatclub_post'
-    ),
-    path(
         'chat/contacts/',
         chat_views.ChatContactsView.as_view(template_name='democracy/chat_contacts.html'),
         name='contacts'
     ),
-    path(
-        'chat/user/<str:chatuser_id>/',
-        chat_views.ChatUsersView.as_view(template_name='democracy/chat_users.html'),
-        name='chatusers'
+    re_path('chat/club/' + club_regexp, include([
+        path(
+            '',
+            chat_views.ChatClubView.as_view(template_name='democracy/chat_club.html'),
+            name='chatclub'
+        ),
+        path(
+            'post/',
+            chat_views.post_in_chatclub,
+            name='post_in_chatclub'
+        ),
+        path(
+            'delete_post/<str:post_id>/',
+            chat_views.delete_chatclub_post,
+            name='delete_chatclub_post'
+        ),
+        ])
     ),
-    path(
-        'chat/user/<str:chatuser_id>/post/',
-        chat_views.post_in_chatusers,
-        name='post_in_chatusers'
-    ),
-    path(
-        'chat/user/<str:chatuser_id>/delete_post/<str:post_id>/',
-        chat_views.delete_chatusers_post,
-        name='delete_chatusers_post'
-    ),
+    path('chat/user/<str:chatuser_id>/', include([
+        path(
+            '',
+            chat_views.ChatUsersView.as_view(template_name='democracy/chat_users.html'),
+            name='chatusers'
+        ),
+        path(
+            'post/',
+            chat_views.post_in_chatusers,
+            name='post_in_chatusers'
+        ),
+        path(
+            'delete_post/<str:post_id>/',
+            chat_views.delete_chatusers_post,
+            name='delete_chatusers_post'
+        ),
+        ])
+    )
 ]
 
 

@@ -331,7 +331,7 @@
         <button type="button" class="btn btn-sm" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form method="POST" action="{% url 'democracy:delete_meeting' club_id meeting.id %}" class="text-center">
+        <form method="POST" action="{% url 'democracy:delete_meeting' club.id meeting.id %}" class="text-center">
           {% csrf_token %}
           <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
             {% trans 'Confirm' %}

@@ -56,6 +56,27 @@ def add_club_context(request, context, club_id):
     return context
 
 
+def fill_options_kwargs(reverse_kwargs, view_opt=None, order_opt=None, display_opt=None):
+    if view_opt and view_opt != 'all':
+        reverse_kwargs['view_opt'] = view_opt
+    if order_opt and order_opt != 'title':
+        reverse_kwargs['order_opt'] = order_opt
+    if display_opt and display_opt != 'posters':
+        reverse_kwargs['display_opt'] = display_opt
+
+
+def get_film_detail_reverse(film, view_opt=None, order_opt=None, display_opt=None):
+    reverse_kwargs = {'film_id': film.id, 'film_slug': film.filmdb.slug}
+    fill_options_kwargs(reverse_kwargs, view_opt, order_opt, display_opt)
+    return reverse('democracy:film_detail', kwargs=reverse_kwargs)
+
+
+def get_candidate_films_reverse(club_id, view_opt=None, order_opt=None, display_opt=None):
+    reverse_kwargs = {'club_id': club_id}
+    fill_options_kwargs(reverse_kwargs, view_opt, order_opt, display_opt)
+    return reverse('democracy:candidate_films', kwargs=reverse_kwargs)
+
+
 def update_filmdb_omdb_info(filmdb):
     """ Returns True if the database has been updated, and False otherwise """
     omdb_api_url = f'http://www.omdbapi.com/?i=tt{filmdb.imdb_id}&plot=full&apikey={OMDB_API_KEY}'

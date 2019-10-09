@@ -23,6 +23,7 @@ from filmdemocracy.registration.models import User
 from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
 from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info
 from filmdemocracy.utils import random_club_id_generator, random_film_id_generator, random_meeting_id_generator
+from filmdemocracy.utils import get_film_detail_reverse, get_candidate_films_reverse, fill_options_kwargs
 from filmdemocracy.utils import NotificationsHelper
 from filmdemocracy.utils import RankingGenerator
 
@@ -320,12 +321,13 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
         club_films = Film.objects.filter(club_id=club.id, seen=False)
-        view_opt = self.kwargs['view_opt'] if 'view_opt' in self.kwargs else 'all'
-        order_opt = self.kwargs['order_opt'] if 'order_opt' in self.kwargs else 'title'
-        display_opt = self.kwargs['display_opt'] if 'display_opt' in self.kwargs else 'posters'
+        view_opt = self.kwargs['view_opt'] if 'view_opt' in self.kwargs and self.kwargs['view_opt'] else 'all'
+        order_opt = self.kwargs['order_opt'] if 'order_opt' in self.kwargs and self.kwargs['order_opt'] else 'title'
+        display_opt = self.kwargs['display_opt'] if 'display_opt' in self.kwargs and self.kwargs['display_opt'] else 'posters'
         context['view_opt'] = view_opt
         context['order_opt'] = order_opt
         context['display_opt'] = display_opt
+        context['options'] = fill_options_kwargs({}, view_opt, order_opt, display_opt)
         if view_opt == 'all':
             context['view_opt_tag'] = _("All")
         elif view_opt == 'not_voted':
@@ -415,14 +417,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     def get_success_url(self):
         film = get_object_or_404(Film, pk=self.film_id)
         if self.success:
-            return reverse_lazy(
-                'democracy:film_detail',
-                kwargs={'film_id': film.id,
-                        'film_slug': film.filmdb.slug,
-                        'view_opt': 'all',
-                        'order_opt': 'title',
-                        'display_opt': 'posters'}
-            )
+            return get_film_detail_reverse(film)
         else:
             return reverse_lazy(
                 'democracy:add_new_film',

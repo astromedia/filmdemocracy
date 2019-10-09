@@ -22,6 +22,7 @@ from filmdemocracy.registration.models import User
 
 from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
 from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info, extract_club_id
+from filmdemocracy.utils import get_film_detail_reverse, get_candidate_films_reverse
 from filmdemocracy.utils import random_club_id_generator, random_film_id_generator, random_meeting_id_generator
 from filmdemocracy.utils import NotificationsHelper
 from filmdemocracy.utils import RankingGenerator
@@ -53,9 +54,9 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         club_id = extract_club_id(self.kwargs['film_id'])
         context = add_club_context(self.request, context, club_id)
         context['page'] = 'film_detail'
-        context['view_opt'] = self.kwargs['view_opt'] if 'view_opt' in self.kwargs else 'all'
-        context['order_opt'] = self.kwargs['order_opt'] if 'order_opt' in self.kwargs else 'title'
-        context['display_opt'] = self.kwargs['display_opt'] if 'display_opt' in self.kwargs else 'posters'
+        context['view_opt'] = self.kwargs['view_opt'] if 'view_opt' in self.kwargs and self.kwargs['view_opt'] else 'all'
+        context['order_opt'] = self.kwargs['order_opt'] if 'order_opt' in self.kwargs and self.kwargs['order_opt'] else 'title'
+        context['display_opt'] = self.kwargs['display_opt'] if 'display_opt' in self.kwargs and self.kwargs['display_opt'] else 'posters'
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
         context['film'] = film
         context['updatable_db'] = film.filmdb.updatable
@@ -98,13 +99,7 @@ def vote_film(request, film_id, view_opt='all', order_opt='title', display_opt='
     user_vote, tmp = Vote.objects.get_or_create(user=request.user, film=film, club=club)
     user_vote.choice = request.POST['choice']
     user_vote.save()
-    return HttpResponseRedirect(reverse(
-        'democracy:candidate_films',
-        kwargs={'club_id': club_id,
-                'view_opt': view_opt,
-                'order_opt': order_opt,
-                'display_opt': display_opt}
-    ))
+    return HttpResponseRedirect(get_candidate_films_reverse(club_id, view_opt, order_opt, display_opt))
 
 
 @login_required
@@ -116,14 +111,7 @@ def delete_vote(request, film_id, view_opt='all', order_opt='title', display_opt
     club = get_object_or_404(Club, pk=club_id)
     vote = get_object_or_404(Vote, user=request.user, film=film, club=club)
     vote.delete()
-    return HttpResponseRedirect(reverse(
-        'democracy:film_detail',
-        kwargs={'film_id': film.id,
-                'film_slug': film.filmdb.slug,
-                'view_opt': view_opt,
-                'order_opt': order_opt,
-                'display_opt': display_opt}
-    ))
+    return HttpResponseRedirect(get_film_detail_reverse(film, view_opt, order_opt, display_opt))
 
 
 @login_required
@@ -160,14 +148,7 @@ def comment_film(request, film_id, view_opt='all', order_opt='title', display_op
         film_comment = FilmComment.objects.create(user=request.user, film=film, club=club, text=comment_text)
         film_comment.save()
         create_notifications(request.user, club, film)
-    return HttpResponseRedirect(reverse(
-        'democracy:film_detail',
-        kwargs={'film_id': film.id,
-                'film_slug': film.filmdb.slug,
-                'view_opt': view_opt,
-                'order_opt': order_opt,
-                'display_opt': display_opt}
-    ))
+    return HttpResponseRedirect(get_film_detail_reverse(film, view_opt, order_opt, display_opt))
 
 
 @login_required
@@ -180,14 +161,7 @@ def delete_film_comment(request, film_id, comment_id, view_opt='all', order_opt=
             return HttpResponseForbidden()
     film_comment.deleted = True
     film_comment.save()
-    return HttpResponseRedirect(reverse(
-        'democracy:film_detail',
-        kwargs={'film_id': film.id,
-                'film_slug': film.filmdb.slug,
-                'view_opt': view_opt,
-                'order_opt': order_opt,
-                'display_opt': display_opt}
-    ))
+    return HttpResponseRedirect(get_film_detail_reverse(film, view_opt, order_opt, display_opt))
 
 
 @login_required
@@ -220,14 +194,7 @@ def add_filmaffinity_url(request, film_id, view_opt='all', order_opt='title', di
         messages.success(request, _('Link to FilmAffinity added!'))
     except ValueError:
         messages.error(request, _('Invalid FilmAffinity url!'))
-    return HttpResponseRedirect(reverse(
-        'democracy:film_detail',
-        kwargs={'film_id': film.id,
-                'film_slug': film.filmdb.slug,
-                'view_opt': view_opt,
-                'order_opt': order_opt,
-                'display_opt': display_opt}
-    ))
+    return HttpResponseRedirect(get_film_detail_reverse(film, view_opt, order_opt, display_opt))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -240,14 +207,10 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
 
     def get_success_url(self):
         film = get_object_or_404(Film, pk=self.kwargs['film_id'])
-        return reverse_lazy(
-            'democracy:film_detail',
-            kwargs={'film_id': film.id,
-                    'film_slug': film.filmdb.slug,
-                    'view_opt': self.kwargs['view_opt'] if 'view_opt' in self.kwargs else None,
-                    'order_opt': self.kwargs['order_opt'] if 'order_opt' in self.kwargs else None,
-                    'display_opt': self.kwargs['display_opt'] if 'display_opt' in self.kwargs else None}
-        )
+        view_opt = self.kwargs['view_opt'] if 'view_opt' in self.kwargs and self.kwargs['view_opt'] else 'all'
+        order_opt = self.kwargs['order_opt'] if 'order_opt' in self.kwargs and self.kwargs['order_opt'] else 'title'
+        display_opt = self.kwargs['display_opt'] if 'display_opt' in self.kwargs and self.kwargs['display_opt'] else 'posters'
+        return get_film_detail_reverse(film, view_opt, order_opt, display_opt)
 
     def get_form_kwargs(self):
         kwargs = super(FilmSeenView, self).get_form_kwargs()
@@ -298,13 +261,7 @@ def delete_film(request, film_id, view_opt='all', order_opt='title', display_opt
         return HttpResponseForbidden()
     film = get_object_or_404(Film, pk=film_id)
     film.delete()
-    return HttpResponseRedirect(reverse(
-        'democracy:candidate_films',
-        kwargs={'club_id': club_id,
-                'view_opt': view_opt,
-                'order_opt': order_opt,
-                'display_opt': display_opt}
-    ))
+    return HttpResponseRedirect(get_candidate_films_reverse(club_id, view_opt, order_opt, display_opt))
 
 
 @login_required
@@ -315,23 +272,10 @@ def unsee_film(request, film_id, view_opt='all', order_opt='title', display_opt=
     film = get_object_or_404(Film, pk=film_id)
     if Film.objects.filter(club=club_id, imdb_id=film.filmdb.imdb_id, seen=False):
         messages.error(request, _('This film is already in the candidate list! Delete it or leave it.'))
-        return HttpResponseRedirect(reverse(
-            'democracy:film_detail',
-            kwargs={'film_id': film.id,
-                    'film_slug': film.filmdb.slug,
-                    'view_opt': view_opt,
-                    'order_opt': order_opt,
-                    'display_opt': display_opt}
-        ))
+        return HttpResponseRedirect(get_film_detail_reverse(film, view_opt, order_opt, display_opt))
     else:
         film.seen = False
         film.seen_by.clear()
         film.seen_date = None
         film.save()
-        return HttpResponseRedirect(reverse(
-            'democracy:candidate_films',
-            kwargs={'club_id': club_id,
-                    'view_opt': view_opt,
-                    'order_opt': order_opt,
-                    'display_opt': display_opt}
-        ))
+        return HttpResponseRedirect(get_candidate_films_reverse(club_id, view_opt, order_opt, display_opt))
