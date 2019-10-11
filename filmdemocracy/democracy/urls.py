@@ -4,20 +4,12 @@ from filmdemocracy.democracy.views import club as club_views
 from filmdemocracy.democracy.views import film as film_views
 from filmdemocracy.democracy.views import chat as chat_views
 from filmdemocracy.democracy.views import meetings as meetings_views
-from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS, MEETING_ID_N_DIGITS
 
 
 app_name = 'democracy'
 
 
-FULL_FILM_ID_N_DIGITS = CLUB_ID_N_DIGITS + FILM_ID_N_DIGITS
-FULL_MEETINGS_ID_N_DIGITS = CLUB_ID_N_DIGITS + MEETING_ID_N_DIGITS
-
-
-options_regexp = r'(?:&view=(?P<view_opt>[a-zA-Z_]+))?(?:&order=(?P<order_opt>[a-zA-Z_]+))?(?:&display=(?P<display_opt>[a-zA-Z_]+))?/?$'
-club_regexp = r'(?P<club_id>[0-9]{{{club_id_n_digits}}})/'.format(club_id_n_digits=CLUB_ID_N_DIGITS)
-film_regexp = r'(?P<film_id>[0-9]{{{full_film_id_n_digits}}})/'.format(full_film_id_n_digits=FULL_FILM_ID_N_DIGITS)
-meeting_regexp = r'(?P<meeting_id>[0-9]{{{full_meetings_id_n_digits}}})/'.format(full_meetings_id_n_digits=FULL_MEETINGS_ID_N_DIGITS)
+options_regexp = r'(?:(?P<options_string>[0-9a-zA-Z_&=\?]+))?$'
 
 
 club_urlpatterns = [
@@ -31,7 +23,7 @@ club_urlpatterns = [
         club_views.InviteNewMemberConfirmView.as_view(template_name='democracy/invite_new_member_confirm.html'),
         name='invite_new_member_confirm'
     ),
-    re_path('club/' + club_regexp, include([
+    path('club/<str:club_id>/', include([
         path(
             '',
             club_views.ClubDetailView.as_view(template_name='democracy/club_detail.html'),
@@ -108,7 +100,7 @@ club_urlpatterns = [
 
 
 film_urlpatterns = [
-    re_path('film/' + film_regexp, include([
+    path('film/<str:film_id>/', include([
         re_path(
             r'vote_film/' + options_regexp,
             film_views.vote_film,
@@ -160,7 +152,7 @@ film_urlpatterns = [
 
 
 meetings_urlpatterns = [
-    re_path('club/' + club_regexp + 'meetings/', include([
+    path('club/<str:club_id>/meetings/', include([
         path(
             '',
             meetings_views.MeetingsListView.as_view(template_name='democracy/meetings_list.html'),
@@ -171,24 +163,21 @@ meetings_urlpatterns = [
             meetings_views.MeetingsNewView.as_view(template_name='democracy/meetings_form.html'),
             name='meetings_new'
         ),
-        re_path(meeting_regexp, include([
-            path(
-                'edit/',
-                meetings_views.MeetingsEditView.as_view(template_name='democracy/meetings_form.html'),
-                name='meetings_edit'
-            ),
-            path(
-                'assistance/',
-                meetings_views.meeting_assistance,
-                name='meeting_assistance'
-            ),
-            path(
-                'delete/',
-                meetings_views.delete_meeting,
-                name='delete_meeting'
-            ),
-            ])
-        )
+        path(
+            '<str:meeting_id>/edit/',
+            meetings_views.MeetingsEditView.as_view(template_name='democracy/meetings_form.html'),
+            name='meetings_edit'
+        ),
+        path(
+            '<str:meeting_id>/assistance/',
+            meetings_views.meeting_assistance,
+            name='meeting_assistance'
+        ),
+        path(
+            '<str:meeting_id>/delete/',
+            meetings_views.delete_meeting,
+            name='delete_meeting'
+        ),
         ])
      )
 ]
@@ -200,42 +189,36 @@ chat_urlpatterns = [
         chat_views.ChatContactsView.as_view(template_name='democracy/chat_contacts.html'),
         name='contacts'
     ),
-    re_path('chat/club/' + club_regexp, include([
-        path(
-            '',
-            chat_views.ChatClubView.as_view(template_name='democracy/chat_club.html'),
-            name='chatclub'
-        ),
-        path(
-            'post/',
-            chat_views.post_in_chatclub,
-            name='post_in_chatclub'
-        ),
-        path(
-            'delete_post/<str:post_id>/',
-            chat_views.delete_chatclub_post,
-            name='delete_chatclub_post'
-        ),
-        ])
+    path(
+        'chat/club/<str:club_id>/',
+        chat_views.ChatClubView.as_view(template_name='democracy/chat_club.html'),
+        name='chatclub'
     ),
-    path('chat/user/<str:chatuser_id>/', include([
-        path(
-            '',
-            chat_views.ChatUsersView.as_view(template_name='democracy/chat_users.html'),
-            name='chatusers'
-        ),
-        path(
-            'post/',
-            chat_views.post_in_chatusers,
-            name='post_in_chatusers'
-        ),
-        path(
-            'delete_post/<str:post_id>/',
-            chat_views.delete_chatusers_post,
-            name='delete_chatusers_post'
-        ),
-        ])
-    )
+    path(
+        'chat/club/<str:club_id>/post/',
+        chat_views.post_in_chatclub,
+        name='post_in_chatclub'
+    ),
+    path(
+        'chat/club/<str:club_id>/delete_post/<str:post_id>/',
+        chat_views.delete_chatclub_post,
+        name='delete_chatclub_post'
+    ),
+    path(
+        'chat/user/<str:chatuser_id>/',
+        chat_views.ChatUsersView.as_view(template_name='democracy/chat_users.html'),
+        name='chatusers'
+    ),
+    path(
+        'chat/user/<str:chatuser_id>/post/',
+        chat_views.post_in_chatusers,
+        name='post_in_chatusers'
+    ),
+    path(
+        'chat/user/<str:chatuser_id>/delete_post/<str:post_id>/',
+        chat_views.delete_chatusers_post,
+        name='delete_chatusers_post'
+    ),
 ]
 
 

@@ -167,7 +167,7 @@ class FilmSeenForm(forms.ModelForm):
                 _("You must set a date.")
             )
         film = get_object_or_404(Film, pk=self.film_id)
-        if seen_date < film.pub_date.date():
+        if seen_date < film.pub_datetime.date():
             raise forms.ValidationError(
                 _("You can't see films before they were proposed!")
             )

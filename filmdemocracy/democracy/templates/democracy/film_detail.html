@@ -40,9 +40,9 @@
           {% if film.proposed_by %}
           <a class="green-color blue-color-hover"
            href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
-          {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.pub_date|date:"d M Y" }}
+          {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.pub_datetime|date:"d M Y" }}
           {% else %}
-          {% trans 'a club ex-member' %} {% trans 'on ' %} {{ film.pub_date|date:"d M Y" }}
+          {% trans 'a club ex-member' %} {% trans 'on ' %} {{ film.pub_datetime|date:"d M Y" }}
           {% endif %}
         </p>
 
@@ -106,7 +106,7 @@
 
 <!--START: REPORT PROBLEM-->
 <!--<div class="col-auto">-->
-<!--<form class="" action="{% url 'democracy:candidate_films' club.id view_opt order_opt display_opt %}">-->
+<!--<form class="" action="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:order_option|add:display_option %}">-->
 <!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
 <!--{% trans 'Report problem with film info' %}-->
 <!--</button>-->
@@ -117,7 +117,7 @@
 
 <!--START: MARK AS SEEN-->
 {% if not film.seen %}
-  <form class="text-center" method="POST" action="{% url 'democracy:film_seen' film.id view_opt order_opt display_opt %}">
+  <form class="text-center" method="POST" action="{% url 'democracy:film_seen' film_id=film.id options_string=view_option|add:order_option|add:display_option %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
       {% trans 'Mark as seen by club' %}
@@ -130,7 +130,7 @@
 <!--START: MARK AS NOT SEEN-->
 {% if film.seen %}
 {% if user in club_admins %}
-  <form class="text-center" method="POST" action="{% url 'democracy:unsee_film' film.id view_opt order_opt display_opt %}">
+  <form class="text-center" method="POST" action="{% url 'democracy:unsee_film' film_id=film.id options_string=view_option|add:order_option|add:display_option %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
       {% trans 'Move back to candidate films' %}
@@ -173,7 +173,7 @@
 
     {% for choice, choice_dict in vote_choices.items %}
     <div class="text-center">
-      <form method="POST" action="{% url 'democracy:vote_film' film.id view_opt order_opt display_opt %}">
+      <form method="POST" action="{% url 'democracy:vote_film' film_id=film.id options_string=view_option|add:order_option|add:display_option %}">
         {% csrf_token %}
 
         <!--POSITIVE BUTTON-->
@@ -212,7 +212,7 @@
 
 
     {% if film_voted %}
-    <form class="text-center mt-4" action="{% url 'democracy:delete_vote' film.id view_opt order_opt display_opt %}"
+    <form class="text-center mt-4" action="{% url 'democracy:delete_vote' film_id=film.id options_string=view_option|add:order_option|add:display_option %}"
           method="POST">
       {% csrf_token %}
 
@@ -373,7 +373,7 @@
             {% if not comment.deleted %}
             {% if user == comment.user or user in club_admins %}
             <form class=""
-                  action="{% url 'democracy:delete_film_comment' film.id comment.id view_opt order_opt display_opt %}"
+                  action="{% url 'democracy:delete_film_comment' film_id=film.id comment_id=comment.id options_string=view_option|add:order_option|add:display_option %}"
                   method="POST">
               {% csrf_token %}
               {{ comment.date }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
@@ -414,7 +414,7 @@
                src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="user.profile_image not found">
           {% endif %}
         </div>
-        <form class="mx-auto" action="{% url 'democracy:comment_film' film.id view_opt order_opt display_opt %}"
+        <form class="mx-auto" action="{% url 'democracy:comment_film' film_id=film.id options_string=view_option|add:order_option|add:display_option %}"
               method="POST">
           {% csrf_token %}
 
@@ -505,7 +505,7 @@
         <button type="button" class="btn btn-sm" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form method="POST" action="{% url 'democracy:delete_film' film.id view_opt order_opt display_opt %}"
+        <form method="POST" action="{% url 'democracy:delete_film' film_id=film.id options_string=view_option|add:order_option|add:display_option %}"
               class="text-center">
           {% csrf_token %}
           <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
@@ -524,7 +524,7 @@
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' film.id view_opt order_opt display_opt %}"
+      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' film_id=film.id options_string=view_option|add:order_option|add:display_option %}"
             class="text-center">
         {% csrf_token %}
         <div class="modal-header">

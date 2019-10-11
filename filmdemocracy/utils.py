@@ -1,6 +1,7 @@
 import random
 import requests
 from datetime import datetime, timezone
+import re
 
 from django.contrib import messages
 from django.urls import reverse
@@ -56,25 +57,28 @@ def add_club_context(request, context, club_id):
     return context
 
 
-def fill_options_kwargs(reverse_kwargs, view_opt=None, order_opt=None, display_opt=None):
-    if view_opt and view_opt != 'all':
-        reverse_kwargs['view_opt'] = view_opt
-    if order_opt and order_opt != 'title':
-        reverse_kwargs['order_opt'] = order_opt
-    if display_opt and display_opt != 'posters':
-        reverse_kwargs['display_opt'] = display_opt
+def fill_options_string(view_option=None, order_option=None, display_option=None):
+    options_string = ''
+    if view_option and view_option != 'all':
+        options_string += f'&view={view_option}'
+    if order_option and order_option != 'title':
+        options_string += f'&order={order_option}'
+    if display_option and display_option != 'posters':
+        options_string += f'&display={display_option}'
+    return options_string
 
 
-def get_film_detail_reverse(film, view_opt=None, order_opt=None, display_opt=None):
-    reverse_kwargs = {'film_id': film.id, 'film_slug': film.filmdb.slug}
-    fill_options_kwargs(reverse_kwargs, view_opt, order_opt, display_opt)
-    return reverse('democracy:film_detail', kwargs=reverse_kwargs)
-
-
-def get_candidate_films_reverse(club_id, view_opt=None, order_opt=None, display_opt=None):
-    reverse_kwargs = {'club_id': club_id}
-    fill_options_kwargs(reverse_kwargs, view_opt, order_opt, display_opt)
-    return reverse('democracy:candidate_films', kwargs=reverse_kwargs)
+def extract_options(options_string=None):
+    if options_string:
+        view_option = re.search(r'(&view=[0-9a-zA-Z_]+)', options_string)
+        view_option = view_option.group(1) if view_option else ''
+        order_option = re.search(r'(&order=[0-9a-zA-Z_]+)', options_string)
+        order_option = order_option.group(1) if order_option else ''
+        display_option = re.search(r'(&display=[0-9a-zA-Z_]+)', options_string)
+        display_option = display_option.group(1) if display_option else ''
+        return view_option, order_option, display_option
+    else:
+        return '', '', ''
 
 
 def update_filmdb_omdb_info(filmdb):
