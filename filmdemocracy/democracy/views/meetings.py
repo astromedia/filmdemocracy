@@ -22,7 +22,7 @@ from filmdemocracy.registration.models import User
 
 from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
 from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info
-from filmdemocracy.utils import random_club_id_generator, random_film_id_generator, random_meeting_id_generator
+from filmdemocracy.utils import random_club_id_generator, random_film_public_id_generator
 from filmdemocracy.utils import NotificationsHelper
 from filmdemocracy.utils import RankingGenerator
 
@@ -37,7 +37,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     from_email = 'filmdemocracyweb@gmail.com'
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_form_kwargs(self):
         kwargs = super(MeetingsNewView, self).get_form_kwargs()
@@ -67,7 +67,6 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
         user = self.request.user
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         new_meeting = Meeting.objects.create(
-            id=random_meeting_id_generator(club.id),
             club=club,
             name=form.cleaned_data['name'],
             description=form.cleaned_data['description'],
@@ -108,11 +107,7 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
     from_email = 'filmdemocracyweb@gmail.com'
 
     def test_func(self):
-        return user_is_organizer_check(
-            self.request,
-            self.kwargs['club_id'],
-            self.kwargs['meeting_id']
-        )
+        return user_is_organizer_check(self.request.user, self.kwargs['club_id'], self.kwargs['meeting_id'])
 
     def get_form_kwargs(self):
         kwargs = super(MeetingsEditView, self).get_form_kwargs()
@@ -171,9 +166,10 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
 
 @login_required
 def meeting_assistance(request, club_id, meeting_id):
-    if not user_is_club_member_check(request, club_id):
-        return HttpResponseForbidden()
     user = request.user
+    club = get_object_or_404(Club, pk=club_id)
+    if not user_is_club_member_check(user, club=club):
+        return HttpResponseForbidden()
     meeting = get_object_or_404(Meeting, pk=meeting_id)
     if 'assist_yes' in request.POST:
         if user in meeting.members_yes.all():
@@ -211,24 +207,26 @@ def meeting_assistance(request, club_id, meeting_id):
 
 @login_required
 def delete_meeting(request, club_id, meeting_id):
-    organizer_check = user_is_organizer_check(request, club_id, meeting_id)
-    admin_check = user_is_club_admin_check(request, club_id)
+    organizer_check = user_is_organizer_check(request.user, club_id, meeting_id)
+    club = get_object_or_404(Club, pk=club_id)
+    admin_check = user_is_club_admin_check(request.user, club=club)
     if not organizer_check and not admin_check:
         return HttpResponseForbidden()
     meeting = get_object_or_404(Meeting, pk=meeting_id)
     meeting.delete()
-    return HttpResponseRedirect(reverse('democracy:club_detail', kwargs={'club_id': club_id}))
+    return HttpResponseRedirect(reverse('democracy:club_detail', kwargs={'club_id': club.id}))
 
 
 @method_decorator(login_required, name='dispatch')
 class MeetingsListView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context = add_club_context(self.request, context, self.kwargs['club_id'])
-        club_meetings = Meeting.objects.filter(club_id=self.kwargs['club_id'], date__gte=timezone.now().date())
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context = add_club_context(context, club)
+        club_meetings = Meeting.objects.filter(club=club, date__gte=timezone.now().date())
         context['club_meetings'] = club_meetings.order_by('date')
         return context

@@ -22,7 +22,7 @@ from filmdemocracy.registration.models import User
 
 from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
 from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info
-from filmdemocracy.utils import random_club_id_generator, random_film_id_generator, random_meeting_id_generator
+from filmdemocracy.utils import random_club_id_generator, random_film_public_id_generator
 from filmdemocracy.utils import NotificationsHelper
 from filmdemocracy.utils import RankingGenerator
 
@@ -31,41 +31,43 @@ from filmdemocracy.utils import RankingGenerator
 class ChatClubView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'chat'
-        context = add_club_context(self.request, context, self.kwargs['club_id'])
-        posts = ChatClubPost.objects.filter(club=self.kwargs['club_id'])
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context = add_club_context(context, club)
+        posts = ChatClubPost.objects.filter(club=club)
         context['posts'] = posts.order_by('-datetime')[:1000]  # TODO
         return context
 
 
 @login_required
-def post_in_chatclub(request, club_id):
-    if not user_is_club_member_check(request, club_id):
-        return HttpResponseForbidden()
+def post_in_chat_club(request, club_id):
     club = get_object_or_404(Club, pk=club_id)
+    if not user_is_club_member_check(request.user, club=club):
+        return HttpResponseForbidden()
     post_text = request.POST['text']
     if not post_text.lstrip() == '':
         post = ChatClubPost.objects.create(user_sender=request.user, club=club, text=post_text)
         post.save()
-        chat_info, tmp = ChatClubInfo.objects.get_or_create(club=club)  # TODO: change to get_or_404 in pro version
+        chat_info, tmp = ChatClubInfo.objects.get_or_404(club=club)
         chat_info.last_post = post
         chat_info.save()
-    return HttpResponseRedirect(reverse('democracy:chatclub', kwargs={'club_id': club_id}))
+    return HttpResponseRedirect(reverse('democracy:chat_club', kwargs={'club_id': club_id}))
 
 
 @login_required
-def delete_chatclub_post(request, club_id, post_id):
+def delete_chat_club_post(request, club_id, post_id):
     post = get_object_or_404(ChatClubPost, id=post_id)
+    club = get_object_or_404(Club, pk=club_id)
     if request.user != post.user:
-        if not user_is_club_admin_check(request, club_id):
+        if not user_is_club_admin_check(request.user, club=club):
             return HttpResponseForbidden()
     post.deleted = True
     post.save()
-    return HttpResponseRedirect(reverse('democracy:chatclub', kwargs={'club_id': club_id}))
+    return HttpResponseRedirect(reverse('democracy:chat_club', kwargs={'club_id': club.id}))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -98,12 +100,12 @@ class ChatContactsView(generic.TemplateView):
 class ChatUsersView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
-        return users_know_each_other_check(self.request, self.kwargs['chatuser_id'])
+        return users_know_each_other_check(self.request, self.kwargs['chat_user_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'chat'
-        chat_user = get_object_or_404(User, pk=self.kwargs['chatuser_id'])
+        chat_user = get_object_or_404(User, pk=self.kwargs['chat_user_id'])
         context['chat_user'] = chat_user
         posts_a = ChatUsersPost.objects.filter(user_sender=self.request.user, user_receiver=chat_user)
         posts_b = ChatUsersPost.objects.filter(user_sender=chat_user, user_receiver=self.request.user)
@@ -113,10 +115,10 @@ class ChatUsersView(UserPassesTestMixin, generic.TemplateView):
 
 
 @login_required
-def post_in_chatusers(request, chatuser_id):
-    if not users_know_each_other_check(request, chatuser_id):
+def post_in_chat_users(request, chat_user_id):
+    if not users_know_each_other_check(request, chat_user_id):
         return HttpResponseForbidden()
-    chat_user = get_object_or_404(User, pk=chatuser_id)
+    chat_user = get_object_or_404(User, pk=chat_user_id)
     post_text = request.POST['text']
     if not post_text.lstrip() == '':
         post = ChatUsersPost.objects.create(user_sender=request.user, user_receiver=chat_user, text=post_text)
@@ -125,14 +127,14 @@ def post_in_chatusers(request, chatuser_id):
             chat_info, tmp = ChatUsersInfo.objects.get_or_create(user=users_tuple[0], user_known=users_tuple[1])
             chat_info.last_post = post
             chat_info.save()
-    return HttpResponseRedirect(reverse('democracy:chatusers', kwargs={'chatuser_id': chatuser_id}))
+    return HttpResponseRedirect(reverse('democracy:chat_users', kwargs={'chat_user_id': chat_user_id}))
 
 
 @login_required
-def delete_chatusers_post(request, post_id):
+def delete_chat_users_post(request, post_id):
     post = get_object_or_404(ChatUsersPost, id=post_id)
     if request.user != post.user:
         return HttpResponseForbidden()
     post.deleted = True
     post.save()
-    return HttpResponseRedirect(reverse('democracy:chatusers', kwargs={'chatuser_id': post.user_receiver.id}))
+    return HttpResponseRedirect(reverse('democracy:chat_users', kwargs={'chat_user_id': post.user_receiver.id}))

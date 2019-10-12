@@ -66,7 +66,7 @@
   <!--            <strong>{{ post.user_sender.username }}</strong></a>-->
   <!--        </div>-->
   <!--        <div class="col-auto date">-->
-  <!--          <span class="small text-muted">{{ post.date }}</span>-->
+  <!--          <span class="small text-muted">{{ post.created_datetime }}</span>-->
   <!--        </div>-->
   <!--      </div>-->
 
@@ -85,11 +85,11 @@
   <!--  </div>-->
 
 
-    {% ifchanged post.date|date %}
+    {% ifchanged post.created_datetime|date %}
 
     <div class="text-center">
     <div class="date-bubble px-2 text-center rounded-pill">
-      {{ post.date|date }}
+      {{ post.created_datetime|date }}
     </div>
     </div>
 
@@ -138,7 +138,7 @@
           <span>{{ post.text }}</span>
           {% endif %}
           <span style="display:inline-block; width: 20px;"></span>
-          <div class="post-time text-muted text-right">{{ post.date|date:"H:i" }}</div>
+          <div class="post-time text-muted text-right">{{ post.created_datetime|date:"H:i" }}</div>
         </div>
       </div>
 
@@ -146,7 +146,7 @@
 <!--      <div class="small post-delete mx-1">-->
 <!--        {% if not post.deleted %}-->
 
-<!--            <form style="padding-top: 2px;" class="{% if user == post.user_sender %}text-right{% endif %}" action="{% url 'democracy:delete_chatclub_post' club.id post.id %}" method="POST">-->
+<!--            <form style="padding-top: 2px;" class="{% if user == post.user_sender %}text-right{% endif %}" action="{% url 'democracy:delete_chat_club_post' club.id post.id %}" method="POST">-->
 <!--              {% csrf_token %}-->
 
 <!--              <label id="post-delete-label" style="display:none;" for="delete-post_{{ forloop.counter }}" class="pointer-cursor mx-2">{% trans 'Delete' %}</label>-->
@@ -187,7 +187,7 @@
     <!--START: POST FORM-->
       <div class="form-post">
 
-        <form class="form-inline" action="{% url 'democracy:post_in_chatclub' club.id %}" method="POST">
+        <form class="form-inline" action="{% url 'democracy:post_in_chat_club' club.id %}" method="POST">
           {% csrf_token %}
 
           <div class="input-group">

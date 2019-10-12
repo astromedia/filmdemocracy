@@ -22,7 +22,7 @@ from filmdemocracy.registration.models import User
 
 from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
 from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info
-from filmdemocracy.utils import random_club_id_generator, random_film_id_generator, random_meeting_id_generator
+from filmdemocracy.utils import random_club_id_generator, random_film_public_id_generator
 from filmdemocracy.utils import extract_options
 from filmdemocracy.utils import NotificationsHelper
 from filmdemocracy.utils import RankingGenerator
@@ -61,23 +61,23 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
     pk_url_kwarg = 'club_id'
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'club_detail'
-        club_id = self.kwargs['club_id']
-        context = add_club_context(self.request, context, club_id)
-        club_meetings = Meeting.objects.filter(club_id=club_id, date__gte=timezone.now().date())
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context = add_club_context(context, club)
+        club_meetings = Meeting.objects.filter(club=club, date__gte=timezone.now().date())
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
             context['extra_meetings'] = len(club_meetings) > 3
-        last_comments = FilmComment.objects.filter(club_id=club_id, deleted=False)
+        last_comments = FilmComment.objects.filter(club=club, deleted=False)
         if last_comments:
             context['last_comments'] = last_comments.order_by('-datetime')[0:5]
-        club_films = Film.objects.filter(club_id=club_id)
+        club_films = Film.objects.filter(club=club)
         if club_films:
-            films_last_pub = club_films.order_by('-pub_datetime')
+            films_last_pub = club_films.order_by('-created_datetime')
             groups_last_pub = [films_last_pub[i:i+3] for i in [0, 3, 6, 9]]
             context['groups_last_pub'] = groups_last_pub
             last_seen = club_films.filter(seen=True)
@@ -91,24 +91,23 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
     pk_url_kwarg = 'user_id'
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club_id = self.kwargs['club_id']
-        context = add_club_context(self.request, context, club_id)
-        club = context['club']
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context = add_club_context(context, club)
         member = get_object_or_404(User, pk=self.kwargs['user_id'])
         context['member'] = member
         club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
         context['club_member_info'] = club_member_info
-        all_votes = member.vote_set.filter(club_id=club.id)
+        all_votes = member.vote_set.filter(club=club)
         context['num_of_votes'] = all_votes.count()
-        club_films = Film.objects.filter(club_id=club.id)
+        club_films = Film.objects.filter(club=club)
         club_films_not_seen = club_films.filter(seen=False)
         votes = [vote for vote in all_votes if vote.film in club_films_not_seen]
         context['member_votes'] = votes
-        member_seen_films = member.seen_by.filter(club_id=club.id)
+        member_seen_films = member.seen_by.filter(club=club)
         context['member_seen_films'] = member_seen_films
         context['num_of_films_seen'] = member_seen_films.count()
         proposed = club_films.filter(proposed_by=member)
@@ -123,7 +122,7 @@ class EditClubInfoView(UserPassesTestMixin, generic.UpdateView):
     form_class = forms.EditClubForm
 
     def test_func(self):
-        return user_is_club_admin_check(self.request, self.kwargs['club_id'])
+        return user_is_club_admin_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_success_url(self):
         return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
@@ -136,7 +135,7 @@ class EditClubPanelView(UserPassesTestMixin, generic.UpdateView):
     fields = ['panel']
 
     def test_func(self):
-        return user_is_club_admin_check(self.request, self.kwargs['club_id'])
+        return user_is_club_admin_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_success_url(self):
         return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
@@ -144,11 +143,11 @@ class EditClubPanelView(UserPassesTestMixin, generic.UpdateView):
 
 @login_required
 def leave_club(request, club_id):
-    if not user_is_club_member_check(request, club_id):
+    club = get_object_or_404(Club, pk=club_id)
+    if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()
     context = {}
-    context = add_club_context(request, context, club_id)
-    club = context['club']
+    context = add_club_context(context, club)
     club_members = context['club_members']
     club_admins = context['club_admins']
     user = request.user
@@ -172,11 +171,10 @@ def leave_club(request, club_id):
 
 @login_required
 def self_demote(request, club_id):
-    if not user_is_club_admin_check(request, club_id):
+    club = get_object_or_404(Club, pk=club_id)
+    if not user_is_club_admin_check(request.user, club=club):
         return HttpResponseForbidden()
-    context = {}
-    context = add_club_context(request, context, club_id)
-    club = context['club']
+    context = add_club_context({}, club)
     club_admins = context['club_admins']
     user = request.user
     if user in club_admins:
@@ -194,7 +192,7 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
     form_class = forms.KickMembersForm
 
     def test_func(self):
-        return user_is_club_admin_check(self.request, self.kwargs['club_id'])
+        return user_is_club_admin_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_form_kwargs(self):
         kwargs = super(KickMembersView, self).get_form_kwargs()
@@ -212,8 +210,8 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club_id = self.kwargs['club_id']
-        context = add_club_context(self.request, context, club_id)
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context = add_club_context(context, club)
         return context
 
     @staticmethod
@@ -257,7 +255,7 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
     form_class = forms.PromoteMembersForm
 
     def test_func(self):
-        return user_is_club_admin_check(self.request, self.kwargs['club_id'])
+        return user_is_club_admin_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_form_kwargs(self):
         kwargs = super(PromoteMembersView, self).get_form_kwargs()
@@ -275,8 +273,8 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club_id = self.kwargs['club_id']
-        context = add_club_context(self.request, context, club_id)
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context = add_club_context(context, club)
         return context
 
     @staticmethod
@@ -313,14 +311,14 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
 class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'candidate_films'
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
-        club_films = Film.objects.filter(club_id=club.id, seen=False)
+        club_films = Film.objects.filter(club=club, seen=False)
         options_string = self.kwargs['options_string'] if 'options_string' in self.kwargs and self.kwargs['options_string'] else None
         view_option, order_option, display_option = extract_options(options_string)
         context['view_option'] = view_option
@@ -333,10 +331,10 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         else:
             context['view_option_tag'] = _("All")
         if order_option == '&order=date_proposed':
-            context['order_option_string'] = "film.pub_datetime"
+            context['order_option_string'] = "film.created_datetime"
             context['order_option_tag'] = _("Proposed")
         elif order_option == '&order=year':
-            context['order_option_string'] = "film.filmdb.year"
+            context['order_option_string'] = "film.db.year"
             context['order_option_tag'] = _("Year")
         elif order_option == '&order=duration':
             context['order_option_string'] = "duration"
@@ -345,7 +343,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
             context['order_option_string'] = "vote_points"
             context['order_option_tag'] = _("My vote")
         else:
-            context['order_option_string'] = "film.filmdb.title"
+            context['order_option_string'] = "film.db.title"
             context['order_option_tag'] = _("Title")
         if display_option == '&display=list':
             context['display_option_tag'] = _("List")
@@ -354,12 +352,12 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         candidate_films = []
         for film in club_films:
             try:
-                film_duration = int(film.filmdb.duration)
+                film_duration = int(film.db.duration)
             except ValueError:
-                if ' min' in film.filmdb.duration:
-                    film_duration = int(film.filmdb.duration.replace(' min', ''))
-                elif 'min' in film.filmdb.duration:
-                    film_duration = int(film.filmdb.duration.replace('min', ''))
+                if ' min' in film.db.duration:
+                    film_duration = int(film.db.duration.replace(' min', ''))
+                elif 'min' in film.db.duration:
+                    film_duration = int(film.db.duration.replace('min', ''))
                 else:
                     film_duration = 0
             film_voters = [vote.user.username for vote in film.vote_set.all()]
@@ -389,13 +387,13 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
 class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         context['club'] = club
-        seen_films = Film.objects.filter(club_id=club.id, seen=True)
+        seen_films = Film.objects.filter(club=club, seen=True)
         context['seen_films'] = seen_films
         return context
 
@@ -405,7 +403,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmAddNewForm
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_form_kwargs(self):
         kwargs = super(AddNewFilmView, self).get_form_kwargs()
@@ -413,19 +411,19 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
         return kwargs
 
     def get_success_url(self):
-        film = get_object_or_404(Film, pk=self.film_id)
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        film = get_object_or_404(Film, pk=self.film_public_id)
         if self.success:
-            return reverse('democracy:film_detail', kwargs={'film_id': film.id,
-                                                            'film_slug': film.filmdb.slug})
+            return reverse('democracy:film_detail', kwargs={'club_id': club.id,
+                                                            'film_public_id': film.public_id,
+                                                            'film_slug': film.db.slug})
         else:
-            return reverse_lazy(
-                'democracy:add_new_film',
-                kwargs={'club_id': self.kwargs['club_id']}
-            )
+            return reverse_lazy('democracy:add_new_film', kwargs={'club_id': self.kwargs['club_id']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['club'] = club
         return context
 
     @staticmethod
@@ -442,7 +440,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
         user = self.request.user
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
         imdb_key = form.cleaned_data['imdb_input']
-        if Film.objects.filter(club=club.id, imdb_id=imdb_key, seen=False):
+        if Film.objects.filter(club=club, imdb_id=imdb_key, seen=False):
             messages.error(self.request, _('That film is already in the candidate list!'))
             self.success = False
         else:
@@ -455,15 +453,15 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
                 self.success = True
             if self.success:
                 film = Film.objects.create(
-                    id=random_film_id_generator(club.id),
+                    public_id=random_film_public_id_generator(club.id),
                     imdb_id=imdb_key,
                     proposed_by=user,
                     club=club,
-                    filmdb=filmdb,
+                    db=filmdb,
                 )
                 film.save()
                 self.create_notifications(user, club, film)
-                self.film_id = film.id
+                self.film_public_id = film.public_id
                 messages.success(self.request, _('New film added! Be the first to vote it!'))
         return super().form_valid(form)
 
@@ -472,14 +470,13 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
 class RankingParticipantsView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'film_ranking'
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        context['club'] = club
-        context['club_members'] = club.members.filter(is_active=True)
+        context = add_club_context(context, club)
         return context
 
 
@@ -487,7 +484,7 @@ class RankingParticipantsView(UserPassesTestMixin, generic.TemplateView):
 class RankingResultsView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -511,7 +508,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
     from_email = 'filmdemocracyweb@gmail.com'
 
     def test_func(self):
-        return user_is_club_member_check(self.request, self.kwargs['club_id'])
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     @method_decorator(csrf_protect)
     def dispatch(self, *args, **kwargs):
@@ -544,7 +541,8 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        context['club'] = club
         return context
 
 
@@ -584,8 +582,8 @@ class InviteNewMemberConfirmView(generic.FormView):
         context = super().get_context_data(**kwargs)
         if self.validlink:
             club = self.get_object(Club, self.kwargs['uclubidb64'])
-            context['validlink'] = True
             context['club'] = club
+            context['validlink'] = True
         else:
             context.update({'form': None, 'validlink': False})
         return context

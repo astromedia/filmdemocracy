@@ -9,37 +9,37 @@ from django.utils.translation import gettext_lazy as _
 from django.shortcuts import get_object_or_404
 
 from filmdemocracy.democracy.models import Film, Vote, Club, Notification, ChatUsersInfo, Meeting
-from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS, MEETING_ID_N_DIGITS
+from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS
 from filmdemocracy.registration.models import User
 from filmdemocracy.secrets import OMDB_API_KEY
 
 
-def user_is_club_member_check(request, club_id):
-    user = request.user
-    club = get_object_or_404(Club, pk=club_id)
+def user_is_club_member_check(user, club_id=None, club=None):
+    if club is None and club_id:
+        club = get_object_or_404(Club, pk=club_id)
     club_members = club.members.filter(is_active=True)
     return user in club_members
 
 
-def user_is_club_admin_check(request, club_id):
-    user = request.user
-    club = get_object_or_404(Club, pk=club_id)
+def user_is_club_admin_check(user, club_id=None, club=None):
+    if club is None and club_id:
+        club = get_object_or_404(Club, pk=club_id)
     club_members = club.members.filter(is_active=True)
     club_admins = club.admin_members.filter(is_active=True)
     return user in club_members and user in club_admins
 
 
-def user_is_organizer_check(request, club_id, meeting_id):
-    user = request.user
-    club = get_object_or_404(Club, pk=club_id)
+def user_is_organizer_check(user, club_id=None, club=None, meeting_id=None, meeting=None):
+    if club is None and club_id:
+        club = get_object_or_404(Club, pk=club_id)
     meeting = get_object_or_404(Meeting, pk=meeting_id)
     club_members = club.members.filter(is_active=True)
     return user in club_members and user == meeting.organizer
 
 
-def users_know_each_other_check(request, chatuser_id):
-    user = request.user
-    chat_user = get_object_or_404(User, pk=chatuser_id)
+def users_know_each_other_check(user, chat_user_id=None, chat_user=None):
+    if chat_user is None and chat_user_id:
+        chat_user = get_object_or_404(User, pk=chat_user_id)
     common_clubs = user.club_set.all() & chat_user.club_set.all()
     chat_opened = ChatUsersInfo.objects.filter(user=user, user_known=chat_user)
     if common_clubs.exists() or chat_opened.exists():
@@ -48,12 +48,10 @@ def users_know_each_other_check(request, chatuser_id):
         return False
 
 
-def add_club_context(request, context, club_id):
-    club = get_object_or_404(Club, pk=club_id)
+def add_club_context(context, club):
     context['club'] = club
     context['club_members'] = club.members.filter(is_active=True)
     context['club_admins'] = club.admin_members.filter(is_active=True)
-    context['user'] = request.user
     return context
 
 
@@ -117,7 +115,7 @@ class RankingFilm:
 
     def __init__(self, film, participants, ranking_config):
         self.film = film
-        self.id = film.id
+        self.id = film.public_id
         self.participants = participants
         self.ranking_config = ranking_config
         self.film_votes = None
@@ -173,7 +171,7 @@ class RankingFilm:
             if vote.choice == Vote.VETO:
                 veto_warnings.append({
                     'type': Vote.VETO,
-                    'film': self.film.filmdb.title,
+                    'film': self.film.db.title,
                     'voter': vote.user.username,
                 })
         return veto_warnings
@@ -184,7 +182,7 @@ class RankingFilm:
             if vote.user not in self.participants and vote.choice == Vote.OMG:
                 not_present_omg_warnings.append({
                     'type': Vote.OMG,
-                    'film': self.film.filmdb.title,
+                    'film': self.film.db.title,
                     'voter': vote.user.username,
                 })
         return not_present_omg_warnings
@@ -194,7 +192,7 @@ class RankingFilm:
         if self.film.proposed_by not in self.participants:
             proposer_not_present_warning.append({
                 'type': 'proposer missing',
-                'film': self.film.filmdb.title,
+                'film': self.film.db.title,
                 'voter': self.film.proposed_by.username,
             })
         return proposer_not_present_warning
@@ -257,7 +255,7 @@ class RankingGenerator:
         if film.proposed_by not in self.participants and self.config['exclude_not_present']:
             return False
         else:
-            film_duration_int = film.filmdb.duration_in_mins_int
+            film_duration_int = film.db.duration_in_mins_int
             if film_duration_int > self.config['max_duration']:
                 return False
             else:
@@ -274,7 +272,7 @@ class RankingGenerator:
                 ranking_film.process_votes()
                 ranking_results.append({
                     'film': ranking_film.film,
-                    'duration': f'{ranking_film.film.filmdb.duration_in_mins_int} min',
+                    'duration': f'{ranking_film.film.db.duration_in_mins_int} min',
                     'positive_votes': ranking_film.positive_votes,
                     'negative_votes': ranking_film.negative_votes,
                     'abstentionists': ranking_film.abstentionists,
@@ -292,26 +290,13 @@ def random_club_id_generator(n_digits=CLUB_ID_N_DIGITS):
     return str(random.choice(free_ids)).zfill(n_digits)
 
 
-def random_film_id_generator(club_id, n_digits=FILM_ID_N_DIGITS):
+def random_film_public_id_generator(club_id, n_digits=FILM_ID_N_DIGITS):
     """ Picks an integer in the [1, 10^n_digits-1] range among the free ones (i.e., not found in the DB) """
     club_films = Film.objects.filter(club_id=club_id)
     films_ids = [fid[-n_digits:] for fid in club_films.values_list('id', flat=True)]
     free_ids = [i for i in range(1, 10**n_digits - 1) if i not in films_ids]
-    base_film_id = str(random.choice(free_ids)).zfill(n_digits)
-    return '{}{}'.format(club_id, base_film_id)
-
-
-def random_meeting_id_generator(club_id, n_digits=MEETING_ID_N_DIGITS):
-    """ Picks an integer in the [1, 10^n_digits-1] range among the free ones (i.e., not found in the DB) """
-    club_meetings = Meeting.objects.filter(club_id=club_id)
-    meetings_ids = [mid[-n_digits:] for mid in club_meetings.values_list('id', flat=True)]
-    free_ids = [i for i in range(1, 10**n_digits - 1) if i not in meetings_ids]
-    base_meeting_id = str(random.choice(free_ids)).zfill(n_digits)
-    return '{}{}'.format(club_id, base_meeting_id)
-
-
-def extract_club_id(object_id, club_id_n_digits=CLUB_ID_N_DIGITS):
-    return object_id[0:club_id_n_digits]
+    film_public_id = str(random.choice(free_ids)).zfill(n_digits)
+    return '{}'.format(film_public_id)
 
 
 class NotificationsHelper:
@@ -335,8 +320,8 @@ class NotificationsHelper:
             'object_id': object_id,
             'counter': counter,
             'club': ntf.club,
-            'datetime': ntf.datetime,
-            'time_ago': time_ago_format(datetime.now(timezone.utc) - ntf.datetime),  # TODO: use pytz
+            'datetime': ntf.created_datetime,
+            'time_ago': time_ago_format(datetime.now(timezone.utc) - ntf.created_datetime),  # TODO: use pytz
             'read': ntf.read,
             'ids': '_'.join(ntf_ids) if isinstance(ntf_ids, list) else str(ntf_ids),
         }
@@ -408,7 +393,7 @@ class NotificationsHelper:
         for ntf in self.notifications.filter(type=notification_type):
             if not ntf.read:
                 self.unread_count += 1
-            self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, ntf.object_film.filmdb.title, ntf.object_film.id))
+            self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, ntf.object_film.db.title, ntf.object_film.public_id))
 
     def process_hierarchy_notifications(self, notification_type):
         for ntf in self.notifications.filter(type=notification_type):
@@ -437,14 +422,14 @@ class NotificationsHelper:
                 if i == 1:
                     if not last_ntf.read:
                         self.unread_count += 1
-                self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, last_ntf.object_film.filmdb.title, last_ntf.object_film.id, counter))
+                self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, last_ntf.object_film.db.title, last_ntf.object_film.public_id, counter))
 
     def process_comments_notifications(self, notification_type):
         ntfs_group = self.notifications.filter(type=notification_type).order_by('-datetime')
         for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
             ntf_films = set(ntf.object_film for ntf in ntfs_subgroup)
             for ntf_film in ntf_films:
-                ntf_film_group = ntfs_subgroup.filter(object_film=ntf_film.id)
+                ntf_film_group = ntfs_subgroup.filter(object_film=ntf_film.public_id)
                 ntf_ids = [str(ntf.id) for ntf in ntf_film_group]
                 last_ntf = ntf_film_group.last()
                 if len(ntf_film_group) > 1:
@@ -456,7 +441,7 @@ class NotificationsHelper:
                 if i == 1:
                     if not last_ntf.read:
                         self.unread_count += 1
-                self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, last_ntf.object_film.filmdb.title, last_ntf.object_film.id, counter))
+                self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, last_ntf.object_film.db.title, last_ntf.object_film.public_id, counter))
 
     @staticmethod
     def dispatch_url_home(club_id=None, ntf_object_id=None):
@@ -474,8 +459,8 @@ class NotificationsHelper:
     @staticmethod
     def dispatch_url_film(club_id=None, ntf_object_id=None):
         film = get_object_or_404(Film, pk=ntf_object_id)
-        return reverse('democracy:film_detail', kwargs={'film_id': film.id,
-                                                        'film_slug': film.filmdb.slug})
+        return reverse('democracy:film_detail', kwargs={'film_public_id': film.public_id,
+                                                        'film_slug': film.db.slug})
 
     @staticmethod
     def dispatch_url_films(club_id=None, ntf_object_id=None):

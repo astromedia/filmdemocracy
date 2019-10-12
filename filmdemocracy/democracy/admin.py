@@ -27,7 +27,7 @@ class FilmAdmin(admin.ModelAdmin):
         ),
     ]
     inlines = [VoteInLine]
-    list_display = ('id', 'proposed_by', 'pub_datetime', 'seen')
+    list_display = ('id', 'proposed_by', 'created_datetime', 'seen')
     list_filter = ['proposed_by', 'seen']
 
 

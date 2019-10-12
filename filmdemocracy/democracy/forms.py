@@ -67,6 +67,7 @@ class PromoteMembersForm(forms.ModelForm):
 def process_imdb_input(form):
     """ Validate that the input is a valid IMDb film url or key and return IMDb id. """
     # TODO: do this using regexps
+
     imdb_input = form.cleaned_data['imdb_input']
     try:
         if 'imdb' in imdb_input:
@@ -155,7 +156,7 @@ class FilmSeenForm(forms.ModelForm):
         fields = ['seen_date', 'members']
 
     def __init__(self, *args, **kwargs):
-        self.film_id = kwargs.pop('film_id', None)
+        self.film_public_id = kwargs.pop('film_public_id', None)
         club_members = kwargs.pop('club_members', None)
         super(FilmSeenForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = club_members
@@ -166,8 +167,8 @@ class FilmSeenForm(forms.ModelForm):
             raise forms.ValidationError(
                 _("You must set a date.")
             )
-        film = get_object_or_404(Film, pk=self.film_id)
-        if seen_date < film.pub_datetime.date():
+        film = get_object_or_404(Film, pk=self.film_public_id)
+        if seen_date < film.created_datetime.date():
             raise forms.ValidationError(
                 _("You can't see films before they were proposed!")
             )
@@ -275,7 +276,7 @@ class MeetingsForm(forms.ModelForm):
             self.initial['name'] = meeting.name
             self.initial['description'] = meeting.description
             self.initial['place'] = meeting.place
-            self.initial['date'] = meeting.date
+            self.initial['date'] = meeting.created_datetime
             self.initial['time_start'] = meeting.time_start
             self.initial['time_end'] = meeting.time_end
         except AttributeError:

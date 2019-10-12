@@ -79,8 +79,8 @@
 
       <!--TITLE COLUMN-->
       <td class="align-middle">
-        <a class="strong-link" href="{% url 'democracy:film_detail' film_results.film.id film_results.film.filmdb.slug %}">
-          {{ film_results.film.filmdb.title }}
+        <a class="strong-link" href="{% url 'democracy:film_detail' film_results.film.public_id film_results.film.db.slug %}">
+          {{ film_results.film.db.title }}
         </a>
       </td>
 
@@ -141,7 +141,7 @@
         <div class="modal-content modal-results">
           <div class="modal-header modal-results-header">
             <h5 class="modal-title" id="FilmResultsModal_{{ forloop.counter }}_Title">
-              {% trans 'Results for:' %} {{ film_results.film.filmdb.title }}</h5>
+              {% trans 'Results for:' %} {{ film_results.film.db.title }}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>

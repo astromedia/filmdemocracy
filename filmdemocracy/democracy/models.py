@@ -1,5 +1,6 @@
 import os
 import datetime
+import uuid
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -11,9 +12,8 @@ from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 
 
-CLUB_ID_N_DIGITS = 5
-FILM_ID_N_DIGITS = 5
-MEETING_ID_N_DIGITS = 4
+CLUB_ID_N_DIGITS = 6
+FILM_ID_N_DIGITS = 6
 
 
 def get_club_logo_path(instance, filename):
@@ -21,6 +21,8 @@ def get_club_logo_path(instance, filename):
 
 
 class Club(models.Model):
+    # TODO: Input image validation
+
     DEFAULT_PANEL_STRING = """
     \r\n## A sample club panel written in markdown
     \r\n
@@ -39,9 +41,9 @@ class Club(models.Model):
     \r\n- Item 2
     \r\n- Item 3
     """
+
     id = models.CharField(primary_key=True, unique=True, max_length=CLUB_ID_N_DIGITS)
     name = models.CharField(_('Club name'), max_length=50)
-    created_date = models.DateField('club created date', auto_now_add=True)
     short_description = models.CharField(_('Short description (optional)'), max_length=120)
     panel = MarkdownxField(
         _('Club panel: description, rules, etc. (optional)'),
@@ -50,10 +52,11 @@ class Club(models.Model):
         blank=True,
         null=True,
     )
-    # TODO: Input image validation.
     logo = models.ImageField(_('club logo'), upload_to=get_club_logo_path, blank=True, null=True)
     members = models.ManyToManyField(User)
     admin_members = models.ManyToManyField(User, related_name='admin_members')
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     def __str__(self):
         return f"{self.id}|{self.name}"
@@ -64,66 +67,81 @@ class Club(models.Model):
 
 
 class InvitationLink(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     invited_email = models.EmailField(max_length=254)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
 
     def __str__(self):
-        return f"{self.club}|{self.invited_email}"
+        return f"{self.club.name}|{self.invited_email}"
 
 
 class ChatClubPost(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_sender = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    datetime = models.DateTimeField('comment datetime', auto_now_add=True)
     edited = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     text = models.CharField(max_length=5000)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     def __str__(self):
-        return f'{self.club}|{self.user_sender}|{self.datetime}|{self.text}'
+        return f'{self.club}|{self.user_sender}|{self.created_datetime}|{self.text}'
 
 
 class ChatClubInfo(models.Model):
+    """ Created together with the associated the club """
+
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     last_post = models.ForeignKey(ChatClubPost, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f'{self.club}|{self.last_post.datetime}'
+        return f'{self.club}|{self.last_post.created_datetime}'
 
 
 class ChatUsersPost(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_sender = models.ForeignKey(User, related_name='user_sender', on_delete=models.CASCADE)
     user_receiver = models.ForeignKey(User, related_name='user_receiver', on_delete=models.CASCADE)
-    datetime = models.DateTimeField('comment datetime', auto_now_add=True)
     edited = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     text = models.CharField(max_length=5000)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     def __str__(self):
-        return f'{self.user_sender}|{self.user_receiver}|{self.datetime}|{self.text}'
+        return f'{self.user_sender}|{self.user_receiver}|{self.created_datetime}|{self.text}'
 
 
 class ChatUsersInfo(models.Model):
+
     user = models.ForeignKey(User, related_name='chat_user', on_delete=models.CASCADE)
     user_known = models.ForeignKey(User, related_name='chat_user_known', on_delete=models.CASCADE)
-    created_date = models.DateField('chat created date', auto_now_add=True)
     last_post = models.ForeignKey(ChatUsersPost, on_delete=models.SET_NULL, null=True)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user}|{self.user_known}|{self.last_post.datetime}'
+        return f'{self.user}|{self.user_known}|{self.last_post.created_datetime}'
 
 
 class ClubMemberInfo(models.Model):
+
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     member = models.ForeignKey(User, on_delete=models.CASCADE)
     joined_date = models.DateField(auto_now_add=True)
+    admin_comment = models.TextField('club admins comments about the member', null=True, blank=True, max_length=2000)
 
     def __str__(self):
         return f'{self.member}|{self.club}'
 
 
 class Meeting(models.Model):
-    id = models.CharField(primary_key=True, unique=True, max_length=(CLUB_ID_N_DIGITS + MEETING_ID_N_DIGITS))
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     name = models.CharField(_('Name'), default=_('Club meeting'), max_length=50)
     description = models.CharField(_('Description (optional)'), default='', max_length=5000)
@@ -135,17 +153,18 @@ class Meeting(models.Model):
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')
     members_no = models.ManyToManyField(User, related_name='members_no')
-    created_datetime = models.DateTimeField('meeting created datetime', auto_now_add=True)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     def __str__(self):
         return f'{self.id}|{self.name}'
 
 
 class FilmDb(models.Model):
+
     imdb_id = models.CharField('IMDb id', primary_key=True, max_length=7)
     faff_id = models.CharField('FilmAffinity id', default='', max_length=6)
     title = models.CharField(default='', max_length=1000)
-    slug = models.SlugField(unique=True)
     year = models.IntegerField(default=0)
     rated = models.CharField(default='', max_length=20)
     duration = models.CharField(default='', max_length=20)
@@ -156,15 +175,15 @@ class FilmDb(models.Model):
     country = models.CharField(default='', max_length=1000)
     language = models.CharField(default='', max_length=1000)
     plot = models.CharField(default='', max_length=5000)
-    created_date = models.DateField('db created date', auto_now_add=True)
-    last_updated = models.DateField('last db update date', auto_now=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = self.slug or slugify(self.title)
-        return super().save(*args, **kwargs)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     def __str__(self):
         return f'{self.imdb_id}|{self.title}'
+
+    @property
+    def slug(self):
+        return slugify(self.title)
 
     @property
     def duration_in_mins_int(self):
@@ -191,35 +210,36 @@ class FilmDb(models.Model):
 
     @property
     def updatable(self):
-        time_diff_created = datetime.datetime.now().date() - self.created_date
-        time_diff_updated = self.last_updated - self.created_date
+        time_diff_created = datetime.datetime.now().date() - self.created_datetime.date()
+        time_diff_updated = self.last_updated_datetime - self.created_datetime
         return time_diff_created > 2 * time_diff_updated
 
 
 class Film(models.Model):
     """ Film proposed by user in club. Obtains info from FilmDb. """
-    id = models.CharField(primary_key=True, unique=True, max_length=(CLUB_ID_N_DIGITS + FILM_ID_N_DIGITS))  # 5(club)+5
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    public_id = models.CharField(unique=False, max_length=FILM_ID_N_DIGITS)
     imdb_id = models.CharField('IMDb id', max_length=7)
     proposed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    filmdb = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
-    pub_datetime = models.DateTimeField('published datetime', auto_now_add=True)
+    db = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)
     seen_by = models.ManyToManyField(User, related_name='seen_by')
     seen_date = models.DateField('date seen', null=True, blank=True)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     def __str__(self):
-        return f'{self.id}|{self.filmdb.title}'
+        return f'{self.id}|{self.db.title}'
 
     @property
     def share_link(self):
-        return reverse_lazy('democracy:film_detail', kwargs={'film_id': self.id, 'film_slug': self.filmdb.slug})
+        return reverse_lazy('democracy:film_detail', kwargs={'club_id': self.club.id, 'film_public_id': self.public_id, 'film_slug': self.db.slug})
 
 
 class Vote(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    film = models.ForeignKey(Film, on_delete=models.CASCADE)
-    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+
     OMG = 'omg'
     YES = 'yes'
     SEENOK = 'seenok'
@@ -227,6 +247,7 @@ class Vote(models.Model):
     NO = 'no'
     SEENNO = 'seenno'
     VETO = 'veto'
+
     vote_choices = (
         (OMG, _('I really really want to see it.')),
         (YES, _('I want to see it.')),
@@ -236,7 +257,13 @@ class Vote(models.Model):
         (SEENNO, _("I've seen it, and I don't want to see it again.")),
         (VETO, _('Veto!')),
     )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    film = models.ForeignKey(Film, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
     choice = models.CharField(max_length=6, choices=vote_choices)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     @property
     def vote_karma(self):
@@ -259,22 +286,27 @@ class Vote(models.Model):
         return vote_score_dict[self.choice]
 
     def __str__(self):
-        return f'{self.user}|{self.film.filmdb.title}|{self.choice}'
+        return f'{self.user}|{self.film.db.title}|{self.choice}'
 
 
 class FilmComment(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    datetime = models.DateTimeField('comment datetime', auto_now_add=True)
+    edited = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     text = models.CharField(max_length=5000)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     def __str__(self):
-        return f'{self.user}|{self.film.filmdb.title}|{self.text}'
+        return f'{self.user}|{self.film.db.title}|{self.text}'
 
 
 class Notification(models.Model):
+
     JOINED = 'joined'
     PROMOTED = 'promoted'
     LEFT = 'left'
@@ -284,6 +316,7 @@ class Notification(models.Model):
     COMM_FILM = 'commfilm'
     COMM_COMM = 'commcomm'
     KICKED = 'kicked'
+
     notification_choices = (
         (JOINED, 'Member joined the club'),
         (PROMOTED, 'Member promoted to admin.'),
@@ -295,15 +328,17 @@ class Notification(models.Model):
         (COMM_COMM, 'Member commented in film commented by user.'),
         (KICKED, 'Member kicked other member from club.'),
     )
+
     type = models.CharField(max_length=9, choices=notification_choices)
     activator = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='active_member')
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='club')
     object_member = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='passive_member')
     object_film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, related_name='passive_film')
     object_meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, null=True, related_name='passive_meeting')
-    datetime = models.DateTimeField('notification datetime', auto_now_add=True)
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipient')
     read = models.BooleanField('notification read', default=False)
+    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
+    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
 
     def __str__(self):
-        return f"{self.activator.username}|{self.club}|{self.type}|{self.datetime}|{self.recipient.username}"
+        return f"{self.activator.username}|{self.club}|{self.type}|{self.created_datetime}|{self.recipient.username}"

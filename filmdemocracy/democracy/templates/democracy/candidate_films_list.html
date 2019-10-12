@@ -148,10 +148,10 @@
 
     <div class="col col-auto align-self-center p-0 my-2">
       <div class="card card-film">
-          <a href="{% url 'democracy:film_detail' film_id=candidate.film.id film_slug=candidate.film.filmdb.slug options_string=view_option|add:order_option|add:display_option %}">
-            <img class="card-img" src="{{ candidate.film.filmdb.poster_url }}" alt="film.poster not found">
+          <a href="{% url 'democracy:film_detail' film_public_id=candidate.film.public_id film_slug=candidate.film.db.slug options_string=view_option|add:order_option|add:display_option %}">
+            <img class="card-img" src="{{ candidate.film.db.poster_url }}" alt="film.poster not found">
             <div class="overlay">
-              <div class="film-title">{{ candidate.film.filmdb.title }}</div>
+              <div class="film-title">{{ candidate.film.db.title }}</div>
             </div>
           </a>
           {% if candidate.voted %}
@@ -225,19 +225,19 @@
 
         <!--TITLE COLUMN-->
         <td class="align-middle">
-          <a href="{% url 'democracy:film_detail' film_id=candidate.film.id film_slug=candidate.film.filmdb.slug options_string=view_option|add:order_option|add:display_option %}">
-          {{ candidate.film.filmdb.title }}
+          <a href="{% url 'democracy:film_detail' film_public_id=candidate.film.public_id film_slug=candidate.film.db.slug options_string=view_option|add:order_option|add:display_option %}">
+          {{ candidate.film.db.title }}
           </a>
         </td>
 
         <!--ORDER BY COLUMN-->
         <td class="align-middle text-center">
         {% if order_option == '&order=date_proposed' %}
-          {{ candidate.film.pub_datetime.date|date:"Y/m/d" }}
+          {{ candidate.film.created_datetime.date|date:"Y/m/d" }}
         {% elif order_option == '&order=year' %}
-          {{ candidate.film.filmdb.year }}
+          {{ candidate.film.db.year }}
         {% elif order_option == '&order=duration' %}
-          {{ candidate.film.filmdb.duration }}
+          {{ candidate.film.db.duration }}
         {% endif %}
         </td>
 

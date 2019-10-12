@@ -53,11 +53,11 @@
 <!--POSTS-->
 {% for post in posts|dictsort:"date" %}
 
-  {% ifchanged post.date|date %}
+  {% ifchanged post.created_datetime|date %}
 
   <div class="text-center">
   <div class="date-bubble px-2 text-center rounded-pill">
-    {{ post.date|date }}
+    {{ post.created_datetime|date }}
   </div>
   </div>
 
@@ -79,7 +79,7 @@
           <span>{{ post.text }}</span>
           {% endif %}
           <span style="display:inline-block; width: 20px;"></span>
-          <div class="post-time text-muted text-right">{{ post.date|date:"H:i" }}</div>
+          <div class="post-time text-muted text-right">{{ post.created_datetime|date:"H:i" }}</div>
         </div>
       </div>
 
@@ -111,7 +111,7 @@
     <!--START: POST FORM-->
       <div class="form-post">
 
-        <form class="form-inline" action="{% url 'democracy:post_in_chatusers' chat_user.id %}" method="POST">
+        <form class="form-inline" action="{% url 'democracy:post_in_chat_users' chat_user.id %}" method="POST">
           {% csrf_token %}
 
           <div class="input-group">

@@ -85,7 +85,7 @@
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <a class="dropdown-item py-0 px-3" href="{% url 'democracy:chatclub' userclub.id %}">
+          <a class="dropdown-item py-0 px-3" href="{% url 'democracy:chat_club' userclub.id %}">
             <div class="media chat-item">
 
               {% if userclub.logo %}
@@ -99,7 +99,7 @@
 
               <div class="media-body align-self-center p-0 m-0">
                 <p class="first-line"><strong>{{ userclub.name }}</strong></p>
-                {% with last_post=userclub.chatclubinfo_set.all.0.last_post %}
+                {% with last_post=userclub.chat_clubinfo_set.all.0.last_post %}
                 {% if last_post %}
                 <p class="second-line club-chat-poster">
                   <strong>{{ last_post.user_sender.username }}:</strong>
@@ -121,7 +121,7 @@
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <a class="dropdown-item py-0 px-3" href="{% url 'democracy:chatusers' chat_opened.user_known.id %}">
+          <a class="dropdown-item py-0 px-3" href="{% url 'democracy:chat_users' chat_opened.user_known.id %}">
             <div class="media chat-item">
 
               {% if chat_opened.user_known.profile_image %}

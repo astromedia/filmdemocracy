@@ -40,7 +40,7 @@ club_urlpatterns = [
             name='edit_club_panel'
         ),
         path(
-            'member/<str:user_id>/',
+            'member/<uuid:user_id>/',
             club_views.ClubMemberDetailView.as_view(template_name='democracy/club_member_detail.html'),
             name='club_member_detail'
         ),
@@ -100,7 +100,7 @@ club_urlpatterns = [
 
 
 film_urlpatterns = [
-    path('film/<str:film_id>/', include([
+    path('club/<str:club_id>/film/<str:film_public_id>/', include([
         re_path(
             r'vote_film/' + options_regexp,
             film_views.vote_film,
@@ -132,7 +132,7 @@ film_urlpatterns = [
             name='comment_film'
         ),
         re_path(
-            r'delete_comment/(?P<comment_id>[0-9]+)/' + options_regexp,
+            r'delete_comment/(?P<comment_id>[0-9a-f-]+)/' + options_regexp,
             film_views.delete_film_comment,
             name='delete_film_comment'
         ),
@@ -164,17 +164,17 @@ meetings_urlpatterns = [
             name='meetings_new'
         ),
         path(
-            '<str:meeting_id>/edit/',
+            '<uuid:meeting_id>/edit/',
             meetings_views.MeetingsEditView.as_view(template_name='democracy/meetings_form.html'),
             name='meetings_edit'
         ),
         path(
-            '<str:meeting_id>/assistance/',
+            '<uuid:meeting_id>/assistance/',
             meetings_views.meeting_assistance,
             name='meeting_assistance'
         ),
         path(
-            '<str:meeting_id>/delete/',
+            '<uuid:meeting_id>/delete/',
             meetings_views.delete_meeting,
             name='delete_meeting'
         ),
@@ -192,32 +192,32 @@ chat_urlpatterns = [
     path(
         'chat/club/<str:club_id>/',
         chat_views.ChatClubView.as_view(template_name='democracy/chat_club.html'),
-        name='chatclub'
+        name='chat_club'
     ),
     path(
         'chat/club/<str:club_id>/post/',
-        chat_views.post_in_chatclub,
-        name='post_in_chatclub'
+        chat_views.post_in_chat_club,
+        name='post_in_chat_club'
     ),
     path(
-        'chat/club/<str:club_id>/delete_post/<str:post_id>/',
-        chat_views.delete_chatclub_post,
-        name='delete_chatclub_post'
+        'chat/club/<str:club_id>/delete_post/<uuid:post_id>/',
+        chat_views.delete_chat_club_post,
+        name='delete_chat_club_post'
     ),
     path(
-        'chat/user/<str:chatuser_id>/',
+        'chat/user/<uuid:chat_user_id>/',
         chat_views.ChatUsersView.as_view(template_name='democracy/chat_users.html'),
-        name='chatusers'
+        name='chat_users'
     ),
     path(
-        'chat/user/<str:chatuser_id>/post/',
-        chat_views.post_in_chatusers,
-        name='post_in_chatusers'
+        'chat/user/<uuid:chat_user_id>/post/',
+        chat_views.post_in_chat_users,
+        name='post_in_chat_users'
     ),
     path(
-        'chat/user/<str:chatuser_id>/delete_post/<str:post_id>/',
-        chat_views.delete_chatusers_post,
-        name='delete_chatusers_post'
+        'chat/user/<uuid:chat_user_id>/delete_post/<uuid:post_id>/',
+        chat_views.delete_chat_users_post,
+        name='delete_chat_users_post'
     ),
 ]
 

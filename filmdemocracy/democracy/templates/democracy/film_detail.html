@@ -18,7 +18,7 @@
 <div class="container-fluid container-film-banner mx-0 px-0">
 
   <!--TITLE-->
-  <p class="film-title text-center">{{ film.filmdb.title }}</p>
+  <p class="film-title text-center">{{ film.db.title }}</p>
 
   <div class="container film-data">
 
@@ -26,7 +26,7 @@
 
       <!--POSTER-->
       <div class="col-md-3 text-center mb-4 mt-1 align-self-start">
-        <img src="{{ film.filmdb.poster_url }}" alt="poster image not found"
+        <img src="{{ film.db.poster_url }}" alt="poster image not found"
              data-toggle="modal" data-target="#PosterModal">
       </div>
 
@@ -40,9 +40,9 @@
           {% if film.proposed_by %}
           <a class="green-color blue-color-hover"
            href="{% url 'democracy:club_member_detail' club.id film.proposed_by.id %}">
-          {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.pub_datetime|date:"d M Y" }}
+          {{ film.proposed_by.username }}</a> {% trans 'on ' %} {{ film.created_datetime|date:"d M Y" }}
           {% else %}
-          {% trans 'a club ex-member' %} {% trans 'on ' %} {{ film.pub_datetime|date:"d M Y" }}
+          {% trans 'a club ex-member' %} {% trans 'on ' %} {{ film.created_datetime|date:"d M Y" }}
           {% endif %}
         </p>
 
@@ -51,17 +51,17 @@
         <div class="row mb-1 mx-0">
 
           <div class="col col-sm-6 pl-0">
-            <a href="{{ film.filmdb.imdb_url }}" class="badge badge-green-to-blue pointer-cursor" target="blank">
+            <a href="{{ film.db.imdb_url }}" class="badge badge-green-to-blue pointer-cursor" target="blank">
               {% trans 'IMDb' %}
             </a>
           </div>
 
           <div class="col col-sm-6 pl-0">
-            {% if film.filmdb.faff_id %}
-            <a class="badge badge-green-to-blue pointer-cursor" href="{{ film.filmdb.faff_url }}" target="blank">
+            {% if film.db.faff_id %}
+            <a class="badge badge-green-to-blue pointer-cursor" href="{{ film.db.faff_url }}" target="blank">
               {% trans 'FilmAffinity' %}
             </a>
-            {% elif not film.filmdb.faff_id %}
+            {% elif not film.db.faff_id %}
             <a class="badge badge-green-to-blue pointer-cursor" data-toggle="modal" data-target="#AddFaffModalCenter">
               {% trans 'Add FilmAffinity link' %}
             </a>
@@ -72,26 +72,26 @@
 
         <!--MISC INFO-->
         <div class="row mt-3 mb-1 mx-0">
-          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Year' %}</strong>: {{ film.filmdb.year }}</div>
-          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Rated' %}</strong>: {{ film.filmdb.rated }}</div>
+          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Year' %}</strong>: {{ film.db.year }}</div>
+          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Rated' %}</strong>: {{ film.db.rated }}</div>
           <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Duration' %}</strong>: {{ film_duration }}</div>
-          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Country' %}</strong>: {{ film.filmdb.country }}</div>
+          <div class="col-6 col-sm-6 p-0"><strong>{% trans 'Country' %}</strong>: {{ film.db.country }}</div>
         </div>
 
         <!--PLOT-->
         <div id="summary">
-          <p class="text-justify mb-0 collapse" id="collapseSummary"><em>{{ film.filmdb.plot }}</em></p>
+          <p class="text-justify mb-0 collapse" id="collapseSummary"><em>{{ film.db.plot }}</em></p>
           <a class="collapsed green-color blue-color-hover ml-3" data-toggle="collapse" href="#collapseSummary"
              aria-expanded="false" aria-controls="collapseSummary">{% trans 'Plot' %}</a>
         </div>
 
         <!--DIRECTOR, WRITER, ACTOR-->
         <p class="my-1" style="padding-left:20px; text-indent: -20px"><strong>{% trans 'Director' %}:</strong>
-          {{ film.filmdb.director }}</p>
+          {{ film.db.director }}</p>
         <p class="my-1" style="padding-left:20px; text-indent: -20px"><strong>{% trans 'Writer' %}:</strong>
-          {{ film.filmdb.writer }}</p>
+          {{ film.db.writer }}</p>
         <p class="my-1" style="padding-left:20px; text-indent: -20px"><strong>{% trans 'Cast' %}:</strong>
-          {{ film.filmdb.actors }}</p>
+          {{ film.db.actors }}</p>
 
       </div>
       <!--END: INFO-->
@@ -117,7 +117,7 @@
 
 <!--START: MARK AS SEEN-->
 {% if not film.seen %}
-  <form class="text-center" method="POST" action="{% url 'democracy:film_seen' film_id=film.id options_string=view_option|add:order_option|add:display_option %}">
+  <form class="text-center" method="POST" action="{% url 'democracy:film_seen' film_public_id=film.public_id options_string=view_option|add:order_option|add:display_option %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
       {% trans 'Mark as seen by club' %}
@@ -130,7 +130,7 @@
 <!--START: MARK AS NOT SEEN-->
 {% if film.seen %}
 {% if user in club_admins %}
-  <form class="text-center" method="POST" action="{% url 'democracy:unsee_film' film_id=film.id options_string=view_option|add:order_option|add:display_option %}">
+  <form class="text-center" method="POST" action="{% url 'democracy:unsee_film' film_public_id=film.public_id options_string=view_option|add:order_option|add:display_option %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
       {% trans 'Move back to candidate films' %}
@@ -173,7 +173,7 @@
 
     {% for choice, choice_dict in vote_choices.items %}
     <div class="text-center">
-      <form method="POST" action="{% url 'democracy:vote_film' film_id=film.id options_string=view_option|add:order_option|add:display_option %}">
+      <form method="POST" action="{% url 'democracy:vote_film' film_public_id=film.public_id options_string=view_option|add:order_option|add:display_option %}">
         {% csrf_token %}
 
         <!--POSITIVE BUTTON-->
@@ -212,7 +212,7 @@
 
 
     {% if film_voted %}
-    <form class="text-center mt-4" action="{% url 'democracy:delete_vote' film_id=film.id options_string=view_option|add:order_option|add:display_option %}"
+    <form class="text-center mt-4" action="{% url 'democracy:delete_vote' film_public_id=film.public_id options_string=view_option|add:order_option|add:display_option %}"
           method="POST">
       {% csrf_token %}
 
@@ -373,18 +373,18 @@
             {% if not comment.deleted %}
             {% if user == comment.user or user in club_admins %}
             <form class=""
-                  action="{% url 'democracy:delete_film_comment' film_id=film.id comment_id=comment.id options_string=view_option|add:order_option|add:display_option %}"
+                  action="{% url 'democracy:delete_film_comment' film_public_id=film.public_id comment_id=comment.id options_string=view_option|add:order_option|add:display_option %}"
                   method="POST">
               {% csrf_token %}
-              {{ comment.date }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
+              {{ comment.created_datetime }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
               {% trans 'Delete' %}</label>
               <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">
             </form>
             {% else %}
-            {{ comment.date }}
+            {{ comment.created_datetime }}
             {% endif %}
             {% elif comment.deleted %}
-            {{ comment.date }}
+            {{ comment.created_datetime }}
             {% endif %}
           </div>
 
@@ -414,7 +414,7 @@
                src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="user.profile_image not found">
           {% endif %}
         </div>
-        <form class="mx-auto" action="{% url 'democracy:comment_film' film_id=film.id options_string=view_option|add:order_option|add:display_option %}"
+        <form class="mx-auto" action="{% url 'democracy:comment_film' film_public_id=film.public_id options_string=view_option|add:order_option|add:display_option %}"
               method="POST">
           {% csrf_token %}
 
@@ -477,7 +477,7 @@
           <br>
         </div>
         <div>
-          <img src="{{ film.filmdb.poster_url }}" alt="poster image not found">
+          <img src="{{ film.db.poster_url }}" alt="poster image not found">
         </div>
       </div>
     </div>
@@ -505,7 +505,7 @@
         <button type="button" class="btn btn-sm" data-dismiss="modal">
           {% trans 'Cancel' %}
         </button>
-        <form method="POST" action="{% url 'democracy:delete_film' film_id=film.id options_string=view_option|add:order_option|add:display_option %}"
+        <form method="POST" action="{% url 'democracy:delete_film' film_public_id=film.public_id options_string=view_option|add:order_option|add:display_option %}"
               class="text-center">
           {% csrf_token %}
           <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
@@ -524,7 +524,7 @@
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' film_id=film.id options_string=view_option|add:order_option|add:display_option %}"
+      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' film_public_id=film.public_id options_string=view_option|add:order_option|add:display_option %}"
             class="text-center">
         {% csrf_token %}
         <div class="modal-header">
