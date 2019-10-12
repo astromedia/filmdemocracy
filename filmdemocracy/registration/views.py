@@ -16,7 +16,7 @@ class SignUpView(generic.CreateView):
 
     def form_valid(self, form):
         messages.success(self.request, _("Account created successfully.\nWelcome to FilmDemocracy!"
-                                         "\nPlease now login with your new credentials to continue."))
+                                         "\nNow login with your new credentials to continue."))
         return super().form_valid(form)
 
 

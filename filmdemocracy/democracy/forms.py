@@ -157,7 +157,8 @@ class FilmSeenForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.film_public_id = kwargs.pop('film_public_id', None)
-        club_members = kwargs.pop('club_members', None)
+        self.club = get_object_or_404(Club, pk=kwargs.pop('club_id', None))
+        club_members = self.club.members.filter(is_active=True)
         super(FilmSeenForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = club_members
 
@@ -167,7 +168,7 @@ class FilmSeenForm(forms.ModelForm):
             raise forms.ValidationError(
                 _("You must set a date.")
             )
-        film = get_object_or_404(Film, pk=self.film_public_id)
+        film = get_object_or_404(Film, club=self.club, public_id=self.film_public_id)
         if seen_date < film.created_datetime.date():
             raise forms.ValidationError(
                 _("You can't see films before they were proposed!")

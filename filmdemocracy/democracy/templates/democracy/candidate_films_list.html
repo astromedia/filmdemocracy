@@ -148,7 +148,7 @@
 
     <div class="col col-auto align-self-center p-0 my-2">
       <div class="card card-film">
-          <a href="{% url 'democracy:film_detail' film_public_id=candidate.film.public_id film_slug=candidate.film.db.slug options_string=view_option|add:order_option|add:display_option %}">
+          <a href="{% url 'democracy:film_detail' club.id candidate.film.public_id candidate.film.db.slug view_option|add:order_option|add:display_option %}">
             <img class="card-img" src="{{ candidate.film.db.poster_url }}" alt="film.poster not found">
             <div class="overlay">
               <div class="film-title">{{ candidate.film.db.title }}</div>
@@ -225,7 +225,7 @@
 
         <!--TITLE COLUMN-->
         <td class="align-middle">
-          <a href="{% url 'democracy:film_detail' film_public_id=candidate.film.public_id film_slug=candidate.film.db.slug options_string=view_option|add:order_option|add:display_option %}">
+          <a href="{% url 'democracy:film_detail' club.id candidate.film.public_id candidate.film.db.slug view_option|add:order_option|add:display_option %}">
           {{ candidate.film.db.title }}
           </a>
         </td>
@@ -259,7 +259,7 @@
 {% else %}
 
 <div class="text-center text-muted mt-5">
-  {% if view_option == 'all' %}
+  {% if not view_option %}
     <span>{% trans 'There are no candidate films...' %}</span><br>
     <a class="misc-text mx-1 green-color blue-color-hover" href="{% url 'democracy:add_new_film' club.id %}">
     {% trans 'Propose one!' %}

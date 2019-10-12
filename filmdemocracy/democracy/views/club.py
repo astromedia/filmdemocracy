@@ -401,6 +401,8 @@ class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
 @method_decorator(login_required, name='dispatch')
 class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmAddNewForm
+    success = None
+    new_film_public_id = None
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
@@ -412,13 +414,13 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
 
     def get_success_url(self):
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        film = get_object_or_404(Film, pk=self.film_public_id)
         if self.success:
+            film = get_object_or_404(Film, club=club, public_id=self.new_film_public_id)
             return reverse('democracy:film_detail', kwargs={'club_id': club.id,
                                                             'film_public_id': film.public_id,
                                                             'film_slug': film.db.slug})
         else:
-            return reverse_lazy('democracy:add_new_film', kwargs={'club_id': self.kwargs['club_id']})
+            return reverse_lazy('democracy:add_new_film', kwargs={'club_id': club.id})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -461,7 +463,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
                 )
                 film.save()
                 self.create_notifications(user, club, film)
-                self.film_public_id = film.public_id
+                self.new_film_public_id = film.public_id
                 messages.success(self.request, _('New film added! Be the first to vote it!'))
         return super().form_valid(form)
 

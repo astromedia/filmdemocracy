@@ -71,7 +71,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
             else:
                 context['film_duration'] = film.db.duration
         film_comments = FilmComment.objects.filter(club=club.id, film=film)
-        context['film_comments'] = film_comments.order_by('datetime')
+        context['film_comments'] = film_comments.order_by('created_datetime')
         choice_dict = {}
         for choice in Vote.vote_choices:
             choice_dict[choice[0]] = {
@@ -87,6 +87,59 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         except Vote.DoesNotExist:
             context['film_voted'] = False
         context['vote_choices'] = choice_dict
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class FilmSeenView(UserPassesTestMixin, generic.FormView):
+    form_class = forms.FilmSeenForm
+
+    def test_func(self):
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
+
+    def get_success_url(self):
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
+        return reverse('democracy:film_detail', kwargs={'club_id': club.id,
+                                                        'film_public_id': film.public_id,
+                                                        'film_slug': film.db.slug,
+                                                        'options_string': self.kwargs['options_string']})
+
+    def get_form_kwargs(self):
+        kwargs = super(FilmSeenView, self).get_form_kwargs()
+        kwargs.update({'film_public_id': self.kwargs['film_public_id']})
+        kwargs.update({'club_id': self.kwargs['club_id']})
+        return kwargs
+
+    @staticmethod
+    def create_notifications(user, club, film):
+        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        for member in club_members:
+            Notification.objects.create(type=Notification.SEEN_FILM,
+                                        activator=user,
+                                        club=club,
+                                        recipient=member,
+                                        object_film=film)
+
+    def form_valid(self, form):
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
+        film.seen_date = form.cleaned_data['seen_date']
+        members = form.cleaned_data['members']
+        for member in members:
+            film.seen_by.add(member)
+        film.seen = True
+        film.save()
+        self.create_notifications(self.request.user, club, film)
+        messages.success(self.request, _('Film marked as seen.'))
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
+        context['film'] = film
+        context = add_club_context(context, club)
         return context
 
 
@@ -206,60 +259,6 @@ def add_filmaffinity_url(request, club_id, film_public_id, options_string):
                                                                          'film_public_id': film.public_id,
                                                                          'film_slug': film.db.slug,
                                                                          'options_string': options_string}))
-
-
-@method_decorator(login_required, name='dispatch')
-class FilmSeenView(UserPassesTestMixin, generic.FormView):
-    form_class = forms.FilmSeenForm
-
-    def test_func(self):
-        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
-
-    def get_success_url(self):
-        club = get_object_or_404(Film, pk=self.kwargs['club_id'])
-        film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
-        return reverse('democracy:film_detail', kwargs={'club_id': club.id,
-                                                        'film_public_id': film.public_id,
-                                                        'film_slug': film.db.slug,
-                                                        'options_string': self.kwargs['options_string']})
-
-    def get_form_kwargs(self):
-        kwargs = super(FilmSeenView, self).get_form_kwargs()
-        kwargs.update({'film_public_id': self.kwargs['film_public_id']})
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        kwargs.update({'club_members': club.members.filter(is_active=True)})
-        return kwargs
-
-    @staticmethod
-    def create_notifications(user, club, film):
-        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
-        for member in club_members:
-            Notification.objects.create(type=Notification.SEEN_FILM,
-                                        activator=user,
-                                        club=club,
-                                        recipient=member,
-                                        object_film=film)
-
-    def form_valid(self, form):
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        film = get_object_or_404(Film, club=club, id=self.kwargs['film_public_id'])
-        film.seen_date = form.cleaned_data['seen_date']
-        members = form.cleaned_data['members']
-        for member in members:
-            film.seen_by.add(member)
-        film.seen = True
-        film.save()
-        self.create_notifications(self.request.user, club, film)
-        messages.success(self.request, _('Film marked as seen.'))
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
-        context['film'] = film
-        context = add_club_context(context, club)
-        return context
 
 
 @login_required

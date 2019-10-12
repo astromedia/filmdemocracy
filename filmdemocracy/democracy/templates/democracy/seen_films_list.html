@@ -32,7 +32,7 @@
 
     <div class="col col-auto align-self-center my-3">
       <div class="card card-film mx-auto">
-          <a href="{% url 'democracy:film_detail' film.public_id film.db.slug %}">
+          <a href="{% url 'democracy:film_detail' club.id film.public_id film.db.slug %}">
             <img class="card-img" src="{{ film.db.poster_url }}" alt="film.poster not found">
             <div class="overlay">
               <div class="film-title">{{ film.db.title }}</div>

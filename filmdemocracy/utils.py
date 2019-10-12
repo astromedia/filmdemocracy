@@ -293,8 +293,8 @@ def random_club_id_generator(n_digits=CLUB_ID_N_DIGITS):
 def random_film_public_id_generator(club_id, n_digits=FILM_ID_N_DIGITS):
     """ Picks an integer in the [1, 10^n_digits-1] range among the free ones (i.e., not found in the DB) """
     club_films = Film.objects.filter(club_id=club_id)
-    films_ids = [fid[-n_digits:] for fid in club_films.values_list('id', flat=True)]
-    free_ids = [i for i in range(1, 10**n_digits - 1) if i not in films_ids]
+    films_public_ids = club_films.values_list('public_id', flat=True)
+    free_ids = [i for i in range(1, 10**n_digits - 1) if i not in films_public_ids]
     film_public_id = str(random.choice(free_ids)).zfill(n_digits)
     return '{}'.format(film_public_id)
 
@@ -458,8 +458,9 @@ class NotificationsHelper:
 
     @staticmethod
     def dispatch_url_film(club_id=None, ntf_object_id=None):
-        film = get_object_or_404(Film, pk=ntf_object_id)
-        return reverse('democracy:film_detail', kwargs={'film_public_id': film.public_id,
+        film = get_object_or_404(Film, club_id=club_id, public_id=ntf_object_id)
+        return reverse('democracy:film_detail', kwargs={'club_id': club_id,
+                                                        'film_public_id': film.public_id,
                                                         'film_slug': film.db.slug})
 
     @staticmethod

@@ -137,14 +137,14 @@ film_urlpatterns = [
             name='delete_film_comment'
         ),
         re_path(
+            r'film_seen/' + options_regexp,
+            film_views.FilmSeenView.as_view(template_name='democracy/film_seen.html'),
+            name='film_seen'
+        ),
+        re_path(
             r'(?P<film_slug>[a-z-]+)/' + options_regexp,
             film_views.FilmDetailView.as_view(template_name='democracy/film_detail.html'),
             name='film_detail'
-        ),
-        re_path(
-            r'film_seen/' + options_regexp,
-            film_views.FilmSeenView.as_view(template_name='democracy/candidate_films_seen.html'),
-            name='film_seen'
         ),
         ])
     )
