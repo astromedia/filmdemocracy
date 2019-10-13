@@ -13,6 +13,8 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from filmdemocracy.democracy import forms
 from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, InvitationLink
@@ -24,7 +26,7 @@ from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_ch
 from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info
 from filmdemocracy.utils import random_club_id_generator, random_film_public_id_generator
 from filmdemocracy.utils import extract_options
-from filmdemocracy.utils import NotificationsHelper
+from filmdemocracy.utils import NotificationsHelper, SpamHelper
 from filmdemocracy.utils import RankingGenerator
 
 
@@ -503,11 +505,9 @@ class RankingResultsView(UserPassesTestMixin, generic.TemplateView):
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
     form_class = forms.InviteNewMemberForm
-    subject_template_name = 'democracy/emails/invite_new_member_subject.txt'
-    email_template_name = 'democracy/emails/invite_new_member_email.html'
-    html_email_template_name = 'democracy/emails/invite_new_member_email_html.html'
-    extra_email_context = None
-    from_email = 'filmdemocracyweb@gmail.com'
+    subject_template = 'democracy/emails/invite_new_member_subject.txt'
+    email_template = 'democracy/emails/invite_new_member_email.html'
+    html_email_template = 'democracy/emails/invite_new_member_email_html.html'
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
@@ -522,19 +522,20 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
         return kwargs
 
     def form_valid(self, form):
-        email_opts = {
-            'subject_template_name': self.subject_template_name,
-            'email_template_name': self.email_template_name,
-            'html_email_template_name': self.html_email_template_name,
-            'extra_email_context': self.extra_email_context,
-            'use_https': self.request.is_secure(),
-            'from_email': self.from_email,
-            'request': self.request,
-        }
-        form.save(**email_opts)
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        invitation_link, tmp = InvitationLink.objects.get_or_create(club=club, invited_email=form.cleaned_data['email'])
+        email = form.cleaned_data["email"]
+        invitation_link, tmp = InvitationLink.objects.get_or_create(club=club, invited_email=email)
         invitation_link.save()
+        email_context = {
+            'club': club,
+            'invitation_text': form.cleaned_data["invitation_text"],
+            'uinviterid': urlsafe_base64_encode(force_bytes(self.request.user.pk)),
+            'uclubid': urlsafe_base64_encode(force_bytes(club.id)),
+            'uemail': urlsafe_base64_encode(force_bytes(email)),
+        }
+        to_emails_list = []
+        spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
+        spam_helper.send_emails(to_emails_list, email_context)
         messages.success(self.request, _('An invitation email has been sent to: ') + form.cleaned_data['email'])
         return super().form_valid(form)
 
@@ -551,6 +552,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberConfirmView(generic.FormView):
     form_class = forms.InviteNewMemberConfirmForm
+    valid_link = False
 
     @method_decorator(sensitive_post_parameters())
     @method_decorator(never_cache)
@@ -558,36 +560,37 @@ class InviteNewMemberConfirmView(generic.FormView):
         assert 'uinviteridb64' in kwargs
         assert 'uemailb64' in kwargs
         assert 'uclubidb64' in kwargs
-        self.validlink = False
+        self.valid_link = False
         user = self.request.user
-        inviter = self.get_object(User, self.kwargs['uinviteridb64'])
+        inviter = self.get_object_from_uidb64(User, self.kwargs['uinviteridb64'])
         invited_email = str(urlsafe_base64_decode(self.kwargs['uemailb64']), 'utf-8')
-        club = self.get_object(Club, self.kwargs['uclubidb64'])
+        club = self.get_object_from_uidb64(Club, self.kwargs['uclubidb64'])
         if club is not None and user.email == invited_email:
             club_members = club.members.filter(is_active=True)
             invitation_link = InvitationLink.objects.filter(club=club, invited_email=user.email)
             if inviter in club_members and user not in club_members and invitation_link:
-                self.validlink = True
+                self.valid_link = True
                 return super().dispatch(*args, **kwargs)
         # Display the "invitation link not valid" error page.
         return self.render_to_response(self.get_context_data())
 
-    def get_object(self, object_model, uobjectidb64):
+    @staticmethod
+    def get_object_from_uidb64(model_class, uobjectidb64):
         try:
             uobjectid = str(urlsafe_base64_decode(uobjectidb64), 'utf-8')
-            object = object_model.objects.get(pk=int(uobjectid))
-        except (TypeError, ValueError, OverflowError, object_model.DoesNotExist, ValidationError):
-            object = None
-        return object
+            object_model = model_class.objects.get(pk=int(uobjectid))
+        except (TypeError, ValueError, OverflowError, model_class.DoesNotExist, ValidationError):
+            object_model = None
+        return object_model
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.validlink:
-            club = self.get_object(Club, self.kwargs['uclubidb64'])
+        if self.valid_link:
+            club = self.get_object_from_uidb64(Club, self.kwargs['uclubidb64'])
             context['club'] = club
-            context['validlink'] = True
+            context['valid_link'] = True
         else:
-            context.update({'form': None, 'validlink': False})
+            context.update({'form': None, 'valid_link': False})
         return context
 
     @staticmethod
@@ -601,7 +604,7 @@ class InviteNewMemberConfirmView(generic.FormView):
 
     def form_valid(self, form):
         user = self.request.user
-        club = self.get_object(Club, self.kwargs['uclubidb64'])
+        club = self.get_object_from_uidb64(Club, self.kwargs['uclubidb64'])
         club_members = club.members.filter(is_active=True)
         if user not in club_members:
             club.members.add(self.request.user)
@@ -615,6 +618,6 @@ class InviteNewMemberConfirmView(generic.FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        club = self.get_object(Club, self.kwargs['uclubidb64'])
+        club = self.get_object_from_uidb64(Club, self.kwargs['uclubidb64'])
         return reverse_lazy('democracy:club_detail', kwargs={'club_id': club.id})
 

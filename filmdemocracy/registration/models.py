@@ -27,7 +27,7 @@ class User(AbstractUser):
     profile_image = models.ImageField(_('user profile image'), upload_to=get_profile_image_path, blank=True, null=True)
     joined_date = models.DateField('user created date', auto_now_add=True)
     last_updated = models.DateField('user last update date', auto_now=True)
-    comment = models.TextField('site admin info about the user', null=True, blank=True, max_length=1000)
+    comment = models.TextField('site admin comments about the user', null=True, blank=True, max_length=1000)
 
     def __str__(self):
         return f"{self.id}|{self.username}|{self.email}"

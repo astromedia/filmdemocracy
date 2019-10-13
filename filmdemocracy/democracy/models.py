@@ -57,6 +57,7 @@ class Club(models.Model):
     admin_members = models.ManyToManyField(User, related_name='admin_members')
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
     last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
+    comment = models.TextField('site admin comments about the club', null=True, blank=True, max_length=1000)
 
     def __str__(self):
         return f"{self.id}|{self.name}"
@@ -149,7 +150,6 @@ class Meeting(models.Model):
     place = models.CharField(_('Place'), default='', max_length=100)
     date = models.DateField(_('Date'))
     time_start = models.TimeField(_('Start time (optional)'), null=True, blank=True)
-    time_end = models.TimeField(_('End time (optional)'), null=True, blank=True)
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')
     members_no = models.ManyToManyField(User, related_name='members_no')
@@ -177,6 +177,7 @@ class FilmDb(models.Model):
     plot = models.CharField(default='', max_length=5000)
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
     last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
+    comment = models.TextField('site admin comments about the film', null=True, blank=True, max_length=1000)
 
     def __str__(self):
         return f'{self.imdb_id}|{self.title}'

@@ -176,9 +176,10 @@
       <div class="col-auto">
         <div class="media">
           <img style="min-height: 18px;" class="align-self-center mr-2" src="{% static 'democracy/svg/clock.svg'%}">
-          <span class="text-muted">{{ meeting.time_start }}</span>
-          {% if meeting.time_end %}
-          <span class="text-muted mx-2">-</span><span class="text-muted"> {{ meeting.time_end }}</span>
+          {% if meeting.time_start %}
+            <span class="text-muted">{{ meeting.time_start }}</span>
+          {% else %}
+            <span class="text-muted">{% trans 'Not defined' %}</span>
           {% endif %}
         </div>
       </div>

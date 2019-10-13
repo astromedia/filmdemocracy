@@ -7,6 +7,9 @@ from django.contrib import messages
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import get_object_or_404
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives
+from django.template import loader
 
 from filmdemocracy.democracy.models import Film, Vote, Club, Notification, ChatUsersInfo, Meeting
 from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS
@@ -284,19 +287,18 @@ class RankingGenerator:
 
 
 def random_club_id_generator(n_digits=CLUB_ID_N_DIGITS):
-    """ Picks an integer in the [1, 10^n_digits-1] range among the free ones (i.e., not found in the DB) """
+    """ Picks an integer in the [1, 10^n_digits-1] range among the free ones """
     club_ids = Club.objects.values_list('id', flat=True)
     free_ids = [i for i in range(1, 10**n_digits - 1) if i not in club_ids]
     return str(random.choice(free_ids)).zfill(n_digits)
 
 
 def random_film_public_id_generator(club_id, n_digits=FILM_ID_N_DIGITS):
-    """ Picks an integer in the [1, 10^n_digits-1] range among the free ones (i.e., not found in the DB) """
+    """ Picks an integer in the [1, 10^n_digits-1] range among the free ones in the club """
     club_films = Film.objects.filter(club_id=club_id)
     films_public_ids = club_films.values_list('public_id', flat=True)
     free_ids = [i for i in range(1, 10**n_digits - 1) if i not in films_public_ids]
-    film_public_id = str(random.choice(free_ids)).zfill(n_digits)
-    return '{}'.format(film_public_id)
+    return str(random.choice(free_ids)).zfill(n_digits)
 
 
 class NotificationsHelper:
@@ -466,6 +468,43 @@ class NotificationsHelper:
     @staticmethod
     def dispatch_url_films(club_id=None, ntf_object_id=None):
         return reverse('democracy:candidate_films', kwargs={'club_id': club_id})
+
+
+class SpamHelper:
+
+    def __init__(self, request, subject_template, email_template, html_email_template):
+        self.request = request
+        self.use_https = self.request.is_secure()
+        self.from_email = 'filmdemocracyweb@gmail.com'
+        self.subject_template = subject_template
+        self.email_template = email_template
+        self.html_email_template = html_email_template
+        self.domain_override = None
+        self.default_context = self.get_default_context()
+
+    def get_default_context(self):
+        default_context = {'user': self.request.user,
+                           'protocol': ('https' if self.use_https else 'http',)}
+        if not self.domain_override:
+            current_site = get_current_site(self.request)
+            default_context['current_site'] = get_current_site(self.request)
+            default_context['site_name'] = current_site.name
+            default_context['domain'] = current_site.domain
+        else:
+            default_context['site_name'] = default_context['domain'] = self.domain_override
+        return default_context
+
+    def send_emails(self, to_emails_list, email_context=None):
+        context = {**self.default_context, **email_context}
+        # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
+        subject = loader.render_to_string(self.subject_template, context)
+        subject = ''.join(subject.splitlines())
+        body = loader.render_to_string(self.email_template, context)
+        email_messages = EmailMultiAlternatives(subject, body, self.from_email, to_emails_list)
+        if self.html_email_template:
+            html_email = loader.render_to_string(self.html_email_template, context)
+            email_messages.attach_alternative(html_email, 'text/html')
+        email_messages.send()
 
 
 def time_ago_format(datetime_diff):

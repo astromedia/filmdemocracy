@@ -66,7 +66,7 @@ class PromoteMembersForm(forms.ModelForm):
 
 def process_imdb_input(form):
     """ Validate that the input is a valid IMDb film url or key and return IMDb id. """
-    # TODO: do this using regexps
+    # TODO: do this using regexps?
 
     imdb_input = form.cleaned_data['imdb_input']
     try:
@@ -165,27 +165,19 @@ class FilmSeenForm(forms.ModelForm):
     def clean_seen_date(self):
         seen_date = self.cleaned_data['seen_date']
         if not seen_date:
-            raise forms.ValidationError(
-                _("You must set a date.")
-            )
+            raise forms.ValidationError(_("You must set a date."))
         film = get_object_or_404(Film, club=self.club, public_id=self.film_public_id)
         if seen_date < film.created_datetime.date():
-            raise forms.ValidationError(
-                _("You can't see films before they were proposed!")
-            )
+            raise forms.ValidationError(_("You can't see films before they were proposed!"))
         elif seen_date > timezone.now().date():
-            raise forms.ValidationError(
-                _("Time travelling to the future is not possible (yet).")
-            )
+            raise forms.ValidationError(_("Time travelling to the future is not possible (yet)."))
         else:
             return seen_date
 
     def clean_members(self):
         members = self.cleaned_data['members']
         if not members:
-            raise forms.ValidationError(
-                _("Someone must have seen it... right?")
-            )
+            raise forms.ValidationError(_("Someone must have seen it... right?"))
         else:
             return members
 
@@ -203,54 +195,6 @@ class InviteNewMemberForm(forms.Form):
         self.club_id = kwargs.pop('club_id', None)
         super(InviteNewMemberForm, self).__init__(*args, **kwargs)
 
-    def send_mail(self, subject_template_name, email_template_name,
-                  html_email_template_name, context, from_email, to_email):
-        subject = loader.render_to_string(subject_template_name, context)
-        # Email subject *must not* contain newlines:
-        # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
-        subject = ''.join(subject.splitlines())
-        body = loader.render_to_string(email_template_name, context)
-        email_message = EmailMultiAlternatives(subject, body, from_email, [to_email])
-        if html_email_template_name is not None:
-            html_email = loader.render_to_string(html_email_template_name, context)
-            email_message.attach_alternative(html_email, 'text/html')
-        email_message.send()
-
-    def save(self,
-             domain_override=None,
-             subject_template_name='',
-             email_template_name='',
-             html_email_template_name='',
-             extra_email_context=None,
-             use_https=False, from_email=None, request=None):
-        user = request.user
-        email = self.cleaned_data["email"]
-        invitation_text = self.cleaned_data["invitation_text"]
-        club = get_object_or_404(Club, pk=self.club_id)
-        if not domain_override:
-            current_site = get_current_site(request)
-            site_name = current_site.name
-            domain = current_site.domain
-        else:
-            site_name = domain = domain_override
-        context = {
-            'user': user,
-            'club': club,
-            'email': email,
-            'invitation_text': invitation_text,
-            'domain': domain,
-            'site_name': site_name,
-            'uinviterid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'uclubid': urlsafe_base64_encode(force_bytes(club.pk)),
-            'uemail': urlsafe_base64_encode(force_bytes(email)),
-            'protocol': 'https' if use_https else 'http',
-            **(extra_email_context or {}),
-        }
-        self.send_mail(
-            subject_template_name, email_template_name,
-            html_email_template_name, context, from_email, email
-        )
-
 
 class InviteNewMemberConfirmForm(forms.Form):
     pass
@@ -264,8 +208,11 @@ class MeetingsForm(forms.ModelForm):
         required=False,
     )
     send_spam = forms.BooleanField(label='send_spam', required=False)
-    spam_opts = forms.ChoiceField(choices=(('all', ""), ('interested', ""), ('noone', "")),
-                                  label='spam_opts', required=False)
+    spam_options = forms.ChoiceField(
+        choices=(('all', ""), ('interested', ""), ('noone', "")),
+        label='spam_options',
+        required=False
+    )
 
     def __init__(self, *args, **kwargs):
         self.club_id = kwargs.pop('club_id', None)
@@ -279,13 +226,12 @@ class MeetingsForm(forms.ModelForm):
             self.initial['place'] = meeting.place
             self.initial['date'] = meeting.created_datetime
             self.initial['time_start'] = meeting.time_start
-            self.initial['time_end'] = meeting.time_end
         except AttributeError:
             pass
 
     class Meta:
         model = Meeting
-        fields = ['name', 'description', 'place', 'date', 'time_start', 'time_end', 'send_spam', 'spam_opts']
+        fields = ['name', 'description', 'place', 'date', 'time_start', 'send_spam', 'spam_options']
 
     def clean_date(self):
         date = self.cleaned_data['date']
@@ -302,57 +248,3 @@ class MeetingsForm(forms.ModelForm):
                 if time_start < timezone.now().time():
                     raise forms.ValidationError(_("Meetings can't start before they are proposed, sorry."))
         return self.cleaned_data['time_start']
-
-    @staticmethod
-    def send_mail(subject_template_name, email_template_name,
-                  html_email_template_name, context, from_email, to_email):
-        subject = loader.render_to_string(subject_template_name, context)
-        # Email subject *must not* contain newlines:
-        # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
-        subject = ''.join(subject.splitlines())
-        body = loader.render_to_string(email_template_name, context)
-        email_message = EmailMultiAlternatives(subject, body, from_email, [to_email])
-        if html_email_template_name is not None:
-            html_email = loader.render_to_string(html_email_template_name, context)
-            email_message.attach_alternative(html_email, 'text/html')
-        email_message.send()
-
-    def spam_members(self,
-                     spammable_members,
-                     domain_override=None,
-                     subject_template_name='',
-                     email_template_name='',
-                     html_email_template_name='',
-                     extra_email_context=None,
-                     use_https=False, from_email=None, request=None):
-        user = request.user
-        name = self.cleaned_data['name']
-        description = self.cleaned_data['description']
-        place = self.cleaned_data['place']
-        date = self.cleaned_data['date']
-        time_start = self.cleaned_data['time_start']
-        time_end = self.cleaned_data['time_end']
-        club = get_object_or_404(Club, pk=self.club_id)
-        if not domain_override:
-            current_site = get_current_site(request)
-            site_name = current_site.name
-            domain = current_site.domain
-        else:
-            site_name = domain = domain_override
-        context = {
-            'organizer': user,
-            'club': club,
-            'name': name,
-            'description': description,
-            'place': place,
-            'date': date,
-            'time_start': time_start,
-            'time_end': time_end,
-            'domain': domain,
-            'site_name': site_name,
-            'protocol': 'https' if use_https else 'http',
-            **(extra_email_context or {}),
-        }
-        for member in spammable_members:
-            self.send_mail(subject_template_name, email_template_name, html_email_template_name,
-                           context, from_email, member.email)

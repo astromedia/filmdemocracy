@@ -112,14 +112,14 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
         return kwargs
 
     @staticmethod
-    def create_notifications(user, club, film):
-        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+    def create_notifications(_user, _club, _film):
+        club_members = _club.members.filter(is_active=True).exclude(pk=_user.id)
         for member in club_members:
             Notification.objects.create(type=Notification.SEEN_FILM,
-                                        activator=user,
-                                        club=club,
+                                        activator=_user,
+                                        club=_club,
                                         recipient=member,
-                                        object_film=film)
+                                        object_film=_film)
 
     def form_valid(self, form):
         club = get_object_or_404(Club, pk=self.kwargs['club_id'])

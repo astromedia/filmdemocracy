@@ -140,27 +140,6 @@
         </div>
       </div>
 
-      <!--END TIME-->
-      <div class="col-md-4">
-        <div class="form-input-field">
-          {{ form.time_end.label_tag }}
-          {% if form.is_bound %}
-          {% if form.time_end.errors %}
-          {% render_field form.time_end class="form-control time-field is-invalid" type="time" %}
-          {% else %}
-          {% render_field form.time_end class="form-control time-field is-valid" type="time" %}
-          {% endif %}
-          {% else %}
-          {% render_field form.time_end class="form-control time-field" type="time" %}
-          {% endif %}
-          {% for error in form.time_end.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-
     </div>
 
     <!--START: SEND NOTIFICATION EMAILS-->
@@ -191,15 +170,15 @@
         </div>
         <div class="col col-auto text-left my-2">
           <div class="custom-control custom-radio">
-            <input type="radio" id="customRadio1" name="spam_opts" value="all" class="custom-control-input" checked>
+            <input type="radio" id="customRadio1" name="spam_options" value="all" class="custom-control-input" checked>
             <label class="custom-control-label" for="customRadio1">{% trans 'Club members' %}</label>
           </div>
           <div class="custom-control custom-radio">
-            <input type="radio" id="customRadio2" name="spam_opts" value="interested" class="custom-control-input">
+            <input type="radio" id="customRadio2" name="spam_options" value="interested" class="custom-control-input">
             <label class="custom-control-label" for="customRadio2">{% trans 'Only members that checked the meeting' %}</label>
           </div>
           <div class="custom-control custom-radio">
-            <input type="radio" id="customRadio3" name="spam_opts" value="noone" class="custom-control-input">
+            <input type="radio" id="customRadio3" name="spam_options" value="noone" class="custom-control-input">
             <label class="custom-control-label" for="customRadio3">{% trans 'No one' %}</label>
           </div>
         </div>

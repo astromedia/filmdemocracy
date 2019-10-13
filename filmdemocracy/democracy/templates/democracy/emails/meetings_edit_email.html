@@ -10,7 +10,6 @@
 {% trans 'Where:' %} {{ place }}
 {% trans 'When:' %} {{ date }}
 {% if time_start %}{% trans 'Starting at: '%}{{ time_start }}{% endif %}
-{% if time_end %}{% trans 'Finishing at: '%}{{ time_end }}{% endif %}
 
 {% trans "In case these changes affect you, follow this link to go to the club and modify your interest in the meeting:" %}
 {{ protocol}}://{{ domain }}{% url 'democracy:club_detail' club.id %}
