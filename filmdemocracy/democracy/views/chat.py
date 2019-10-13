@@ -15,7 +15,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, InvitationLink
+from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, Invitation
 from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
@@ -36,7 +36,7 @@ class ChatClubView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'chat'
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
         posts = ChatClubPost.objects.filter(club=club)
         context['posts'] = posts.order_by('-datetime')[:1000]  # TODO
@@ -45,7 +45,7 @@ class ChatClubView(UserPassesTestMixin, generic.TemplateView):
 
 @login_required
 def post_in_chat_club(request, club_id):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()
     post_text = request.POST['text']
@@ -55,13 +55,13 @@ def post_in_chat_club(request, club_id):
         chat_info, tmp = ChatClubInfo.objects.get_or_404(club=club)
         chat_info.last_post = post
         chat_info.save()
-    return HttpResponseRedirect(reverse('democracy:chat_club', kwargs={'club_id': club_id}))
+    return HttpResponseRedirect(reverse('democracy:chat_club', kwargs={'club_id': club.id}))
 
 
 @login_required
 def delete_chat_club_post(request, club_id, post_id):
     post = get_object_or_404(ChatClubPost, id=post_id)
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if request.user != post.user:
         if not user_is_club_admin_check(request.user, club=club):
             return HttpResponseForbidden()
@@ -79,7 +79,7 @@ class ChatContactsView(generic.TemplateView):
         user_clubs = user.club_set.all()
         unique_contacts = []
         for club in user_clubs:
-            for contact in club.members.filter(is_active=True).exclude(pk=self.request.user.id):
+            for contact in club.members.filter(is_active=True).exclude(id=self.request.user.id):
                 unique_contacts.append(contact)
         unique_contacts = set(unique_contacts)
         contacts_info = []
@@ -105,7 +105,7 @@ class ChatUsersView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'chat'
-        chat_user = get_object_or_404(User, pk=self.kwargs['chat_user_id'])
+        chat_user = get_object_or_404(User, id=self.kwargs['chat_user_id'])
         context['chat_user'] = chat_user
         posts_a = ChatUsersPost.objects.filter(user_sender=self.request.user, user_receiver=chat_user)
         posts_b = ChatUsersPost.objects.filter(user_sender=chat_user, user_receiver=self.request.user)
@@ -118,7 +118,7 @@ class ChatUsersView(UserPassesTestMixin, generic.TemplateView):
 def post_in_chat_users(request, chat_user_id):
     if not users_know_each_other_check(request, chat_user_id):
         return HttpResponseForbidden()
-    chat_user = get_object_or_404(User, pk=chat_user_id)
+    chat_user = get_object_or_404(User, id=chat_user_id)
     post_text = request.POST['text']
     if not post_text.lstrip() == '':
         post = ChatUsersPost.objects.create(user_sender=request.user, user_receiver=chat_user, text=post_text)

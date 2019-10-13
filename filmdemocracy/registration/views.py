@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from filmdemocracy.registration import forms
+from filmdemocracy.democracy.models import Notification
 
 
 class SignUpView(generic.CreateView):
@@ -22,6 +23,15 @@ class SignUpView(generic.CreateView):
 
 @login_required
 def account_delete(request):
+
+    def create_notifications(_user, _club):
+        abandoned_members = _club.members.filter(is_active=True).exclude(id=_user.id)
+        for abandoned_member in abandoned_members:
+            Notification.objects.create(type=Notification.ABANDONED,
+                                        activator=None,
+                                        club=_club,
+                                        recipient=abandoned_member)
+
     user = request.user
     user_clubs = user.club_set.all()
     for club in user_clubs:
@@ -33,7 +43,7 @@ def account_delete(request):
             for member in club_members:
                 club.admin_members.add(member)
             club.save()
-            # TODO: add notification that only admin in club left
+            create_notifications(user, club)
     user.delete()
     messages.success(request, _("Account deleted successfully."))
     return HttpResponseRedirect(reverse('home'))

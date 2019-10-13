@@ -1,9 +1,9 @@
 {% load i18n %}
 
-{{ user.username }} {% trans 'invited you to join the FilmDemocracy club named:' %} "{{ club.name }}".
+{{ invitation.inviter.username }} {% trans 'invited you to join the FilmDemocracy club named:' %} "{{ invitation.club.name }}".
 
-{% if invitation_text %}{{ invitation_text }}{% endif %}
+{% if invitation.invitation_text %}{{ invitation.invitation_text }}{% endif %}
 
 {% trans 'Follow the link below to join the club:' %}
 
-{{ protocol}}://{{ domain }}{% url 'democracy:invite_new_member_confirm' uinviteridb64=uinviterid uemailb64=uemail uclubidb64=uclubid %}
+{{ protocol}}://{{ domain }}{% url 'democracy:invite_new_member_confirm' invitation.id %}

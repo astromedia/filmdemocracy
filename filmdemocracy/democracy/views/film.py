@@ -15,7 +15,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, InvitationLink
+from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, Invitation
 from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
@@ -50,7 +50,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
         context = add_club_context(context, club)
         context['page'] = 'film_detail'
@@ -98,7 +98,7 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_success_url(self):
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
         return reverse('democracy:film_detail', kwargs={'club_id': club.id,
                                                         'film_public_id': film.public_id,
@@ -113,7 +113,7 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
 
     @staticmethod
     def create_notifications(_user, _club, _film):
-        club_members = _club.members.filter(is_active=True).exclude(pk=_user.id)
+        club_members = _club.members.filter(is_active=True).exclude(id=_user.id)
         for member in club_members:
             Notification.objects.create(type=Notification.SEEN_FILM,
                                         activator=_user,
@@ -122,7 +122,7 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
                                         object_film=_film)
 
     def form_valid(self, form):
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
         film.seen_date = form.cleaned_data['seen_date']
         members = form.cleaned_data['members']
@@ -136,7 +136,7 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
         context['film'] = film
         context = add_club_context(context, club)
@@ -145,7 +145,7 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
 
 @login_required
 def vote_film(request, club_id, film_public_id, options_string):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, club=club, public_id=film_public_id)
@@ -158,7 +158,7 @@ def vote_film(request, club_id, film_public_id, options_string):
 
 @login_required
 def delete_vote(request, club_id, film_public_id, options_string):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, club=club, public_id=film_public_id)
@@ -194,7 +194,7 @@ def comment_film(request, club_id, film_public_id, options_string):
                                             recipient=commenter,
                                             object_film=_film)
 
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, club=club, public_id=film_public_id)
@@ -211,7 +211,7 @@ def comment_film(request, club_id, film_public_id, options_string):
 
 @login_required
 def delete_film_comment(request, club_id, film_public_id, comment_id, options_string):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     film = get_object_or_404(Film, club=club, public_id=film_public_id)
     film_comment = get_object_or_404(FilmComment, id=comment_id)
     if request.user != film_comment.user:
@@ -227,7 +227,7 @@ def delete_film_comment(request, club_id, film_public_id, comment_id, options_st
 
 @login_required
 def add_filmaffinity_url(request, club_id, film_public_id, options_string):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, club=club, public_id=film_public_id)
@@ -263,7 +263,7 @@ def add_filmaffinity_url(request, club_id, film_public_id, options_string):
 
 @login_required
 def delete_film(request, club_id, film_public_id, options_string):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, club=club, public_id=film_public_id)
@@ -274,7 +274,7 @@ def delete_film(request, club_id, film_public_id, options_string):
 
 @login_required
 def unsee_film(request, club_id, film_public_id, options_string):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_admin_check(request.user, club=club):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, club=club, public_id=film_public_id)

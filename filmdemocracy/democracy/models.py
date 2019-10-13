@@ -14,6 +14,7 @@ from markdownx.utils import markdownify
 
 CLUB_ID_N_DIGITS = 6
 FILM_ID_N_DIGITS = 6
+INVITATION_DURATION_DAYS = 30
 
 
 def get_club_logo_path(instance, filename):
@@ -67,15 +68,18 @@ class Club(models.Model):
         return markdownify(str(self.panel))
 
 
-class InvitationLink(models.Model):
+class Invitation(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    is_active = models.BooleanField(default=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    invited_email = models.EmailField(max_length=254)
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE)
+    hash_invited_email = models.CharField(max_length=64)
+    invitation_text = models.CharField(_('Send message with invitation (optional)'), max_length=500)
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
 
     def __str__(self):
-        return f"{self.club.name}|{self.invited_email}"
+        return f"{str(self.id)}|{self.club.name}|{self.inviter.name}"
 
 
 class ChatClubPost(models.Model):
@@ -133,7 +137,7 @@ class ClubMemberInfo(models.Model):
 
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     member = models.ForeignKey(User, on_delete=models.CASCADE)
-    joined_date = models.DateField(auto_now_add=True)
+    date_joined_club = models.DateField(auto_now_add=True)
     admin_comment = models.TextField('club admins comments about the member', null=True, blank=True, max_length=2000)
 
     def __str__(self):
@@ -236,7 +240,9 @@ class Film(models.Model):
 
     @property
     def share_link(self):
-        return reverse_lazy('democracy:film_detail', kwargs={'club_id': self.club.id, 'film_public_id': self.public_id, 'film_slug': self.db.slug})
+        return reverse_lazy('democracy:film_detail', kwargs={'club_id': self.club.id,
+                                                             'film_public_id': self.public_id,
+                                                             'film_slug': self.db.slug})
 
 
 class Vote(models.Model):
@@ -259,6 +265,7 @@ class Vote(models.Model):
         (VETO, _('Veto!')),
     )
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
@@ -317,6 +324,7 @@ class Notification(models.Model):
     COMM_FILM = 'commfilm'
     COMM_COMM = 'commcomm'
     KICKED = 'kicked'
+    ABANDONED = 'abandoned'
 
     notification_choices = (
         (JOINED, 'Member joined the club'),
@@ -328,8 +336,10 @@ class Notification(models.Model):
         (COMM_FILM, "Member commented in film proposed by user."),
         (COMM_COMM, 'Member commented in film commented by user.'),
         (KICKED, 'Member kicked other member from club.'),
+        (ABANDONED, 'Club admin deleted account.'),
     )
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=9, choices=notification_choices)
     activator = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='active_member')
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='club')

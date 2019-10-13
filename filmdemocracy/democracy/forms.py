@@ -33,7 +33,7 @@ class EditClubForm(forms.ModelForm):
 class KickMembersForm(forms.ModelForm):
     members = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset=User.objects.filter(pk=0),
+        queryset=User.objects.filter(id=0),
         required=False
     )
 
@@ -46,11 +46,17 @@ class KickMembersForm(forms.ModelForm):
         super(KickMembersForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = kickable_members
 
+    def clean_members(self):
+        kicked_members = self.cleaned_data['members']
+        if not kicked_members:
+            raise forms.ValidationError(_("You haven't selected anyone to kick!"))
+        return kicked_members
+
 
 class PromoteMembersForm(forms.ModelForm):
     members = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset=User.objects.filter(pk=0),
+        queryset=User.objects.filter(id=0),
         required=False
     )
 
@@ -63,27 +69,16 @@ class PromoteMembersForm(forms.ModelForm):
         super(PromoteMembersForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = promotable_members
 
+    def clean_members(self):
+        promoted_members = self.cleaned_data['members']
+        if not promoted_members:
+            raise forms.ValidationError(_("You haven't selected anyone to promote!"))
+        return promoted_members
+
 
 def process_imdb_input(form):
     """ Validate that the input is a valid IMDb film url or key and return IMDb id. """
     # TODO: do this using regexps?
-
-    imdb_input = form.cleaned_data['imdb_input']
-    try:
-        if 'imdb' in imdb_input:
-            url_list = imdb_input.split('/')
-            title_position = url_list.index('title')
-            imdb_key = url_list[title_position + 1]
-            imdb_key = imdb_key.replace('tt', '')
-        elif 'imdb' not in imdb_input and 'tt' in imdb_input and len(imdb_input) is 9:
-            imdb_key = imdb_input.replace('tt', '')
-        elif 'imdb' not in imdb_input and 'tt' not in imdb_input and len(imdb_input) is 7:
-            imdb_key = imdb_input
-        else:
-            raise ValueError
-        return imdb_key
-    except ValueError:
-        raise forms.ValidationError(_("The IMDb film url or key does not seem to be valid."))
 
 
 # def process_faff_url(form):
@@ -126,7 +121,22 @@ class FilmAddNewForm(forms.ModelForm):
         super(FilmAddNewForm, self).__init__(*args, **kwargs)
 
     def clean_imdb_input(self):
-        return process_imdb_input(self)
+        imdb_input = self.cleaned_data['imdb_input']
+        try:
+            if 'imdb' in imdb_input:
+                url_list = imdb_input.split('/')
+                title_position = url_list.index('title')
+                imdb_key = url_list[title_position + 1]
+                imdb_key = imdb_key.replace('tt', '')
+            elif 'imdb' not in imdb_input and 'tt' in imdb_input and len(imdb_input) is 9:
+                imdb_key = imdb_input.replace('tt', '')
+            elif 'imdb' not in imdb_input and 'tt' not in imdb_input and len(imdb_input) is 7:
+                imdb_key = imdb_input
+            else:
+                raise ValueError
+        except ValueError:
+            return forms.ValidationError(_("The IMDb film url or key does not seem to be valid."))
+        return imdb_key
 
 
 # class FilmAddFilmAffForm(forms.ModelForm):
@@ -147,7 +157,7 @@ class FilmAddNewForm(forms.ModelForm):
 class FilmSeenForm(forms.ModelForm):
     members = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset=User.objects.filter(pk=0),
+        queryset=User.objects.filter(id=0),
         required=False,
     )
 
@@ -157,7 +167,7 @@ class FilmSeenForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.film_public_id = kwargs.pop('film_public_id', None)
-        self.club = get_object_or_404(Club, pk=kwargs.pop('club_id', None))
+        self.club = get_object_or_404(Club, id=kwargs.pop('club_id', None))
         club_members = self.club.members.filter(is_active=True)
         super(FilmSeenForm, self).__init__(*args, **kwargs)
         self.fields['members'].queryset = club_members
@@ -220,7 +230,7 @@ class MeetingsForm(forms.ModelForm):
             self.meeting_id = kwargs.pop('meeting_id', None)
         super(MeetingsForm, self).__init__(*args, **kwargs)
         try:
-            meeting = get_object_or_404(Meeting, pk=self.meeting_id)
+            meeting = get_object_or_404(Meeting, id=self.meeting_id)
             self.initial['name'] = meeting.name
             self.initial['description'] = meeting.description
             self.initial['place'] = meeting.place

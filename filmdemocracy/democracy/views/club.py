@@ -1,41 +1,35 @@
+import hashlib
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.utils.http import urlsafe_base64_decode
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, InvitationLink
-from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
-from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
+from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, Invitation, ChatClubInfo, Meeting, FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
 
-from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
-from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info
+from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check
+from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info, extract_options
 from filmdemocracy.utils import random_club_id_generator, random_film_public_id_generator
-from filmdemocracy.utils import extract_options
-from filmdemocracy.utils import NotificationsHelper, SpamHelper
-from filmdemocracy.utils import RankingGenerator
+from filmdemocracy.utils import RankingGenerator, SpamHelper
 
 
 @method_decorator(login_required, name='dispatch')
 class CreateClubView(generic.FormView):
     form_class = forms.EditClubForm
+    new_club = None
 
     def get_success_url(self):
-        # TODO: redirect to club view
         return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.new_club.id})
 
     def form_valid(self, form):
@@ -49,11 +43,11 @@ class CreateClubView(generic.FormView):
         new_club.admin_members.add(user)
         new_club.members.add(user)
         new_club.save()
-        self.new_club = new_club
+        ClubMemberInfo.objects.create(club=new_club, member=user)
         ChatClubInfo.objects.create(club=new_club)
         messages.success(self.request, _(f"New club created! Now you can invite people to your club, "
                                          f"propose films, and organize meetings."))
-        ClubMemberInfo.objects.create(club=new_club, member=user)
+        self.new_club = new_club
         return super().form_valid(form)
 
 
@@ -68,7 +62,7 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'club_detail'
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
         club_meetings = Meeting.objects.filter(club=club, date__gte=timezone.now().date())
         if club_meetings:
@@ -97,9 +91,9 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
-        member = get_object_or_404(User, pk=self.kwargs['user_id'])
+        member = get_object_or_404(User, id=self.kwargs['user_id'])
         context['member'] = member
         club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
         context['club_member_info'] = club_member_info
@@ -145,7 +139,7 @@ class EditClubPanelView(UserPassesTestMixin, generic.UpdateView):
 
 @login_required
 def leave_club(request, club_id):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()
     context = {}
@@ -173,7 +167,7 @@ def leave_club(request, club_id):
 
 @login_required
 def self_demote(request, club_id):
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_admin_check(request.user, club=club):
         return HttpResponseForbidden()
     context = add_club_context({}, club)
@@ -198,27 +192,24 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
 
     def get_form_kwargs(self):
         kwargs = super(KickMembersView, self).get_form_kwargs()
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         club_members = club.members.filter(is_active=True)
-        kickable_members = club_members.exclude(pk=self.request.user.id)
+        kickable_members = club_members.exclude(id=self.request.user.id)
         kwargs.update({'kickable_members': kickable_members})
         return kwargs
 
     def get_success_url(self):
-        if self.success:
-            return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
-        elif not self.success:
-            return reverse_lazy('democracy:kick_members', kwargs={'club_id': self.kwargs['club_id']})
+        return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
         return context
 
     @staticmethod
     def create_notifications(user, club, kicked_members):
-        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        club_members = club.members.filter(is_active=True).exclude(id=user.id)
         for kicked in kicked_members:
             for member in club_members:
                 Notification.objects.create(type=Notification.KICKED,
@@ -228,27 +219,22 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
                                             recipient=member)
 
     def form_valid(self, form):
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         club_admins = club.admin_members.all()
         kicked_members = form.cleaned_data['members']
-        if kicked_members:
-            for member in kicked_members:
-                if member in club_admins:
-                    club.admin_members.remove(member)
-                club.members.remove(member)
-                club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
-                club_member_info.delete()
-                Notification.objects.filter(club=club, recipient=member).delete()
-            club.save()
-            self.create_notifications(self.request.user, club, kicked_members)
-            if len(kicked_members) == 1:
-                messages.success(self.request, _("Member successfully kicked from club."))
-            else:
-                messages.success(self.request, _("Members successfully kicked from club."))
-            self.success = True
+        for member in kicked_members:
+            if member in club_admins:
+                club.admin_members.remove(member)
+            club.members.remove(member)
+            club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
+            club_member_info.delete()
+            Notification.objects.filter(club=club, recipient=member).delete()
+        club.save()
+        self.create_notifications(self.request.user, club, kicked_members)
+        if len(kicked_members) == 1:
+            messages.success(self.request, _("Member successfully kicked from club."))
         else:
-            messages.error(self.request, _("You haven't selected anyone to kick!"))
-            self.success = False
+            messages.success(self.request, _("Members successfully kicked from club."))
         return super().form_valid(form)
 
 
@@ -261,27 +247,24 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
 
     def get_form_kwargs(self):
         kwargs = super(PromoteMembersView, self).get_form_kwargs()
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         club_members = club.members.filter(is_active=True)
-        promotable_members = club_members.exclude(pk=self.request.user.id)
+        promotable_members = club_members.exclude(id=self.request.user.id)
         kwargs.update({'promotable_members': promotable_members})
         return kwargs
 
     def get_success_url(self):
-        if self.success:
-            return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
-        elif not self.success:
-            return reverse_lazy('democracy:promote_members', kwargs={'club_id': self.kwargs['club_id']})
+        return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
         return context
 
     @staticmethod
     def create_notifications(user, club, promoted_members):
-        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        club_members = club.members.filter(is_active=True).exclude(id=user.id)
         for promoted in promoted_members:
             for member in club_members:
                 Notification.objects.create(type=Notification.PROMOTED,
@@ -291,21 +274,16 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
                                             recipient=member)
 
     def form_valid(self, form):
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         promoted_members = form.cleaned_data['members']
-        if promoted_members:
-            for member in promoted_members:
-                club.admin_members.add(member)
-            club.save()
-            self.create_notifications(self.request.user, club, promoted_members)
-            if len(promoted_members) == 1:
-                messages.success(self.request, _("Member successfully promoted to admin."))
-            else:
-                messages.success(self.request, _("Members successfully promoted to admin."))
-            self.success = True
+        for member in promoted_members:
+            club.admin_members.add(member)
+        club.save()
+        self.create_notifications(self.request.user, club, promoted_members)
+        if len(promoted_members) == 1:
+            messages.success(self.request, _("Member successfully promoted to admin."))
         else:
-            messages.error(self.request, _("You haven't selected anyone to promote!"))
-            self.success = False
+            messages.success(self.request, _("Members successfully promoted to admin."))
         return super().form_valid(form)
 
 
@@ -318,7 +296,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'candidate_films'
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context['club'] = club
         club_films = Film.objects.filter(club=club, seen=False)
         options_string = self.kwargs['options_string'] if 'options_string' in self.kwargs and self.kwargs['options_string'] else None
@@ -393,7 +371,7 @@ class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context['club'] = club
         seen_films = Film.objects.filter(club=club, seen=True)
         context['seen_films'] = seen_films
@@ -403,7 +381,7 @@ class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
 @method_decorator(login_required, name='dispatch')
 class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmAddNewForm
-    success = None
+    film_added = False
     new_film_public_id = None
 
     def test_func(self):
@@ -415,8 +393,8 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
         return kwargs
 
     def get_success_url(self):
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        if self.success:
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
+        if self.film_added:
             film = get_object_or_404(Film, club=club, public_id=self.new_film_public_id)
             return reverse('democracy:film_detail', kwargs={'club_id': club.id,
                                                             'film_public_id': film.public_id,
@@ -426,13 +404,13 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context['club'] = club
         return context
 
     @staticmethod
     def create_notifications(user, club, film):
-        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        club_members = club.members.filter(is_active=True).exclude(id=user.id)
         for member in club_members:
             Notification.objects.create(type=Notification.ADDED_FILM,
                                         activator=user,
@@ -442,28 +420,27 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
 
     def form_valid(self, form):
         user = self.request.user
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         imdb_key = form.cleaned_data['imdb_input']
         if Film.objects.filter(club=club, imdb_id=imdb_key, seen=False):
             messages.error(self.request, _('That film is already in the candidate list!'))
-            self.success = False
+            self.film_added = False
         else:
             filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_key)
             if created or (not created and not filmdb.title):
-                self.success = update_filmdb_omdb_info(filmdb)
-                if not self.success:
+                self.film_added = update_filmdb_omdb_info(filmdb)
+                if not self.film_added:
                     messages.error(self.request, _('Sorry, we could not find that film in the database...'))
             else:
-                self.success = True
-            if self.success:
+                self.film_added = True
+            if self.film_added:
                 film = Film.objects.create(
-                    public_id=random_film_public_id_generator(club.id),
+                    public_id=random_film_public_id_generator(club),
                     imdb_id=imdb_key,
                     proposed_by=user,
                     club=club,
                     db=filmdb,
                 )
-                film.save()
                 self.create_notifications(user, club, film)
                 self.new_film_public_id = film.public_id
                 messages.success(self.request, _('New film added! Be the first to vote it!'))
@@ -479,7 +456,7 @@ class RankingParticipantsView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'film_ranking'
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
         return context
 
@@ -493,7 +470,7 @@ class RankingResultsView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page'] = 'ranking_results'
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context['club'] = club
         ranking_generator = RankingGenerator(self.request, club.id)
         ranking_results, participants = ranking_generator.generate_ranking()
@@ -522,18 +499,16 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
         return kwargs
 
     def form_valid(self, form):
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         email = form.cleaned_data["email"]
-        invitation_link, tmp = InvitationLink.objects.get_or_create(club=club, invited_email=email)
-        invitation_link.save()
-        email_context = {
-            'club': club,
-            'invitation_text': form.cleaned_data["invitation_text"],
-            'uinviterid': urlsafe_base64_encode(force_bytes(self.request.user.pk)),
-            'uclubid': urlsafe_base64_encode(force_bytes(club.id)),
-            'uemail': urlsafe_base64_encode(force_bytes(email)),
-        }
-        to_emails_list = []
+        invitation_text = form.cleaned_data["invitation_text"]
+        hash_invited_email = hashlib.sha256(email.encode('utf-8')).hexdigest()
+        invitation = Invitation.objects.create(club=club,
+                                               inviter=self.request.user,
+                                               hash_invited_email=hash_invited_email,
+                                               invitation_text=invitation_text)
+        email_context = {'invitation': invitation}
+        to_emails_list = [email]
         spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
         spam_helper.send_emails(to_emails_list, email_context)
         messages.success(self.request, _('An invitation email has been sent to: ') + form.cleaned_data['email'])
@@ -544,7 +519,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context['club'] = club
         return context
 
@@ -552,41 +527,30 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberConfirmView(generic.FormView):
     form_class = forms.InviteNewMemberConfirmForm
+    invitation = None
     valid_link = False
 
     @method_decorator(sensitive_post_parameters())
     @method_decorator(never_cache)
     def dispatch(self, *args, **kwargs):
-        assert 'uinviteridb64' in kwargs
-        assert 'uemailb64' in kwargs
-        assert 'uclubidb64' in kwargs
-        self.valid_link = False
-        user = self.request.user
-        inviter = self.get_object_from_uidb64(User, self.kwargs['uinviteridb64'])
-        invited_email = str(urlsafe_base64_decode(self.kwargs['uemailb64']), 'utf-8')
-        club = self.get_object_from_uidb64(Club, self.kwargs['uclubidb64'])
-        if club is not None and user.email == invited_email:
-            club_members = club.members.filter(is_active=True)
-            invitation_link = InvitationLink.objects.filter(club=club, invited_email=user.email)
-            if inviter in club_members and user not in club_members and invitation_link:
-                self.valid_link = True
-                return super().dispatch(*args, **kwargs)
+        self.invitation = get_object_or_404(Invitation, id=self.kwargs['invitation_id'])
+        if self.invitation and self.invitation.is_active:
+            user = self.request.user
+            hash_user_email = hashlib.sha256(user.email.encode('utf-8')).hexdigest()
+            inviter = self.invitation.inviter
+            club = self.invitation.club
+            if club is not None and hash_user_email == self.invitation.hash_invited_email:
+                club_members = club.members.filter(is_active=True)
+                if inviter in club_members and user not in club_members:
+                    self.valid_link = True
+                    return super().dispatch(*args, **kwargs)
         # Display the "invitation link not valid" error page.
         return self.render_to_response(self.get_context_data())
-
-    @staticmethod
-    def get_object_from_uidb64(model_class, uobjectidb64):
-        try:
-            uobjectid = str(urlsafe_base64_decode(uobjectidb64), 'utf-8')
-            object_model = model_class.objects.get(pk=int(uobjectid))
-        except (TypeError, ValueError, OverflowError, model_class.DoesNotExist, ValidationError):
-            object_model = None
-        return object_model
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.valid_link:
-            club = self.get_object_from_uidb64(Club, self.kwargs['uclubidb64'])
+            club = self.invitation.club
             context['club'] = club
             context['valid_link'] = True
         else:
@@ -595,7 +559,7 @@ class InviteNewMemberConfirmView(generic.FormView):
 
     @staticmethod
     def create_notifications(user, club):
-        club_members = club.members.filter(is_active=True).exclude(pk=user.id)
+        club_members = club.members.filter(is_active=True).exclude(id=user.id)
         for member in club_members:
             Notification.objects.create(type=Notification.JOINED,
                                         activator=user,
@@ -604,20 +568,20 @@ class InviteNewMemberConfirmView(generic.FormView):
 
     def form_valid(self, form):
         user = self.request.user
-        club = self.get_object_from_uidb64(Club, self.kwargs['uclubidb64'])
-        club_members = club.members.filter(is_active=True)
-        if user not in club_members:
+        club = self.invitation.club
+        # Avoid user accepting invitation link twice
+        if self.invitation.is_active:
             club.members.add(self.request.user)
             club.save()
-            club_member_info = ClubMemberInfo.objects.create(club=club, member=user)
-            club_member_info.save()
+            ClubMemberInfo.objects.create(club=club, member=user)
             self.create_notifications(user, club)
-            invitation_link = InvitationLink.objects.get(club=club, invited_email=user.email)
-            invitation_link.delete()
+            # Deactivate all other invitations the user may have received before
+            pending_invitations = Invitation.objects.filter(club=club, hash_invited_email=self.invitation.hash_invited_email)
+            for pending_invitation in pending_invitations:
+                pending_invitation.is_active = False
+                pending_invitation.save()
         messages.success(self.request, _('Congratulations! You have are now a proud member of the club!'))
         return super().form_valid(form)
 
     def get_success_url(self):
-        club = self.get_object_from_uidb64(Club, self.kwargs['uclubidb64'])
-        return reverse_lazy('democracy:club_detail', kwargs={'club_id': club.id})
-
+        return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.invitation.club.id})

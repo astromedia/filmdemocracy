@@ -339,8 +339,13 @@
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <a class="dropdown-item py-0 px-3 {% if not ntf.read %} active {% endif %}"
-             href="{% url 'democracy:notification_dispatcher' ntf.type ntf.club.id ntf.object_id ntf.ids %}">
+          <form method="POST" action="{% url 'notification_dispatcher' ntf.type ntf.club.id ntf.object_id %}">
+          {% csrf_token %}
+
+          <input type="hidden" name="ntf_ids" value="{{ ntf.ntf_ids }}">
+
+          <button class="dropdown-item py-0 px-3 {% if not ntf.read %} active {% endif %}">
+
             <div class="media notification-item">
 
               {% if ntf.activator %}
@@ -441,6 +446,10 @@
                       You were kicked from the club by {{ kicker }}.
                     {% endblocktrans %}
 
+                  {% elif ntf.type == 'abandoned' %}
+
+                    {% trans 'The only admin of the club left and all club members were automatically promoted to admin' %}
+
                   {% endif %}
 
                 </p>
@@ -448,15 +457,23 @@
               </div>
 
             </div>
-          </a>
+
+          </button>
+
+          </form>
 
           {% endfor %}
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <a class="dropdown-item py-0 px-3 m-0 extra-item text-center" href="{% url 'democracy:notification_cleaner' %}">
+          <form method="POST" action="{% url 'notification_cleaner' %}" >
+          {% csrf_token %}
+
+          <button type="submit" class="dropdown-item py-0 px-3 m-0 extra-item text-center">
             <strong>{% trans 'Mark all as read' %}</strong>
-          </a>
+          </button>
+
+          </form>
 
         </div>
 

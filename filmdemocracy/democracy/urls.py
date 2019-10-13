@@ -19,7 +19,7 @@ club_urlpatterns = [
         name='create_club'
     ),
     path(
-        'invitation_link/<uinviteridb64>/<uemailb64>/<uclubidb64>/',
+        'invitation/<uuid:invitation_id>/',
         club_views.InviteNewMemberConfirmView.as_view(template_name='democracy/invite_new_member_confirm.html'),
         name='invite_new_member_confirm'
     ),

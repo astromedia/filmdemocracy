@@ -15,7 +15,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, InvitationLink
+from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, Invitation
 from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
@@ -49,13 +49,14 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
+        context['club'] = club
         context['new_meeting'] = True
         return context
 
     @staticmethod
     def create_notifications(_user, _club, _meeting):
-        club_members = _club.members.filter(is_active=True).exclude(pk=_user.id)
+        club_members = _club.members.filter(is_active=True).exclude(id=_user.id)
         for member in club_members:
             Notification.objects.create(type=Notification.ORGAN_MEET,
                                         activator=_user,
@@ -65,7 +66,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
 
     def form_valid(self, form):
         user = self.request.user
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         new_meeting = Meeting.objects.create(
             club=club,
             name=form.cleaned_data['name'],
@@ -117,13 +118,13 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['club'] = get_object_or_404(Club, pk=self.kwargs['club_id'])
-        context['meeting'] = get_object_or_404(Meeting, pk=self.kwargs['meeting_id'])
+        context['club'] = get_object_or_404(Club, id=self.kwargs['club_id'])
+        context['meeting'] = get_object_or_404(Meeting, id=self.kwargs['meeting_id'])
         context['new_meeting'] = False
         return context
 
     def form_valid(self, form):
-        meeting = get_object_or_404(Meeting, pk=self.kwargs['meeting_id'])
+        meeting = get_object_or_404(Meeting, id=self.kwargs['meeting_id'])
         meeting.name = form.cleaned_data['name']
         meeting.description = form.cleaned_data['description']
         meeting.place = form.cleaned_data['place']
@@ -132,7 +133,7 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
         meeting.save()
         spam_option = form.cleaned_data['spam_options']
         if spam_option == 'all' or spam_option == 'interested':
-            club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+            club = get_object_or_404(Club, id=self.kwargs['club_id'])
             spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
             email_context = {
                 'organizer': self.request.user,
@@ -161,10 +162,10 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
 @login_required
 def meeting_assistance(request, club_id, meeting_id):
     user = request.user
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(user, club=club):
         return HttpResponseForbidden()
-    meeting = get_object_or_404(Meeting, pk=meeting_id)
+    meeting = get_object_or_404(Meeting, id=meeting_id)
     if 'assist_yes' in request.POST:
         if user in meeting.members_yes.all():
             meeting.members_yes.remove(user)
@@ -193,20 +194,17 @@ def meeting_assistance(request, club_id, meeting_id):
                 meeting.members_maybe.remove(user)
             meeting.members_no.add(user)
     meeting.save()
-    return HttpResponseRedirect(reverse(
-        'democracy:club_detail',
-        kwargs={'club_id': club_id}
-    ))
+    return HttpResponseRedirect(reverse('democracy:club_detail', kwargs={'club_id': club_id}))
 
 
 @login_required
 def delete_meeting(request, club_id, meeting_id):
     organizer_check = user_is_organizer_check(request.user, club_id, meeting_id)
-    club = get_object_or_404(Club, pk=club_id)
+    club = get_object_or_404(Club, id=club_id)
     admin_check = user_is_club_admin_check(request.user, club=club)
     if not organizer_check and not admin_check:
         return HttpResponseForbidden()
-    meeting = get_object_or_404(Meeting, pk=meeting_id)
+    meeting = get_object_or_404(Meeting, id=meeting_id)
     meeting.delete()
     return HttpResponseRedirect(reverse('democracy:club_detail', kwargs={'club_id': club.id}))
 
@@ -219,7 +217,7 @@ class MeetingsListView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        club = get_object_or_404(Club, pk=self.kwargs['club_id'])
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
         club_meetings = Meeting.objects.filter(club=club, date__gte=timezone.now().date())
         context['club_meetings'] = club_meetings.order_by('date')

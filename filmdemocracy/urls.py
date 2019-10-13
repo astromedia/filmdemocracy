@@ -50,7 +50,7 @@ urlpatterns += i18n_patterns(
         name='terms_and_conditions'
     ),
     path(
-        'notification_dispatcher/<str:ntf_type>/<str:ntf_club_id>/<str:ntf_object_id>/<str:ntf_ids>/',
+        'notification_dispatcher/<str:ntf_type>/<str:ntf_club_id>/<str:ntf_object_id>/',
         views.notification_dispatcher,
         name='notification_dispatcher'
     ),

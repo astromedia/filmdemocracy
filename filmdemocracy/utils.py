@@ -293,9 +293,9 @@ def random_club_id_generator(n_digits=CLUB_ID_N_DIGITS):
     return str(random.choice(free_ids)).zfill(n_digits)
 
 
-def random_film_public_id_generator(club_id, n_digits=FILM_ID_N_DIGITS):
+def random_film_public_id_generator(club, n_digits=FILM_ID_N_DIGITS):
     """ Picks an integer in the [1, 10^n_digits-1] range among the free ones in the club """
-    club_films = Film.objects.filter(club_id=club_id)
+    club_films = Film.objects.filter(club=club)
     films_public_ids = club_films.values_list('public_id', flat=True)
     free_ids = [i for i in range(1, 10**n_digits - 1) if i not in films_public_ids]
     return str(random.choice(free_ids)).zfill(n_digits)
@@ -322,10 +322,10 @@ class NotificationsHelper:
             'object_id': object_id,
             'counter': counter,
             'club': ntf.club,
-            'datetime': ntf.created_datetime,
+            'created_datetime': ntf.created_datetime,
             'time_ago': time_ago_format(datetime.now(timezone.utc) - ntf.created_datetime),  # TODO: use pytz
             'read': ntf.read,
-            'ids': '_'.join(ntf_ids) if isinstance(ntf_ids, list) else str(ntf_ids),
+            'ntf_ids': '_'.join([str(ntf_id) for ntf_id in ntf_ids]) if isinstance(ntf_ids, list) else str(ntf_ids),
         }
         return ntf_message
 
@@ -343,6 +343,7 @@ class NotificationsHelper:
             Notification.ADDED_FILM: self.process_added_films_notification,
             Notification.COMM_FILM: self.process_comments_notifications,
             Notification.COMM_COMM: self.process_comments_notifications,
+            Notification.ABANDONED: self.process_club_notifications,
         }
         return processing_mapping
 
@@ -362,6 +363,7 @@ class NotificationsHelper:
             Notification.COMM_FILM + 's': self.dispatch_url_film,
             Notification.COMM_COMM: self.dispatch_url_film,
             Notification.COMM_COMM + 's': self.dispatch_url_film,
+            Notification.ABANDONED: self.dispatch_url_club,
         }
         return processing_mapping
 
@@ -371,7 +373,7 @@ class NotificationsHelper:
             processing_mapping = self.get_processing_mapping()
             for ntf_type, processing_function in processing_mapping.items():
                 processing_function(ntf_type)
-        self.messages = sorted(self.messages, key=lambda k: k['datetime'], reverse=True)[0:self.max_notifications]
+        self.messages = sorted(self.messages, key=lambda k: k['created_datetime'], reverse=True)[0:self.max_notifications]
 
     def get_dispatch_url(self, ntf_type, ntf_club_id, ntf_object_id):
         dispatch_url_mapping = self.get_dispatch_url_mapping()
@@ -408,12 +410,12 @@ class NotificationsHelper:
             self.messages.append(self.build_ntf_message(ntf, ntf_type, ntf.id, ntf.object_member.username, ntf.object_member.id))
 
     def process_added_films_notification(self, notification_type):
-        ntfs_group = self.notifications.filter(type=notification_type).order_by('-datetime')
+        ntfs_group = self.notifications.filter(type=notification_type).order_by('-created_datetime')
         for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
             ntf_activators = set(ntf.activator for ntf in ntfs_subgroup)
             for ntf_activator in ntf_activators:
                 ntf_activator_group = ntfs_subgroup.filter(activator=ntf_activator.id)
-                ntf_ids = [str(ntf.id) for ntf in ntf_activator_group]
+                ntf_ids = [ntf.id for ntf in ntf_activator_group]
                 last_ntf = ntf_activator_group.last()
                 if len(ntf_activator_group) > 1:
                     counter = len(ntf_activator_group)
@@ -427,12 +429,12 @@ class NotificationsHelper:
                 self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, last_ntf.object_film.db.title, last_ntf.object_film.public_id, counter))
 
     def process_comments_notifications(self, notification_type):
-        ntfs_group = self.notifications.filter(type=notification_type).order_by('-datetime')
+        ntfs_group = self.notifications.filter(type=notification_type).order_by('-created_datetime')
         for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
             ntf_films = set(ntf.object_film for ntf in ntfs_subgroup)
             for ntf_film in ntf_films:
                 ntf_film_group = ntfs_subgroup.filter(object_film=ntf_film.public_id)
-                ntf_ids = [str(ntf.id) for ntf in ntf_film_group]
+                ntf_ids = [ntf.id for ntf in ntf_film_group]
                 last_ntf = ntf_film_group.last()
                 if len(ntf_film_group) > 1:
                     counter = len(ntf_film_group)
@@ -484,7 +486,7 @@ class SpamHelper:
 
     def get_default_context(self):
         default_context = {'user': self.request.user,
-                           'protocol': ('https' if self.use_https else 'http',)}
+                           'protocol': 'https' if self.use_https else 'http'}
         if not self.domain_override:
             current_site = get_current_site(self.request)
             default_context['current_site'] = get_current_site(self.request)
@@ -496,9 +498,8 @@ class SpamHelper:
 
     def send_emails(self, to_emails_list, email_context=None):
         context = {**self.default_context, **email_context}
-        # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
         subject = loader.render_to_string(self.subject_template, context)
-        subject = ''.join(subject.splitlines())
+        subject = ''.join(subject.splitlines())  # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
         body = loader.render_to_string(self.email_template, context)
         email_messages = EmailMultiAlternatives(subject, body, self.from_email, to_emails_list)
         if self.html_email_template:
