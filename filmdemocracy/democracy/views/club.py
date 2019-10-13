@@ -211,6 +211,11 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
     def create_notifications(user, club, kicked_members):
         club_members = club.members.filter(is_active=True).exclude(id=user.id)
         for kicked in kicked_members:
+            Notification.objects.create(type=Notification.KICKED,
+                                        activator=user,
+                                        club=club,
+                                        object_member=kicked,
+                                        recipient=kicked)
             for member in club_members:
                 Notification.objects.create(type=Notification.KICKED,
                                             activator=user,

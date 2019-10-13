@@ -449,7 +449,7 @@ class NotificationsHelper:
 
     @staticmethod
     def dispatch_url_home(club_id=None, ntf_object_id=None):
-        return reverse('democracy:home')
+        return reverse('home')
 
     @staticmethod
     def dispatch_url_member(club_id=None, ntf_object_id=None):
