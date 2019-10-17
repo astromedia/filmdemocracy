@@ -30,11 +30,9 @@ from filmdemocracy.utils import RankingGenerator
 @method_decorator(login_required, name='dispatch')
 class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     form_class = forms.MeetingsForm
-    subject_template_name = 'democracy/emails/meetings_new_subject.txt'
-    email_template_name = 'democracy/emails/meetings_new_email.html'
-    html_email_template_name = 'democracy/emails/meetings_new_email_html.html'
-    extra_email_context = None
-    from_email = 'filmdemocracyweb@gmail.com'
+    subject_template = 'democracy/emails/meetings_new_subject.txt'
+    email_template = 'democracy/emails/meetings_new_email.html'
+    html_email_template = 'democracy/emails/meetings_new_email_html.html'
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
@@ -61,7 +59,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
             Notification.objects.create(type=Notification.ORGAN_MEET,
                                         activator=_user,
                                         club=_club,
-                                        object_meeting=_meeting,
+                                        object_id=_meeting.id,
                                         recipient=member)
 
     def form_valid(self, form):
@@ -79,18 +77,19 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
         new_meeting.save()
         self.create_notifications(user, club, new_meeting)
         if form.cleaned_data['send_spam']:
-            email_opts = {
-                'domain_override': None,
-                'subject_template_name': self.subject_template_name,
-                'email_template_name': self.email_template_name,
-                'html_email_template_name': self.html_email_template_name,
-                'extra_email_context': self.extra_email_context,
-                'use_https': self.request.is_secure(),
-                'from_email': self.from_email,
-                'request': self.request,
+            spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
+            email_context = {
+                'organizer': self.request.user,
+                'club': club,
+                'name': new_meeting.name,
+                'description': new_meeting.description,
+                'place': new_meeting.place,
+                'date': new_meeting.date,
+                'time_start': new_meeting.time_start,
             }
             spammable_members = club.members.filter(is_active=True)
-            form.spam_members(spammable_members, **email_opts)
+            to_emails_list = [member.email for member in spammable_members]
+            spam_helper.send_emails(to_emails_list, email_context)
             messages.success(self.request, _('Meeting planned! A notification email has been sent to club members.'))
         else:
             messages.success(self.request, _('Meeting planned!'))
@@ -105,7 +104,7 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
     html_email_template = 'democracy/emails/meetings_edit_email_html.html'
 
     def test_func(self):
-        return user_is_organizer_check(self.request.user, self.kwargs['club_id'], self.kwargs['meeting_id'])
+        return user_is_organizer_check(self.request.user, club_id=self.kwargs['club_id'], meeting_id=self.kwargs['meeting_id'])
 
     def get_form_kwargs(self):
         kwargs = super(MeetingsEditView, self).get_form_kwargs()
@@ -199,8 +198,8 @@ def meeting_assistance(request, club_id, meeting_id):
 
 @login_required
 def delete_meeting(request, club_id, meeting_id):
-    organizer_check = user_is_organizer_check(request.user, club_id, meeting_id)
     club = get_object_or_404(Club, id=club_id)
+    organizer_check = user_is_organizer_check(request.user, club=club, meeting_id=meeting_id)
     admin_check = user_is_club_admin_check(request.user, club=club)
     if not organizer_check and not admin_check:
         return HttpResponseForbidden()

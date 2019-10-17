@@ -24,7 +24,7 @@ def get_club_logo_path(instance, filename):
 class Club(models.Model):
     # TODO: Input image validation
 
-    DEFAULT_PANEL_STRING = """
+    DEFAULT_PANEL_STRING = _("""
     \r\n## A sample club panel written in markdown
     \r\n
     \r\n---
@@ -41,7 +41,7 @@ class Club(models.Model):
     \r\n- Item 1
     \r\n- Item 2
     \r\n- Item 3
-    """
+    """)
 
     id = models.CharField(primary_key=True, unique=True, max_length=CLUB_ID_N_DIGITS)
     name = models.CharField(_('Club name'), max_length=50)
@@ -325,27 +325,27 @@ class Notification(models.Model):
     COMM_COMM = 'commcomm'
     KICKED = 'kicked'
     ABANDONED = 'abandoned'
+    INVITED = 'invited'
 
     notification_choices = (
         (JOINED, 'Member joined the club'),
-        (PROMOTED, 'Member promoted to admin.'),
-        (LEFT, "Member left the club."),
-        (ADDED_FILM, 'Member added new film.'),
-        (SEEN_FILM, "Member marked film as seen by club."),
-        (ORGAN_MEET, "Member organized a new club meeting."),
-        (COMM_FILM, "Member commented in film proposed by user."),
-        (COMM_COMM, 'Member commented in film commented by user.'),
-        (KICKED, 'Member kicked other member from club.'),
-        (ABANDONED, 'Club admin deleted account.'),
+        (PROMOTED, 'Member promoted to admin'),
+        (LEFT, "Member left the club"),
+        (ADDED_FILM, 'Member added new film'),
+        (SEEN_FILM, "Member marked film as seen by club"),
+        (ORGAN_MEET, "Member organized a new club meeting"),
+        (COMM_FILM, "Member commented in film proposed by user"),
+        (COMM_COMM, 'Member commented in film commented by user'),
+        (KICKED, 'Member kicked other member from club'),
+        (ABANDONED, 'Club admin deleted account'),
+        (INVITED, 'User invited to join club'),
     )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=9, choices=notification_choices)
     activator = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='active_member')
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='club')
-    object_member = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='passive_member')
-    object_film = models.ForeignKey(Film, on_delete=models.CASCADE, null=True, related_name='passive_film')
-    object_meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, null=True, related_name='passive_meeting')
+    object_id = models.UUIDField(null=True)
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipient')
     read = models.BooleanField('notification read', default=False)
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)

@@ -450,6 +450,12 @@
 
                     {% trans 'The only admin of the club left and all club members were automatically promoted to admin' %}
 
+                  {% elif ntf.type == 'invited' %}
+
+                    {% blocktrans with club=ntf.club.name inviter=ntf.activator.username %}
+                      You were invited to join the club "{{ club }}" by {{ inviter }}.
+                    {% endblocktrans %}
+
                   {% endif %}
 
                 </p>

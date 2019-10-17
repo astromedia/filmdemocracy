@@ -100,7 +100,7 @@ class ChatContactsView(generic.TemplateView):
 class ChatUsersView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
-        return users_know_each_other_check(self.request, self.kwargs['chat_user_id'])
+        return users_know_each_other_check(self.request, chat_user_id=self.kwargs['chat_user_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -116,7 +116,7 @@ class ChatUsersView(UserPassesTestMixin, generic.TemplateView):
 
 @login_required
 def post_in_chat_users(request, chat_user_id):
-    if not users_know_each_other_check(request, chat_user_id):
+    if not users_know_each_other_check(request, chat_user_id=chat_user_id):
         return HttpResponseForbidden()
     chat_user = get_object_or_404(User, id=chat_user_id)
     post_text = request.POST['text']

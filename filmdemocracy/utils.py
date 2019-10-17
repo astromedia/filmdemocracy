@@ -11,7 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 
-from filmdemocracy.democracy.models import Film, Vote, Club, Notification, ChatUsersInfo, Meeting
+from filmdemocracy.democracy.models import Film, Vote, Club, Notification, ChatUsersInfo, Meeting, Invitation
 from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS
 from filmdemocracy.registration.models import User
 from filmdemocracy.secrets import OMDB_API_KEY
@@ -19,30 +19,30 @@ from filmdemocracy.secrets import OMDB_API_KEY
 
 def user_is_club_member_check(user, club_id=None, club=None):
     if club is None and club_id:
-        club = get_object_or_404(Club, pk=club_id)
+        club = get_object_or_404(Club, id=club_id)
     club_members = club.members.filter(is_active=True)
     return user in club_members
 
 
 def user_is_club_admin_check(user, club_id=None, club=None):
     if club is None and club_id:
-        club = get_object_or_404(Club, pk=club_id)
+        club = get_object_or_404(Club, id=club_id)
     club_members = club.members.filter(is_active=True)
     club_admins = club.admin_members.filter(is_active=True)
     return user in club_members and user in club_admins
 
 
-def user_is_organizer_check(user, club_id=None, club=None, meeting_id=None, meeting=None):
+def user_is_organizer_check(user, club_id=None, club=None, meeting_id=None):
     if club is None and club_id:
-        club = get_object_or_404(Club, pk=club_id)
-    meeting = get_object_or_404(Meeting, pk=meeting_id)
+        club = get_object_or_404(Club, id=club_id)
+    meeting = get_object_or_404(Meeting, id=meeting_id)
     club_members = club.members.filter(is_active=True)
     return user in club_members and user == meeting.organizer
 
 
 def users_know_each_other_check(user, chat_user_id=None, chat_user=None):
     if chat_user is None and chat_user_id:
-        chat_user = get_object_or_404(User, pk=chat_user_id)
+        chat_user = get_object_or_404(User, id=chat_user_id)
     common_clubs = user.club_set.all() & chat_user.club_set.all()
     chat_opened = ChatUsersInfo.objects.filter(user=user, user_known=chat_user)
     if common_clubs.exists() or chat_opened.exists():
@@ -287,18 +287,18 @@ class RankingGenerator:
 
 
 def random_club_id_generator(n_digits=CLUB_ID_N_DIGITS):
-    """ Picks an integer in the [1, 10^n_digits-1] range among the free ones """
+    """ Picks an integer in the [10**(n_digits-1), 10**n_digits-1] range among the free ones """
     club_ids = Club.objects.values_list('id', flat=True)
-    free_ids = [i for i in range(1, 10**n_digits - 1) if i not in club_ids]
-    return str(random.choice(free_ids)).zfill(n_digits)
+    free_ids = [i for i in range(10**(n_digits-1), 10**n_digits - 1) if i not in club_ids]
+    return str(random.choice(free_ids))
 
 
 def random_film_public_id_generator(club, n_digits=FILM_ID_N_DIGITS):
-    """ Picks an integer in the [1, 10^n_digits-1] range among the free ones in the club """
+    """ Picks an integer in the [10**(n_digits-1), 10^n_digits-1] range among the free ones in the club """
     club_films = Film.objects.filter(club=club)
     films_public_ids = club_films.values_list('public_id', flat=True)
-    free_ids = [i for i in range(1, 10**n_digits - 1) if i not in films_public_ids]
-    return str(random.choice(free_ids)).zfill(n_digits)
+    free_ids = [i for i in range(10**(n_digits-1), 10**n_digits - 1) if i not in films_public_ids]
+    return str(random.choice(free_ids))
 
 
 class NotificationsHelper:
@@ -314,12 +314,12 @@ class NotificationsHelper:
         return self.request.user.is_anonymous
 
     @staticmethod
-    def build_ntf_message(ntf, ntf_type, ntf_ids, object_name=None, object_id=None, counter=0):
+    def build_ntf_message(ntf, ntf_type, ntf_ids, object_id=None, object_name=None, counter=0):
         ntf_message = {
             'type': ntf_type,
             'activator': ntf.activator,
-            'object_name': object_name,
             'object_id': object_id,
+            'object_name': object_name,
             'counter': counter,
             'club': ntf.club,
             'created_datetime': ntf.created_datetime,
@@ -334,18 +334,119 @@ class NotificationsHelper:
 
     def get_processing_mapping(self):
         processing_mapping = {
-            Notification.JOINED: self.process_joined_notifications,
-            Notification.LEFT: self.process_club_notifications,
-            Notification.ORGAN_MEET: self.process_club_notifications,
+            Notification.JOINED: self.process_member_notifications,
+            Notification.LEFT: self.process_base_notifications,
+            Notification.ORGAN_MEET: self.process_base_notifications,
             Notification.SEEN_FILM: self.process_seen_films_notifications,
             Notification.PROMOTED: self.process_hierarchy_notifications,
             Notification.KICKED: self.process_hierarchy_notifications,
             Notification.ADDED_FILM: self.process_added_films_notification,
             Notification.COMM_FILM: self.process_comments_notifications,
             Notification.COMM_COMM: self.process_comments_notifications,
-            Notification.ABANDONED: self.process_club_notifications,
+            Notification.ABANDONED: self.process_base_notifications,
+            Notification.INVITED: self.process_invitation_notifications,
         }
         return processing_mapping
+
+    def process_notifications(self):
+        self.notifications = self.get_user_notifications()
+        if self.notifications:
+            processing_mapping = self.get_processing_mapping()
+            for ntf_type, processing_function in processing_mapping.items():
+                processing_function(ntf_type)
+        self.messages = sorted(self.messages, key=lambda k: k['created_datetime'], reverse=True)[0:self.max_notifications]
+
+    def process_base_notifications(self, notification_type):
+        for ntf in self.notifications.filter(type=notification_type):
+            if not ntf.read:
+                self.unread_count += 1
+            self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id))
+
+    def process_member_notifications(self, notification_type):
+        for ntf in self.notifications.filter(type=notification_type):
+            if not ntf.read:
+                self.unread_count += 1
+            self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, ntf.activator.id))
+
+    def process_seen_films_notifications(self, notification_type):
+        for ntf in self.notifications.filter(type=notification_type):
+            try:
+                object_film = Film.objects.get(id=ntf.object_id)
+                if not ntf.read:
+                    self.unread_count += 1
+                self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, object_film.id, object_film.db.title))
+            except Film.DoesNotExist:
+                pass
+
+    def process_hierarchy_notifications(self, notification_type):
+        for ntf in self.notifications.filter(type=notification_type):
+            try:
+                object_member = User.objects.get(id=ntf.object_id)
+                if not ntf.read:
+                    self.unread_count += 1
+                if object_member == self.request.user:
+                    ntf_type = ntf.type + '_self'
+                else:
+                    ntf_type = ntf.type
+                self.messages.append(self.build_ntf_message(ntf, ntf_type, ntf.id, object_member.id, object_member.username))
+            except User.DoesNotExist:
+                pass
+
+    def process_added_films_notification(self, notification_type):
+        ntfs_group = self.notifications.filter(type=notification_type).order_by('-created_datetime')
+        for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
+            ntf_activators = set(ntf.activator for ntf in ntfs_subgroup)
+            for ntf_activator in ntf_activators:
+                ntf_activator_group = ntfs_subgroup.filter(activator=ntf_activator.id)
+                ntf_ids = [ntf.id for ntf in ntf_activator_group]
+                last_ntf = ntf_activator_group.last()
+                try:
+                    object_film = Film.objects.get(id=last_ntf.object_id)
+                    if len(ntf_activator_group) > 1:
+                        counter = len(ntf_activator_group)
+                        ntf_type = last_ntf.type + 's'
+                    else:
+                        counter = 0
+                        ntf_type = last_ntf.type
+                    if i == 1:
+                        if not last_ntf.read:
+                            self.unread_count += 1
+                    self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, object_film.id, object_film.db.title, counter))
+                except Film.DoesNotExist:
+                    pass
+
+    def process_comments_notifications(self, notification_type):
+        ntfs_group = self.notifications.filter(type=notification_type).order_by('-created_datetime')
+        for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
+            ntf_films = set(ntf.object_film for ntf in ntfs_subgroup)
+            for ntf_film in ntf_films:
+                ntf_film_group = ntfs_subgroup.filter(object_film=ntf_film.public_id)
+                ntf_ids = [ntf.id for ntf in ntf_film_group]
+                last_ntf = ntf_film_group.last()
+                try:
+                    object_film = Film.objects.get(id=last_ntf.object_id)
+                    if len(ntf_film_group) > 1:
+                        counter = len(ntf_film_group)
+                        ntf_type = last_ntf.type + 's'
+                    else:
+                        counter = 0
+                        ntf_type = last_ntf.type
+                    if i == 1:
+                        if not last_ntf.read:
+                            self.unread_count += 1
+                    self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, object_film.public_id, object_film.db.title, counter))
+                except Film.DoesNotExist:
+                    pass
+
+    def process_invitation_notifications(self, notification_type):
+        for ntf in self.notifications.filter(type=notification_type):
+            try:
+                object_invitation = Invitation.objects.get(id=ntf.object_id)
+                if not ntf.read:
+                    self.unread_count += 1
+                self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, object_invitation.id))
+            except Invitation.DoesNotExist:
+                pass
 
     def get_dispatch_url_mapping(self):
         processing_mapping = {
@@ -364,88 +465,15 @@ class NotificationsHelper:
             Notification.COMM_COMM: self.dispatch_url_film,
             Notification.COMM_COMM + 's': self.dispatch_url_film,
             Notification.ABANDONED: self.dispatch_url_club,
+            Notification.INVITED: self.dispatch_url_invitation_link,
         }
         return processing_mapping
-
-    def process_notifications(self):
-        self.notifications = self.get_user_notifications()
-        if self.notifications:
-            processing_mapping = self.get_processing_mapping()
-            for ntf_type, processing_function in processing_mapping.items():
-                processing_function(ntf_type)
-        self.messages = sorted(self.messages, key=lambda k: k['created_datetime'], reverse=True)[0:self.max_notifications]
 
     def get_dispatch_url(self, ntf_type, ntf_club_id, ntf_object_id):
         dispatch_url_mapping = self.get_dispatch_url_mapping()
         dispatch_url_function = dispatch_url_mapping[ntf_type]
         url = dispatch_url_function(ntf_club_id, ntf_object_id)
         return url
-
-    def process_joined_notifications(self, notification_type):
-        for ntf in self.notifications.filter(type=notification_type):
-            if not ntf.read:
-                self.unread_count += 1
-            self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, ntf.activator.username, ntf.activator.id))
-
-    def process_club_notifications(self, notification_type):
-        for ntf in self.notifications.filter(type=notification_type):
-            if not ntf.read:
-                self.unread_count += 1
-            self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id))
-
-    def process_seen_films_notifications(self, notification_type):
-        for ntf in self.notifications.filter(type=notification_type):
-            if not ntf.read:
-                self.unread_count += 1
-            self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, ntf.object_film.db.title, ntf.object_film.public_id))
-
-    def process_hierarchy_notifications(self, notification_type):
-        for ntf in self.notifications.filter(type=notification_type):
-            if not ntf.read:
-                self.unread_count += 1
-            if ntf.object_member == self.request.user:
-                ntf_type = ntf.type + '_self'
-            else:
-                ntf_type = ntf.type
-            self.messages.append(self.build_ntf_message(ntf, ntf_type, ntf.id, ntf.object_member.username, ntf.object_member.id))
-
-    def process_added_films_notification(self, notification_type):
-        ntfs_group = self.notifications.filter(type=notification_type).order_by('-created_datetime')
-        for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
-            ntf_activators = set(ntf.activator for ntf in ntfs_subgroup)
-            for ntf_activator in ntf_activators:
-                ntf_activator_group = ntfs_subgroup.filter(activator=ntf_activator.id)
-                ntf_ids = [ntf.id for ntf in ntf_activator_group]
-                last_ntf = ntf_activator_group.last()
-                if len(ntf_activator_group) > 1:
-                    counter = len(ntf_activator_group)
-                    ntf_type = last_ntf.type + 's'
-                else:
-                    counter = 0
-                    ntf_type = last_ntf.type
-                if i == 1:
-                    if not last_ntf.read:
-                        self.unread_count += 1
-                self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, last_ntf.object_film.db.title, last_ntf.object_film.public_id, counter))
-
-    def process_comments_notifications(self, notification_type):
-        ntfs_group = self.notifications.filter(type=notification_type).order_by('-created_datetime')
-        for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
-            ntf_films = set(ntf.object_film for ntf in ntfs_subgroup)
-            for ntf_film in ntf_films:
-                ntf_film_group = ntfs_subgroup.filter(object_film=ntf_film.public_id)
-                ntf_ids = [ntf.id for ntf in ntf_film_group]
-                last_ntf = ntf_film_group.last()
-                if len(ntf_film_group) > 1:
-                    counter = len(ntf_film_group)
-                    ntf_type = last_ntf.type + 's'
-                else:
-                    counter = 0
-                    ntf_type = last_ntf.type
-                if i == 1:
-                    if not last_ntf.read:
-                        self.unread_count += 1
-                self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, last_ntf.object_film.db.title, last_ntf.object_film.public_id, counter))
 
     @staticmethod
     def dispatch_url_home(club_id=None, ntf_object_id=None):
@@ -462,7 +490,7 @@ class NotificationsHelper:
 
     @staticmethod
     def dispatch_url_film(club_id=None, ntf_object_id=None):
-        film = get_object_or_404(Film, club_id=club_id, public_id=ntf_object_id)
+        film = get_object_or_404(Film, club_id=club_id, id=ntf_object_id)
         return reverse('democracy:film_detail', kwargs={'club_id': club_id,
                                                         'film_public_id': film.public_id,
                                                         'film_slug': film.db.slug})
@@ -470,6 +498,10 @@ class NotificationsHelper:
     @staticmethod
     def dispatch_url_films(club_id=None, ntf_object_id=None):
         return reverse('democracy:candidate_films', kwargs={'club_id': club_id})
+
+    @staticmethod
+    def dispatch_url_invitation_link(club_id=None, ntf_object_id=None):
+        return reverse('democracy:invite_new_member_confirm', kwargs={'invitation_id': ntf_object_id})
 
 
 class SpamHelper:
@@ -501,11 +533,12 @@ class SpamHelper:
         subject = loader.render_to_string(self.subject_template, context)
         subject = ''.join(subject.splitlines())  # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
         body = loader.render_to_string(self.email_template, context)
-        email_messages = EmailMultiAlternatives(subject, body, self.from_email, to_emails_list)
-        if self.html_email_template:
-            html_email = loader.render_to_string(self.html_email_template, context)
-            email_messages.attach_alternative(html_email, 'text/html')
-        email_messages.send()
+        for to_email in to_emails_list:
+            email_messages = EmailMultiAlternatives(subject, body, self.from_email, [to_email])
+            if self.html_email_template:
+                html_email = loader.render_to_string(self.html_email_template, context)
+                email_messages.attach_alternative(html_email, 'text/html')
+            email_messages.send()
 
 
 def time_ago_format(datetime_diff):

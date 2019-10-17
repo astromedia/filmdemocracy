@@ -214,13 +214,13 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
             Notification.objects.create(type=Notification.KICKED,
                                         activator=user,
                                         club=club,
-                                        object_member=kicked,
+                                        object_id=kicked.id,
                                         recipient=kicked)
             for member in club_members:
                 Notification.objects.create(type=Notification.KICKED,
                                             activator=user,
                                             club=club,
-                                            object_member=kicked,
+                                            object_id=kicked.id,
                                             recipient=member)
 
     def form_valid(self, form):
@@ -275,7 +275,7 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
                 Notification.objects.create(type=Notification.PROMOTED,
                                             activator=user,
                                             club=club,
-                                            object_member=promoted,
+                                            object_id=promoted.id,
                                             recipient=member)
 
     def form_valid(self, form):
@@ -420,7 +420,7 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
             Notification.objects.create(type=Notification.ADDED_FILM,
                                         activator=user,
                                         club=club,
-                                        object_film=film,
+                                        object_id=film.id,
                                         recipient=member)
 
     def form_valid(self, form):
@@ -503,6 +503,18 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
         kwargs.update({'club_id': self.kwargs['club_id']})
         return kwargs
 
+    @staticmethod
+    def create_notifications(user, club, email, invitation):
+        try:
+            invited_user = User.objects.get(email=email)
+            Notification.objects.create(type=Notification.INVITED,
+                                        activator=user,
+                                        object_id=invitation.id,
+                                        club=club,
+                                        recipient=invited_user)
+        except User.DoesNotExist:
+            pass
+
     def form_valid(self, form):
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         email = form.cleaned_data["email"]
@@ -512,6 +524,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
                                                inviter=self.request.user,
                                                hash_invited_email=hash_invited_email,
                                                invitation_text=invitation_text)
+        self.create_notifications(self.request.user, club, email, invitation)
         email_context = {'invitation': invitation}
         to_emails_list = [email]
         spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)

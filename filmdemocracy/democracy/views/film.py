@@ -119,7 +119,7 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
                                         activator=_user,
                                         club=_club,
                                         recipient=member,
-                                        object_film=_film)
+                                        object_id=_film.id)
 
     def form_valid(self, form):
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
@@ -182,7 +182,7 @@ def comment_film(request, club_id, film_public_id, options_string):
             Notification.objects.create(type=Notification.COMM_FILM,
                                         activator=_user,
                                         club=_club,
-                                        object_film=_film,
+                                        object_id=_film.id,
                                         recipient=proposer)
 
         # Notifications to people that commented on that film before (film_commenters):
@@ -192,7 +192,7 @@ def comment_film(request, club_id, film_public_id, options_string):
                                             activator=_user,
                                             club=_club,
                                             recipient=commenter,
-                                            object_film=_film)
+                                            object_id=_film.id)
 
     club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
