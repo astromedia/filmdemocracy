@@ -1,12 +1,12 @@
-{% extends "global/base_filmdemocracy.html" %}
+{% extends "core/base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'global/css/home.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/dark_background.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/dark_background.css' %}">
 {% endblock %}
 
 {% block title %}Home{% endblock %}
@@ -17,10 +17,10 @@
 <!--START: WEBSITE INTRO-->
 <div class="container-fluid text-center">
   <div>
-    <img class="webpage-logo" src="{% static 'global/svg/urna_glow.svg'%}">
+    <img class="webpage-logo" src="{% static 'core/svg/urna_glow.svg'%}">
   </div>
   <div>
-    <img class="webpage-title" src="{% static 'global/svg/webname_greengray.svg'%}">
+    <img class="webpage-title" src="{% static 'core/svg/webname_greengray.svg'%}">
   </div>
   <p class="lead text-muted webpage-subtitle">{% trans 'Power to the people!' %}</p>
 </div>

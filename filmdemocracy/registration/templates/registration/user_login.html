@@ -1,4 +1,4 @@
-{% extends "global/base_filmdemocracy.html" %}
+{% extends "core/base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -142,7 +142,7 @@
 {% endif %}
 
 
-<form class="btn-cancel" action="{% url 'home' %}">
+<form class="btn-cancel" action="{% url 'core:home' %}">
   <button type="submit" class="btn btn-sm">{% trans 'Home' %}</button>
 </form>
 

@@ -15,16 +15,17 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, Invitation
+from filmdemocracy.core.models import Notification
+from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation
 from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
 
-from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
-from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info
-from filmdemocracy.utils import random_club_id_generator, random_film_public_id_generator
-from filmdemocracy.utils import NotificationsHelper
-from filmdemocracy.utils import RankingGenerator
+from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
+from filmdemocracy.core.utils import add_club_context, update_filmdb_omdb_info
+from filmdemocracy.core.utils import random_club_id_generator, random_film_public_id_generator
+from filmdemocracy.core.utils import NotificationsHelper
+from filmdemocracy.core.utils import RankingGenerator
 
 
 @method_decorator(login_required, name='dispatch')

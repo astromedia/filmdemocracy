@@ -4,7 +4,7 @@
 #### SETTINGS ####
 
 APPS_DIR='filmdemocracy'
-declare -a WEB_APPS=("registration" "democracy")
+declare -a WEB_APPS=("core" "registration" "democracy")
 
 
 #######################
@@ -23,6 +23,7 @@ cd ${APPS_DIR} || exit
 django-admin compilemessages
 
 cd ${WORKDIR}/.. || exit
+python manage.py feed_db_with_films --test
 python manage.py runserver 0.0.0.0:8000
 
 exit 0

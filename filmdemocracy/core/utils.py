@@ -11,7 +11,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 
-from filmdemocracy.democracy.models import Film, Vote, Club, Notification, ChatUsersInfo, Meeting, Invitation
+from filmdemocracy.core.models import Notification
+from filmdemocracy.democracy.models import Film, Vote, Club, ChatUsersInfo, Meeting, Invitation
 from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS
 from filmdemocracy.registration.models import User
 from filmdemocracy.secrets import OMDB_API_KEY
@@ -95,12 +96,7 @@ def update_filmdb_omdb_info(filmdb):
             filmdb.writer = omdb_data['Writer']
             filmdb.actors = omdb_data['Actors']
             filmdb.poster_url = omdb_data['Poster']
-            if ' min' in omdb_data['Runtime']:
-                filmdb.duration = omdb_data['Runtime'].replace(' min', '')
-            elif 'min' in omdb_data['Runtime']:
-                filmdb.duration = omdb_data['Runtime'].replace('min', '')
-            else:
-                filmdb.duration = omdb_data['Runtime']
+            filmdb.duration = omdb_data['Runtime']
             filmdb.language = omdb_data['Language']
             filmdb.rated = omdb_data['Rated']
             filmdb.country = omdb_data['Country']
@@ -258,8 +254,7 @@ class RankingGenerator:
         if film.proposed_by not in self.participants and self.config['exclude_not_present']:
             return False
         else:
-            film_duration_int = film.db.duration_in_mins_int
-            if film_duration_int > self.config['max_duration']:
+            if film.db.duration_in_mins_int > self.config['max_duration']:
                 return False
             else:
                 return True
@@ -275,7 +270,7 @@ class RankingGenerator:
                 ranking_film.process_votes()
                 ranking_results.append({
                     'film': ranking_film.film,
-                    'duration': f'{ranking_film.film.db.duration_in_mins_int} min',
+                    'duration': ranking_film.film.db.duration_str,
                     'positive_votes': ranking_film.positive_votes,
                     'negative_votes': ranking_film.negative_votes,
                     'abstentionists': ranking_film.abstentionists,
@@ -336,10 +331,10 @@ class NotificationsHelper:
         processing_mapping = {
             Notification.JOINED: self.process_member_notifications,
             Notification.LEFT: self.process_base_notifications,
-            Notification.ORGAN_MEET: self.process_base_notifications,
+            Notification.ORGAN_MEET: self.process_meetings_notifications,
             Notification.SEEN_FILM: self.process_seen_films_notifications,
-            Notification.PROMOTED: self.process_hierarchy_notifications,
-            Notification.KICKED: self.process_hierarchy_notifications,
+            Notification.PROMOTED: self.process_member_notifications,
+            Notification.KICKED: self.process_member_notifications,
             Notification.ADDED_FILM: self.process_added_films_notification,
             Notification.COMM_FILM: self.process_comments_notifications,
             Notification.COMM_COMM: self.process_comments_notifications,
@@ -362,11 +357,15 @@ class NotificationsHelper:
                 self.unread_count += 1
             self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id))
 
-    def process_member_notifications(self, notification_type):
+    def process_meetings_notifications(self, notification_type):
         for ntf in self.notifications.filter(type=notification_type):
-            if not ntf.read:
-                self.unread_count += 1
-            self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, ntf.activator.id))
+            try:
+                object_meeting = Meeting.objects.get(id=ntf.object_id)
+                if not ntf.read:
+                    self.unread_count += 1
+                self.messages.append(self.build_ntf_message(ntf, ntf.type, ntf.id, object_meeting.id, object_meeting.name))
+            except Meeting.DoesNotExist:
+                pass
 
     def process_seen_films_notifications(self, notification_type):
         for ntf in self.notifications.filter(type=notification_type):
@@ -378,7 +377,7 @@ class NotificationsHelper:
             except Film.DoesNotExist:
                 pass
 
-    def process_hierarchy_notifications(self, notification_type):
+    def process_member_notifications(self, notification_type):
         for ntf in self.notifications.filter(type=notification_type):
             try:
                 object_member = User.objects.get(id=ntf.object_id)
@@ -451,6 +450,7 @@ class NotificationsHelper:
     def get_dispatch_url_mapping(self):
         processing_mapping = {
             Notification.JOINED: self.dispatch_url_member,
+            Notification.JOINED + '_self': self.dispatch_url_club,
             Notification.LEFT: self.dispatch_url_club,
             Notification.ORGAN_MEET: self.dispatch_url_club,
             Notification.SEEN_FILM: self.dispatch_url_film,
@@ -477,7 +477,7 @@ class NotificationsHelper:
 
     @staticmethod
     def dispatch_url_home(club_id=None, ntf_object_id=None):
-        return reverse('home')
+        return reverse('core:home')
 
     @staticmethod
     def dispatch_url_member(club_id=None, ntf_object_id=None):

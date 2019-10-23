@@ -178,7 +178,7 @@ class FilmDb(models.Model):
     poster_url = models.URLField(default='', max_length=1000)
     country = models.CharField(default='', max_length=1000)
     language = models.CharField(default='', max_length=1000)
-    plot = models.CharField(default='', max_length=5000)
+    plot = models.CharField(default='', max_length=20000)
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
     last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
     comment = models.TextField('site admin comments about the film', null=True, blank=True, max_length=1000)
@@ -204,6 +204,21 @@ class FilmDb(models.Model):
             else:
                 duration_int = 0
         return duration_int
+
+    @property
+    def duration_str(self):
+        """ Display this string as the film duration """
+        duration_str = str(self.duration)
+        try:
+            duration_int = int(duration_str)
+            return '{} min'.format(duration_int)
+        except ValueError:
+            if ' min' in duration_str:
+                return duration_str
+            elif 'min' in duration_str:
+                return duration_str.replace('min', ' min')
+            else:
+                return duration_str
 
     @property
     def imdb_url(self):
@@ -311,45 +326,3 @@ class FilmComment(models.Model):
 
     def __str__(self):
         return f'{self.user}|{self.film.db.title}|{self.text}'
-
-
-class Notification(models.Model):
-
-    JOINED = 'joined'
-    PROMOTED = 'promoted'
-    LEFT = 'left'
-    ADDED_FILM = 'addedfilm'
-    SEEN_FILM = 'seenfilm'
-    ORGAN_MEET = 'organmeet'
-    COMM_FILM = 'commfilm'
-    COMM_COMM = 'commcomm'
-    KICKED = 'kicked'
-    ABANDONED = 'abandoned'
-    INVITED = 'invited'
-
-    notification_choices = (
-        (JOINED, 'Member joined the club'),
-        (PROMOTED, 'Member promoted to admin'),
-        (LEFT, "Member left the club"),
-        (ADDED_FILM, 'Member added new film'),
-        (SEEN_FILM, "Member marked film as seen by club"),
-        (ORGAN_MEET, "Member organized a new club meeting"),
-        (COMM_FILM, "Member commented in film proposed by user"),
-        (COMM_COMM, 'Member commented in film commented by user'),
-        (KICKED, 'Member kicked other member from club'),
-        (ABANDONED, 'Club admin deleted account'),
-        (INVITED, 'User invited to join club'),
-    )
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    type = models.CharField(max_length=9, choices=notification_choices)
-    activator = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='active_member')
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='club')
-    object_id = models.UUIDField(null=True)
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipient')
-    read = models.BooleanField('notification read', default=False)
-    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
-    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
-
-    def __str__(self):
-        return f"{self.activator.username}|{self.club}|{self.type}|{self.created_datetime}|{self.recipient.username}"

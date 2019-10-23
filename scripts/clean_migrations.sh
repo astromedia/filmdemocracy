@@ -17,7 +17,9 @@ MAIN_DIR=${WORKDIR}/..
 cd ${MAIN_DIR} || exit
 
 for WEB_APP in "${WEB_APPS[@]}"; do
-  rm -rf ./${APPS_DIR}/${WEB_APP}/migrations
+  sudo rm -rf ./${APPS_DIR}/${WEB_APP}/migrations
 done
+
+echo 'Done'
 
 exit 0

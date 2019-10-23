@@ -15,13 +15,14 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, Invitation, ChatClubInfo, Meeting, FilmDb, Film, Vote, FilmComment
+from filmdemocracy.core.models import Notification
+from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation, ChatClubInfo, Meeting, FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
 
-from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check
-from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info, extract_options
-from filmdemocracy.utils import random_club_id_generator, random_film_public_id_generator
-from filmdemocracy.utils import RankingGenerator, SpamHelper
+from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check
+from filmdemocracy.core.utils import add_club_context, update_filmdb_omdb_info, extract_options
+from filmdemocracy.core.utils import random_club_id_generator, random_film_public_id_generator
+from filmdemocracy.core.utils import RankingGenerator, SpamHelper
 
 
 @method_decorator(login_required, name='dispatch')
@@ -162,7 +163,7 @@ def leave_club(request, club_id):
     if not club.members.filter(is_active=True):
         club.delete()
         Notification.objects.filter(club=club).delete()
-    return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('core:home'))
 
 
 @login_required
@@ -336,15 +337,6 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
             context['display_option_tag'] = _("Posters")
         candidate_films = []
         for film in club_films:
-            try:
-                film_duration = int(film.db.duration)
-            except ValueError:
-                if ' min' in film.db.duration:
-                    film_duration = int(film.db.duration.replace(' min', ''))
-                elif 'min' in film.db.duration:
-                    film_duration = int(film.db.duration.replace('min', ''))
-                else:
-                    film_duration = 0
             film_voters = [vote.user.username for vote in film.vote_set.all()]
             if self.request.user.username in film_voters:
                 if not view_option or view_option == '&view=only_voted':
@@ -353,7 +345,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
                         'film': film,
                         'voted': True,
                         'vote_points': - user_vote.vote_score,
-                        'duration': film_duration,
+                        'duration': film.db.duration_in_mins_int,
                         'vote': user_vote.vote_karma,
                     })
             elif view_option != '&view=only_voted':
@@ -361,7 +353,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
                     'film': film,
                     'voted': False,
                     'vote_points': -2.5,
-                    'duration': film_duration,
+                    'duration': film.db.duration_in_mins_int,
                     'vote': False,
                 })
         context['candidate_films'] = candidate_films
@@ -577,11 +569,12 @@ class InviteNewMemberConfirmView(generic.FormView):
 
     @staticmethod
     def create_notifications(user, club):
-        club_members = club.members.filter(is_active=True).exclude(id=user.id)
+        club_members = club.members.filter(is_active=True)
         for member in club_members:
             Notification.objects.create(type=Notification.JOINED,
                                         activator=user,
                                         club=club,
+                                        object_id=user.id,
                                         recipient=member)
 
     def form_valid(self, form):

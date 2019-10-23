@@ -1,4 +1,4 @@
-{% extends "global/base_filmdemocracy.html" %}
+{% extends "core/base_filmdemocracy.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
@@ -85,7 +85,7 @@
         <input type="checkbox" class="custom-control-input" name="agree_terms" id="agree_terms" value="agree_terms">
         <label class="custom-control-label" for="agree_terms">
           {% trans 'Agree to' %}
-          <a href="{% url 'terms_and_conditions' %}" target="blank">{% trans 'terms and conditions' %}</a>
+          <a href="{% url 'core:terms_and_conditions' %}" target="blank">{% trans 'terms and conditions' %}</a>
         </label>
       </div>
     </div>
@@ -99,7 +99,7 @@
 <!--END: SIGN UP IN FORM-->
 
 
-<form class="btn-cancel" action="{% url 'home' %}">
+<form class="btn-cancel" action="{% url 'core:home' %}">
   <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 

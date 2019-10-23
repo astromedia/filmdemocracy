@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'filmdemocracy.core',
     'filmdemocracy.registration',
     'filmdemocracy.democracy',
     'django.contrib.admin',
@@ -64,7 +65,7 @@ ROOT_URLCONF = 'filmdemocracy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'filmdemocracy/global/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'filmdemocracy/core/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'filmdemocracy.context_processors.notifications',
+                'filmdemocracy.core.context_processors.notifications',
             ],
         },
     },
@@ -147,15 +148,15 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'filmdemocracy/static/')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'filmdemocracy/global/static'),
+    os.path.join(BASE_DIR, 'filmdemocracy/core/static'),
 ]
 
 
 # Login redirect
 
 LOGIN_URL = '/registration/login/'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'core:home'
+LOGOUT_REDIRECT_URL = 'core:home'
 
 
 # Dev email backend

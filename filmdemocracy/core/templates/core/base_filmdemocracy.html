@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
 
-  <link rel="shortcut icon" type="image/x-icon" href="{% static 'global/images/favicon.ico'%}"/>
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'core/images/favicon.ico'%}"/>
 
   <title>
     {% block title %}{% endblock %} | FilmDemocracy
@@ -21,8 +21,8 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <!-- General FilmDemocracy website styles -->
-  <link rel="stylesheet" type="text/css" href="{% static 'global/css/base_filmdemocracy.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'global/css/common_utils.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'core/css/base_filmdemocracy.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'core/css/common_utils.css' %}">
 
   <!-- Custom styles for child templates -->
   {% block styles %}
@@ -47,9 +47,9 @@
 
   <div class="container navbar-container">
 
-    <a class="navbar-brand ml-md-5 ml-3 align-self-center" href="{% url 'home' %}">
-      <img class="d-md-none .d-lg-block" src="{% static 'global/svg/webname_greengray_short.svg'%}">
-      <img class="d-none d-md-block" src="{% static 'global/svg/webname_greengray.svg'%}">
+    <a class="navbar-brand ml-md-5 ml-3 align-self-center" href="{% url 'core:home' %}">
+      <img class="d-md-none .d-lg-block" src="{% static 'core/svg/webname_greengray_short.svg'%}">
+      <img class="d-none d-md-block" src="{% static 'core/svg/webname_greengray.svg'%}">
     </a>
 
     <!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"-->
@@ -69,7 +69,7 @@
 
         <a class="nav-link nav-icon dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkChat"
            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="" src="{% static 'global/svg/chat_bubble.svg'%}">
+          <img class="" src="{% static 'core/svg/chat_bubble.svg'%}">
         </a>
 
         <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkChat">
@@ -178,7 +178,7 @@
 
         <a class="nav-link nav-icon nav-icon-rounded dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkClub"
            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="" src="{% static 'global/svg/people.svg'%}">
+          <img class="" src="{% static 'core/svg/people.svg'%}">
         </a>
 
         <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkClub">
@@ -254,7 +254,7 @@
           <img class="mr-1 rounded-circle" src="{{ user.profile_image.url }}"
                alt="user.profile_image not found">
           {% else %}
-          <img class="mr-1 rounded-circle" src="{% static 'global/svg/person.svg'%}">
+          <img class="mr-1 rounded-circle" src="{% static 'core/svg/person.svg'%}">
           {% endif %}
           <span>{{ user.username }}</span>
         </a>
@@ -266,7 +266,7 @@
           {% if user.profile_image %}
           <img class="mr-1 rounded-circle" src="{{ user.profile_image.url }}" alt="user.profile_image not found">
           {% else %}
-          <img class="" src="{% static 'global/svg/person.svg'%}">
+          <img class="" src="{% static 'core/svg/person.svg'%}">
           {% endif %}
         </a>
         <!--END: ONLY SHOWN IN SMALL DISPLAYS-->
@@ -317,7 +317,7 @@
 
         <a class="nav-link nav-icon dropdown-toggle pointer-cursor" id="navbarDropdownNotifications"
            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="" src="{% static 'global/svg/bell_white.svg'%}" alt="bell image not found">
+          <img class="" src="{% static 'core/svg/bell_white.svg'%}" alt="bell image not found">
         </a>
 
 
@@ -339,7 +339,7 @@
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <form method="POST" action="{% url 'notification_dispatcher' ntf.type ntf.club.id ntf.object_id %}">
+          <form method="POST" action="{% url 'core:notification_dispatcher' ntf.type ntf.club.id ntf.object_id %}">
           {% csrf_token %}
 
           <input type="hidden" name="ntf_ids" value="{{ ntf.ntf_ids }}">
@@ -366,6 +366,12 @@
 
                     {% blocktrans with new_member=ntf.activator.username %}
                       {{ new_member }} joined the club.
+                    {% endblocktrans %}
+
+                  {% elif ntf.type == 'joined_self' %}
+
+                    {% blocktrans with club=ntf.club.name %}
+                      You joined the club "{{ club }}".
                     {% endblocktrans %}
 
                   {% elif ntf.type == 'promoted' %}
@@ -472,7 +478,7 @@
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <form method="POST" action="{% url 'notification_cleaner' %}" >
+          <form method="POST" action="{% url 'core:notification_cleaner' %}" >
           {% csrf_token %}
 
           <button type="submit" class="dropdown-item py-0 px-3 m-0 extra-item text-center">
@@ -523,13 +529,13 @@
 
       <div class="col-auto">
         <a class="icon" href="https://github.com/astromedia/filmdemocracy/" target="blank">
-          <img style="min-height: 18px;" src="{% static 'global/svg/mark-github.svg'%}">
+          <img style="min-height: 18px;" src="{% static 'core/svg/mark-github.svg'%}">
         </a>
       </div>
 
       <div class="col-auto">
         <a class="icon" href="https://www.facebook.com/FilmDemocracy/" target="blank">
-          <img style="max-height: 18px;" src="{% static 'global/svg/facebook_bnw.svg'%}">
+          <img style="max-height: 18px;" src="{% static 'core/svg/facebook_bnw.svg'%}">
         </a>
       </div>
 
@@ -537,7 +543,7 @@
 
         <a class="icon dropdown-toggle lang-dropdown mr-n2" id="navbarDropdownMenuLinkLanguage" role="button"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="" style="min-height: 16px;" src="{% static 'global/svg/globe_negative.svg'%}">
+          <img class="" style="min-height: 16px;" src="{% static 'core/svg/globe_negative.svg'%}">
         </a>
 
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLinkLanguage">

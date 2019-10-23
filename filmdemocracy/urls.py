@@ -20,11 +20,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from filmdemocracy import views
-
 
 urlpatterns = [
-    path('', views.redirect_to_home),
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
     url(r'^markdownx/', include('markdownx.urls')),
@@ -33,31 +30,15 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path(
         '',
+        include('filmdemocracy.core.urls')
+    ),
+    path(
+        '',
         include('filmdemocracy.democracy.urls')
     ),
     path(
         'registration/',
         include('filmdemocracy.registration.urls')
-    ),
-    path(
-        '',
-        views.HomeView.as_view(template_name='global/home.html'),
-        name='home'
-    ),
-    path(
-        'terms_and_conditions/',
-        views.TermsAndConditionsView.as_view(template_name='global/terms_and_conditions.html'),
-        name='terms_and_conditions'
-    ),
-    path(
-        'notification_dispatcher/<str:ntf_type>/<str:ntf_club_id>/<str:ntf_object_id>/',
-        views.notification_dispatcher,
-        name='notification_dispatcher'
-    ),
-    path(
-        'notification_cleaner/',
-        views.notification_cleaner,
-        name='notification_cleaner'
     ),
 )
 

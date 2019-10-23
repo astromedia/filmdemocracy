@@ -8,7 +8,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
-<link rel="stylesheet" href="{% static 'global/css/dark_background.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/dark_background.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films_wide.css' %}">
 {% endblock %}
 
@@ -237,7 +237,7 @@
         {% elif order_option == '&order=year' %}
           {{ candidate.film.db.year }}
         {% elif order_option == '&order=duration' %}
-          {{ candidate.film.db.duration }}
+          {{ candidate.film.db.duration_str }}
         {% endif %}
         </td>
 

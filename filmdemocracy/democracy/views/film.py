@@ -15,17 +15,18 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
-from filmdemocracy.democracy.models import Club, Notification, ClubMemberInfo, Invitation
+from filmdemocracy.core.models import Notification
+from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation
 from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
 from filmdemocracy.registration.models import User
 
-from filmdemocracy.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
-from filmdemocracy.utils import add_club_context, update_filmdb_omdb_info
-from filmdemocracy.utils import extract_options
-from filmdemocracy.utils import random_club_id_generator, random_film_public_id_generator
-from filmdemocracy.utils import NotificationsHelper
-from filmdemocracy.utils import RankingGenerator
+from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
+from filmdemocracy.core.utils import add_club_context, update_filmdb_omdb_info
+from filmdemocracy.core.utils import extract_options
+from filmdemocracy.core.utils import random_club_id_generator, random_film_public_id_generator
+from filmdemocracy.core.utils import NotificationsHelper
+from filmdemocracy.core.utils import RankingGenerator
 
 
 @method_decorator(login_required, name='dispatch')
@@ -61,15 +62,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         context['display_option'] = display_option
         context['film'] = film
         context['updatable_db'] = film.db.updatable
-        try:
-            context['film_duration'] = f'{int(film.db.duration)} min'
-        except ValueError:
-            if ' min' in film.db.duration:
-                context['film_duration'] = film.db.duration
-            elif 'min' in film.db.duration:
-                context['film_duration'] = film.db.duration.replace('min', ' min')
-            else:
-                context['film_duration'] = film.db.duration
+        context['film_duration'] = film.db.duration_str
         film_comments = FilmComment.objects.filter(club=club.id, film=film)
         context['film_comments'] = film_comments.order_by('created_datetime')
         choice_dict = {}

@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from filmdemocracy.registration import forms
-from filmdemocracy.democracy.models import Notification
+from filmdemocracy.core.models import Notification
 
 
 class SignUpView(generic.CreateView):
@@ -46,7 +46,7 @@ def account_delete(request):
             create_notifications(user, club)
     user.delete()
     messages.success(request, _("Account deleted successfully."))
-    return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('core:home'))
 
 
 @method_decorator(login_required, name='dispatch')

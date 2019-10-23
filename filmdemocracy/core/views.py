@@ -5,8 +5,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
-from filmdemocracy.democracy.models import Notification
-from filmdemocracy.utils import NotificationsHelper
+from filmdemocracy.core.models import Notification
+from filmdemocracy.core.utils import NotificationsHelper
 
 
 @login_required
@@ -29,10 +29,6 @@ def notification_cleaner(request):
         ntf.read = True
         ntf.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def redirect_to_home(request):
-    return redirect('home')
 
 
 class HomeView(generic.TemplateView):
