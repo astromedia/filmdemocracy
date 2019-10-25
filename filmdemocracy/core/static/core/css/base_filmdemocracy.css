@@ -141,8 +141,9 @@ body {
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .media img {
-  max-width: 48px;
-  max-height: 48px;
+  width: 48px;
+  height: 48px;
+  object-fit: fill;
   background: rgba(0, 0, 0, 1) !important;
 }
 

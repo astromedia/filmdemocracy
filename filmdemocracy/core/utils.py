@@ -308,15 +308,16 @@ class NotificationsHelper:
     def check_user_is_anonymous(self):
         return self.request.user.is_anonymous
 
-    @staticmethod
-    def build_ntf_message(ntf, ntf_type, ntf_ids, object_id=None, object_name=None, counter=0):
+    def build_ntf_message(self, ntf, ntf_type, ntf_ids, object_id=None, object_name=None, counter=0, image_url=None):
         ntf_message = {
             'type': ntf_type,
+            'image_url': self.get_notification_image_url(ntf, ntf_type, object_id),
             'activator': ntf.activator,
             'object_id': object_id,
             'object_name': object_name,
             'counter': counter,
-            'club': ntf.club,
+            'club_id': ntf.club.id if ntf.club else None,
+            'club_name': ntf.club.name if ntf.club else None,
             'created_datetime': ntf.created_datetime,
             'time_ago': time_ago_format(datetime.now(timezone.utc) - ntf.created_datetime),  # TODO: use pytz
             'read': ntf.read,
@@ -324,11 +325,74 @@ class NotificationsHelper:
         }
         return ntf_message
 
+    def get_image_url_object_mapping(self):
+        image_url_generator_mapping = {
+            Notification.SIGNUP: self.get_website_image_url,
+            Notification.JOINED: self.get_activator_image_url,
+            Notification.JOINED + '_self': self.get_club_image_url,
+            Notification.LEFT: self.get_activator_image_url,
+            Notification.ORGAN_MEET: self.get_activator_image_url,
+            Notification.SEEN_FILM: self.get_activator_image_url,
+            Notification.PROMOTED: self.get_member_image_url,
+            Notification.PROMOTED + '_self': self.get_activator_image_url,
+            Notification.KICKED: self.get_member_image_url,
+            Notification.KICKED + '_self': self.get_activator_image_url,
+            Notification.ADDED_FILM: self.get_activator_image_url,
+            Notification.ADDED_FILM + 's': self.get_activator_image_url,
+            Notification.COMM_FILM: self.get_activator_image_url,
+            Notification.COMM_FILM + 's': self.get_film_image_url,
+            Notification.COMM_COMM: self.get_activator_image_url,
+            Notification.COMM_COMM + 's': self.get_film_image_url,
+            Notification.ABANDONED: self.get_club_image_url,
+            Notification.INVITED: self.get_club_image_url,
+        }
+        return image_url_generator_mapping
+
+    def get_notification_image_url(self, ntf, ntf_type, object_id):
+        image_url_generator_mapping = self.get_image_url_object_mapping()
+        image_url_generator = image_url_generator_mapping[ntf_type]
+        return image_url_generator(ntf, object_id)
+
+    @staticmethod
+    def get_website_image_url(ntf, object_id):
+        return '/static/core/svg/webname_greengray_short.svg'
+
+    @staticmethod
+    def get_activator_image_url(ntf, object_id):
+        if ntf.activator.profile_image:
+            return ntf.activator.profile_image.url
+        else:
+            return '/static/registration/svg/user_no_profile_image.svg'
+
+    @staticmethod
+    def get_member_image_url(ntf, object_id):
+        member = User.objects.get(id=object_id)
+        if member.profile_image:
+            return member.profile_image.url
+        else:
+            return '/static/registration/svg/user_no_profile_image.svg'
+
+    @staticmethod
+    def get_film_image_url(ntf, object_id):
+        film = Film.objects.get(id=object_id)
+        if film.db.poster_url:
+            return film.db.poster_url
+        else:
+            return None
+
+    @staticmethod
+    def get_club_image_url(ntf, object_id):
+        if ntf.club.logo:
+            return ntf.club.logo.url
+        else:
+            return '/static/democracy/images/club_no_logo.png'
+
     def get_user_notifications(self):
         return Notification.objects.filter(recipient=self.request.user)
 
     def get_processing_mapping(self):
         processing_mapping = {
+            Notification.SIGNUP: self.process_base_notifications,
             Notification.JOINED: self.process_member_notifications,
             Notification.LEFT: self.process_base_notifications,
             Notification.ORGAN_MEET: self.process_meetings_notifications,
@@ -449,6 +513,7 @@ class NotificationsHelper:
 
     def get_dispatch_url_mapping(self):
         processing_mapping = {
+            Notification.SIGNUP: self.dispatch_url_tour,
             Notification.JOINED: self.dispatch_url_member,
             Notification.JOINED + '_self': self.dispatch_url_club,
             Notification.LEFT: self.dispatch_url_club,
@@ -478,6 +543,10 @@ class NotificationsHelper:
     @staticmethod
     def dispatch_url_home(club_id=None, ntf_object_id=None):
         return reverse('core:home')
+
+    @staticmethod
+    def dispatch_url_tour(club_id=None, ntf_object_id=None):
+        return reverse('core:tour')
 
     @staticmethod
     def dispatch_url_member(club_id=None, ntf_object_id=None):

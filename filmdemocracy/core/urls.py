@@ -11,6 +11,11 @@ urlpatterns = [
         name='home'
     ),
     path(
+        'tour/',
+        views.TourView.as_view(template_name='core/tour.html'),
+        name='tour'
+    ),
+    path(
         'terms_and_conditions/',
         views.TermsAndConditionsView.as_view(template_name='core/terms_and_conditions.html'),
         name='terms_and_conditions'

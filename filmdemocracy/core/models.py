@@ -8,6 +8,7 @@ from filmdemocracy.registration.models import User
 
 class Notification(models.Model):
 
+    SIGNUP = 'signup'
     JOINED = 'joined'
     PROMOTED = 'promoted'
     LEFT = 'left'
@@ -21,6 +22,7 @@ class Notification(models.Model):
     INVITED = 'invited'
 
     notification_choices = (
+        (SIGNUP, 'User created account'),
         (JOINED, 'Member joined the club'),
         (PROMOTED, 'Member promoted to admin'),
         (LEFT, "Member left the club"),
@@ -37,7 +39,7 @@ class Notification(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     type = models.CharField(max_length=9, choices=notification_choices)
     activator = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='active_member')
-    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='club')
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True, related_name='club')
     object_id = models.UUIDField(null=True)
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipient')
     read = models.BooleanField('notification read', default=False)

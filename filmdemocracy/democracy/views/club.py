@@ -140,6 +140,7 @@ class EditClubPanelView(UserPassesTestMixin, generic.UpdateView):
 
 @login_required
 def leave_club(request, club_id):
+    # TODO: include notifications?
     club = get_object_or_404(Club, id=club_id)
     if not user_is_club_member_check(request.user, club=club):
         return HttpResponseForbidden()

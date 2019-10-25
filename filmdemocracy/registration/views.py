@@ -13,12 +13,20 @@ from filmdemocracy.core.models import Notification
 
 class SignUpView(generic.CreateView):
     form_class = forms.SignupForm
-    success_url = reverse_lazy('registration:user_login')
 
     def form_valid(self, form):
-        messages.success(self.request, _("Account created successfully.\nWelcome to FilmDemocracy!"
-                                         "\nNow login with your new credentials to continue."))
-        return super().form_valid(form)
+        new_user = form.save()
+        messages.success(self.request, _("Account created successfully. Welcome to FilmDemocracy!"))
+        self.create_notifications(new_user)
+        login(self.request, new_user, backend='django.contrib.auth.backends.ModelBackend')
+        return HttpResponseRedirect(reverse_lazy('core:home'))
+
+    @staticmethod
+    def create_notifications(user):
+        Notification.objects.create(type=Notification.SIGNUP,
+                                    activator=user,
+                                    club=None,
+                                    recipient=user)
 
 
 @login_required

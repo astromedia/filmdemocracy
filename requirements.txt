@@ -1,4 +1,5 @@
 Django
+django-autocomplete-light
 django-markdownx
 django-widget-tweaks
 psycopg2-binary

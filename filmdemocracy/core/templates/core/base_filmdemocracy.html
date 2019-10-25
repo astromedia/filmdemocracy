@@ -339,7 +339,7 @@
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <form method="POST" action="{% url 'core:notification_dispatcher' ntf.type ntf.club.id ntf.object_id %}">
+          <form method="POST" action="{% url 'core:notification_dispatcher' ntf.type ntf.club_id ntf.object_id %}">
           {% csrf_token %}
 
           <input type="hidden" name="ntf_ids" value="{{ ntf.ntf_ids }}">
@@ -348,21 +348,27 @@
 
             <div class="media notification-item">
 
-              {% if ntf.activator %}
-              {% if ntf.activator.profile_image %}
+              {% if ntf.image_url %}
               <img class="align-self-center border border-secondary rounded-circle mr-2"
-                   src="{{ ntf.activator.profile_image.url }}" alt="ntf.activator.profile_image not found">
-              {% else %}
-              <img class="align-self-center border border-secondary rounded-circle mr-2"
-                   src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="ntf.activator.profile_image not found">
-              {% endif %}
+                   src="{{ ntf.image_url }}" alt="ntf.image_url not found">
               {% endif %}
 
               <div class="media-body align-self-center p-0 m-0">
-                <p class="first-line text-muted"><strong>{{ ntf.club.name }}</strong></p>
+
+                {% if ntf.club_name %}
+                  <p class="first-line text-muted"><strong>{{ ntf.club_name }}</strong></p>
+                {% endif %}
+
                 <p class="second-line">
 
-                  {% if ntf.type == 'joined' %}
+                  {% if ntf.type == 'signup' %}
+
+                    {% blocktrans with new_member=ntf.activator.username %}
+                      Welcome to FilmDemocracy {{ new_member }}!
+                    {% endblocktrans %}
+                    <span class="text-primary">{% trans 'Click here to take a tour if this is your first time here.' %}</span>
+
+                  {% elif ntf.type == 'joined' %}
 
                     {% blocktrans with new_member=ntf.activator.username %}
                       {{ new_member }} joined the club.
@@ -370,7 +376,7 @@
 
                   {% elif ntf.type == 'joined_self' %}
 
-                    {% blocktrans with club=ntf.club.name %}
+                    {% blocktrans with club=ntf.club_name %}
                       You joined the club "{{ club }}".
                     {% endblocktrans %}
 
@@ -454,18 +460,22 @@
 
                   {% elif ntf.type == 'abandoned' %}
 
-                    {% trans 'The only admin of the club left and all club members were automatically promoted to admin' %}
+                    {% trans 'The only admin of the club left and all club members were automatically promoted to admin.' %}
 
                   {% elif ntf.type == 'invited' %}
 
-                    {% blocktrans with club=ntf.club.name inviter=ntf.activator.username %}
+                    {% blocktrans with club=ntf.club_name inviter=ntf.activator.username %}
                       You were invited to join the club "{{ club }}" by {{ inviter }}.
                     {% endblocktrans %}
 
                   {% endif %}
 
                 </p>
-                <p class="third-line text-secondary">{{ ntf.time_ago }}</p>
+
+                {% if ntf.time_ago %}
+                  <p class="third-line text-secondary">{{ ntf.time_ago }}</p>
+                {% endif %}
+
               </div>
 
             </div>

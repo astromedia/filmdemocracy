@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'filmdemocracy.core',
     'filmdemocracy.registration',
     'filmdemocracy.democracy',
+    'dal',
+    'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
+from django.utils.decorators import method_decorator
 
 from filmdemocracy.core.models import Notification
 from filmdemocracy.core.utils import NotificationsHelper
@@ -38,6 +39,11 @@ class HomeView(generic.TemplateView):
         if self.request.user.is_authenticated:
             context['user_clubs'] = self.request.user.club_set.all()
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+class TourView(generic.TemplateView):
+    pass
 
 
 class TermsAndConditionsView(generic.TemplateView):
