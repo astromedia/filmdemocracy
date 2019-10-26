@@ -28,19 +28,42 @@
   {{ hidden_field }}
   {% endfor %}
 
-  <div class="form-group mt-4 mb-5 mx-auto">
+<!--  <div class="form-group mt-4 mb-5 mx-auto">-->
+<!--  <input class="form-control" type="text" placeholder="IMDb film url or key" id="imdb_input" name="imdb_input" aria-describedby="IMDbWeb">-->
+<!--  <a href="https://www.imdb.com/" target="blank" id="IMDbWeb" class="form-text text-left ml-2"><small>{% trans 'Go to imdb.com' %}</small></a>-->
+<!--  </div>-->
 
-    <input class="form-control" type="text" placeholder="IMDb film url or key" id="imdb_input" name="imdb_input"
-           aria-describedby="IMDbWeb">
-    <a href="https://www.imdb.com/" target="blank" id="IMDbWeb" class="form-text text-left ml-2">
-      <small>{% trans 'Go to imdb.com' %}</small>
-    </a>
+  <div class="form-inputs">
+
+    <div class="form-input-field">
+
+      <div class="form-group mt-4 mb-5 mx-auto">
+        {% if form.is_bound %}
+        {% if form.filmdbs.errors %}
+        {% render_field form.filmdbs class="form-control is-invalid" %}
+        {% for error in form.filmdbs.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
+        {% else %}
+        {% render_field form.filmdbs class="form-control is-valid" %}
+        {% endif %}
+        {% else %}
+        {% render_field form.filmdbs class="form-control" %}
+        {% endif %}
+      </div>
+
+    </div>
 
   </div>
 
   <input class="btn btn-lg btn-block btn-green-to-blue" type="submit" value="{% trans 'Submit' %}">
 
 </form>
+
+{{ form.media }}
+
 <!--END: ADD NEW FILM FORM-->
 
 

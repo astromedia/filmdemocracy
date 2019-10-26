@@ -15,18 +15,13 @@ body {
   text-align: center;
 }
 
-.form-add-new-film .form-group {
-  width: 90%;
-  max-width: 600px;
-}
-
 .form-add-new-film .form-inputs {
   margin-bottom: 10px;
 }
 
 .form-add-new-film .form-inputs .form-input-field {
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
   padding-top: 10px;
   padding-bottom: 15px;
   padding-left: 10px;

@@ -23,6 +23,11 @@ club_urlpatterns = [
         club_views.InviteNewMemberConfirmView.as_view(template_name='democracy/invite_new_member_confirm.html'),
         name='invite_new_member_confirm'
     ),
+    path(
+        'new_film_autocomplete/',
+        club_views.NewFilmAutocompleteView.as_view(),
+        name='new_film_autocomplete'
+    ),
     path('club/<str:club_id>/', include([
         path(
             '',

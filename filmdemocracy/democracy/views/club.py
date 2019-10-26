@@ -13,6 +13,9 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
+from django.utils.html import format_html
+
+from dal import autocomplete
 
 from filmdemocracy.democracy import forms
 from filmdemocracy.core.models import Notification
@@ -376,27 +379,93 @@ class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
         return context
 
 
+# @method_decorator(login_required, name='dispatch')
+# class AddNewFilmView(UserPassesTestMixin, generic.FormView):
+#     form_class = forms.FilmAddNewForm
+#     film_added = False
+#     new_film_public_id = None
+#
+#     def test_func(self):
+#         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
+#
+#     def get_form_kwargs(self):
+#         kwargs = super(AddNewFilmView, self).get_form_kwargs()
+#         kwargs.update({'club_id': self.kwargs['club_id']})
+#         return kwargs
+#
+#     def get_success_url(self):
+#         club = get_object_or_404(Club, id=self.kwargs['club_id'])
+#         if self.film_added:
+#             film = get_object_or_404(Film, club=club, public_id=self.new_film_public_id)
+#             return reverse('democracy:film_detail', kwargs={'club_id': club.id,
+#                                                             'film_public_id': film.public_id,
+#                                                             'film_slug': film.db.slug})
+#         else:
+#             return reverse_lazy('democracy:add_new_film', kwargs={'club_id': club.id})
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         club = get_object_or_404(Club, id=self.kwargs['club_id'])
+#         context['club'] = club
+#         return context
+#
+#     @staticmethod
+#     def create_notifications(user, club, film):
+#         club_members = club.members.filter(is_active=True).exclude(id=user.id)
+#         for member in club_members:
+#             Notification.objects.create(type=Notification.ADDED_FILM,
+#                                         activator=user,
+#                                         club=club,
+#                                         object_id=film.id,
+#                                         recipient=member)
+#
+#     def form_valid(self, form):
+#         user = self.request.user
+#         club = get_object_or_404(Club, id=self.kwargs['club_id'])
+#         imdb_key = form.cleaned_data['imdb_input']
+#         if Film.objects.filter(club=club, imdb_id=imdb_key, seen=False):
+#             messages.error(self.request, _('That film is already in the candidate list!'))
+#             self.film_added = False
+#         else:
+#             filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_key)
+#             if created or (not created and not filmdb.title):
+#                 self.film_added = update_filmdb_omdb_info(filmdb)
+#                 if not self.film_added:
+#                     messages.error(self.request, _('Sorry, we could not find that film in the database...'))
+#             else:
+#                 self.film_added = True
+#             if self.film_added:
+#                 film = Film.objects.create(
+#                     public_id=random_film_public_id_generator(club),
+#                     imdb_id=imdb_key,
+#                     proposed_by=user,
+#                     club=club,
+#                     db=filmdb,
+#                 )
+#                 self.create_notifications(user, club, film)
+#                 self.new_film_public_id = film.public_id
+#                 messages.success(self.request, _('New film added! Be the first to vote it!'))
+#         return super().form_valid(form)
+
+
 @method_decorator(login_required, name='dispatch')
 class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     form_class = forms.FilmAddNewForm
-    film_added = False
+    films_added_counter = 0
     new_film_public_id = None
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
-    def get_form_kwargs(self):
-        kwargs = super(AddNewFilmView, self).get_form_kwargs()
-        kwargs.update({'club_id': self.kwargs['club_id']})
-        return kwargs
-
     def get_success_url(self):
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        if self.film_added:
+        if self.films_added_counter == 1:
             film = get_object_or_404(Film, club=club, public_id=self.new_film_public_id)
             return reverse('democracy:film_detail', kwargs={'club_id': club.id,
                                                             'film_public_id': film.public_id,
                                                             'film_slug': film.db.slug})
+        elif self.films_added_counter > 1:
+            return reverse('democracy:candidate_films', kwargs={'club_id': club.id})
         else:
             return reverse_lazy('democracy:add_new_film', kwargs={'club_id': club.id})
 
@@ -419,30 +488,56 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
     def form_valid(self, form):
         user = self.request.user
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        imdb_key = form.cleaned_data['imdb_input']
-        if Film.objects.filter(club=club, imdb_id=imdb_key, seen=False):
-            messages.error(self.request, _('That film is already in the candidate list!'))
-            self.film_added = False
-        else:
-            filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_key)
-            if created or (not created and not filmdb.title):
-                self.film_added = update_filmdb_omdb_info(filmdb)
-                if not self.film_added:
-                    messages.error(self.request, _('Sorry, we could not find that film in the database...'))
-            else:
-                self.film_added = True
-            if self.film_added:
-                film = Film.objects.create(
-                    public_id=random_film_public_id_generator(club),
-                    imdb_id=imdb_key,
-                    proposed_by=user,
-                    club=club,
-                    db=filmdb,
-                )
-                self.create_notifications(user, club, film)
-                self.new_film_public_id = film.public_id
+        filmdbs = form.cleaned_data['filmdbs']
+
+        for filmdb in filmdbs:
+            film = Film.objects.filter(club=club, db=filmdb, seen=False)
+            if film:
+                message_warning = '%s %s' % (_('This film is already in the candidate list:'), f'{film[0].db.title}')
+                messages.warning(self.request, message_warning)
+                return super().form_valid(form)
+
+        for filmdb in filmdbs:
+            film = Film.objects.create(
+                public_id=random_film_public_id_generator(club),
+                proposed_by=user,
+                club=club,
+                db=filmdb,
+            )
+            self.films_added_counter += 1
+            self.create_notifications(user, club, film)
+            self.new_film_public_id = film.public_id
+
+        if self.films_added_counter >= 1:
+            if self.films_added_counter == 1:
                 messages.success(self.request, _('New film added! Be the first to vote it!'))
+            elif self.films_added_counter > 1:
+                messages.success(self.request, _('New films added!'))
+
         return super().form_valid(form)
+
+
+class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
+
+    def get_result_label(self, item):
+        return format_html(
+            '<p class="m-0 p-0" style="line-height: 16px"><span class="font-weight-bold">{}</span> <span class="text-muted">({})</span></p>'
+            '<p class="m-0 p-0" style="line-height: 13px"><span class="text-muted font-italic"><small>{}</small></span></p>',
+            item.title,
+            item.year,
+            item.director,
+        )
+
+    def get_selected_result_label(self, item):
+        return item.title
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return FilmDb.objects.none()
+        qs = FilmDb.objects.all()
+        if self.q:
+            qs = qs.filter(title__istartswith=self.q)
+        return qs
 
 
 @method_decorator(login_required, name='dispatch')

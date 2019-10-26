@@ -7,6 +7,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from dal import autocomplete
 
 from filmdemocracy.democracy.models import Film, FilmDb, Club, Meeting
 from filmdemocracy.registration.models import User
@@ -109,34 +110,38 @@ def process_imdb_input(form):
 #         raise forms.ValidationError(_("Invalid FilmAffinity url."))
 
 
-class FilmAddNewForm(forms.ModelForm):
-    imdb_input = forms.CharField(max_length=200, label=_('IMDb film url or key'),)
+# def clean_imdb_input(self):
+#     imdb_input = self.cleaned_data['imdb_input']
+#     try:
+#         if 'imdb' in imdb_input:
+#             url_list = imdb_input.split('/')
+#             title_position = url_list.index('title')
+#             imdb_key = url_list[title_position + 1]
+#             imdb_key = imdb_key.replace('tt', '')
+#         elif 'imdb' not in imdb_input and 'tt' in imdb_input and len(imdb_input) is 9:
+#             imdb_key = imdb_input.replace('tt', '')
+#         elif 'imdb' not in imdb_input and 'tt' not in imdb_input and len(imdb_input) is 7:
+#             imdb_key = imdb_input
+#         else:
+#             raise ValueError
+#     except ValueError:
+#         return forms.ValidationError(_("The IMDb film url or key does not seem to be valid."))
+#     return imdb_key
 
-    class Meta:
-        model = Film
-        fields = ['imdb_input']
 
-    def __init__(self, *args, **kwargs):
-        self.club_id = kwargs.pop('club_id', None)
-        super(FilmAddNewForm, self).__init__(*args, **kwargs)
-
-    def clean_imdb_input(self):
-        imdb_input = self.cleaned_data['imdb_input']
-        try:
-            if 'imdb' in imdb_input:
-                url_list = imdb_input.split('/')
-                title_position = url_list.index('title')
-                imdb_key = url_list[title_position + 1]
-                imdb_key = imdb_key.replace('tt', '')
-            elif 'imdb' not in imdb_input and 'tt' in imdb_input and len(imdb_input) is 9:
-                imdb_key = imdb_input.replace('tt', '')
-            elif 'imdb' not in imdb_input and 'tt' not in imdb_input and len(imdb_input) is 7:
-                imdb_key = imdb_input
-            else:
-                raise ValueError
-        except ValueError:
-            return forms.ValidationError(_("The IMDb film url or key does not seem to be valid."))
-        return imdb_key
+class FilmAddNewForm(forms.Form):
+    # https://select2.org/
+    filmdbs = forms.ModelMultipleChoiceField(
+        queryset=FilmDb.objects.all(),
+        widget=autocomplete.ModelSelect2Multiple(
+            url='democracy:new_film_autocomplete',
+            attrs={
+                'data-placeholder': _('Type here the name of the film'),
+                'data-minimum-input-length': 0,
+                'data-html': True,
+            }
+        )
+    )
 
 
 # class FilmAddFilmAffForm(forms.ModelForm):

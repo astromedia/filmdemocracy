@@ -271,7 +271,7 @@ def unsee_film(request, club_id, film_public_id, options_string):
     if not user_is_club_admin_check(request.user, club=club):
         return HttpResponseForbidden()
     film = get_object_or_404(Film, club=club, public_id=film_public_id)
-    if Film.objects.filter(club=club_id, imdb_id=film.db.imdb_id, seen=False):
+    if Film.objects.filter(club=club_id, db=film.db, seen=False):
         messages.error(request, _('This film is already in the candidate list! Delete it or leave it.'))
         return HttpResponseRedirect(reverse('democracy:film_detail', kwargs={'club_id': club.id,
                                                                              'film_public_id': film.public_id,

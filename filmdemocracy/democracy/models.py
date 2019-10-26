@@ -184,7 +184,7 @@ class FilmDb(models.Model):
     comment = models.TextField('site admin comments about the film', null=True, blank=True, max_length=1000)
 
     def __str__(self):
-        return f'{self.imdb_id}|{self.title}'
+        return f'{self.title}'
 
     @property
     def slug(self):
@@ -240,7 +240,6 @@ class Film(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     public_id = models.CharField(unique=False, max_length=FILM_ID_N_DIGITS)
-    imdb_id = models.CharField('IMDb id', max_length=7)
     proposed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     db = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
