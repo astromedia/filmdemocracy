@@ -19,11 +19,12 @@ from dal import autocomplete
 
 from filmdemocracy.democracy import forms
 from filmdemocracy.core.models import Notification
-from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation, ChatClubInfo, Meeting, FilmDb, Film, Vote, FilmComment
+from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation, Meeting, FilmDb, Film, Vote, FilmComment
+from filmdemocracy.chat.models import ChatClubInfo
 from filmdemocracy.registration.models import User
 
 from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check
-from filmdemocracy.core.utils import add_club_context, update_filmdb_omdb_info, extract_options
+from filmdemocracy.core.utils import add_club_context, extract_options
 from filmdemocracy.core.utils import random_club_id_generator, random_film_public_id_generator
 from filmdemocracy.core.utils import RankingGenerator, SpamHelper
 

@@ -2,11 +2,6 @@ from django import forms
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMultiAlternatives
-from django.template import loader
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from dal import autocomplete
 
 from filmdemocracy.democracy.models import Film, FilmDb, Club, Meeting

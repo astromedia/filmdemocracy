@@ -2,7 +2,7 @@ import uuid
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.utils.decorators import method_decorator
 

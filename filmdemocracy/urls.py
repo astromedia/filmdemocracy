@@ -28,18 +28,10 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    path(
-        '',
-        include('filmdemocracy.core.urls')
-    ),
-    path(
-        '',
-        include('filmdemocracy.democracy.urls')
-    ),
-    path(
-        'registration/',
-        include('filmdemocracy.registration.urls')
-    ),
+    path('', include('filmdemocracy.core.urls')),
+    path('', include('filmdemocracy.democracy.urls')),
+    path('registration/', include('filmdemocracy.registration.urls')),
+    # path('chat/', include('filmdemocracy.chat.urls')),
 )
 
 

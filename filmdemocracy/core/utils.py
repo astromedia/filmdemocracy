@@ -12,7 +12,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 
 from filmdemocracy.core.models import Notification
-from filmdemocracy.democracy.models import Film, Vote, Club, ChatUsersInfo, Meeting, Invitation
+from filmdemocracy.democracy.models import Film, Vote, Club, Meeting, Invitation
+from filmdemocracy.chat.models import ChatUsersInfo
 from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS
 from filmdemocracy.registration.models import User
 from filmdemocracy.secrets import OMDB_API_KEY

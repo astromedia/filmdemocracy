@@ -1,0 +1,448 @@
+{% load static %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+<nav id="NavBar" class="navbar navbar-expand navbar-dark fixed-top navbar-shadow p-0">
+
+    <div class="container navbar-container">
+
+
+    <!--START: BRAND-->
+    <a class="navbar-brand ml-md-5 ml-3 align-self-center" href="{% url 'core:home' %}">
+
+      <!--START: ONLY SHOWN IN SMALL DISPLAYS-->
+      <img class="d-none d-md-block" src="{% static 'core/svg/webname_greengray.svg'%}">
+      <!--END: ONLY SHOWN IN SMALL DISPLAYS-->
+
+      <!--START: ONLY SHOWN IN LARGE DISPLAYS-->
+      <img class="d-md-none .d-lg-block" src="{% static 'core/svg/webname_greengray_short.svg'%}">
+      <!--END: ONLY SHOWN IN LARGE DISPLAYS-->
+
+    </a>
+    <!--END: BRAND-->
+
+
+    <ul class="navbar-nav ml-auto">
+
+
+
+    <!--START: IF USER AUTHENTICATED-->
+    {% if user.is_authenticated %}
+
+
+
+      <!--START: CHATS DROPDOWN-->
+      <!--extends "chat/base_filmdemocracy_chat.html"-->
+      <!--START: CHATS DROPDOWN-->
+
+
+
+      <!--START: CLUBS DROPDOWN-->
+      <li class="nav-item dropdown mx-2 align-self-center">
+
+        <a class="nav-link nav-icon nav-icon-rounded dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkClub"
+           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="{% static 'core/svg/people.svg'%}">
+        </a>
+
+        <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkClub">
+
+          <p class="dropdown-header py-0 m-0 px-1 text-center">
+            <strong>{% trans 'Clubs' %}</strong>
+          </p>
+
+          {% if user.club_set.all %}
+
+            {% for userclub in user.club_set.all %}
+
+            <div class="dropdown-divider p-0 m-0"></div>
+
+            <a class="dropdown-item py-0 m-0 px-1" href="{% url 'democracy:club_detail' userclub.id %}">
+              <div class="media club-item">
+
+                {% if userclub.logo %}
+                <img class="align-self-center border border-secondary rounded-circle mr-2"
+                     src="{{ userclub.logo.url }}" alt="club.logo not found">
+                {% else %}
+                <img class="align-self-center border border-secondary rounded-circle mr-2"
+                     src="{% static 'democracy/images/club_no_logo.png' %}"
+                     alt="userclub.logo not found">
+                {% endif %}
+
+                <div class="media-body align-self-center p-0 m-0">
+                  <p class="first-line text-dark p-0 m-0">
+                  <span style="color: seagreen; font-size: 20px;">{% if club == userclub and page != 'chat' %} &#x25cf; {% endif %}</span>
+                  <strong>{{ userclub.name }}</strong></p>
+                  <p class="second-line text-secondary p-0 m-0">
+                    {{ userclub.members.all|length }} {% blocktrans count userclub.members.all|length as _ %}member{% plural %}members{% endblocktrans %},
+                    {{ userclub.film_set.all|length }} {% blocktrans count userclub.film_set.all|length as _ %}film{% plural %}films{% endblocktrans %},
+                    {{ userclub.vote_set.all|length }} {% blocktrans count userclub.vote_set.all|length as _ %}vote{% plural %}votes{% endblocktrans %}
+                  </p>
+                </div>
+
+              </div>
+            </a>
+
+            {% endfor %}
+
+
+          {% else %}
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <div class="dropdown-item py-0 m-0 px-1 text-center text-item text-secondary">
+            <span>{% trans 'You are not in any club yet... join or create one!' %}</span>
+          </div>
+
+          {% endif %}
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1 extra-item text-item text-center" href="{% url 'democracy:create_club' %}">
+            <strong>{% trans 'Create new club' %}</strong>
+          </a>
+
+        </div>
+
+      </li>
+      <!--END: CLUBS DROPDOWN-->
+
+
+
+      <!--START: USER DROPDOWN-->
+      <li class="nav-item dropdown mx-2 align-self-center">
+
+        <a class="nav-link nav-icon nav-icon-rounded dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkUser"
+           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {% if user.profile_image %}
+          <img class="" src="{{ user.profile_image.url }}" alt="user.profile_image not found">
+          {% else %}
+          <img class="no-image" src="{% static 'core/svg/person.svg'%}">
+          {% endif %}
+        </a>
+
+        <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkUser">
+
+          <p class="dropdown-header py-0 m-0 px-1 text-center">
+            <strong>{% trans 'Profile' %}</strong>
+          </p>
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1" href="{% url 'registration:account_info' %}">
+
+            <div class="media user-item">
+
+            {% if user.profile_image %}
+            <img class="align-self-center border border-secondary rounded-circle mr-2"
+                 src="{{ user.profile_image.url }}" alt="user.profile_image not found">
+            {% else %}
+            <img class="align-self-center border border-secondary rounded-circle mr-2"
+                 src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="user.profile_image not found">
+            {% endif %}
+
+            <div class="media-body align-self-center p-0 m-0">
+              <p class="first-line text-dark p-0 m-0"><strong>{{ user.username }}</strong></p>
+              <p class="second-line text-secondary p-0 m-0">{{ user.email }}</p>
+            </div>
+
+            </div>
+
+          </a>
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1 text-item logout-item text-center text-secondary" href="{% url 'registration:user_logout' %}">
+            <strong>{% trans 'Log out' %}</strong>
+          </a>
+
+        </div>
+
+      </li>
+      <!--END: USER DROPDOWN-->
+
+
+
+      <!--START: NOTIFICATIONS DROPDOWN-->
+      <li class="nav-item dropdown mx-2 align-self-center ">
+
+        <a class="nav-link nav-icon dropdown-toggle pointer-cursor" id="navbarDropdownNotifications"
+           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img class="" src="{% static 'core/svg/bell_white.svg'%}" alt="bell image not found">
+        </a>
+
+
+        {% if notifications.unread_count > 0 %}
+        <div class="badge-count text-center">
+          <span>{{ notifications.unread_count }}</span>
+        </div>
+        {% endif %}
+
+        <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownNotifications">
+
+          <p class="dropdown-header py-0 m-0 px-1 text-center">
+            <strong>{% trans 'Notifications' %}</strong>
+          </p>
+
+          {% if notifications.list %}
+
+          {% for ntf in notifications.list %}
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+            <form method="POST" action="{% url 'core:notification_dispatcher' ntf.type ntf.club_id ntf.object_id %}">
+            {% csrf_token %}
+
+            <input type="hidden" name="ntf_ids" value="{{ ntf.ntf_ids }}">
+
+              <button class="dropdown-item py-0 m-0 px-1 {% if not ntf.read %} active {% endif %}">
+
+              <div class="media ntf-item">
+
+                {% if ntf.image_url %}
+                <img class="align-self-center border border-secondary rounded-circle mr-2"
+                     src="{{ ntf.image_url }}" alt="ntf.image_url not found">
+                {% endif %}
+
+                <div class="media-body align-self-center p-0 m-0">
+
+                  {% if ntf.club_name %}
+                  <p class="first-line">
+                    <span class="first-line-club text-muted"><strong>{{ ntf.club_name }}</strong></span>
+                    {% if ntf.time_ago %}<span class="first-line-time-ago text-secondary">{{ ntf.time_ago }}</span>{% endif %}
+                  </p>
+                  {% endif %}
+
+                  <p class="second-line">
+
+                    {% if ntf.type == 'signup' %}
+
+                      {% blocktrans with new_member=ntf.activator.username %}
+                        Welcome to FilmDemocracy {{ new_member }}!
+                      {% endblocktrans %}
+                      <span class="text-primary">{% trans 'Click here to take a tour if this is your first time here.' %}</span>
+
+                    {% elif ntf.type == 'joined' %}
+
+                      {% blocktrans with new_member=ntf.activator.username %}
+                        {{ new_member }} joined the club.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'joined_self' %}
+
+                      {% blocktrans with club=ntf.club_name %}
+                        You joined the club "{{ club }}".
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'promoted' %}
+
+                      {% blocktrans with promoter=ntf.activator.username promoted=ntf.object_name %}
+                        {{ promoted }} was promoted to admin by {{ promoter }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'promoted_self' %}
+
+                      {% blocktrans with promoter=ntf.activator.username %}
+                        You were promoted to admin by {{ promoter }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'left' %}
+
+                      {% blocktrans with ex_member=ntf.activator.username %}
+                        {{ ex_member }} left the club.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'addedfilm' %}
+
+                      {% blocktrans with proposer=ntf.activator.username film=ntf.object_name %}
+                        {{ proposer }} added a film: {{ film }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'addedfilms' %}
+
+                      {% blocktrans with proposer=ntf.activator.username count=ntf.counter %}
+                        {{ proposer }} added {{ count }} new films.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'seenfilm' %}
+
+                      {% blocktrans with marker_member=ntf.activator.username film=ntf.object_name %}
+                        {{ marker_member }} marked the film {{ film }} as seen.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'organmeet' %}
+
+                      {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
+                        {{ organizer }} organized a new meeting: {{ meeting }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'commfilm' %}
+
+                      {% blocktrans with commenter=ntf.activator.username film=ntf.object_name %}
+                        {{ commenter }} made a comment on your film {{ film }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'commfilms' %}
+
+                      {% blocktrans with count=ntf.counter film=ntf.object_name %}
+                        Your film {{ film }} has {{ count }} new comments.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'commcomm' %}
+
+                      {% blocktrans with commenter=ntf.activator.username film=ntf.object_name %}
+                        {{ commenter }} made a comment on the film {{ film }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'commcomms' %}
+
+                      {% blocktrans with count=ntf.counter film=ntf.object_name %}
+                        The film {{ film }} has {{ count }} new comments.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'kicked' %}
+
+                      {% blocktrans with kicker=ntf.activator.username member=ntf.object_name %}
+                        {{ member }} was kicked from the club by {{ kicker }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'kicked_self' %}
+
+                      {% blocktrans with kicker=ntf.activator.username %}
+                        You were kicked from the club by {{ kicker }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'abandoned' %}
+
+                      {% trans 'The only admin of the club left and all club members were automatically promoted to admin.' %}
+
+                    {% elif ntf.type == 'invited' %}
+
+                      {% blocktrans with club=ntf.club_name inviter=ntf.activator.username %}
+                        You were invited to join the club "{{ club }}" by {{ inviter }}.
+                      {% endblocktrans %}
+
+                    {% endif %}
+
+                  </p>
+
+                </div>
+
+              </div>
+
+            </button>
+
+          </form>
+
+        {% endfor %}
+
+        <div class="dropdown-divider p-0 m-0"></div>
+
+        <form method="POST" action="{% url 'core:notification_cleaner' %}" >
+        {% csrf_token %}
+
+        <button type="submit" class="dropdown-item py-0 m-0 px-1 extra-item text-item text-center">
+          <strong>{% trans 'Mark all as read' %}</strong>
+        </button>
+
+        </form>
+
+      </div>
+
+      {% else %}
+
+      <div class="dropdown-divider p-0 m-0"></div>
+
+      <div class="dropdown-item py-0 m-0 px-1 text-center text-item text-secondary">
+        <span>{% trans 'Nothing to see here yet' %}</span>
+      </div>
+
+      {% endif %}
+
+      </li>
+      <!--END: NOTIFICATIONS DROPDOWN-->
+
+
+
+    {% endif %}
+    <!--END: IF USER AUTHENTICATED-->
+
+
+
+    <!--START: MENU-->
+      <li class="nav-item dropdown ml-2 mr-3 align-self-center">
+
+        <a class="nav-link nav-icon nav-icon-menu dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkMenu"
+           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img class="" src="{% static 'core/svg/burguer_menu.svg'%}">
+        </a>
+
+        <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkMenu">
+
+          <p class="dropdown-header py-0 m-0 px-1 text-center">
+            <strong>{% trans 'Clubs' %}</strong>
+          </p>
+
+          {% if user.club_set.all %}
+
+            {% for userclub in user.club_set.all %}
+
+            <div class="dropdown-divider p-0 m-0"></div>
+
+            <a class="dropdown-item py-0 m-0 px-1 {% if club == userclub and page != 'chat' %} active {% endif %}"
+               href="{% url 'democracy:club_detail' userclub.id %}">
+              <div class="media club-item">
+
+                {% if userclub.logo %}
+                <img class="align-self-center border border-secondary rounded-circle mr-2"
+                     src="{{ userclub.logo.url }}" alt="club.logo not found">
+                {% else %}
+                <img class="align-self-center border border-secondary rounded-circle mr-2"
+                     src="{% static 'democracy/images/club_no_logo.png' %}"
+                     alt="userclub.logo not found">
+                {% endif %}
+
+                <div class="media-body align-self-center p-0 m-0">
+                  <p class="first-line text-dark p-0 m-0"><strong>{{ userclub.name }}</strong></p>
+                  <p class="second-line text-secondary p-0 m-0">
+                    {{ userclub.members.all|length }} {% blocktrans count userclub.members.all|length as _ %}member{% plural %}members{% endblocktrans %},
+                    {{ userclub.film_set.all|length }} {% blocktrans count userclub.film_set.all|length as _ %}film{% plural %}films{% endblocktrans %},
+                    {{ userclub.vote_set.all|length }} {% blocktrans count userclub.vote_set.all|length as _ %}vote{% plural %}votes{% endblocktrans %}
+                  </p>
+                </div>
+
+              </div>
+            </a>
+
+            {% endfor %}
+
+
+          {% else %}
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <div class="dropdown-item py-0 m-0 px-1 text-center text-item text-secondary">
+            <span>{% trans 'You are not in any club yet... join or create one!' %}</span>
+          </div>
+
+          {% endif %}
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1 extra-item text-item text-center" href="{% url 'democracy:create_club' %}">
+            <strong>{% trans 'Create new club' %}</strong>
+          </a>
+
+        </div>
+
+      </li>
+    <!--END: MENU-->
+
+
+    </ul>
+
+
+  </div>
+
+</nav>

@@ -4,7 +4,7 @@
 #### SETTINGS ####
 
 APPS_DIR='filmdemocracy'
-declare -a WEB_APPS=("core" "registration" "democracy")
+declare -a WEB_APPS=("core" "registration" "democracy" "chat")
 
 
 #######################

@@ -2,7 +2,6 @@ from django.urls import include, path, re_path
 
 from filmdemocracy.democracy.views import club as club_views
 from filmdemocracy.democracy.views import film as film_views
-from filmdemocracy.democracy.views import chat as chat_views
 from filmdemocracy.democracy.views import meetings as meetings_views
 
 
@@ -188,43 +187,4 @@ meetings_urlpatterns = [
 ]
 
 
-chat_urlpatterns = [
-    path(
-        'chat/contacts/',
-        chat_views.ChatContactsView.as_view(template_name='democracy/chat_contacts.html'),
-        name='contacts'
-    ),
-    path(
-        'chat/club/<str:club_id>/',
-        chat_views.ChatClubView.as_view(template_name='democracy/chat_club.html'),
-        name='chat_club'
-    ),
-    path(
-        'chat/club/<str:club_id>/post/',
-        chat_views.post_in_chat_club,
-        name='post_in_chat_club'
-    ),
-    path(
-        'chat/club/<str:club_id>/delete_post/<uuid:post_id>/',
-        chat_views.delete_chat_club_post,
-        name='delete_chat_club_post'
-    ),
-    path(
-        'chat/user/<uuid:chat_user_id>/',
-        chat_views.ChatUsersView.as_view(template_name='democracy/chat_users.html'),
-        name='chat_users'
-    ),
-    path(
-        'chat/user/<uuid:chat_user_id>/post/',
-        chat_views.post_in_chat_users,
-        name='post_in_chat_users'
-    ),
-    path(
-        'chat/user/<uuid:chat_user_id>/delete_post/<uuid:post_id>/',
-        chat_views.delete_chat_users_post,
-        name='delete_chat_users_post'
-    ),
-]
-
-
-urlpatterns = club_urlpatterns + film_urlpatterns + chat_urlpatterns + meetings_urlpatterns
+urlpatterns = club_urlpatterns + film_urlpatterns + meetings_urlpatterns

@@ -1,32 +1,20 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy, reverse
-from django.utils import timezone
+from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.utils.http import urlsafe_base64_decode
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
-from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.cache import never_cache
-from django.views.decorators.debug import sensitive_post_parameters
 
 from filmdemocracy.democracy import forms
 from filmdemocracy.core.models import Notification
-from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation
-from filmdemocracy.democracy.models import ChatClubPost, ChatUsersPost, ChatUsersInfo, ChatClubInfo, Meeting
-from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment
-from filmdemocracy.registration.models import User
+from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment, Club
 
-from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check, users_know_each_other_check
-from filmdemocracy.core.utils import add_club_context, update_filmdb_omdb_info
+from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check
+from filmdemocracy.core.utils import add_club_context
 from filmdemocracy.core.utils import extract_options
-from filmdemocracy.core.utils import random_club_id_generator, random_film_public_id_generator
-from filmdemocracy.core.utils import NotificationsHelper
-from filmdemocracy.core.utils import RankingGenerator
 
 
 @method_decorator(login_required, name='dispatch')

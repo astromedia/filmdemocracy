@@ -1,0 +1,220 @@
+
+/* General page styles
+-------------------------------------------------- */
+
+/* General page structure
+-------------------------------------------------- */
+
+html {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.container-base {
+  max-width: 600px;
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 3.5rem;
+  margin-bottom: 0;
+}
+
+.chat-banner {
+  position: relative;
+  max-width: 600px;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: -45px;
+  background-color: transparent;
+  z-index: 4;
+}
+
+.chat-banner .row {
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.chat-banner .chat-title {
+  pointer: hover;
+  display: inline-block;
+  font-size: 19px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.chat-banner .chat-title a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.chat-banner img {
+ max-height: 35px;
+ background: rgba(0, 0, 0, 1) !important;
+}
+
+.chat-banner a:hover {
+  color: white !important;
+}
+
+.container-shoutbox {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  height: calc(var(--vh, 1vh) * 100 - 150px);
+  z-index: 2;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 50px;
+  background: url("/static/democracy/images/chat_background.png");
+  background-position: left top;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+
+footer {
+  display:none;
+}
+
+/* Posts
+-------------------------------------------------- */
+.date-bubble {
+  display: inline-block;
+  width: auto;
+  font-size: 14px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.post .media-body {
+  padding: 0px;
+}
+
+.post:hover {
+  cursor: pointer;
+}
+
+.post:hover .post-bubble {
+  background-color: #c3e2ff !important;
+}
+
+.post .user-image img {
+ max-width: 35px;
+ background: rgba(0, 0, 0, 1) !important;
+}
+
+.post .green-chat{
+  background-color: #effedd !important;
+}
+
+.post .post-bubble {
+  background-color: white;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  min-width: 105px;
+}
+
+.post .post-text {
+  color: black;
+  font-size: 15px;
+  line-height: 18px; /* Vertically center the text there */
+  max-width: 80vw;
+  word-wrap: break-word !important;
+}
+
+.post .post-text .poster-name {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.post .post-time {
+  font-size: 11px;
+  position: relative;
+  margin-top: -13px;
+  margin-right: -10px;
+}
+
+.post .post-delete {
+  opacity: 0.8;
+  max-height: 20px;
+}
+
+.post .post-delete label:hover {
+  color: red;
+}
+
+.post .post-delete label:hover {
+  display: ;
+}
+
+
+/* Post Form
+-------------------------------------------------- */
+
+.footer {
+  position:fixed;
+  bottom: 0;
+  background-color: #fff;
+  position: relative;
+  bottom: 0;
+}
+
+.form-post {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.form-inline .input-group {
+  width: 100%;
+  margin: 10px;
+}
+
+.footer .form-control {
+  padding: 0px;
+  margin-right: 10px;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+}
+
+.footer textarea {
+  border: none;
+  height: 72px;
+}
+
+.form-post img {
+  max-height: 27px
+}
+
+
+/* Contacts
+-------------------------------------------------- */
+
+.container-contacts {
+  text-decoration: none;
+}
+
+.container-contacts a {
+  text-decoration: none;
+}
+
+.container-contacts .contact {
+  color: black;
+}
+
+.container-contacts .contact:hover {
+  background-color: #dfdfe1;
+}
+
+.container-contacts .contact img {
+  max-width: 48px;
+}
+
