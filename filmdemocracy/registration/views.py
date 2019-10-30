@@ -58,17 +58,9 @@ def account_delete(request):
 
 
 @method_decorator(login_required, name='dispatch')
-class AccountInfoView(generic.TemplateView):
-    context_object_name = 'user'
-
-    def get_queryset(self):
-        return self.request.user
-
-
-@method_decorator(login_required, name='dispatch')
-class AccountInfoEditView(generic.UpdateView):
-    form_class = forms.AccountInfoEditForm
-    success_url = reverse_lazy('registration:account_info')
+class AccountInfoView(generic.UpdateView):
+    form_class = forms.AccountInfoForm
+    success_url = reverse_lazy('core:home')
 
     def get_object(self, queryset=None):
         return self.request.user

@@ -33,13 +33,6 @@ urlpatterns = [
         name='account_info'
     ),
     path(
-        'account/info/edit/',
-        views.AccountInfoEditView.as_view(
-            template_name='registration/account_info_edit.html'
-        ),
-        name='account_info_edit'
-    ),
-    path(
         'account/delete/',
         views.account_delete,
         name='account_delete'

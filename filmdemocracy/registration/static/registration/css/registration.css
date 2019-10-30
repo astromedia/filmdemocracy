@@ -10,7 +10,7 @@ body {
 
 .h3 {
   text-align: center;
-  margin-top: 100px;
+  margin-top: 20px;
   margin-bottom: 20px;
   font-weight: normal;
 }
@@ -68,9 +68,10 @@ body {
 
 /* Account and form account styles
 -------------------------------------------------- */
+
 .profile-picture {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .profile-picture img {
@@ -80,28 +81,22 @@ body {
   background: rgba(0, 0, 0, 0.7);
 }
 
-.profile-picture .edit-picture {
-  position: relative;
-  opacity:0.7;
-}
-
-.overlay {
+.change-picture-icon {
   text-align: center;
-  margin-top: -148px;
-  margin-bottom: 68px;
   position: relative;
+  bottom: 60px;
+  left: 60px;
+  width: 70px;
+  height: 70px;
+  margin: 0px;
+  margin-bottom: -70px;
+  padding: 0px;
 }
 
-.overlay img {
+.change-picture-icon img {
   background: rgba(0, 0, 0, 0.7);
-  max-width: 70px;
+  width: 100%;
   padding: 10px;
-}
-
-.btn-profile {
-  min-width: 180px;
-  max-width: 250px;
-  margin: auto;
 }
 
 .form-profile {

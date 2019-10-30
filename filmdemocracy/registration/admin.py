@@ -7,7 +7,7 @@ from filmdemocracy.registration.models import User
 
 class CustomUserAdmin(UserAdmin):
     add_form = forms.SignupForm
-    form = forms.AccountInfoEditForm
+    form = forms.AccountInfoForm
     model = User
     list_display = ['email', 'username',]
 

@@ -191,12 +191,12 @@
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-            <form method="POST" action="{% url 'core:notification_dispatcher' ntf.type ntf.club_id ntf.object_id %}">
+          <form method="POST" action="{% url 'core:notification_dispatcher' ntf.type ntf.club_id ntf.object_id %}">
             {% csrf_token %}
 
             <input type="hidden" name="ntf_ids" value="{{ ntf.ntf_ids }}">
 
-              <button class="dropdown-item py-0 m-0 px-1 {% if not ntf.read %} active {% endif %}">
+            <button class="dropdown-item py-0 m-0 px-1 {% if not ntf.read %} active {% endif %}">
 
               <div class="media ntf-item">
 
@@ -206,6 +206,7 @@
                 {% endif %}
 
                 <div class="media-body align-self-center p-0 m-0">
+
 
                   {% if ntf.club_name %}
                   <p class="first-line">
@@ -335,28 +336,28 @@
 
           </form>
 
-        {% endfor %}
+          {% endfor %}
 
-        <div class="dropdown-divider p-0 m-0"></div>
+          <div class="dropdown-divider p-0 m-0"></div>
 
-        <form method="POST" action="{% url 'core:notification_cleaner' %}" >
-        {% csrf_token %}
+          <form method="POST" action="{% url 'core:notification_cleaner' %}" >
+          {% csrf_token %}
 
-        <button type="submit" class="dropdown-item py-0 m-0 px-1 extra-item text-item text-center">
-          <strong>{% trans 'Mark all as read' %}</strong>
-        </button>
+          <button type="submit" class="dropdown-item py-0 m-0 px-1 extra-item text-item text-center">
+            <strong>{% trans 'Mark all as read' %}</strong>
+          </button>
 
-        </form>
+          </form>
 
-      </div>
+        </div>
 
       {% else %}
 
-      <div class="dropdown-divider p-0 m-0"></div>
+        <div class="dropdown-divider p-0 m-0"></div>
 
-      <div class="dropdown-item py-0 m-0 px-1 text-center text-item text-secondary">
-        <span>{% trans 'Nothing to see here yet' %}</span>
-      </div>
+        <div class="dropdown-item py-0 m-0 px-1 text-center text-item text-secondary">
+          <span>{% trans 'Nothing to see here yet' %}</span>
+        </div>
 
       {% endif %}
 
@@ -370,7 +371,7 @@
 
 
 
-    <!--START: MENU-->
+      <!--START: MENU-->
       <li class="nav-item dropdown ml-2 mr-3 align-self-center">
 
         <a class="nav-link nav-icon nav-icon-menu dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkMenu"
@@ -381,63 +382,43 @@
         <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkMenu">
 
           <p class="dropdown-header py-0 m-0 px-1 text-center">
-            <strong>{% trans 'Clubs' %}</strong>
+            <strong>{% trans 'Menu' %}</strong>
           </p>
 
-          {% if user.club_set.all %}
-
-            {% for userclub in user.club_set.all %}
-
-            <div class="dropdown-divider p-0 m-0"></div>
-
-            <a class="dropdown-item py-0 m-0 px-1 {% if club == userclub and page != 'chat' %} active {% endif %}"
-               href="{% url 'democracy:club_detail' userclub.id %}">
-              <div class="media club-item">
-
-                {% if userclub.logo %}
-                <img class="align-self-center border border-secondary rounded-circle mr-2"
-                     src="{{ userclub.logo.url }}" alt="club.logo not found">
-                {% else %}
-                <img class="align-self-center border border-secondary rounded-circle mr-2"
-                     src="{% static 'democracy/images/club_no_logo.png' %}"
-                     alt="userclub.logo not found">
-                {% endif %}
-
-                <div class="media-body align-self-center p-0 m-0">
-                  <p class="first-line text-dark p-0 m-0"><strong>{{ userclub.name }}</strong></p>
-                  <p class="second-line text-secondary p-0 m-0">
-                    {{ userclub.members.all|length }} {% blocktrans count userclub.members.all|length as _ %}member{% plural %}members{% endblocktrans %},
-                    {{ userclub.film_set.all|length }} {% blocktrans count userclub.film_set.all|length as _ %}film{% plural %}films{% endblocktrans %},
-                    {{ userclub.vote_set.all|length }} {% blocktrans count userclub.vote_set.all|length as _ %}vote{% plural %}votes{% endblocktrans %}
-                  </p>
-                </div>
-
-              </div>
-            </a>
-
-            {% endfor %}
-
-
-          {% else %}
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <div class="dropdown-item py-0 m-0 px-1 text-center text-item text-secondary">
-            <span>{% trans 'You are not in any club yet... join or create one!' %}</span>
-          </div>
-
-          {% endif %}
+          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Buscar grupos?</div></a>
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <a class="dropdown-item py-0 m-0 px-1 extra-item text-item text-center" href="{% url 'democracy:create_club' %}">
-            <strong>{% trans 'Create new club' %}</strong>
-          </a>
+          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Idioma?</div></a>
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Ajustes?</div></a>
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Preguntas frecuentes?</div></a>
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Contacto?</div></a>
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Tour?</div></a>
+
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Compartir aplicación?</div></a>
+
 
         </div>
 
       </li>
-    <!--END: MENU-->
+      <!--END: MENU-->
 
 
     </ul>

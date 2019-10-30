@@ -16,13 +16,11 @@ class SignupForm(UserCreationForm):
     def clean_agree_terms(self):
         agree_terms = self.cleaned_data['agree_terms']
         if not agree_terms:
-            raise forms.ValidationError(
-                _("You must agree to the terms and conditions to create an account.")
-            )
+            raise forms.ValidationError(_("You must agree to the terms and conditions to create an account."))
         return agree_terms
 
 
-class AccountInfoEditForm(UserChangeForm):
+class AccountInfoForm(UserChangeForm):
     # TODO: profile_image validation
     x = forms.FloatField(widget=forms.HiddenInput(), required=False)
     y = forms.FloatField(widget=forms.HiddenInput(), required=False)
@@ -39,7 +37,7 @@ class AccountInfoEditForm(UserChangeForm):
         }
 
     def save(self):
-        user = super(AccountInfoEditForm, self).save()
+        user = super(AccountInfoForm, self).save()
         x = self.cleaned_data.get('x')
         y = self.cleaned_data.get('y')
         w = self.cleaned_data.get('width')
