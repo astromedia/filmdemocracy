@@ -30,7 +30,7 @@ body {
   position: absolute !important;
   width: 80px;
   padding: 0px;
-  font-size: 14px;
+  font-size: 1rem;
   position: absolute;
   left: calc(50% - 40px);
   bottom: 3px;

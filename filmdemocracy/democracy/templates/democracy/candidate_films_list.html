@@ -22,12 +22,12 @@
 </div>
 
 
-<!--START: CANDIDATE FILMS VIEW OPTIONS-->
+<form action="{% url 'democracy:add_new_film' club.id %}">
+  <button type="submit" class="btn btn-block btn-add-new-film btn-green-to-blue mb-5">{% trans 'Propose film' %}</button>
+</form>
 
-<!--<button data-toggle="modal" data-target="#AddFilmModalCenter" type="button"-->
-<!--        class="btn btn-sm btn-block btn-option btn-green-to-blue mt-4 mb-2 mx-auto">-->
-<!--  {% trans 'Propose film' %}-->
-<!--</button>-->
+
+<!--START: CANDIDATE FILMS VIEW OPTIONS-->
 
 <div class="row justify-content-center filter-options">
 
@@ -42,6 +42,10 @@
 
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdownMenuButtonView">
 
+        <p class="dropdown-header py-0 m-0 px-1 text-center">
+          <strong>{% trans 'Filter films' %}</strong>
+        </p>
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if not view_option %} active {% endif %} py-2 px-3"
            href="{% url 'democracy:candidate_films' club_id=club.id options_string=order_option|add:display_option %}">
           {% trans 'All' %}
@@ -73,6 +77,9 @@
 
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdownMenuButtonOrder">
 
+        <p class="dropdown-header py-0 m-0 px-1 text-center">
+          <strong>{% trans 'Order films by' %}</strong>
+        </p>
         <a class="dropdown-item {% if not order_option %}active{% endif %} py-2 px-3"
            href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:display_option %}">
           {% trans 'Title' %}
@@ -114,6 +121,9 @@
 
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdownMenuButtonDisplay">
 
+        <p class="dropdown-header py-0 m-0 px-1 text-center">
+          <strong>{% trans 'View films as' %}</strong>
+        </p>
         <a class="dropdown-item {% if not display_option %}active{% endif %} py-2 px-3"
            href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:order_option %}">
           {% trans 'Posters' %}
@@ -264,10 +274,10 @@
     <a class="misc-text mx-1 green-color blue-color-hover" href="{% url 'democracy:add_new_film' club.id %}">
     {% trans 'Propose one!' %}
     </a>
-  {% elif view_option == 'not_voted' %}
+  {% elif view_option == '&view=not_voted' %}
     <span>{% trans 'Seems like you have voted all films... congratulations!' %}</span>
-  {% elif view_option == 'only_voted' %}
-    <span>{% trans 'You have not voted any film yet... shame on you.' %}</span>
+  {% elif view_option == '&view=only_voted' %}
+    <span>{% trans 'You have not voted any film yet...' %}</span>
   {% endif %}
 </div>
 
@@ -276,9 +286,9 @@
 
 
 <!--START: ADD NEW-->
-<a class="pointer-cursor rounded-circle" id="btn-new-options" role="button" href="{% url 'democracy:add_new_film' club.id %}">
-  <img class="align-self-center rounded-circle" src="{% static 'democracy/svg/camera.svg'%}">
-</a>
+<!--<a class="pointer-cursor rounded-circle" id="btn-new-options" role="button" href="{% url 'democracy:add_new_film' club.id %}">-->
+<!--  <img class="align-self-center rounded-circle" src="{% static 'democracy/svg/camera.svg'%}">-->
+<!--</a>-->
 <!--END: ADD NEW-->
 
 

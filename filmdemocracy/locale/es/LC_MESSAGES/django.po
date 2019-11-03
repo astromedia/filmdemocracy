@@ -906,37 +906,37 @@ msgstr "¡Organiza uno!"
 msgid "Back to club"
 msgstr "Volver al club"
 
-#: democracy/templates/democracy/ranking_participants.html:14
+#: democracy/templates/democracy/ranking_generator.html:14
 #: democracy/templates/democracy/ranking_results.html:40
 msgid "Participants"
 msgstr "Participantes"
 
-#: democracy/templates/democracy/ranking_participants.html:20
+#: democracy/templates/democracy/ranking_generator.html:20
 #: democracy/templates/democracy/ranking_results.html:19
 msgid "Film ranking"
 msgstr "Ranking de películas"
 
-#: democracy/templates/democracy/ranking_participants.html:24
+#: democracy/templates/democracy/ranking_generator.html:24
 msgid "Who is present?"
 msgstr "¿Quién está presente?"
 
-#: democracy/templates/democracy/ranking_participants.html:25
+#: democracy/templates/democracy/ranking_generator.html:25
 msgid "Click on their picture and count their votes."
 msgstr "Pincha en sus fotos y cuenta sus votos."
 
-#: democracy/templates/democracy/ranking_participants.html:67
+#: democracy/templates/democracy/ranking_generator.html:67
 msgid "Ranking options"
 msgstr "Opciones del ranking"
 
-#: democracy/templates/democracy/ranking_participants.html:74
+#: democracy/templates/democracy/ranking_generator.html:74
 msgid "Exclude films proposed by members not present:"
 msgstr "Excluir películas propuestas por miembros ausentes:"
 
-#: democracy/templates/democracy/ranking_participants.html:90
+#: democracy/templates/democracy/ranking_generator.html:90
 msgid "Maximum film duration in minutes (optional):"
 msgstr "Duración máxima de la película en minutos (opcional):"
 
-#: democracy/templates/democracy/ranking_participants.html:102
+#: democracy/templates/democracy/ranking_generator.html:102
 msgid "Count votes"
 msgstr "Contar votos"
 

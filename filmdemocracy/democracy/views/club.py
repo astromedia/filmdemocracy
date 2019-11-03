@@ -542,7 +542,7 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
 
 
 @method_decorator(login_required, name='dispatch')
-class RankingParticipantsView(UserPassesTestMixin, generic.TemplateView):
+class RankingGeneratorView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])

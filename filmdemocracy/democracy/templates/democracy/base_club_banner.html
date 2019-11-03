@@ -51,7 +51,7 @@
             action="{% if page == 'film_ranking' or page == 'ranking_results'%}
                     {% url 'democracy:club_detail' club.id %}
                     {% else %}
-                    {% url 'democracy:ranking_participants' club.id %}
+                    {% url 'democracy:ranking_generator' club.id %}
                     {% endif %}">
 
         <button type="submit" class="btn btn-block">

@@ -4,6 +4,13 @@
 body {
 }
 
+.btn-add-new-film {
+  width: 30%;
+  min-width: 150px;
+  max-width: 250px;
+  margin: auto;
+}
+
 .filter-options {
   margin: 0;
   padding: 0;
@@ -20,7 +27,7 @@ body {
 .filter-options .btn {
   padding-top: 3px;
   padding-bottom: 3px;
-  font-size: 13px;
+  font-size: 1rem;
   color: darkgray;
   background-color: #121317;
   border: 1px solid #282828;
@@ -33,7 +40,7 @@ body {
 
 .filter-options .dropdown-menu {
   width: 96%;
-  max-width: 908px;
+  max-width: 57rem;
   margin-left: 2%;
   margin-right: 2%;
   overflow: hidden;
@@ -51,7 +58,7 @@ body {
 }
 
 .filter-options .dropdown-menu .dropdown-item:hover {
-  background-color: #dfdfe1;
+  background-color: #f8f9fa;
 }
 
 .filter-options .dropdown-menu .active {

@@ -2,13 +2,12 @@
 /* Club banner style
 -------------------------------------------------- */
 .club-banner-navigation {
-  position: -webkit-sticky; /* Safari */
   position: sticky !important;
-  top: 7px;
+  top: -2.5rem;
   text-align: center;
   width: 100%;
-  padding-top: 15px;
-  margin-top: -20px;
+  padding-top: 4rem;
+  margin-top: -4.5rem;
   padding-bottom: 3px;
   margin-bottom: 0px;
   background-color: #121317;

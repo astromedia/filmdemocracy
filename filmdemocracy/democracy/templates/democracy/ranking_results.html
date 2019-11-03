@@ -27,7 +27,7 @@
 
 <!--LINK TO NEW MEETING-->
 <div class="my-2 btn-new-ranking">
-  <form action="{% url 'democracy:ranking_participants' club.id %}">
+  <form action="{% url 'democracy:ranking_generator' club.id %}">
     <button type="submit" class="btn btn-block btn-green-to-blue">
       {% trans 'Generate new ranking' %}
     </button>

@@ -20,35 +20,34 @@
         </a>
       </div>
 
-      <div class="col-auto dropup">
+<!--      <div class="col-auto dropup">-->
 
-        <a class="icon dropdown-toggle lang-dropdown mr-n2" id="navbarDropdownMenuLinkLanguage" role="button"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="" style="min-height: 16px;" src="{% static 'core/svg/globe_negative.svg'%}">
-        </a>
+<!--        <a class="icon dropdown-toggle lang-dropdown mr-n2" id="navbarDropdownMenuLinkLanguage" role="button"-->
+<!--           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--          <img class="" style="min-height: 16px;" src="{% static 'core/svg/globe_negative.svg'%}">-->
+<!--        </a>-->
 
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLinkLanguage">
+<!--        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLinkLanguage">-->
 
-          {% get_current_language as LANGUAGE_CODE %}
-          {% get_available_languages as LANGUAGES %}
-          {% get_language_info_list for LANGUAGES as languages %}
+<!--          {% get_current_language as LANGUAGE_CODE %}-->
+<!--          {% get_available_languages as LANGUAGES %}-->
+<!--          {% get_language_info_list for LANGUAGES as languages %}-->
 
-          {% for language in languages %}
-          <form class="dropdown-item {% if language.code == LANGUAGE_CODE %} active {% endif %}"
-                action="{% url 'set_language' %}" method="POST">
-            {% csrf_token %}
-            <label class="pointer-cursor" for="language_{{ forloop.counter }}">
-              {{ language.name_local|title }} ({{ language.code }})
-            </label>
+<!--          {% for language in languages %}-->
+<!--          <form class="dropdown-item {% if language.code == LANGUAGE_CODE %} active {% endif %}"-->
+<!--                action="{% url 'set_language' %}" method="POST">-->
+<!--            {% csrf_token %}-->
+<!--            <label class="pointer-cursor" for="language_{{ forloop.counter }}">-->
+<!--              {{ language.name_local|title }} ({{ language.code }})-->
+<!--            </label>-->
+<!--            <input type="submit" class="invisible" name="language"-->
+<!--                   id="language_{{ forloop.counter }}" value="{{ language.code }}">-->
+<!--            <input name="next" type="hidden" value="{{ redirect_to }}">-->
+<!--          </form>-->
+<!--          {% endfor %}-->
 
-            <input type="submit" class="invisible" name="language"
-                   id="language_{{ forloop.counter }}" value="{{ language.code }}">
-            <input name="next" type="hidden" value="{{ redirect_to }}">
-          </form>
-          {% endfor %}
-
-        </div>
-      </div>
+<!--        </div>-->
+<!--      </div>-->
 
     </div>
 

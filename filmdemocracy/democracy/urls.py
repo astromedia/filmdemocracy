@@ -69,9 +69,9 @@ club_urlpatterns = [
             name='promote_members'
         ),
         path(
-            'ranking/participants/',
-            club_views.RankingParticipantsView.as_view(template_name='democracy/ranking_participants.html'),
-            name='ranking_participants'
+            'ranking/generator/',
+            club_views.RankingGeneratorView.as_view(template_name='democracy/ranking_generator.html'),
+            name='ranking_generator'
         ),
         path(
             'ranking/results/',

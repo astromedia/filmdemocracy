@@ -49,7 +49,7 @@
         <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkClub">
 
           <p class="dropdown-header py-0 m-0 px-1 text-center">
-            <strong>{% trans 'Clubs' %}</strong>
+            <strong>{% trans 'Your clubs' %}</strong>
           </p>
 
           {% if user.club_set.all %}
@@ -143,8 +143,8 @@
             {% endif %}
 
             <div class="media-body align-self-center p-0 m-0">
-              <p class="first-line text-dark p-0 m-0"><strong>{{ user.username }}</strong></p>
-              <p class="second-line text-secondary p-0 m-0">{{ user.email }}</p>
+              <p class="first-line text-dark">{{ user.username }}</p>
+              <p class="second-line text-secondary">{{ user.email }}</p>
             </div>
 
             </div>
@@ -385,14 +385,41 @@
             <strong>{% trans 'Menu' %}</strong>
           </p>
 
+          <div class="dropdown-divider p-0 m-0"></div>
+
+          <!--START: SELECT LANGUAGE-->
+          <a class="dropdown-item py-0 m-0 px-1 pointer-cursor" data-toggle="modal" data-target="#languagesModal">
+
+            <div class="media menu-item">
+
+              <img class="align-self-center border border-secondary rounded-circle mr-2"
+                   src="{% static 'core/svg/globe_negative.svg'%}">
+
+              <div class="media-body align-self-center p-0 m-0">
+                <p class="first-line text-dark">
+                  {% trans 'Select language' %}
+                </p>
+                <p class="second-line text-secondary">
+                  {% get_current_language as LANGUAGE_CODE %}
+                  {% get_available_languages as LANGUAGES %}
+                  {% get_language_info_list for LANGUAGES as languages %}
+
+                  {% for language in languages %}
+                    {% if language.code == LANGUAGE_CODE %}
+                      {{ language.name_local|title }} ({{ language.code }})
+                    {% endif %}
+                  {% endfor %}
+                </p>
+
+              </div>
+
+            </div>
+
+          </a>
 
           <div class="dropdown-divider p-0 m-0"></div>
 
           <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Buscar grupos?</div></a>
-
-          <div class="dropdown-divider p-0 m-0"></div>
-
-          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Idioma?</div></a>
 
           <div class="dropdown-divider p-0 m-0"></div>
 
@@ -427,3 +454,52 @@
   </div>
 
 </nav>
+
+
+
+<!-- START: MODAL LANGUAGES -->
+<div class="modal fade" id="languagesModal" tabindex="-1" role="dialog"
+     aria-labelledby="languagesModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="languagesModalTitle">{% trans 'Site language' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body text-center p-0">
+
+        <!--{% get_current_language as LANGUAGE_CODE %}-->
+        <!--{% get_available_languages as LANGUAGES %}-->
+        <!--{% get_language_info_list for LANGUAGES as languages %}-->
+
+        <div class="list-group p-0 m-0">
+
+        {% for language in languages %}
+        <form class="m-0 p-0" action="{% url 'set_language' %}" method="POST">
+          {% csrf_token %}
+          <label class="list-group-item list-group-item-action pointer-cursor py-3 {% if language.code == LANGUAGE_CODE %} active {% endif %}" for="language_{{ forloop.counter }}">
+            {{ language.name_local|title }} ({{ language.code }})
+          </label>
+
+          <input type="submit" style="display: none;" class="invisible" name="language" id="language_{{ forloop.counter }}" value="{{ language.code }}">
+          <input name="next" type="hidden" value="{{ redirect_to }}">
+        </form>
+        {% endfor %}
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm" data-dismiss="modal">
+          {% trans 'Cancel' %}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- END: MODAL LANGUAGES -->

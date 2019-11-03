@@ -88,7 +88,7 @@ footer {
 .date-bubble {
   display: inline-block;
   width: auto;
-  font-size: 14px;
+  font-size: 1rem;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.25);
 }
@@ -211,7 +211,7 @@ footer {
 }
 
 .container-contacts .contact:hover {
-  background-color: #dfdfe1;
+  background-color: #f8f9fa;
 }
 
 .container-contacts .contact img {

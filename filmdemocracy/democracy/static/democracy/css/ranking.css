@@ -23,46 +23,43 @@ body {
 }
 
 
+
 /* Form participants
 -------------------------------------------------- */
-.form-participants {
+.form-ranking-generator {
   text-align: center;
+  font-size: 15px;
 }
 
-.form-participants .col {
+.form-ranking-generator .col {
   max-width: 29%;
   padding: 5px;
   margin-left: 1%;
   margin-right: 1%;
 }
 
-.form-participants .btn-block {
+.form-ranking-generator .btn-block {
   max-width: 225px;
   margin: auto;
   margin-top: 30px;
 }
 
-.form-select-members .card :checked + label img {
-  background-color: lightseagreen !important;
-  border: 5px solid lightseagreen !important;
-}
-
-/* Ranking options header
--------------------------------------------------- */
-.ranking-options .h3 {
-  font-size: 15px;
-  padding-top: 10px;
-  margin-bottom: -13px;
-  text-transform: uppercase;
+.form-ranking-generator .step-title {
+  font-weight: bold;
+  padding-top: 0px;
+  margin-bottom: -16px;
   margin-top: 10px;
 }
 
-.ranking-options hr {
-  width: 450px;
-  max-width: 80%;
-  color: gray;
-  background-color: gray;
-  margin-bottom: 20px;
+hr {
+  width: 400px;
+  color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.form-select-members .card :checked + label img {
+  background-color: lightseagreen !important;
+  border: 5px solid lightseagreen !important;
 }
 
 
