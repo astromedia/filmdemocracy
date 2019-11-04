@@ -5,12 +5,12 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 95px; /* Set the fixed height of the footer here */
-  line-height: 25px; /* Vertically center the text there */
+  height: 6.5rem; /* Set the fixed height of the footer here */
+  line-height: 1.5rem; /* Vertically center the text there */
   background-color: #121317;
-  border-top: 2px solid black;
+  border-top: 0.15rem solid black;
   z-index: 3;
-  padding: 10px;
+  padding: 1rem;
 }
 
 .footer .icon img {
@@ -19,50 +19,4 @@
 
 .footer .icon:hover img {
   opacity: 1;
-}
-
-.footer .dropdown-toggle::after {
-    display:none;
-}
-
-.footer .dropdown-menu {
-  padding: 2px;
-}
-
-.footer .dropdown-menu .dropdown-item {
-  padding: 0px;
-  margin: auto;
-  text-align: left;
-}
-
-.footer .dropdown-menu .dropdown-item label {
-  padding: 12px 18px;
-  margin: 0px;
-  width: 100%;
-}
-
-.footer .dropdown-menu .active {
-  color: black;
-  font-weight: bold;
-  background-color: #d1d1d1;
-}
-
-.footer .dropdown-menu .dropdown-item:hover {
-  font-weight: bold;
-}
-
-.footer .lang-dropdown {
-  color: #d1d1d1;
-}
-
-.footer .lang-dropdown:active {
-  color: #d1d1d1;
-}
-
-.footer .lang-dropdown:focus {
-  color: #d1d1d1;
-}
-
-.footer .lang-dropdown:hover {
-  color: #fff;
 }

@@ -1,20 +1,13 @@
 
 /* Webpage text style
 -------------------------------------------------- */
+
 .webpage-logo {
-  max-width: 15rem;
+  max-width: 13rem;
 }
 
 .webpage-title {
   max-width: 65%
-}
-
-.webpage-subtitle {
-  font-size: 22px;
-}
-
-.misc-text {
-  font-size: 17px;
 }
 
 hr {

@@ -23,12 +23,12 @@ body {
   padding-bottom: 0rem;
   background-color: #bababc;
   min-height: 45rem;
-  margin-bottom: 40px; /* Footer height */
+  margin-bottom: 6.5rem; /* Footer height */
 }
 
 .container-base {
-  padding-top: 1.5rem;
-  padding-bottom: 5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   min-height: 65rem;
   max-width: 57rem;
   background-color: #fafafa;

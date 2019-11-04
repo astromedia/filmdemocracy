@@ -1,8 +1,6 @@
 
 /* General page styles
 -------------------------------------------------- */
-body {
-}
 
 .container-base {
   background-color: #fafafa;
@@ -10,8 +8,7 @@ body {
 
 .h3 {
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 1.5rem;
   font-weight: normal;
 }
 
@@ -20,20 +17,21 @@ body {
 -------------------------------------------------- */
 .form-registration {
   text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .form-registration .form-inputs {
-  margin-bottom: 10px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .form-registration .form-inputs .form-input-field {
-  width: 100%;
+  width: 80%;
   max-width: 330px;
-  padding-top: 10px;
-  padding-bottom: 15px;
-  padding-left: 10px;
-  padding-right: 10px;
   margin: auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .form-registration .form-inputs .form-input-field .label {
@@ -52,97 +50,75 @@ body {
   box-sizing: border-box;
   height: auto;
   padding: 10px;
-  font-size: 16px;
+  font-size: 1rem;
+  text-align: center;
 }
 
 .form-registration .form-inputs .form-input-field .form-control:focus {
   z-index: 2;
 }
 
-.form-registration .btn-block {
-  max-width: 250px;
-  margin: auto;
-  margin-top: 20px;
-}
 
-
-/* Account and form account styles
+/* Account info styles
 -------------------------------------------------- */
 
-.profile-picture {
+.form-account-info {
+  text-align: left;
+}
+
+.form-account-info .form-inputs .profile-picture {
   text-align: center;
   margin-bottom: 20px;
 }
 
-.profile-picture img {
-  width: 11rem;
+.form-account-info .form-inputs .profile-picture img {
+  width: 10rem;
   border: 2px solid rgba(0, 0, 0, 0.75);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   background: rgba(0, 0, 0, 0.7);
 }
 
-.change-picture-icon {
+.form-account-info .form-inputs .profile-picture .change-picture-icon {
   text-align: center;
   position: relative;
-  bottom: 60px;
-  left: 60px;
-  width: 70px;
-  height: 70px;
+  bottom: 50px;
+  left: 50px;
+  width: 50px;
+  height: 50px;
   margin: 0px;
-  margin-bottom: -70px;
+  margin-bottom: -50px;
   padding: 0px;
 }
 
-.change-picture-icon img {
+.form-account-info .form-inputs .profile-picture .change-picture-icon img {
   background: rgba(0, 0, 0, 0.7);
   width: 100%;
-  padding: 10px;
+  padding: 5px;
 }
 
-.form-profile {
-  text-align: left;
+.form-account-info .form-inputs .form-input-field {
+  max-width: 100%;
 }
 
-.form-profile .form-inputs .form-input-field {
-  max-width: 95%;
-}
-
-.form-profile .form-inputs .form-input-field .form-picture {
-  max-width: 400px;
-  margin: auto;
-}
-
-.form-profile .form-inputs .form-input-field .form-email {
-  max-width: 310px;
-}
-
-.form-profile .form-inputs .form-input-field .form-first-name {
-  max-width: 310px;
-}
-
-.form-profile .form-inputs .form-input-field .form-last-name {
-  max-width: 310px;
-}
-
-.form-registration .btn-cancel-modal {
+.form-account-info .btn-modal-util {
   text-align: center;
-  font-size: 13px;
+  padding: 1px;
+  margin: 0px;
+  border: 2px solid #282828;
+  border-radius: 100px;
+  width: 2.2rem;
+  height: 2.2rem;
 }
 
-.form-registration .btn-cancel-modal {
-  color: #6c737d;
-  background-color: transparent;
-  border: 1px solid #282828;
+.form-account-info .btn-modal-util img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
-.form-registration .btn-cancel-modal:hover {
-  color: #fff;
-  text-decoration: none;
-  border: 1px solid #282828;
-  background-color: #282828;
-}
-
-.form-registration .btn-submit-modal {
-  max-width: 300px;
-  font-size: 13px;
+.form-account-info .btn-modal {
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  font-weight: bold !important;
 }

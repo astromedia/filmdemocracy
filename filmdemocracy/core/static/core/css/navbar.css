@@ -1,15 +1,13 @@
-/* Navbar top fixed styles
+
+/* Navbar general styles
 -------------------------------------------------- */
-
-
-/* Navbar general styles */
 
 .navbar {
   height: 3.5rem;
   background-color: #07080a;
 }
 
-.navbar-container {
+.navbar .navbar-container {
   max-width: 57rem;
   padding: 2px;
 }
@@ -18,10 +16,12 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
 }
 
-/* Navbar icon styles */
 
-.navbar-brand img {
-  max-height: 30px;
+/* Navbar icon styles
+-------------------------------------------------- */
+
+.navbar .navbar-brand img {
+  max-height: 2.3rem;
 }
 
 .navbar .nav-item .nav-icon {
@@ -29,7 +29,7 @@
 }
 
 .navbar .nav-item .nav-icon img {
-  max-height: 35px;
+  max-height: 2.5rem;
 }
 
 .navbar .nav-item .nav-icon-rounded img {
@@ -57,7 +57,8 @@
 }
 
 
-/* Navbar dropdown menu styles */
+/* Navbar dropdown menu styles
+-------------------------------------------------- */
 
 .navbar .nav-item .dropdown-toggle::after {
   display:none;
@@ -85,19 +86,20 @@
   background-color: #d1d1d1 !important;
 }
 
-.dropdown-menu .dropdown-header {
-  line-height: 30px;
+.navbar .nav-item .dropdown-menu .dropdown-header {
+  font-size: 1rem;
+  line-height: 2rem;
   color: #343a40 !important;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .media {
-  height: 54px;
+  height: 4rem;
   padding: 2px;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .media img {
-  width: 40px;
-  height: 40px;
+  width: 3.3rem;
+  height: 3.3rem;
   object-fit: fill;
   background: rgba(0, 0, 0, 1) !important;
 }
@@ -114,7 +116,7 @@
 
 .navbar .nav-item .dropdown-menu .text-item {
   font-size: 1rem;
-  line-height: 54px;
+  line-height: 3rem;
 }
 
 .navbar .nav-item .dropdown-menu .text-item:hover {
@@ -129,13 +131,9 @@
   color: lightseagreen !important;
 }
 
-.navbar .nav-item .dropdown-menu .logout-item {
-  line-height: 54px;
-}
 
-.navbar .nav-item .dropdown-menu .logout-item:hover {
-  background-color: transparent !important;
-}
+/* Navbar chat
+-------------------------------------------------- */
 
 .navbar .nav-item .dropdown-menu .dropdown-item .chat-item .first-line {
   font-size: 16px;
@@ -151,57 +149,101 @@
   margin: 0px;
 }
 
+.navbar .nav-item .dropdown-menu .dropdown-item .club-chat-poster {
+  color: #344a8d;
+}
+
+
+/* Navbar club
+-------------------------------------------------- */
+
 .navbar .nav-item .dropdown-menu .dropdown-item .club-item .first-line {
   font-size: 1rem;
-  line-height: 20px;
+  line-height: 1.5rem;
   padding: 0px;
   margin: 0px;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .club-item .second-line {
-  font-size: 13px;
-  line-height: 15px;
+  font-size: 0.9rem;
+  line-height: 1.3rem;
   padding: 0px;
   margin: 0px;
 }
 
+
+/* Navbar user
+-------------------------------------------------- */
+
 .navbar .nav-item .dropdown-menu .dropdown-item .user-item .first-line {
   font-weight: bold;
   font-size: 1rem;
-  line-height: 20px;
+  line-height: 1.5rem;
   padding: 0px;
   margin: 0px;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .user-item .second-line {
-  font-size: 13px;
-  line-height: 15px;
+  font-size: 0.9rem;
+  line-height: 1.3rem;
   padding: 0px;
   margin: 0px;
 }
 
+.navbar .nav-item .dropdown-menu .logout-item {
+}
+
+.navbar .nav-item .dropdown-menu .logout-item:hover {
+  background-color: transparent !important;
+}
+
+
+/* Navbar ntf
+-------------------------------------------------- */
+
+.badge-count {
+  margim: 0px;
+  margin-bottom: -17px;
+  padding: 0px;
+  position: relative;
+  width: 17px;
+  height: 17px;
+  bottom: 45px;
+  left: 30px;
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: bold;
+  color:white;
+  background-color: red;
+  border-radius: 100px;
+}
+
 .navbar .nav-item .dropdown-menu .dropdown-item .ntf-item .first-line {
-  line-height: 15px;
+  line-height: 1.25rem;
   padding: 0px;
   margin: 0px;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .ntf-item .first-line .first-line-club {
-  font-size: 13px;
+  font-size: 0.9rem;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .ntf-item .first-line .first-line-time-ago {
-  font-size: 11px;
+  font-size: 0.8rem;
   margin-left: 5px;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .ntf-item .second-line {
   font-size: 1rem;
-  line-height: 17px;
+  line-height: 1.25rem;
   padding: 0px;
   margin: 0px;
   white-space: normal;
 }
+
+
+/* Navbar menu
+-------------------------------------------------- */
 
 .navbar .nav-item .dropdown-menu .dropdown-item .menu-item .first-line {
   font-weight: bold;
@@ -223,38 +265,4 @@
   font-weight: bold;
   color: #495057;
   border: 1px solid rgba(0, 0, 0, .125);
-}
-
-.navbar .nav-item .dropdown-menu .dropdown-item .club-chat-poster {
-  color: #344a8d;
-}
-
-.btn-login {
-  width: 140px;
-  color: seagreen;
-  background-color: transparent;
-  border: 1px solid seagreen;
-}
-
-.btn-login:hover {
-  color: #fff;
-  text-decoration: none;
-  background-color: lightseagreen;
-}
-
-.badge-count {
-  margim: 0px;
-  margin-bottom: -17px;
-  padding: 0px;
-  position: relative;
-  width: 17px;
-  height: 17px;
-  bottom: 45px;
-  left: 30px;
-  font-size: 12px;
-  line-height: 17px;
-  font-weight: bold;
-  color:white;
-  background-color: red;
-  border-radius: 100px;
 }

@@ -64,10 +64,11 @@
 
 
 <!--START: ACCOUNT INFO FORM-->
-<form class="form-registration form-profile text-center" enctype="multipart/form-data" method="POST" id="formUpload"
+<form class="form-registration form-account-info text-center" enctype="multipart/form-data" method="POST" id="formUpload"
       novalidate>
   {% csrf_token %}
 
+  <input type="hidden" name="updateImage" id="updateImage">
   <input type="hidden" name="x" id="id_x">
   <input type="hidden" name="y" id="id_y">
   <input type="hidden" name="width" id="id_width">
@@ -99,12 +100,12 @@
     <div class="form-input-field">
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mb-1">
           <div class="float-md-right">
             <strong>{% trans 'Username:' %}</strong>
           </div>
         </div>
-        <div class="col-md-auto">
+        <div class="col-md-auto mb-1">
           {{ user.username }}
         </div>
       </div>
@@ -115,12 +116,12 @@
     <div class="form-input-field">
 
       <div class="row align-items-center">
-        <div class="col-md-6">
+        <div class="col-md-6 mb-1">
           <div class="float-md-right">
             <strong>{% trans 'Email:' %}</strong>
           </div>
         </div>
-        <div class="col-md-auto">
+        <div class="col-md-auto mb-1">
           <div class="form-email mx-auto">
             {% if form.is_bound %}
             {% if form.email.errors %}
@@ -146,12 +147,12 @@
     <div class="form-input-field">
 
       <div class="row align-items-center">
-        <div class="col-md-6">
-          <div class="float-md-right">
-            <strong>{% trans 'Public email in clubs:' %}</strong>
+        <div class="col-6">
+          <div class="text-right">
+            <strong>{% trans 'Public email:' %}</strong>
           </div>
         </div>
-        <div class="col-md-auto">
+        <div class="col-auto">
           <div class="custom-control custom-switch">
             {% if user.public_email %}
             <input type="checkbox" class="custom-control-input" name="public_email" id="public_email"
@@ -224,60 +225,64 @@
   </div>
 
 
-  <!-- MODAL TO CROP THE IMAGE -->
+  <!-- START: CROPPER MODAL -->
   <div class="modal fade" id="modalCrop">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">{% trans 'Format your profile picture' %}</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <h4 class="modal-title">{% trans 'Format profile picture' %}</h4>
+          <button type="button" class="close js-destroy" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <img src="" id="image" style="max-width: 100%;">
+          <img src="" id="image" style="max-width: 100%; min-height: 250px; max-height: 350px;">
         </div>
         <div class="modal-footer">
-          <div class="btn-group pull-left" role="group">
-            <button type="button" class="btn btn-default js-zoom-in">
-              <span class="glyphicon glyphicon-zoom-in"></span>
-            </button>
-            <button type="button" class="btn btn-default js-zoom-out">
-              <span class="glyphicon glyphicon-zoom-out"></span>
-            </button>
-          </div>
-          <a class="btn btn-sm btn-cancel-modal mr-3" href="{% url 'registration:account_info' %}" role="button">
-            {% trans 'Cancel' %}</a>
-          <button type="button" class="btn btn-submit-modal btn-green-to-blue js-crop-and-upload">
+
+          <button type="button" class="btn btn-modal-util js-zoom-out">
+            <img class="rounded-circle" src="{% static 'registration/svg/zoom_out.svg' %}">
+          </button>
+
+          <button type="button" class="btn btn-modal-util mx-3 js-zoom-in">
+            <img class="rounded-circle" src="{% static 'registration/svg/zoom_in.svg' %}">
+          </button>
+
+
+          <button type="button" class="btn btn-modal-util js-reset">
+            <img class="rounded-circle" src="{% static 'registration/svg/reset.svg' %}">
+          </button>
+
+          <button type="button" class="btn btn-modal btn-green-to-blue ml-auto js-crop-and-upload">
             {% trans 'Upload and save changes' %}
           </button>
+
         </div>
       </div>
     </div>
   </div>
-  <!-- END MODAL IMAGE -->
+  <!-- END: CROPPER MODAL -->
 
 
-  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Save changes' %}">
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Save changes' %}">
 
 </form>
 <!--END: ACCOUNT INFO FORM-->
 
 
 <!--START: ACCOUNT OPTIONS-->
-<form class="form-registration text-center" method="POST" action="{% url 'registration:password_change' %}">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-block btn-green-to-blue">
-    {% trans 'Change password' %}
-  </button>
-</form>
-
 <form class="form-registration text-center" method="POST" action="{% url 'registration:user_logout' %}">
   {% csrf_token %}
-  <button type="submit" class="btn btn-block btn-white-to-gray">
+  <button type="submit" class="btn btn-standard btn-white-to-gray">
     {% trans 'Log out' %}
   </button>
 </form>
+
+
+<div class="text-center strong-link my-5">
+  <a href="{% url 'registration:password_change' %}">{% trans 'Change password' %}</a>
+</div>
+
 
 <div class="text-center my-4">
   <a class="text-danger text-decoration-none pointer-cursor mb-4" style="font-size: 13px;" data-toggle="modal" data-target="#DeleteModalCenter">
@@ -288,29 +293,11 @@
 
 
 
-<form class="btn-cancel" action="{% url 'core:home' %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
-</form>
-
-
-
 <!-- START MODAL IMAGE -->
 {% if user.profile_image %}
 <div class="modal fade" id="UserImageModalCenter" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
-        <div class="text-right mb-3">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <br>
-        </div>
-        <div>
-          <img src="{{ user.profile_image.url }}" alt="user.profile_image not found">
-        </div>
-      </div>
-    </div>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <img class='rounded' src="{{ user.profile_image.url }}" alt="user.profile_image not found">
   </div>
 </div>
 {% endif %}
@@ -333,12 +320,9 @@
         {% trans 'Are you sure about this? All your data will be deleted permanently...' %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-sm" data-dismiss="modal">
-          {% trans 'Cancel' %}
-        </button>
         <form method="POST" action="{% url 'registration:account_delete' %}" class="text-center">
           {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
+          <button type="submit" class="btn btn-outline-danger mx-3">
             {% trans 'Confirm' %}
           </button>
         </form>
@@ -352,7 +336,7 @@
 
 {% block javascript %}
 <!--START: CROPPER SCRIPT-->
-<!--https://github.com/Foliotek/Croppie-->
+<!--https://github.com/fengyuanchen/cropperjs-->
 <script src="{% static 'core/js/cropper.min.js' %}" crossorigin="anonymous"></script>
 <script>
     $(function () {
@@ -376,18 +360,19 @@
       $("#modalCrop").on("shown.bs.modal", function () {
         $image.cropper({
           viewMode: 1,
+          dragMode: 'move',
           aspectRatio: 1/1,
-          minCropBoxWidth: 200,
-          minCropBoxHeight: 200,
+          minCropBoxWidth: 100,
+          minCropBoxHeight: 100,
           ready: function () {
             $image.cropper("setCanvasData", canvasData);
             $image.cropper("setCropBoxData", cropBoxData);
+            $image.cropper("reset");
           }
         });
       }).on("hidden.bs.modal", function () {
-        cropBoxData = $image.cropper("getCropBoxData");
-        canvasData = $image.cropper("getCanvasData");
         $image.cropper("destroy");
+        $('input[type="file"]').val('')
       });
 
       $(".js-zoom-in").click(function () {
@@ -398,9 +383,19 @@
         $image.cropper("zoom", -0.1);
       });
 
+      $(".js-reset").click(function () {
+        $image.cropper("reset");
+      });
+
+      $(".js-destroy").click(function () {
+        $image.cropper("destroy");
+        $image.cropper("clear");
+      });
+
       /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
       $(".js-crop-and-upload").click(function () {
         var cropData = $image.cropper("getData");
+        $("#updateImage").val(true);
         $("#id_x").val(cropData["x"]);
         $("#id_y").val(cropData["y"]);
         $("#id_height").val(cropData["height"]);

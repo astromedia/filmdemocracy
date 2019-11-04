@@ -64,7 +64,8 @@
 
 
 <!--START: LOG IN FORM-->
-<h3 class="h3 font-weight-normal">{% trans 'Log in' %}</h3>
+<h3 class="h3">{% trans 'Log in' %}</h3>
+
 
 <form class="form-registration" method="POST" novalidate>
   {% csrf_token %}
@@ -117,7 +118,7 @@
     </div>
 
     <!--TODO: This button doesn't do anything yet...-->
-    <div class="form-input-field mb-n3">
+    <div class="form-input-field">
       <div class="custom-control custom-checkbox">
         <input type="checkbox" class="custom-control-input" name="remember_me" id="remember_me" checked
                value="remember_user">
@@ -127,14 +128,14 @@
 
   </div>
 
-  <input class="btn btn-lg btn-block btn-green-to-blue" type="submit" value="{% trans 'Log in' %}">
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Log in' %}">
   <input type="hidden" name="next" value="{{ next }}">
 
 </form>
 <!--END: LOG IN FORM-->
 
 
-<div class="text-center mt-3">
+<div class="text-center my-5">
   <a href="{% url 'registration:user_signup' %}">{% trans 'Create account' %}</a>
 </div>
 
@@ -142,9 +143,10 @@
 {% endif %}
 
 
-<form class="btn-cancel" action="{% url 'core:home' %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Home' %}</button>
-</form>
+<div class="text-center strong-link my-5">
+  <a href="{% url 'core:home' %}">{% trans 'Go to home' %}</a>
+</div>
+
 
 
 {% endblock %}

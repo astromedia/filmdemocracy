@@ -60,7 +60,7 @@ def account_delete(request):
 @method_decorator(login_required, name='dispatch')
 class AccountInfoView(generic.UpdateView):
     form_class = forms.AccountInfoForm
-    success_url = reverse_lazy('core:home')
+    success_url = reverse_lazy('registration:account_info')
 
     def get_object(self, queryset=None):
         return self.request.user

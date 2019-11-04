@@ -22,7 +22,6 @@
   <div>
     <img class="webpage-title" src="{% static 'core/svg/webname_greengray.svg'%}">
   </div>
-  <p class="lead text-muted webpage-subtitle">{% trans 'Power to the people!' %}</p>
 </div>
 <!--END: WEBSITE INTRO-->
 
@@ -82,13 +81,13 @@
 <!--START: LOGIN / SIGNIN-->
 <div class="text-center my-5">
 
-  <p class="lead misc-text light1-style">{% trans 'To start, log in.' %}</p>
+  <p class="light1-style">{% trans 'To start, log in.' %}</p>
 
   <form action="{% url 'registration:user_login' %}">
-    <button type="submit" class="btn btn-block btn-green-to-blue mb-5">{% trans 'Log in' %}</button>
+    <button type="submit" class="btn btn-standard btn-green-to-blue mb-5">{% trans 'Log in' %}</button>
   </form>
 
-  <span class="lead misc-text light1-style">{% trans 'New here?' %}</span>
+  <span class="light1-style">{% trans 'New here?' %}</span>
   <a class="misc-text mx-1 green-color blue-color-hover" href="{% url 'registration:user_signup' %}">
     {% trans 'Create an account!' %}
   </a>
@@ -100,28 +99,28 @@
 {% endif %}
 
 <!--START: WEBPAGE LOG-->
-<h4 class="lead text-muted home-section-title">{% trans 'FilmDemocracy log' %}</h4>
+<!--<h4 class="lead text-muted home-section-title">{% trans 'FilmDemocracy log' %}</h4>-->
 
-<hr>
+<!--<hr>-->
 
-<div class="home-log">
-  <div class="row">
+<!--<div class="home-log">-->
+<!--  <div class="row">-->
 
-    <div class="col-sm-2">
-      <strong>2019.01.24:</strong>
-    </div>
-    <div class="col-sm-10">
-      <p>
-        {% blocktrans %}
-        Welcome to FilmDemocracy! This site is under testing,
-        so expect all your data to be deleted at some point before the official launch.
-        Sorry for the inconvinience...
-        {% endblocktrans %}
-      </p>
-    </div>
+<!--    <div class="col-sm-2">-->
+<!--      <strong>2019.01.24:</strong>-->
+<!--    </div>-->
+<!--    <div class="col-sm-10">-->
+<!--      <p>-->
+<!--        {% blocktrans %}-->
+<!--        Welcome to FilmDemocracy! This site is under testing,-->
+<!--        so expect all your data to be deleted at some point before the official launch.-->
+<!--        Sorry for the inconvinience...-->
+<!--        {% endblocktrans %}-->
+<!--      </p>-->
+<!--    </div>-->
 
-  </div>
-</div>
+<!--  </div>-->
+<!--</div>-->
 <!--END: WEBPAGE LOG-->
 
 
