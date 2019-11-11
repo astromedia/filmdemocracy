@@ -6,14 +6,15 @@
 {% block styles %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
-<link rel="stylesheet" href="{% static 'democracy/css/meetings.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/form_meetings.css' %}">
 {% endblock %}
 
 {% block title %}
 {% if new_meeting %}
-  <h1 class="display-4">{% trans 'Organize new meeting' %}</h1>
+  {% trans 'Organize new meeting' %}
 {% else %}
-  <h1 class="display-4">{% trans 'Edit meeting' %}</h1>
+  {% trans 'Edit meeting' %}
 {% endif %}
 {% endblock %}
 
@@ -21,15 +22,14 @@
 
 
 {% if new_meeting %}
-  <h1 class="display-4">{% trans 'Organize meeting' %}</h1>
+  <h3 class="h3">{% trans 'Organize new meeting' %}</h3>
 {% else %}
-  <h1 class="display-4">{% trans 'Edit meeting' %}</h1>
+  <h3 class="h3">{% trans 'Edit meeting' %}</h3>
 {% endif %}
 
 
-
 <!--START: MEETING FORM-->
-<form class="form-meeting" method="POST" novalidate>
+<form class="form-standard form-meeting" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}
@@ -40,15 +40,17 @@
 
     <!--NAME-->
     <div class="form-input-field">
-      {{ form.name.label_tag }}
+      <div class="label">
+        {{ form.name.label_tag }}
+      </div>
       {% if form.is_bound %}
       {% if form.name.errors %}
-      {% render_field form.name class="form-control form-name is-invalid" %}
+      {% render_field form.name class="form-control is-invalid" %}
       {% else %}
-      {% render_field form.name class="form-control form-name is-valid" %}
+      {% render_field form.name class="form-control is-valid" %}
       {% endif %}
       {% else %}
-      {% render_field form.name class="form-control form-name" %}
+      {% render_field form.name class="form-control" %}
       {% endif %}
       {% for error in form.name.errors %}
       <div class="invalid-feedback">
@@ -57,36 +59,19 @@
       {% endfor %}
     </div>
 
-    <!--DESCRIPTION-->
-    <div class="form-input-field">
-      {{ form.description.label_tag }}
-      {% if form.is_bound %}
-      {% if form.description.errors %}
-      {% render_field form.description class="form-control form-description is-invalid" %}
-      {% else %}
-      {% render_field form.description class="form-control form-description is-valid" %}
-      {% endif %}
-      {% else %}
-      {% render_field form.description class="form-control form-description" %}
-      {% endif %}
-      {% for error in form.description.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-      {% endfor %}
-    </div>
-
     <!--PLACE-->
     <div class="form-input-field">
-      {{ form.place.label_tag }}
+      <div class="label">
+        {{ form.place.label_tag }}
+      </div>
       {% if form.is_bound %}
       {% if form.place.errors %}
-      {% render_field form.place class="form-control form-place is-invalid" %}
+      {% render_field form.place class="form-control is-invalid" %}
       {% else %}
-      {% render_field form.place class="form-control form-place is-valid" %}
+      {% render_field form.place class="form-control is-valid" %}
       {% endif %}
       {% else %}
-      {% render_field form.place class="form-control form-place" %}
+      {% render_field form.place class="form-control" %}
       {% endif %}
       {% for error in form.place.errors %}
       <div class="invalid-feedback">
@@ -95,34 +80,39 @@
       {% endfor %}
     </div>
 
-    <!--DATE-->
-    <div class="form-input-field">
-      {{ form.date.label_tag }}
-      {% if form.is_bound %}
-      {% if form.date.errors %}
-      {% render_field form.date class="form-control date-field is-invalid" type="date" %}
-      {% else %}
-      {% render_field form.date class="form-control date-field is-valid" type="date" %}
-      {% endif %}
-      {% else %}
-      {% render_field form.date class="form-control date-field" type="date" %}
-      {% endif %}
-      {% for error in form.date.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-      {% endfor %}
-    </div>
+    <!--DATE & TIME-->
+    <div class="form-input-field form-date-time">
 
+      <div class="form-row justify-content-center">
 
-    <!--DATE AND TIME-->
-    <div class="form-row justify-content-center mx-5">
+        <!--DATE-->
+        <div class="col-6">
 
+          <div class="label">
+            {{ form.date.label_tag }}
+          </div>
+          {% if form.is_bound %}
+          {% if form.date.errors %}
+          {% render_field form.date class="form-control date-field is-invalid" type="date" %}
+          {% else %}
+          {% render_field form.date class="form-control date-field is-valid" type="date" %}
+          {% endif %}
+          {% else %}
+          {% render_field form.date class="form-control date-field" type="date" %}
+          {% endif %}
+          {% for error in form.date.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+          {% endfor %}
+        </div>
 
-      <!--START TIME-->
-      <div class="col-md-4">
-        <div class="form-input-field">
-          {{ form.time_start.label_tag }}
+        <!--START TIME-->
+        <div class="col-6">
+
+          <div class="label">
+            {{ form.time_start.label_tag }}
+          </div>
           {% if form.is_bound %}
           {% if form.time_start.errors %}
           {% render_field form.time_start class="form-control time-field is-invalid" type="time" %}
@@ -138,8 +128,30 @@
           </div>
           {% endfor %}
         </div>
+
       </div>
 
+    </div>
+
+    <!--DESCRIPTION-->
+    <div class="form-input-field form-description">
+      <div class="label">
+        {{ form.description.label_tag }}
+      </div>
+      {% if form.is_bound %}
+      {% if form.description.errors %}
+      {% render_field form.description class="form-control description-text is-invalid" %}
+      {% else %}
+      {% render_field form.description class="form-control description-text is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.description class="form-control description-text" %}
+      {% endif %}
+      {% for error in form.description.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
     </div>
 
     <!--START: SEND NOTIFICATION EMAILS-->
@@ -150,7 +162,7 @@
 
       <div class="row align-items-center justify-content-center">
         <div class="col col-auto my-2">
-          <strong>{% trans 'Send notification email to club members:' %}</strong>
+          {% trans 'Send notification email to club members:' %}
         </div>
         <div class="col col-auto my-2">
           <div class="custom-control custom-switch">
@@ -166,7 +178,7 @@
 
       <div class="row align-items-start justify-content-center">
         <div class="col col-auto my-2">
-          <strong>{% trans 'Send notification email to:' %}</strong>
+          {% trans 'Send notification email to:' %}
         </div>
         <div class="col col-auto text-left my-2">
           <div class="custom-control custom-radio">
@@ -191,15 +203,16 @@
 
   </div>
 
-  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Publish' %}">
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Publish' %}">
 
 </form>
 <!--END: MEETING FORM-->
 
 
-<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
-</form>
+<div class="text-center strong-link my-5">
+  <a href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
+</div>
+
 
 
 {% endblock %}

@@ -20,15 +20,15 @@
 <div class="container-fluid club-banner">
 
   <!--SHORT DESCRIPTION-->
-  <div class="lead text-muted short-description pt-3 mb-3">{{ club.short_description }}</div>
+  <div class="lead text-muted short-description">{{ club.short_description }}</div>
 
   <!--LOGO-->
   <div class="logo">
-    {% if club.logo %}
-    <img class="zoom-in-cursor shadow" src="{{ club.logo.url }}" alt="club.logo not found"
+    {% if club.logo_image %}
+    <img class="zoom-in-cursor shadow" src="{{ club.logo_image.url }}" alt="club.logo_image not found"
          data-toggle="modal" data-target="#ClubLogoModal">
     {% else %}
-    <img class="shadow" src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo not found">
+    <img class="shadow" src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo_image not found">
     {% endif %}
   </div>
 
@@ -38,11 +38,11 @@
 
 <!--START: NO LOGO MESSAGE-->
 {% if user in club_admins %}
-{% if not club.logo %}
+{% if not club.logo_image %}
 <div class="alert alert-warning text-center alert-dismissible fade show mt-4 mx-4 club-message" role="alert">
   <div class="row justify-content-center">
     <div class="col-md-auto">
-      <strong>{% trans "Your club doesn't have a logo yet!" %}</strong>
+      <strong>{% trans "Your club doesn't have a logo_image yet!" %}</strong>
     </div>
     <div class="col-md-auto">
       <a class="" href="{% url 'democracy:edit_club_info' club.id %}">{% trans 'Complete club info' %}</a>
@@ -633,22 +633,10 @@
 
 
 <!--START: MODAL LOGO-->
-{% if club.logo %}
+{% if club.logo_image %}
 <div class="modal fade" id="ClubLogoModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
-        <div class="text-right mb-3">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <br>
-        </div>
-        <div>
-          <img src="{{ club.logo.url }}" alt="club.logo not found">
-        </div>
-      </div>
-    </div>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <img class='rounded' src="{{ club.logo_image.url }}" alt="club.logo_image not found">
   </div>
 </div>
 {% endif %}

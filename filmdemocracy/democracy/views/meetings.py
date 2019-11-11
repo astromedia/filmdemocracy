@@ -28,11 +28,6 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
-    def get_form_kwargs(self):
-        kwargs = super(MeetingsNewView, self).get_form_kwargs()
-        kwargs.update({'club_id': self.kwargs['club_id']})
-        return kwargs
-
     def get_success_url(self):
         return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
 
@@ -99,7 +94,6 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
 
     def get_form_kwargs(self):
         kwargs = super(MeetingsEditView, self).get_form_kwargs()
-        kwargs.update({'club_id': self.kwargs['club_id']})
         kwargs.update({'meeting_id': self.kwargs['meeting_id']})
         return kwargs
 

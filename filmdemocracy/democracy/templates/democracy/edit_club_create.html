@@ -5,6 +5,7 @@
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/edit_club.css' %}">
 {% endblock %}
 
@@ -27,8 +28,8 @@
 
 {% if form.errors %}
 {% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center mx-4">
-  <strong>{{ error|escape }}</strong>
+<div class="alert alert-danger form-message">
+  {{ error|escape }}
 </div>
 {% endfor %}
 {% endif %}
@@ -38,7 +39,7 @@
 <!--START: CREATE CLUB FORM-->
 <h3 class="h3">{% trans 'Create new club' %}</h3>
 
-<form class="form-edit-club" enctype="multipart/form-data" method="POST" novalidate>
+<form class="form-standard form-edit-club" enctype="multipart/form-data" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}
@@ -47,8 +48,9 @@
 
   <div class="form-inputs">
 
+
     <!--NAME-->
-    <div class="form-input-field">
+    <div class="form-input-field form-name">
       <div class="label">
         {{ form.name.label_tag }}
       </div>
@@ -68,59 +70,57 @@
       {% endfor %}
     </div>
 
+
     <!--LOGO-->
-    <div class="form-input-field">
-      <div class="label">
-        {% trans 'Club logo (optional):' %}
-      </div>
-      <div class="logo">
-        <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="user.profile_image not found">
-      </div>
-      <div class="form-logo">
-        <div class="custom-file">
-          <input id="inputGroupFile" type="file" name='logo' value='logo' class="custom-file-input">
-          <label class="custom-file-label" for="inputGroupFile">{% trans 'Choose file' %}</label>
-        </div>
-      </div>
-    </div>
+    <!--<div class="form-input-field form-logo">-->
+    <!--  <div class="label">-->
+    <!--    {% trans 'Club logo (optional):' %}-->
+    <!--  </div>-->
+    <!--  <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="user.profile_image not found">-->
+    <!--  <div class="custom-file">-->
+    <!--    <input id="inputGroupFile" type="file" name='logo_image' value='logo_image' class="custom-file-input">-->
+    <!--    <label class="custom-file-label" for="inputGroupFile">{% trans 'Choose file' %}</label>-->
+    <!--  </div>-->
+    <!--</div>-->
+
 
     <!--DESCRIPTION-->
-    <div class="form-input-field">
-        <div class="label">
-          {{ form.short_description.label_tag }}
-        </div>
-        {% if form.is_bound %}
-        {% if form.short_description.errors %}
-        {% render_field form.short_description class="form-control form-short-description is-invalid" %}
-        {% else %}
-        {% render_field form.short_description class="form-control form-short-description is-valid" %}
-        {% endif %}
-        {% else %}
-        {% render_field form.short_description class="form-control form-short-description" %}
-        {% endif %}
-        {% for error in form.short_description.errors %}
-        <div class="invalid-feedback">
-          {{ error }}
-        </div>
-        {% endfor %}
+    <div class="form-input-field form-short-description">
+      <div class="label">
+        {{ form.short_description.label_tag }}
+      </div>
+      {% if form.is_bound %}
+      {% if form.short_description.errors %}
+      {% render_field form.short_description class="form-control short-description is-invalid" %}
+      {% else %}
+      {% render_field form.short_description class="form-control short-description is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.short_description class="form-control short-description" %}
+      {% endif %}
+      {% for error in form.short_description.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
     </div>
 
 
-    <div class="form-input-field text-muted mb-n3">
+    <div class="mb-3">
       {% trans 'You will be able to add more details of your club later.' %}
     </div>
 
   </div>
 
-  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Create club' %}">
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Create club' %}">
 
 </form>
 <!--END: CREATE CLUB FORM-->
 
 
-<form class="btn-cancel" action="{% url 'core:home' %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
-</form>
+<div class="text-center strong-link my-5">
+  <a href="{% url 'core:home' %}">{% trans 'Go to home' %}</a>
+</div>
 
 
 <!--START: FILE FORM SCRIPT-->

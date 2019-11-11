@@ -1,81 +1,13 @@
 
-/* General page styles
--------------------------------------------------- */
-body {
-}
-
-.container-base {
-  background-color: #fafafa;
-}
-
-.h3 {
-  text-align: center;
-  margin-top: 100px;
-  margin-bottom: 20px;
-  font-weight: normal;
-}
-
-.btn-go-to-club {
-  min-width: 225px;
-  margin: auto;
-}
-
 /* Form invitation styles
 -------------------------------------------------- */
-.form-invitation {
-  text-align: center;
+
+.form-invitation .form-inputs .form-invitation-text {
+  width: 95% !important;
+  max-width: 500px !important;
 }
 
-.form-invitation .form-inputs {
-  margin-bottom: 10px;
-}
-
-.form-invitation .form-inputs .form-input-field {
-  width: 100%;
-  max-width: 500px;
-  padding-top: 10px;
-  padding-bottom: 15px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin: auto;
-}
-
-.form-invitation .form-inputs .form-input-field .label {
-}
-
-.form-invitation .form-inputs .form-input-field .invalid-feedback {
-  width: 100%;
-  padding: 5px;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: -29px;
-}
-
-.form-invitation .form-inputs .form-input-field .form-control {
-  position: relative;
-  box-sizing: border-box;
-  height: auto;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.form-invitation .form-inputs .form-input-field .form-control:focus {
-  z-index: 2;
-}
-
-.form-invitation .form-inputs .form-input-field .form-email {
-  max-width: 330px;
-  margin: auto;
-}
-
-.form-invitation .form-inputs .form-input-field .form-invitation-text {
-  max-width: 500px;
-  max-height: 200px;
-  margin: auto;
-}
-
-.form-invitation .btn-block {
-  max-width: 225px;
-  margin: auto;
-  margin-top: 20px;
+.form-invitation .form-inputs .form-invitation-text .invitation-text {
+  text-align: left !important;
+  max-height: 150px;
 }

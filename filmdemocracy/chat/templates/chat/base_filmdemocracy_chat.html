@@ -23,13 +23,13 @@
     <a class="dropdown-item py-0 px-3" href="{% url 'chat:chat_club' userclub.id %}">
       <div class="media chat-item">
 
-        {% if userclub.logo %}
+        {% if userclub.logo_image %}
         <img class="align-self-center border border-secondary rounded-circle mr-2"
-             src="{{ userclub.logo.url }}" alt="club.logo not found">
+             src="{{ userclub.logo_image.url }}" alt="club.logo_image not found">
         {% else %}
         <img class="align-self-center border border-secondary rounded-circle mr-2"
              src="{% static 'democracy/images/club_no_logo.png' %}"
-             alt="userclub.logo not found">
+             alt="userclub.logo_image not found">
         {% endif %}
 
         <div class="media-body align-self-center p-0 m-0">

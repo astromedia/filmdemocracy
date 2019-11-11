@@ -21,17 +21,17 @@
 </div>
 
 
-<form class="form-ranking-generator form-select-members" action="{% url 'democracy:ranking_results' club.id %}" method="GET">
+<form class="form-standard form-ranking-generator form-select-members" action="{% url 'democracy:ranking_results' club.id %}" method="GET">
   {% csrf_token %}
 
+  <div class="form-inputs">
 
-  <p class="step-title">{% trans 'Step 1: Select who is present to see the film' %}<p>
-  <hr class="mb-2">
+    <p class="step-title">{% trans '1) Select who is present to see the film' %}<p>
 
-  <p class="text-dark mb-4">{% trans '(Click on their picture to count their votes)' %}</p>
+    <p class="mb-4">{% trans 'Click on their picture to count their votes' %}</p>
 
 
-  <!--START: PARTICIPANTS-->
+    <!--START: PARTICIPANTS-->
     <div class="container-fluid">
       <div class="row justify-content-center">
 
@@ -50,7 +50,6 @@
                      src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="member.profile_image not found">
                 {% endif %}
             </label>
-
             <span>{{ member.username }}</span>
 
           </div>
@@ -60,51 +59,63 @@
 
       </div>
     </div>
-  <!--END: PARTICIPANTS-->
+    <!--END: PARTICIPANTS-->
 
 
-  <p class="step-title">{% trans 'Step 2: Select options and filters for films' %}<p>
-  <hr class="mb-2">
+    <p class="step-title">{% trans '2) Select options and filters for films' %}<p>
 
 
-  <!--RANKING OPTIONS-->
-  <div class="ranking-options">
+    <!--START: RANKING OPTIONS-->
+    <ul class="ranking-options list-group my-3">
 
-    <!--EXCLUDE FILMS PROPOSED BY MEMBERS NOT PRESENT-->
-    <div class="row align-items-center m-3">
-      <div class="col-9 col-md-6">
-          <div class="text-left float-md-right">
-            <strong>{% trans 'Option:' %}</strong> {% trans 'Exclude films proposed by members not present:' %}
+      <!--EXCLUDE FILMS PROPOSED BY MEMBERS NOT PRESENT-->
+      <li class="list-group-item">
+        <div class="row align-items-center m-2">
+          <div class="col-9 col-md-6">
+              <div class="text-left float-md-right">
+                {% trans 'Exclude films proposed by members not present:' %}
+              </div>
           </div>
-      </div>
-      <div class="col-3 col-md-auto my-2">
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
-                 value="exclude_not_present">
-          <label class="custom-control-label" for="exclude_not_present"></label>
+          <div class="col-3 col-md-auto my-2">
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
+                     value="exclude_not_present">
+              <label class="custom-control-label" for="exclude_not_present"></label>
+            </div>
+          </div>
         </div>
-      </div>
+      </li>
+
+      <!--MAX FILM DURATION-->
+      <li class="list-group-item">
+        <div class="row align-items-center m-2">
+          <div class="col-9 col-md-6">
+            <div class="text-left float-md-right">
+              {% trans 'Maximum film duration in minutes (optional):' %}
+            </div>
+          </div>
+          <div class="col-3 col-md-auto my-2">
+            <div>
+              <input type="text" style='max-width: 75px' class="form-control mx-auto" name="max_duration" id="max_duration" value="">
+            </div>
+          </div>
+        </div>
+      </li>
+
+    </ul>
+    <!--END: RANKING OPTIONS-->
+
+
     </div>
 
-    <!--MAX FILM DURATION-->
-    <div class="row align-items-center m-3">
-      <div class="col-9 col-md-6">
-        <div class="text-left float-md-right">
-          <strong>{% trans 'Filter:' %}</strong> {% trans 'Maximum film duration in minutes (optional):' %}
-        </div>
-      </div>
-      <div class="col-3 col-md-auto my-2">
-        <div>
-          <input type="text" style='max-width: 75px' class="form-control mx-auto" name="max_duration" id="max_duration" value="">
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Generate results' %}">
+  <input class="btn btn-standard btn-green-to-blue mt-4" type="submit" value="{% trans 'Generate results' %}">
 
 </form>
+
+
+<div class="text-center strong-link my-5">
+  <a href="{{ request.META.HTTP_REFERER }}">{% trans 'Cancel' %}</a>
+</div>
 
 
 {% endblock %}

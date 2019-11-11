@@ -1,15 +1,6 @@
 
 /* General page styles
 -------------------------------------------------- */
-body {
-}
-
-.btn-add-new-film {
-  width: 30%;
-  min-width: 150px;
-  max-width: 250px;
-  margin: auto;
-}
 
 .filter-options {
   margin: 0;
@@ -24,23 +15,27 @@ body {
   padding: 0;
 }
 
-.filter-options .btn {
-  padding-top: 3px;
-  padding-bottom: 3px;
+.filter-options .filter .dropdown .btn {
+  padding-top: 6px;
+  padding-bottom: 6px;
   font-size: 1rem;
   color: darkgray;
   background-color: #121317;
   border: 1px solid #282828;
 }
 
-.filter-options .btn:hover {
+.filter-options .filter .dropdown .btn:hover {
   color: white;
   border: 1px solid #6c737d;
 }
 
-.filter-options .dropdown-menu {
+.filter-options .filter .dropdown {
+}
+
+ .filter-options .filter .dropdown .dropdown-menu {
   width: 96%;
   max-width: 57rem;
+  min-width: 15rem;
   margin-left: 2%;
   margin-right: 2%;
   overflow: hidden;
@@ -48,20 +43,26 @@ body {
   box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
 }
 
-.filter-options .dropdown-menu .dropdown-item {
-  padding: 12px 18px;
+.filter-options .filter .dropdown .dropdown-menu .dropdown-header {
+  color: #121317;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
-.filter-options .dropdown-menu .dropdown-divider {
+.filter-options .filter .dropdown .dropdown-menu .dropdown-item {
+  padding: 1rem 0.8rem;
+}
+
+.filter-options .filter .dropdown .dropdown-menu .dropdown-divider {
   padding: 0;
   margin: 0;
 }
 
-.filter-options .dropdown-menu .dropdown-item:hover {
+.filter-options .filter .dropdown .dropdown-menu .dropdown-item:hover {
   background-color: #f8f9fa;
 }
 
-.filter-options .dropdown-menu .active {
+.filter-options .filter .dropdown .dropdown-menu .active {
   color: black;
   font-weight: bold;
   background-color: #d1d1d1 !important;
@@ -98,7 +99,7 @@ body {
   margin-bottom: 0px;
 }
 
-.container-list table thead{
+.container-list table thead {
   color: #A9A9A9;
   font-weight: normal;
 }
@@ -203,114 +204,4 @@ body {
   -ms-transform:translatey(0);
   -webkit-transform:translatey(0);
   transform:translatey(0);
-}
-
-
-/* Form new film
--------------------------------------------------- */
-.form-new-film {
-  text-align: center;
-}
-
-.form-new-film .btn-block {
-  max-width: 225px;
-  margin: auto;
-  margin-top: 20px;
-}
-
-.form-new-film .form-inputs {
-  margin-bottom: 10px;
-}
-
-.form-new-film .form-inputs .form-input-field {
-  width: 100%;
-  max-width: 650px;
-  padding-top: 10px;
-  padding-bottom: 15px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin: auto;
-}
-
-.form-new-film .form-inputs .form-input-field .label {
-}
-
-.form-new-film .form-inputs .form-input-field .invalid-feedback{
-  width: 100%;
-  padding: 5px;
-  margin: auto;
-  margin-top: 0px;
-  margin-bottom: -29px;
-}
-
-.form-new-film .form-inputs .form-input-field .form-control {
-  position: relative;
-  box-sizing: border-box;
-  height: auto;
-  padding: 10px;
-  font-size: 16px;
-}
-
-.form-new-film .form-inputs .form-input-field .form-control:focus {
-  z-index: 2;
-}
-
-
-/* Form seen
--------------------------------------------------- */
-.film-seen {
-  width: 10rem;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.85);
-  margin-bottom: 50px;
-}
-
-.form-film-seen {
-  text-align: center;
-}
-
-.form-film-seen .date-field {
-  max-width: 250px;
-  margin: auto;
-  padding-left: 60px;
-  text-align: center;
-}
-
-.form-film-seen .card {
-  background-color: transparent;
-  border-color: transparent;
-  width: 8rem;
-  margin-bottom: 1rem;
-}
-
-.form-film-seen .btn-block {
-  max-width: 225px;
-  margin: auto;
-  margin-top: 30px;
-}
-
-
-/* Hover effect participant
--------------------------------------------------- */
-.hovereffect-participant img {
-  width:100%;
-  height:100%;
-  cursor:pointer;
-  transition: box-shadow 0.1s ease-in-out;
-  background: rgba(0, 0, 0, 1);
-}
-
-.hovereffect-participant img:hover {
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
-}
-
-/* Button new options
--------------------------------------------------- */
-#btn-new-options {
-  padding: 0px;
-}
-
-#btn-new-options img {
-  width: 48px;
-  height: 48px;
-  background-color: seagreen;
 }

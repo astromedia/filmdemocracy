@@ -17,31 +17,16 @@ FILM_ID_N_DIGITS = 6
 INVITATION_DURATION_DAYS = 30
 
 
-def get_club_logo_path(instance, filename):
+def get_club_logo_image_path(instance, filename):
     return os.path.join('club_logos', str(instance.id), filename)
 
 
 class Club(models.Model):
     # TODO: Input image validation
 
-    DEFAULT_PANEL_STRING = _("""
-    \r\n## A sample club panel written in markdown
-    \r\n
-    \r\n---
-    \r\n
-    \r\n#### Point 1: Here is some text.
-    \r\nHello world, I'm a cinema club...
-    \r\n
-    \r\n#### Point 2: And here is a list to consider:
-    \r\n1. Item #1
-    \r\n2. Item #2
-    \r\n3. Item #3
-    \r\n
-    \r\n#### Point 3: And here is an unordered list to consider:
-    \r\n- Item 1
-    \r\n- Item 2
-    \r\n- Item 3
-    """)
+    DEFAULT_PANEL_STRING = _("""#### A sample club panel
+    \rSome normal text, *italic text*, **strong text** and **_strong italic text_** here...
+    \r##### Here is a list:\r1. Item #1\r2. Item #2""")
 
     id = models.CharField(primary_key=True, unique=True, max_length=CLUB_ID_N_DIGITS)
     name = models.CharField(_('Club name'), max_length=50)
@@ -53,7 +38,7 @@ class Club(models.Model):
         blank=True,
         null=True,
     )
-    logo = models.ImageField(_('club logo'), upload_to=get_club_logo_path, blank=True, null=True)
+    logo_image = models.ImageField(_('club logo image'), upload_to=get_club_logo_image_path, blank=True, null=True)
     members = models.ManyToManyField(User)
     admin_members = models.ManyToManyField(User, related_name='admin_members')
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
@@ -97,12 +82,12 @@ class Meeting(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    name = models.CharField(_('Name'), default=_('Club meeting'), max_length=50)
+    name = models.CharField(_('Name'), max_length=50)
     description = models.CharField(_('Description (optional)'), default='', max_length=5000)
     organizer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    place = models.CharField(_('Place'), default='', max_length=100)
+    place = models.CharField(_('Place'), max_length=100)
     date = models.DateField(_('Date'))
-    time_start = models.TimeField(_('Start time (optional)'), null=True, blank=True)
+    time_start = models.TimeField(_('Time (optional)'), null=True, blank=True)
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')
     members_no = models.ManyToManyField(User, related_name='members_no')

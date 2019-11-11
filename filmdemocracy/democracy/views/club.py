@@ -43,7 +43,7 @@ class CreateClubView(generic.FormView):
             id=random_club_id_generator(),
             name=form.cleaned_data['name'],
             short_description=form.cleaned_data['short_description'],
-            logo=form.cleaned_data['logo'],
+            logo_image=form.cleaned_data['logo_image'],
         )
         new_club.admin_members.add(user)
         new_club.members.add(user)
@@ -87,9 +87,7 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
 
 
 @method_decorator(login_required, name='dispatch')
-class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
-    model = User
-    pk_url_kwarg = 'user_id'
+class ClubMemberDetailView(UserPassesTestMixin, generic.TemplateView):
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
@@ -98,7 +96,7 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
-        member = get_object_or_404(User, id=self.kwargs['user_id'])
+        member = get_object_or_404(User, id=self.kwargs['member_id'])
         context['member'] = member
         club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
         context['club_member_info'] = club_member_info
@@ -118,7 +116,6 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.DetailView):
 
 @method_decorator(login_required, name='dispatch')
 class EditClubInfoView(UserPassesTestMixin, generic.UpdateView):
-    model = Club
     pk_url_kwarg = 'club_id'
     form_class = forms.EditClubForm
 
@@ -127,6 +124,9 @@ class EditClubInfoView(UserPassesTestMixin, generic.UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Club, id=self.kwargs['club_id'])
 
 
 @method_decorator(login_required, name='dispatch')
@@ -211,6 +211,8 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
+        candidate_members = club.members.filter(is_active=True).exclude(id=self.request.user.id)
+        context['candidate_members'] = candidate_members
         return context
 
     @staticmethod
@@ -271,6 +273,8 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
+        candidate_members = club.members.filter(is_active=True).exclude(id=self.request.user.id)
+        context['candidate_members'] = candidate_members
         return context
 
     @staticmethod

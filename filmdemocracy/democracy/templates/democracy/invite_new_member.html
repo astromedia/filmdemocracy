@@ -6,6 +6,7 @@
 {% block styles %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/invite_new_member.css' %}">
 {% endblock %}
 
@@ -14,14 +15,11 @@
 {% block content %}
 
 
-{% trans 'Email' as email %}
-
-
 <h3 class="h3">{% trans 'Invite new member to club' %}</h3>
 
 
 <!--START: INVITE NEW MEMBER FORM-->
-<form class="form-invitation" method="POST" novalidate>
+<form class="form-standard form-invitation" method="POST" novalidate>
   {% csrf_token %}
 
 
@@ -34,58 +32,58 @@
     <!--START: NEW MEMBER EMAIL-->
     <div class="form-input-field">
       <label>
-        {% trans 'Send invitation to:' %}
+        {% trans 'Send invitation email to:' %}
       </label>
       {% if form.is_bound %}
       {% if form.email.errors %}
-      {% render_field form.email placeholder=email class="form-control form-email is-invalid" %}
+      {% render_field form.email class="form-control is-invalid" %}
       {% for error in form.email.errors %}
       <div class="invalid-feedback">
         {{ error }}
       </div>
       {% endfor %}
       {% else %}
-      {% render_field form.email placeholder=email class="form-control form-email is-valid" %}
+      {% render_field form.email class="form-control is-valid" %}
       {% endif %}
       {% else %}
-      {% render_field form.email placeholder=email class="form-control form-email" %}
+      {% render_field form.email class="form-control" %}
       {% endif %}
     </div>
     <!--END: NEW MEMBER EMAIL-->
 
     <!--START: INVITATION TEXT-->
-    <div class="form-input-field">
+    <div class="form-input-field form-invitation-text">
       <label>
         {% trans 'Attach message with invitation (optional):' %}
       </label>
       {% if form.is_bound %}
       {% if form.invitation_text.errors %}
-      {% render_field form.invitation_text class="form-control form-invitation-text is-invalid" %}
+      {% render_field form.invitation_text class="form-control invitation-text is-invalid" %}
       {% for error in form.invitation_text.errors %}
       <div class="invalid-feedback">
         {{ error }}
       </div>
       {% endfor %}
       {% else %}
-      {% render_field form.invitation_text class="form-control form-invitation-text is-valid" %}
+      {% render_field form.invitation_text class="form-control invitation-text is-valid" %}
       {% endif %}
       {% else %}
-      {% render_field form.invitation_text class="form-control form-invitation-text" %}
+      {% render_field form.invitation_text class="form-control invitation-text" %}
       {% endif %}
     </div>
     <!--END: INVITATION TEXT-->
 
   </div>
 
-  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Send invitation' %}">
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Send invitation' %}">
 
 </form>
 <!--END: INVITE NEW MEMBER FORM-->
 
 
-<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
-</form>
+<div class="text-center strong-link my-5">
+  <a href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
+</div>
 
 
 {% endblock %}

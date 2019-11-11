@@ -11,18 +11,18 @@ body {
 /* Club banner
 -------------------------------------------------- */
 .club-banner {
-  font-size: 19px;
   text-align: center;
-  margin-top: -18px;
-  padding-top: 10px;
-  padding-bottom: 30px;
+  padding-top: 4rem;
+  margin-top: -4.5rem;
+  padding-bottom: 3rem;
   background-color: #121317;
-  margin-bottom: 130px;
+  margin-bottom: 6rem;
   box-shadow: 0 0px 15px rgba(0, 0, 0, 0.75);
 }
 
 .club-banner .short-description {
-  font-size: 19px;
+  font-size: 1.1rem;
+  margin: 1rem;
 }
 
 .club-banner .logo {
@@ -33,9 +33,9 @@ body {
   border: 2px solid black;
   border-radius: 5px;
   box-shadow: 0 0px 8px #fff;
-  height: 200px;
   max-width: 90%;
-  margin-bottom: -130px;
+  max-height: 15rem;
+  margin-bottom: -8rem;
 }
 
 .admin-utils .btn {

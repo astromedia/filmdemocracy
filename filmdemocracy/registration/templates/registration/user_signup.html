@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'registration/css/registration.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Create new account' %}{% endblock %}
@@ -29,14 +29,14 @@
 {% for field in form %}
 {% if field.label == 'agree_terms' %}
 {% for error in field.errors %}
-<div class="alert alert-danger text-center mx-4">
+<div class="alert alert-danger form-message">
   <strong>{{ error|escape }}</strong>
 </div>
 {% endfor %}
 {% endif %}
 {% endfor %}
 {% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center mx-4">
+<div class="alert alert-danger form-message">
   <strong>{{ error|escape }}</strong>
 </div>
 {% endfor %}
@@ -47,7 +47,7 @@
 <!--START: SIGN UP FORM-->
 <h3 class="h3">{% trans 'Create new account' %}</h3>
 
-<form class="form-registration" method="POST" novalidate>
+<form class="form-standard" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}

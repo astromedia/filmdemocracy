@@ -25,13 +25,11 @@
 </div>
 
 
-<!--LINK TO NEW MEETING-->
-<div class="my-2 btn-new-ranking">
-  <form action="{% url 'democracy:ranking_generator' club.id %}">
-    <button type="submit" class="btn btn-block btn-green-to-blue">
-      {% trans 'Generate new ranking' %}
-    </button>
-  </form>
+<!--LINK TO NEW RANKING-->
+<div class="text-center mb-5">
+    <a class="green-color blue-color-hover" href="{% url 'democracy:ranking_generator' club.id %}">
+    {% trans 'Generate new ranking' %}
+    </a>
 </div>
 
 

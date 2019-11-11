@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'registration/css/registration.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Log in' %}{% endblock %}
@@ -16,8 +16,8 @@
 {% if user.is_authenticated %}
 
 
-<div class="alert alert-success text-center my-5 mx-4" role="alert">
-  <strong>{% trans 'Your are already logged in as:' %} {{ user.username }}</strong>
+<div class="alert alert-success form-message" role="alert">
+  {% trans 'Your are already logged in as:' %} {{ user.username }}
 </div>
 
 
@@ -26,15 +26,11 @@
 
 <!--START: USER DOES NOT HAVE ACCESS-->
 {% if next %}
-<div class="alert alert-danger text-center mx-4" role="alert">
+<div class="alert alert-danger form-message" role="alert">
   {% if user.is_authenticated %}
-  <strong>
     {% trans 'Your account does not have access to this page. To continue, log in to an account with access.' %}
-  </strong>
   {% else %}
-  <strong>
     {% trans 'Sorry, you need to log in to see this page.' %}
-  </strong>
   {% endif %}
 </div>
 {% endif %}
@@ -55,8 +51,8 @@
 
 {% if form.errors %}
 {% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center mx-4">
-  <strong>{{ error|escape }}</strong>
+<div class="alert alert-danger form-message">
+  {{ error|escape }}
 </div>
 {% endfor %}
 {% endif %}
@@ -67,7 +63,7 @@
 <h3 class="h3">{% trans 'Log in' %}</h3>
 
 
-<form class="form-registration" method="POST" novalidate>
+<form class="form-standard" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}

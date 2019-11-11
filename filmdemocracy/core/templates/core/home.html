@@ -43,10 +43,10 @@
 
     <div class="club-logo">
       <a href="{% url 'democracy:club_detail' club.id %}">
-        {% if club.logo %}
-        <img src="{{ club.logo.url }}" alt="club.logo not found">
+        {% if club.logo_image %}
+        <img src="{{ club.logo_image.url }}" alt="club.logo_image not found">
         {% else %}
-        <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo not found">
+        <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo_image not found">
         <div class="overlay py-auto">
           <h5 class="py-auto">{{ club.name }}</h5>
         </div>
@@ -65,7 +65,7 @@
   <div class="col-sm-auto m-3 align-self-center">
     <div class="new-club-logo">
       <a href="{% url 'democracy:create_club' %}">
-        <img src="{% static 'democracy/images/new_club.png' %}" alt="club.logo not found" class="card-img">
+        <img src="{% static 'democracy/images/new_club.png' %}" alt="club.logo_image not found" class="card-img">
       </a>
     </div>
   </div>
@@ -88,7 +88,7 @@
   </form>
 
   <span class="light1-style">{% trans 'New here?' %}</span>
-  <a class="misc-text mx-1 green-color blue-color-hover" href="{% url 'registration:user_signup' %}">
+  <a class="mx-1 green-color blue-color-hover" href="{% url 'registration:user_signup' %}">
     {% trans 'Create an account!' %}
   </a>
 

@@ -5,6 +5,7 @@
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
 <link rel="stylesheet" href="{% static 'registration/css/registration.css' %}">
 <link rel="stylesheet" href="{% static 'core/css/cropper.min.css' %}">
 {% endblock %}
@@ -64,7 +65,7 @@
 
 
 <!--START: ACCOUNT INFO FORM-->
-<form class="form-registration form-account-info text-center" enctype="multipart/form-data" method="POST" id="formUpload"
+<form class="form-standard form-account-info text-center" enctype="multipart/form-data" method="POST" id="formUpload"
       novalidate>
   {% csrf_token %}
 
@@ -271,7 +272,7 @@
 
 
 <!--START: ACCOUNT OPTIONS-->
-<form class="form-registration text-center" method="POST" action="{% url 'registration:user_logout' %}">
+<form class="form-standard text-center" method="POST" action="{% url 'registration:user_logout' %}">
   {% csrf_token %}
   <button type="submit" class="btn btn-standard btn-white-to-gray">
     {% trans 'Log out' %}

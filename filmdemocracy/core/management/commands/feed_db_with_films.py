@@ -1,8 +1,3 @@
-"""
-docker exec -it filmdemocracy_web_1 /bin/bash
-python manage.py shell
-exec(open('local/feed_db_with_films_jsons.py').read())
-"""
 import json
 import glob
 import os
@@ -71,4 +66,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(f'Feeding local film jsons to database:')
         self.process_films_jsons(options['test'])
-        self.stdout.write(f'  Done')
+        self.stdout.write(f'  OK')

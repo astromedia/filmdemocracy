@@ -29,7 +29,9 @@
 }
 
 .navbar .nav-item .nav-icon img {
-  max-height: 2.5rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  object-fit: cover;
 }
 
 .navbar .nav-item .nav-icon-rounded img {
@@ -100,7 +102,7 @@
 .navbar .nav-item .dropdown-menu .dropdown-item .media img {
   width: 3.3rem;
   height: 3.3rem;
-  object-fit: fill;
+  object-fit: cover;
   background: rgba(0, 0, 0, 1) !important;
 }
 

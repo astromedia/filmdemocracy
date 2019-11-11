@@ -1,0 +1,20 @@
+
+/* Form meeting styles
+-------------------------------------------------- */
+
+
+.date-field {
+}
+
+.time-field {
+}
+
+.form-description {
+  width: 95% !important;
+  max-width: 500px !important;
+}
+
+.form-description .description-text {
+  max-height: 100px;
+  text-align: left;
+}

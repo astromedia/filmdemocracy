@@ -1,14 +1,23 @@
+import datetime
+
 from django import forms
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from dal import autocomplete
+from PIL import Image
 
 from filmdemocracy.democracy.models import Film, FilmDb, Club, Meeting
 from filmdemocracy.registration.models import User
 
 
 class EditClubForm(forms.ModelForm):
+    # TODO: logo_image validation
+    updateImage = forms.BooleanField(widget=forms.HiddenInput(), required=False)
+    x = forms.FloatField(widget=forms.HiddenInput(), required=False)
+    y = forms.FloatField(widget=forms.HiddenInput(), required=False)
+    width = forms.FloatField(widget=forms.HiddenInput(), required=False)
+    height = forms.FloatField(widget=forms.HiddenInput(), required=False)
     short_description = forms.CharField(
         max_length=100,
         widget=forms.Textarea,
@@ -18,12 +27,36 @@ class EditClubForm(forms.ModelForm):
 
     class Meta:
         model = Club
-        fields = ['name', 'logo', 'short_description']
+        fields = ['updateImage', 'logo_image', 'x', 'y', 'width', 'height', 'name', 'short_description']
+        widgets = {
+            'logo_image': forms.FileInput(attrs={
+                'accept': 'image/*'  # this is not an actual validation! don't rely on that!
+            })
+        }
 
-    def clean_logo(self):
-        # TODO: club logo validation
-        logo = self.cleaned_data['logo']
-        return logo
+    def clean_logo_image(self):
+        # TODO: club logo_image validation
+        update_image = self.cleaned_data.get('updateImage')
+        logo_image = self.cleaned_data['logo_image']
+        if update_image:
+            return logo_image
+        else:
+            return
+
+    def save(self):
+        club = super(EditClubForm, self).save()
+        update_image = self.cleaned_data.get('updateImage')
+        x = self.cleaned_data.get('x')
+        y = self.cleaned_data.get('y')
+        w = self.cleaned_data.get('width')
+        h = self.cleaned_data.get('height')
+        if update_image and x is not None and y is not None and w is not None and h is not None:
+            image = Image.open(club.logo_image)
+            cropped_image = image.crop((x, y, w+x, h+y))
+            ratio = w/h
+            resized_image = cropped_image.resize((int(516*ratio), 516), Image.ANTIALIAS)
+            resized_image.save(club.logo_image.path)
+        return club
 
 
 class KickMembersForm(forms.ModelForm):
@@ -223,9 +256,9 @@ class MeetingsForm(forms.ModelForm):
         label='spam_options',
         required=False
     )
+    date = forms.DateField(initial=datetime.datetime.now())
 
     def __init__(self, *args, **kwargs):
-        self.club_id = kwargs.pop('club_id', None)
         if 'meeting_id' in kwargs:
             self.meeting_id = kwargs.pop('meeting_id', None)
         super(MeetingsForm, self).__init__(*args, **kwargs)

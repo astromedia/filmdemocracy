@@ -383,8 +383,8 @@ class NotificationsHelper:
 
     @staticmethod
     def get_club_image_url(ntf, object_id):
-        if ntf.club.logo:
-            return ntf.club.logo.url
+        if ntf.club.logo_image:
+            return ntf.club.logo_image.url
         else:
             return '/static/democracy/images/club_no_logo.png'
 
@@ -552,7 +552,7 @@ class NotificationsHelper:
     @staticmethod
     def dispatch_url_member(club_id=None, ntf_object_id=None):
         return reverse('democracy:club_member_detail', kwargs={'club_id': club_id,
-                                                               'user_id': ntf_object_id})
+                                                               'member_id': ntf_object_id})
 
     @staticmethod
     def dispatch_url_club(club_id=None, ntf_object_id=None):

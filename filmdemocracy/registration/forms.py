@@ -38,7 +38,7 @@ class AccountInfoForm(UserChangeForm):
         }
 
     def clean_profile_image(self):
-        # TODO: club logo validation
+        # TODO: club logo_image validation
         update_image = self.cleaned_data.get('updateImage')
         profile_image = self.cleaned_data['profile_image']
         if update_image:
@@ -48,6 +48,7 @@ class AccountInfoForm(UserChangeForm):
 
     def save(self):
         user = super(AccountInfoForm, self).save()
+        print(self)
         update_image = self.cleaned_data.get('updateImage')
         x = self.cleaned_data.get('x')
         y = self.cleaned_data.get('y')

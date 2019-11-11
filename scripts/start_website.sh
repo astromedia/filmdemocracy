@@ -24,6 +24,7 @@ django-admin compilemessages
 
 cd ${WORKDIR}/.. || exit
 python manage.py feed_db_with_films --test
+python manage.py create_mock_db
 python manage.py runserver 0.0.0.0:8000
 
 exit 0

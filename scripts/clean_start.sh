@@ -4,7 +4,9 @@
 #### SETTINGS ####
 
 APPS_DIR='filmdemocracy'
-declare -a WEB_APPS=("registration" "democracy")
+LOGOS_DIR='local/db_media/club_logos'
+PROFILE_IMAGES_DIR='local/db_media/user_profile_images'
+declare -a WEB_APPS=("core" "registration" "democracy" "chat")
 
 
 ####################
@@ -19,6 +21,9 @@ cd ${MAIN_DIR} || exit
 for WEB_APP in "${WEB_APPS[@]}"; do
   sudo rm -rf ./${APPS_DIR}/${WEB_APP}/migrations
 done
+
+sudo rm -rf ./${LOGOS_DIR}/*
+sudo rm -rf ./${PROFILE_IMAGES_DIR}/*
 
 echo 'Done'
 

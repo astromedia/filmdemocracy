@@ -1,0 +1,39 @@
+
+/* Form Markdown panel styles
+-------------------------------------------------- */
+
+.form-panel-text {
+  width: 95% !important;
+  max-width: unset !important;
+}
+
+.form-panel-text .panel-text {
+  text-align: left !important;
+  max-height: 200px;
+}
+
+.markdownx-preview {
+  text-align: left;
+  max-width: unset !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  background-color: #fff;
+}
+
+.form-preview {
+  margin-top: -25px;
+}
+
+#markdownHelpModal .h3 {
+  text-align: left;
+  margin-top: 0;
+  font-weight: 500;
+}
+
+.table td {
+  padding: 0.4rem 1rem;
+  margin: 0px;
+}

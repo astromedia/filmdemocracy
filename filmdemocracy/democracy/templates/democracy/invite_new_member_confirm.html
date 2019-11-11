@@ -5,7 +5,7 @@
 
 {% block styles %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'democracy/css/invite_new_member.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Club invitation' %}{% endblock %}
@@ -18,23 +18,16 @@
 
 <h3 class="h3">{% trans 'Join club' %}</h3>
 
-<div class="alert alert-success px-5 my-5 mx-4 text-center" role="alert">
-  <strong>
-    {% trans 'You have been invited to join the club: ' %}{{ club.name }}
-  </strong>
+<div class="alert alert-success form-message" role="alert">
+  {% trans 'You have been invited to join the club: ' %}{{ club.name }}
 </div>
 
 
-<form class="form-invitation" method="POST" novalidate>
+<form class="form-standard" method="POST" novalidate>
   {% csrf_token %}
 
-  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Accept invitation' %}">
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Accept invitation' %}">
 
-</form>
-
-
-<form class="btn-cancel" action="{% url 'core:home' %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
 </form>
 
 
@@ -42,20 +35,18 @@
 
 
 <!--START: INVALID INVITATION LINK-->
-<div class="alert alert-danger px-5 my-5 mx-4 text-center" role="alert">
-  <strong>
-    {% trans 'Sorry, this invitation link is either not active anymore, or not valid for you.' %}
-  </strong>
+<div class="alert alert-danger form-message" role="alert">
+  {% trans 'Sorry, this invitation link is either not active anymore, or not valid for you.' %}
 </div>
-
-
-<form class="btn-cancel" action="{% url 'core:home' %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Home' %}</button>
-</form>
 <!--END: INVALID INVITATION LINK-->
 
 
 {% endif %}
+
+
+<div class="text-center strong-link my-5">
+  <a href="{% url 'core:home' %}">{% trans 'Go to home' %}</a>
+</div>
 
 
 {% endblock %}

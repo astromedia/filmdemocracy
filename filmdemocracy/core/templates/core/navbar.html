@@ -41,10 +41,17 @@
       <!--START: CLUBS DROPDOWN-->
       <li class="nav-item dropdown mx-2 align-self-center">
 
+        {% if club and club.logo_image %}
+        <a class="nav-link nav-icon nav-icon-rounded dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkClub"
+           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="{{ club.logo_image.url }}" alt="club.logo_image not found">
+        </a>
+        {% else %}
         <a class="nav-link nav-icon nav-icon-rounded dropdown-toggle pointer-cursor" id="navbarDropdownMenuLinkClub"
            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img src="{% static 'core/svg/people.svg'%}">
         </a>
+        {% endif %}
 
         <div class="dropdown-menu py-0" aria-labelledby="navbarDropdownMenuLinkClub">
 
@@ -61,13 +68,13 @@
             <a class="dropdown-item py-0 m-0 px-1" href="{% url 'democracy:club_detail' userclub.id %}">
               <div class="media club-item">
 
-                {% if userclub.logo %}
+                {% if userclub.logo_image %}
                 <img class="align-self-center border border-secondary rounded-circle mr-2"
-                     src="{{ userclub.logo.url }}" alt="club.logo not found">
+                     src="{{ userclub.logo_image.url }}" alt="club.logo_image not found">
                 {% else %}
                 <img class="align-self-center border border-secondary rounded-circle mr-2"
                      src="{% static 'democracy/images/club_no_logo.png' %}"
-                     alt="userclub.logo not found">
+                     alt="userclub.logo_image not found">
                 {% endif %}
 
                 <div class="media-body align-self-center p-0 m-0">

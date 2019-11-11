@@ -5,8 +5,9 @@
 
 {% block styles %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
-<link rel="stylesheet" href="{% static 'democracy/css/edit_club.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/edit_club_panel.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Edit club panel' %}{% endblock %}
@@ -42,52 +43,136 @@
 <!--START: EDIT CLUB DESCRIPTION FORM-->
 <h3 class="h3">{% trans 'Edit club panel' %}</h3>
 
-<div class="text-center text-muted mb-4">
-  {% trans 'This field supports markdown syntax. New to markdown?' %}
-  <a href=https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="blank">
-    {% trans 'Check this!' %}
-  </a>
-</div>
 
-<form class="form-edit-club" method="POST" novalidate>
+<form class="form-standard" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}
   {{ hidden_field }}
   {% endfor %}
 
-  <!--PANEL-->
-  {% if form.is_bound %}
-  {% if form.panel.errors %}
-  {% render_field form.panel class="form-control form-club-panel is-invalid" %}
-  {% else %}
-  {% render_field form.panel class="form-control form-club-panel is-valid" %}
-  {% endif %}
-  {% else %}
-  {% render_field form.panel class="form-control form-club-panel" %}
-  {% endif %}
-  {% for error in form.panel.errors %}
-  <div class="invalid-feedback">
-    {{ error }}
-  </div>
-  {% endfor %}
+  <div class="form-inputs">
+
+    <div class="form-input-field form-panel-text">
+
+      <div class="label">
+        <span>{% trans 'Write in the area below the text you want to show in your club.' %}</span>
+        <a href="" data-toggle="modal" data-target="#markdownHelpModal">
+          {% trans 'Check the syntax here.' %}
+        </a>
+      </div>
+
+      <!--PANEL-->
+      {% if form.is_bound %}
+      {% if form.panel.errors %}
+      {% render_field form.panel class="form-control panel-text is-invalid" %}
+      {% else %}
+      {% render_field form.panel class="form-control panel-text is-valid" %}
+      {% endif %}
+      {% else %}
+      {% render_field form.panel class="form-control panel-text" %}
+      {% endif %}
+      {% for error in form.panel.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+      {% endfor %}
+
+    </div>
+
 
   <div class="form-preview">
-    <small class="text-center form-text text-muted">
+    <div class="text-center text-muted">
       {% trans 'Panel preview' %}
-    </small>
-    <hr>
+    </div>
   </div>
 
-  <input class="btn btn-block btn-green-to-blue" type="submit" value="{% trans 'Save changes' %}">
+  </div>
+
+
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Save changes' %}">
 
 </form>
 <!--START: EDIT CLUB DESCRIPTION FORM-->
 
 
-<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}" class="text-center mt-5">
-  <button type="submit" class="btn btn-sm">{% trans 'Cancel' %}</button>
-</form>
+<div class="text-center strong-link my-5">
+  <a href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
+</div>
+
+
+<!-- START: MODAL MARKDOWN HELP -->
+<div class="modal fade" id="markdownHelpModal" tabindex="-1" role="dialog"
+     aria-labelledby="markdownHelpModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered show" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="markdownHelpModalTitle">{% trans 'Club panel Syntax' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body text-left p-2">
+
+        <table class="table table-borderless">
+          <tbody>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '# Header1' %}</td>
+              <td class='align-bottom h1'>{%trans 'Header1' %}</td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '## Header2' %}</td>
+              <td class='align-bottom h2'>{%trans 'Header2' %}</td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '### Header3' %}</td>
+              <td class='align-bottom h3'>{%trans 'Header3' %}</td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '#### Header4' %}</td>
+              <td class='align-bottom h4'>{%trans 'Header4' %}</td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '##### Header5' %}</td>
+              <td class='align-bottom h5'>{%trans 'Header5' %}</td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '###### Header6' %}</td>
+              <td class='align-bottom h6'>{%trans 'Header6' %}</td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>***</td>
+              <td class='align-bottom'><hr></td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '_underscores_' %}</td>
+              <td class='align-bottom'><em>{%trans 'underscores' %}</em></td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '**double asterisks**' %}</td>
+              <td class='align-bottom'><strong>{%trans 'double asterisks' %}</strong></td>
+            </tr>
+            <tr>
+              <td class='align-bottom text-right'>{%trans '**_both combined_**' %}</td>
+              <td class='align-bottom'><strong><em>{%trans 'both combined' %}</em></strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="modal-footer">
+        <span>{% trans 'Want to know more?' %}</span>
+        <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">{% trans 'Follow this link' %}</a>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+<!-- END: MODAL MARKDOWN HELP -->
 
 
 {% endblock %}

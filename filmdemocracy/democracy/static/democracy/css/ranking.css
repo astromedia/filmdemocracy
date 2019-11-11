@@ -28,33 +28,22 @@ body {
 -------------------------------------------------- */
 .form-ranking-generator {
   text-align: center;
-  font-size: 15px;
-}
-
-.form-ranking-generator .col {
-  max-width: 29%;
-  padding: 5px;
-  margin-left: 1%;
-  margin-right: 1%;
-}
-
-.form-ranking-generator .btn-block {
-  max-width: 225px;
-  margin: auto;
-  margin-top: 30px;
 }
 
 .form-ranking-generator .step-title {
   font-weight: bold;
-  padding-top: 0px;
-  margin-bottom: -16px;
-  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-top: 15px;
 }
 
-hr {
-  width: 400px;
-  color: rgba(0, 0, 0, 0.15);
-  background-color: rgba(0, 0, 0, 0.15);
+.form-ranking-generator .step-title {
+  font-weight: bold;
+  margin-bottom: 0px;
+  margin-top: 15px;
+}
+
+.form-ranking-generator .form-inputs .ranking-options .list-group-item {
+  padding: 0px;
 }
 
 .form-select-members .card :checked + label img {

@@ -20,10 +20,10 @@
 
     <div class="col col-auto mr-n3">
 
-      {% if club.logo %}
-      <img class="border border-secondary rounded-circle" src="{{ club.logo.url }}" alt="club.logo not found">
+      {% if club.logo_image %}
+      <img class="border border-secondary rounded-circle" src="{{ club.logo_image.url }}" alt="club.logo_image not found">
       {% else %}
-      <img class="border border-secondary rounded-circle" src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo not found">
+      <img class="border border-secondary rounded-circle" src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo_image not found">
       {% endif %}
 
     </div>

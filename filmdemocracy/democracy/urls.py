@@ -44,7 +44,7 @@ club_urlpatterns = [
             name='edit_club_panel'
         ),
         path(
-            'member/<uuid:user_id>/',
+            'member/<uuid:member_id>/',
             club_views.ClubMemberDetailView.as_view(template_name='democracy/club_member_detail.html'),
             name='club_member_detail'
         ),
