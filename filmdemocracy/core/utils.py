@@ -284,17 +284,19 @@ class RankingGenerator:
 
 def random_club_id_generator(n_digits=CLUB_ID_N_DIGITS):
     """ Picks an integer in the [10**(n_digits-1), 10**n_digits-1] range among the free ones """
+    base_ids = list(range(10**(n_digits-1), 10**n_digits - 1))
     club_ids = Club.objects.values_list('id', flat=True)
-    free_ids = [i for i in range(10**(n_digits-1), 10**n_digits - 1) if i not in club_ids]
-    return str(random.choice(free_ids))
+    free_ids = list(set(base_ids) - set(club_ids))
+    return str(random.choice(free_ids)).zfill(n_digits)
 
 
 def random_film_public_id_generator(club, n_digits=FILM_ID_N_DIGITS):
     """ Picks an integer in the [10**(n_digits-1), 10^n_digits-1] range among the free ones in the club """
     club_films = Film.objects.filter(club=club)
+    base_ids = list(range(10**(n_digits-1), 10**n_digits - 1))
     films_public_ids = club_films.values_list('public_id', flat=True)
-    free_ids = [i for i in range(10**(n_digits-1), 10**n_digits - 1) if i not in films_public_ids]
-    return str(random.choice(free_ids))
+    free_ids = list(set(base_ids) - set(films_public_ids))
+    return str(random.choice(free_ids)).zfill(n_digits)
 
 
 class NotificationsHelper:

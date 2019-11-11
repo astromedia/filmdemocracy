@@ -146,7 +146,7 @@ film_urlpatterns = [
             name='film_seen'
         ),
         re_path(
-            r'(?P<film_slug>[a-z-]+)/' + options_regexp,
+            r'(?P<film_slug>[\w-]+)/' + options_regexp,
             film_views.FilmDetailView.as_view(template_name='democracy/film_detail.html'),
             name='film_detail'
         ),

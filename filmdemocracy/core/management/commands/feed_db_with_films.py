@@ -19,14 +19,14 @@ class Command(BaseCommand):
 
     @staticmethod
     def load_film_json(file_path):
-        film_json_id = int(os.path.splitext(ntpath.basename(file_path))[0])
+        film_json_id = str(int(os.path.splitext(ntpath.basename(file_path))[0])).zfill(7)
         with open(file_path) as json_file:
             film_json = json.load(json_file)
         return film_json_id, film_json
 
     @staticmethod
-    def update_filmdb_info(imdb_key, film_json):
-        filmdb, created = FilmDb.objects.get_or_create(imdb_id=imdb_key)
+    def update_filmdb_info(film_json_id, film_json):
+        filmdb, created = FilmDb.objects.get_or_create(imdb_id=film_json_id)
         if created:
             try:
                 filmdb.title = film_json['Title']

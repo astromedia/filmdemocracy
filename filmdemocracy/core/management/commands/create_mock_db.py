@@ -4,6 +4,7 @@ import os
 from pprint import pprint
 import ntpath
 import random
+import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 import django.db.utils
@@ -59,10 +60,9 @@ class Command(BaseCommand):
         self.stdout.write(f'  Creating users...')
         for name in USER_NAMES:
             User.objects.create_user(name, f'{name.lower()}@gmail.com', 'pass')
-        self.stdout.write(f'  OK')
 
-    def add_films_to_club(self, club):
-        self.stdout.write(f'  Adding films to club: {club.name}')
+    @staticmethod
+    def add_films_to_club(club):
         filmsdbs = FilmDb.objects.all()
         club_members = club.members.filter(is_active=True)
         for filmdb in filmsdbs:
@@ -72,7 +72,31 @@ class Command(BaseCommand):
                 club=club,
                 db=filmdb,
             )
-        self.stdout.write(f'  OK')
+
+    @staticmethod
+    def create_random_votes_for_films(club):
+        club_members = club.members.filter(is_active=True)
+        for film in club.film_set.all():
+            for member in club_members:
+                if random.random() < 0.8:
+                    Vote.objects.create(
+                        user=member,
+                        film=film,
+                        club=club,
+                        choice=random.choice([Vote.OMG, Vote.YES, Vote.SEENOK, Vote.MEH, Vote.NO, Vote.SEENNO, Vote.VETO])
+                    )
+
+    @staticmethod
+    def mark_random_films_as_seen(club):
+        club_members = club.members.filter(is_active=True)
+        for film in club.film_set.all():
+            if random.random() < 0.2:
+                film.seen_date = datetime.date.today()
+                for member in club_members:
+                    if random.random() < 0.5:
+                        film.seen_by.add(member)
+                film.seen = True
+                film.save()
 
     def create_clubs(self):
         self.stdout.write(f'  Creating clubs...')
@@ -99,8 +123,12 @@ class Command(BaseCommand):
                 club.members.add(user)
                 ClubMemberInfo.objects.create(club=club, member=user)
             club.save()
+            self.stdout.write(f'  Adding films to club: {club.name}')
             self.add_films_to_club(club)
-        self.stdout.write(f'  OK')
+            self.stdout.write(f'  Adding random votes to films in club: {club.name}')
+            self.create_random_votes_for_films(club)
+            self.stdout.write(f'  Marking random films as seen in club: {club.name}')
+            self.mark_random_films_as_seen(club)
 
     def add_arguments(self, parser):
         pass
