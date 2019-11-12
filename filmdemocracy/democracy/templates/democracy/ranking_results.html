@@ -7,7 +7,7 @@
 {% block styles %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
-<link rel="stylesheet" href="{% static 'democracy/css/ranking.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/ranking_results.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Voting results' %}{% endblock %}
@@ -20,11 +20,6 @@
 </div>
 
 
-<div class="page-subtitle">
-  <span>{% trans 'The people have spoken' %}</span><br>
-</div>
-
-
 <!--LINK TO NEW RANKING-->
 <div class="text-center mb-5">
     <a class="green-color blue-color-hover" href="{% url 'democracy:ranking_generator' club.id %}">
@@ -33,13 +28,16 @@
 </div>
 
 
+<div class="page-subtitle mb-2">
+  <span>{% trans 'The people have spoken:' %}</span><br>
+</div>
+
+
 <!--START: PARTICIPANTS-->
 <div class="participants-header">
-  <h3 class="h3">{% trans 'Participants' %}</h3>
-  <hr>
   <div class="row mx-1 justify-content-center">
     {% for participant in participants %}
-    <div class="col-auto">
+    <div class="col col-auto">
       {% if participant.profile_image %}
       <img class="participant-picture my-2 border border-secondary rounded-circle" title="{{ participant.username }}"
            src="{{ participant.profile_image.url }}"
@@ -56,9 +54,9 @@
 
 
 <!--START: VOTING RESULTS-->
-
 <div class="container container-table">
   <table class="table table-hover">
+
     <thead class="thead-light">
     <tr>
       <!--<th scope="col" class="text-center"><span class="">#</span></th>-->
@@ -67,8 +65,8 @@
       <th scope="col" class="text-center">{% trans 'Results' %}</th>
     </tr>
     </thead>
-    <tbody>
 
+    <tbody>
     {% for film_results in ranking_results|dictsortreversed:"points" %}
 
     <tr class="">
@@ -93,209 +91,201 @@
 
           <div class="row justify-content-center">
 
-            {% if film_results.positive_votes|length > 0 %}
-            <div class="col-auto">
+            <div class="col col-auto">
+              {% if film_results.positive_votes|length > 0 %}
               <strong>{{ film_results.positive_votes|length }}</strong>
               <img class="ml-1 mt-n1 rounded rounded-circle border border-secondary" style="height: 20px;"
                    src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+              {% endif %}
             </div>
-            {% endif %}
 
-            {% if film_results.negative_votes|length > 0 %}
-            <div class="col-auto">
+            <div class="col col-auto">
+              {% if film_results.negative_votes|length > 0 %}
               <strong>{{ film_results.negative_votes|length }}</strong>
               <img class="ml-1 mt-n1 rounded rounded-circle border border-secondary" style="height: 20px;"
                    src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+              {% endif %}
             </div>
-            {% endif %}
 
-            {% if film_results.abstentionists|length > 0 %}
-            <div class="col-auto">
+            <div class="col col-auto">
+              {% if film_results.abstentionists|length > 0 %}
               <strong>{{ film_results.abstentionists|length }}</strong>
               <img class="ml-1 mt-n1" style="height: 22px;" src="{% static 'democracy/svg/question.svg'%}">
+              {% endif %}
             </div>
 
-            {% endif %}
-
-            {% if film_results.warnings %}
-            <div class="col-auto">
+            <div class="col col-auto">
+              {% if film_results.warnings %}
               <strong>{{ film_results.warnings|length }}</strong>
               <img class="ml-1 mt-n1" style="height: 19px;" src="{% static 'democracy/svg/alert.svg'%}">
+              {% endif %}
             </div>
-            {% endif %}
+
           </div>
         </div>
-
 
       </td>
 
     </tr>
 
-
-    <!--START: RESULTS MODAL-->
-    <div class="modal fade" id="FilmResultsModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
-         aria-labelledby="FilmResultsModal_{{ forloop.counter }}_Title" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content modal-results">
-          <div class="modal-header modal-results-header">
-            <h5 class="modal-title" id="FilmResultsModal_{{ forloop.counter }}_Title">
-              {% trans 'Results for:' %} {{ film_results.film.db.title }}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body modal-results">
-
-            <div class="mt-1 mb-3">
-              <strong>{% trans 'Film score:' %}</strong>
-              {% if film_results.points < -1000 %}
-              -∞
-              {% else %}
-              {{ film_results.points }}
-              {% endif %}
-            </div>
-
-            <!--START VOTES-->
-            {% if film_results.positive_votes or film_results.negative_votes %}
-
-            <div class="mt- mb-2">
-              <strong>{% trans 'Votes:' %}</strong>
-            </div>
-
-            <div class="container-results mx-2">
-
-              <!--START POSITIVE VOTES-->
-              {% for vote in film_results.positive_votes %}
-
-              <div class="media post my-2">
-                <div class="align-self-start mr-3 user-image">
-                  {% if vote.user.profile_image %}
-                  <div>
-                    <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
-                         src="{{ vote.user.profile_image.url }}"
-                         alt="vote.user.profile_image not found">
-                    {% else %}
-                    <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
-                         src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-                         alt="vote.user.profile_image not found">
-                    {% endif %}
-                    <img class="hand-icon rounded-circle mt-n3 ml-4" style="height: 18px;"
-                         src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
-                  </div>
-                </div>
-                <div class="">
-                  <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
-                    <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
-                      {{ vote.user.username }}</a>:
-                    <span>{{ vote.get_choice_display }}</span>
-                  </p>
-                </div>
-              </div>
-
-              {% endfor %}
-              <!--END POSITIVE VOTES-->
-
-              <!--START NEGATIVE VOTES-->
-              {% for vote in film_results.negative_votes %}
-
-              <div class="media post my-2">
-                <div class="align-self-start mr-3 user-image">
-                  {% if vote.user.profile_image %}
-                  <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
-                       src="{{ vote.user.profile_image.url }}"
-                       alt="vote.user.profile_image not found">
-                  {% else %}
-                  <img class="border border-secondary rounded-circle" title="{{ vote.user.username }}"
-                       src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-                       alt="vote.user.profile_image not found">
-                  {% endif %}
-                  <img class="hand-icon rounded-circle mt-n3 ml-4" style="height: 18px;"
-                       src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
-                </div>
-                <div class="">
-                  <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">
-                    <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
-                      {{ vote.user.username }}</a>:
-                    <span>{{ vote.get_choice_display }}</span>
-                  </p>
-                </div>
-              </div>
-
-              {% endfor %}
-
-            </div>
-            <!--END NEGATIVE VOTES-->
-
-            {% endif %}
-            <!--END VOTES-->
-
-
-            <!--START ABSTENTIONISTS-->
-            {% if film_results.abstentionists %}
-
-            <div class="mt-n1 mb-2">
-              <strong>{% trans 'Did not vote:' %}</strong>
-            </div>
-
-            <div class="row mx-2">
-              {% for participant in film_results.abstentionists %}
-              <div class="col-auto align-items-center my-1">
-                {% if participant.profile_image %}
-                <img class="voter-picture border border-secondary rounded-circle" title="{{ participant.username }}"
-                     src="{{ participant.profile_image.url }}" alt="participant.profile_image not found">
-                {% else %}
-                <img class="voter-picture border border-secondary rounded-circle" title="{{ participant.username }}"
-                     src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-                     alt="participant.profile_image not found">
-                {% endif %}
-              </div>
-              {% endfor %}
-            </div>
-
-            {% endif %}
-            <!--END ABSTENTIONISTS-->
-
-            <!--START WARNING-->
-            {% if film_results.warnings %}
-
-            <div class="mt-3 mb-2">
-              <strong>{% trans 'Warnings:' %}</strong>
-            </div>
-            <ul>
-            {% for warning in film_results.warnings %}
-              <li>
-              {% if warning.type == 'veto' %}
-              {% blocktrans with user=warning.voter film=warning.film %}
-              <strong>{{ user }}</strong> vetoed the film <strong>{{ film }}</strong>.
-              {% endblocktrans %}
-              {% elif warning.type == 'omg' %}
-              {% blocktrans with user=warning.voter film=warning.film %}
-              Remember that <strong>{{ user }}</strong> really really wants to see <strong>{{ film }}</strong>.
-              {% endblocktrans %}
-              {% elif warning.type == 'proposer missing' %}
-              {% blocktrans with user=warning.voter film=warning.film %}
-              Keep in mind that <strong>{{ user }}</strong> proposed <strong>{{ film }}</strong>, and is not present.
-              {% endblocktrans %}
-              {% endif %}
-                </li>
-            {% endfor %}
-            </ul>
-
-            {% endif %}
-            <!--END WARNING-->
-
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END: RESULTS MODAL-->
-
-
     {% endfor %}
     </tbody>
+
   </table>
 </div>
 <!--END: VOTING RESULTS-->
+
+
+{% for film_results in ranking_results|dictsortreversed:"points" %}
+<!--START: RESULTS MODAL-->
+<div class="modal fade" id="FilmResultsModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
+     aria-labelledby="FilmResultsModal_{{ forloop.counter }}_Title" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content modal-results">
+
+      <div class="modal-header modal-results-header">
+        <h5 class="modal-title" id="FilmResultsModal_{{ forloop.counter }}_Title">{{ film_results.film.db.title }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body modal-results">
+
+        <div class="mt-1 mb-3">
+          <strong>{% trans 'Film score:' %}</strong>
+          {% if film_results.points < -1000 %}
+          -∞
+          {% else %}
+          {{ film_results.points }}
+          {% endif %}
+        </div>
+
+
+        <!--START VOTES-->
+        {% if film_results.positive_votes or film_results.negative_votes %}
+
+        <!--START POSITIVE VOTES-->
+        {% for vote in film_results.positive_votes %}
+
+        <div class="media vote">
+          {% if vote.user.profile_image %}
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
+               src="{{ vote.user.profile_image.url }}"
+               alt="vote.user.profile_image not found">
+          {% else %}
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
+               src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+               alt="vote.user.profile_image not found">
+          {% endif %}
+          <img class="vote-icon hand-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+          <div class="vote-text border rounded-lg">
+            <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
+              {{ vote.user.username }}</a>:
+            <span>{{ vote.get_choice_display }}</span>
+          </div>
+        </div>
+
+        {% endfor %}
+        <!--END POSITIVE VOTES-->
+
+        <!--START NEGATIVE VOTES-->
+        {% for vote in film_results.negative_votes %}
+
+        <div class="media vote">
+          {% if vote.user.profile_image %}
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
+               src="{{ vote.user.profile_image.url }}"
+               alt="vote.user.profile_image not found">
+          {% else %}
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
+               src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+               alt="vote.user.profile_image not found">
+          {% endif %}
+          <img class="vote-icon hand-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+          <div class="vote-text border rounded-lg">
+            <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
+              {{ vote.user.username }}</a>:
+            <span>{{ vote.get_choice_display }}</span>
+          </div>
+        </div>
+
+        {% endfor %}
+        <!--END NEGATIVE VOTES-->
+
+        {% endif %}
+        <!--END VOTES-->
+
+
+        <!--START ABSTENTIONISTS-->
+        {% if film_results.abstentionists %}
+
+        <div class="row vote mt-3">
+          {% for participant in film_results.abstentionists %}
+          <div class="col col-auto media">
+            {% if participant.profile_image %}
+            <img class="user-image rounded-circle" title="{{ participant.username }}"
+                 src="{{ participant.profile_image.url }}" alt="participant.profile_image not found">
+            {% else %}
+            <img class="user-image rounded-circle" title="{{ participant.username }}"
+                 src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+                 alt="participant.profile_image not found">
+            {% endif %}
+            <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/question.svg'%}">
+          </div>
+          {% endfor %}
+        </div>
+
+        {% endif %}
+        <!--END ABSTENTIONISTS-->
+
+        
+        <!--START WARNING-->
+        {% if film_results.warnings %}
+
+        <div class="mt-3 mb-2">
+          <strong>{% trans 'Warnings:' %}</strong>
+        </div>
+
+        <ul>
+        {% for warning in film_results.warnings %}
+          <li>
+
+            {% if warning.type == 'veto' %}
+
+              {% blocktrans with user=warning.voter film=warning.film %}
+              <strong>{{ user }}</strong> vetoed this film.
+              {% endblocktrans %}
+
+            {% elif warning.type == 'omg' %}
+
+              {% blocktrans with user=warning.voter film=warning.film %}
+              <strong>{{ user }}</strong> really really wants to see this film.
+              {% endblocktrans %}
+
+            {% elif warning.type == 'proposer missing' %}
+
+              {% blocktrans with user=warning.voter film=warning.film %}
+              <strong>{{ user }}</strong> proposed this film, and is not present.
+              {% endblocktrans %}
+
+            {% endif %}
+
+          </li>
+        {% endfor %}
+        </ul>
+
+        {% endif %}
+        <!--END WARNING-->
+
+        
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- END: RESULTS MODAL-->
+{% endfor %}
 
 
 <!--START: BACK TO TOP-->
