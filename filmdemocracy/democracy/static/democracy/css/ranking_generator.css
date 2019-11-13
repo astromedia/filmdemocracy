@@ -19,3 +19,7 @@
   background-color: lightseagreen !important;
   border: 5px solid lightseagreen !important;
 }
+
+.custom-range {
+  width: 80%;
+}

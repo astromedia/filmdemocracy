@@ -547,15 +547,20 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
 
 @method_decorator(login_required, name='dispatch')
 class RankingGeneratorView(UserPassesTestMixin, generic.TemplateView):
+    range_step = 10
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page'] = 'film_ranking'
+        context['page'] = 'ranking_generator'
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context = add_club_context(context, club)
+        club_films = Film.objects.filter(club=club, seen=False)
+        max_film_duration = max([film.db.duration_in_mins_int for film in club_films])
+        context['range_step'] = self.range_step
+        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10)
         return context
 
 

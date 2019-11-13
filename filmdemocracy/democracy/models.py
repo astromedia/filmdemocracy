@@ -100,7 +100,7 @@ class Meeting(models.Model):
 
 class FilmDb(models.Model):
 
-    imdb_id = models.CharField('IMDb id', primary_key=True, max_length=7)
+    imdb_id = models.CharField('IMDb id', primary_key=True, max_length=8)
     faff_id = models.CharField('FilmAffinity id', default='', max_length=6)
     title = models.CharField(default='', max_length=1000)
     year = models.IntegerField(default=0)

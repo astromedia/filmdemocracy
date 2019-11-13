@@ -166,7 +166,7 @@
         {% if film_results.positive_votes or film_results.negative_votes %}
 
         <!--START POSITIVE VOTES-->
-        {% for vote in film_results.positive_votes %}
+        {% for vote in film_results.positive_votes|dictsortreversed:"vote_score" %}
 
         <div class="media vote">
           {% if vote.user.profile_image %}
@@ -190,7 +190,7 @@
         <!--END POSITIVE VOTES-->
 
         <!--START NEGATIVE VOTES-->
-        {% for vote in film_results.negative_votes %}
+        {% for vote in film_results.negative_votes|dictsortreversed:"vote_score" %}
 
         <div class="media vote">
           {% if vote.user.profile_image %}

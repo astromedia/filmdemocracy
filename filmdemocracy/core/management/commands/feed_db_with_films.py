@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def update_filmdb_info(film_json_id, film_json):
-        filmdb, created = FilmDb.objects.get_or_create(imdb_id=film_json_id)
+        filmdb, created = FilmDb.objects.get_or_create(imdb_id=str(film_json_id).zfill(8))
         if created:
             try:
                 filmdb.title = film_json['Title']

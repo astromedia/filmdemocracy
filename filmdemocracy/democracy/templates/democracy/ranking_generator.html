@@ -70,13 +70,13 @@
 
       <!--EXCLUDE FILMS PROPOSED BY MEMBERS NOT PRESENT-->
       <li class="list-group-item">
-        <div class="row align-items-center m-2">
-          <div class="col-9 col-md-6">
+        <div class="row align-items-center my-2 mx-1">
+          <div class="col-8 col-md-6">
               <div class="text-left float-md-right">
                 {% trans 'Exclude films proposed by members not present:' %}
               </div>
           </div>
-          <div class="col-3 col-md-auto my-2">
+          <div class="col-4 col-md-auto">
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
                      value="exclude_not_present">
@@ -88,18 +88,21 @@
 
       <!--MAX FILM DURATION-->
       <li class="list-group-item">
-        <div class="row align-items-center m-2">
-          <div class="col-9 col-md-6">
+        <div class="row align-items-center my-2 mx-1">
+          <div class="col-8 col-md-6">
             <div class="text-left float-md-right">
-              {% trans 'Maximum film duration in minutes (optional):' %}
+              {% trans 'Maximum film duration in minutes:' %}
             </div>
           </div>
-          <div class="col-3 col-md-auto my-2">
+          <div class="col-4 col-md-auto">
             <div>
-              <input type="text" style='max-width: 75px' class="form-control mx-auto" name="max_duration" id="max_duration" value="">
+              <output class="" name="max_duration_output" id="max_duration_output">{{ max_film_duration }} (max)</output>
             </div>
           </div>
         </div>
+        <label for="max_duration"></label>
+        <input type="range" class="custom-range" min="0" max="{{ max_film_duration }}" step="{{ range_step }}"
+               value="{{ max_film_duration }}" id='max_duration' name="max_duration" oninput="max_duration_output.value = max_duration.value">
       </li>
 
     </ul>

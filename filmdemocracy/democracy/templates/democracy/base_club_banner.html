@@ -48,14 +48,14 @@
     <div class="col col-6">
 
       <form class="banner-link"
-            action="{% if page == 'film_ranking' or page == 'ranking_results'%}
+            action="{% if page == 'ranking_generator' or page == 'ranking_results'%}
                     {% url 'democracy:club_detail' club.id %}
                     {% else %}
                     {% url 'democracy:ranking_generator' club.id %}
                     {% endif %}">
 
         <button type="submit" class="btn btn-block">
-          {% if page == 'film_ranking' or page == 'ranking_results' %}
+          {% if page == 'ranking_generator' or page == 'ranking_results' %}
           {% trans 'Club' %}
           {% else %}
           {% trans 'Ranking' %}
