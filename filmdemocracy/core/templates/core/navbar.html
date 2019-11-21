@@ -423,10 +423,37 @@
             </div>
 
           </a>
+          <!--END: SELECT LANGUAGE-->
+
 
           <div class="dropdown-divider p-0 m-0"></div>
 
-          <a class="dropdown-item py-0 m-0 px-1" href="#"><div class="media">Buscar grupos?</div></a>
+
+          <!--START: ADMIN UTILS-->
+          {% if club and user in club_admins %}
+          <a class="dropdown-item py-0 m-0 px-1 pointer-cursor" data-toggle="modal" data-target="#adminUtilsModal">
+
+            <div class="media menu-item">
+
+              <img class="align-self-center border border-secondary rounded-circle mr-2"
+                   src="{% static 'core/svg/globe_negative.svg'%}">
+
+              <div class="media-body align-self-center p-0 m-0">
+                <p class="first-line text-dark">
+                  {% trans 'Club admin utilities' %}
+                </p>
+                <p class="second-line text-secondary">
+                  {{ club.name }}
+                </p>
+
+              </div>
+
+            </div>
+
+          </a>
+          {% endif %}
+          <!--END: ADMIN UTILS-->
+
 
           <div class="dropdown-divider p-0 m-0"></div>
 
@@ -476,7 +503,7 @@
         </button>
       </div>
 
-      <div class="modal-body text-center pb-4 py-0 px-0">
+      <div class="modal-body text-center py-0 px-0">
 
         <!--{% get_current_language as LANGUAGE_CODE %}-->
         <!--{% get_available_languages as LANGUAGES %}-->
@@ -505,3 +532,52 @@
   </div>
 </div>
 <!-- END: MODAL LANGUAGES -->
+
+
+{% if club and user in club_admins %}
+<!-- START: MODAL ADMIN UTILS -->
+<div class="modal fade" id="adminUtilsModal" tabindex="-1" role="dialog"
+     aria-labelledby="adminUtilsModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="adminUtilsModalTitle">{% trans 'Club admin utilities' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body text-center py-0 px-0">
+
+        <div class="list-group p-0 m-0">
+
+          <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:edit_club_info' club.id %}">
+            {% trans 'Edit club info' %}
+          </a>
+
+          <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:edit_club_panel' club.id %}">
+            {% trans 'Edit club panel' %}
+          </a>
+
+          <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:promote_members' club.id %}">
+            {% trans 'Promote to admin' %}
+          </a>
+
+          <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:kick_members' club.id %}">
+            {% trans 'Kick members' %}
+          </a>
+
+          <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:self_demote' club.id %}">
+            {% trans 'Self-demote' %}
+          </a>
+
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+</div>
+<!-- END: MODAL ADMIN UTILS -->
+{% endif %}

@@ -50,12 +50,12 @@ club_urlpatterns = [
         ),
         path(
             'leave_club/',
-            club_views.leave_club,
+            club_views.LeaveClubView.as_view(template_name='democracy/leave_club.html'),
             name='leave_club'
         ),
         path(
             'self_demote/',
-            club_views.self_demote,
+            club_views.SelfDemoteView.as_view(template_name='democracy/self_demote.html'),
             name='self_demote'
         ),
         path(

@@ -13,7 +13,6 @@ from filmdemocracy.core.models import Notification
 from filmdemocracy.democracy.models import FilmDb, Film, Vote, FilmComment, Club
 
 from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check
-from filmdemocracy.core.utils import add_club_context
 from filmdemocracy.core.utils import extract_options
 
 
@@ -41,7 +40,6 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
-        context = add_club_context(context, club)
         context['page'] = 'film_detail'
         options_string = self.kwargs['options_string'] if 'options_string' in self.kwargs and self.kwargs['options_string'] else None
         view_option, order_option, display_option = extract_options(options_string)
@@ -120,7 +118,6 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         film = get_object_or_404(Film, club=club, public_id=self.kwargs['film_public_id'])
         context['film'] = film
-        context = add_club_context(context, club)
         return context
 
 

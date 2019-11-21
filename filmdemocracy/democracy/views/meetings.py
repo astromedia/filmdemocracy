@@ -14,7 +14,6 @@ from filmdemocracy.core.models import Notification
 from filmdemocracy.democracy.models import Club, Meeting
 
 from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check
-from filmdemocracy.core.utils import add_club_context
 from filmdemocracy.core.utils import SpamHelper
 
 
@@ -202,7 +201,6 @@ class MeetingsListView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        context = add_club_context(context, club)
         club_meetings = Meeting.objects.filter(club=club, date__gte=timezone.now().date())
         context['club_meetings'] = club_meetings.order_by('date')
         return context

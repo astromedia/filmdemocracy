@@ -1,0 +1,37 @@
+{% extends "democracy/base_club_banner.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Self demote' %}{% endblock %}
+
+{% block content %}
+
+
+<h3 class="h3">{% trans 'Self-demote' %}</h3>
+
+<div class="alert alert-danger form-message" role="alert">
+  {% trans "Are you sure you don't want to be an admin anymore?" %}
+</div>
+
+
+<form class="form-standard" method="POST" novalidate>
+  {% csrf_token %}
+
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Confirm' %}">
+
+</form>
+
+
+<div class="text-center strong-link my-5">
+  <a href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
+</div>
+
+
+{% endblock %}

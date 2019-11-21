@@ -105,6 +105,10 @@ class PromoteMembersForm(forms.ModelForm):
         return promoted_members
 
 
+class ConfirmForm(forms.Form):
+    pass
+
+
 def process_imdb_input(form):
     """ Validate that the input is a valid IMDb film url or key and return IMDb id. """
     # TODO: do this using regexps?

@@ -8,16 +8,12 @@ app_name = 'registration'
 urlpatterns = [
     path(
         'signup/',
-        views.SignUpView.as_view(
-            template_name='registration/user_signup.html'
-        ),
+        views.SignUpView.as_view(template_name='registration/user_signup.html'),
         name='user_signup'
     ),
     path(
         'login/',
-        auth_views.LoginView.as_view(
-            template_name='registration/user_login.html'
-        ),
+        auth_views.LoginView.as_view(template_name='registration/user_login.html'),
         name='user_login'
     ),
     path(
@@ -27,15 +23,13 @@ urlpatterns = [
     ),
     path(
         'account/info/',
-        views.AccountInfoView.as_view(
-            template_name='registration/account_info.html'
-        ),
+        views.AccountInfoView.as_view(template_name='registration/account_info.html'),
         name='account_info'
     ),
     path(
         'account/delete/',
-        views.account_delete,
-        name='account_delete'
+        views.DeleteAccountView.as_view(template_name='registration/delete_account.html'),
+        name='delete_account'
     ),
     path(
         'password_change/',
@@ -47,9 +41,7 @@ urlpatterns = [
     ),
     path(
         'password_change/done/',
-        auth_views.PasswordChangeDoneView.as_view(
-            template_name='registration/password_change_done.html'
-        ),
+        auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'),
         name='password_change_done'
     ),
     path(
@@ -65,9 +57,7 @@ urlpatterns = [
     ),
     path(
         'password_reset/done/',
-        auth_views.PasswordResetDoneView.as_view(
-            template_name='registration/password_reset_done.html'
-        ),
+        auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
         name='password_reset_done'
     ),
     path(
@@ -80,9 +70,7 @@ urlpatterns = [
     ),
     path(
         'password_reset/complete/',
-        auth_views.PasswordResetCompleteView.as_view(
-            template_name='registration/password_reset_complete.html'
-        ),
+        auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
         name='password_reset_complete'
     ),
 ]

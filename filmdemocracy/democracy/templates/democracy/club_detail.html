@@ -563,7 +563,7 @@
 
   <!--LEAVE BUTTON-->
   <div class="text-center my-5">
-    <a class="text-danger text-decoration-none pointer-cursor mb-4" style="font-size: 13px;" data-toggle="modal" data-target="#LeaveModal">
+    <a class="text-danger text-decoration-none pointer-cursor mb-4" style="font-size: 13px;" href="{% url 'democracy:leave_club' club.id %}">
       {% trans 'Leave club' %}
     </a>
   </div>
@@ -644,69 +644,69 @@
 
 
 <!-- START: MODAL SELF-DEMOTE -->
-{% if user in club_admins %}
-<div class="modal fade" id="self_demoteModal" tabindex="-1" role="dialog"
-     aria-labelledby="self_demoteModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="self_demoteModalTitle">{% trans 'Self-demote' %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        {% trans "Are you sure you don't want to be an admin anymore?" %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-sm" data-dismiss="modal">
-          {% trans 'Cancel' %}
-        </button>
-        <form method="POST" action="{% url 'democracy:self_demote' club.id %}" class="text-center">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
-            {% trans 'Confirm' %}
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
+<!--{% if user in club_admins %}-->
+<!--<div class="modal fade" id="self_demoteModal" tabindex="-1" role="dialog"-->
+<!--     aria-labelledby="self_demoteModalTitle" aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title" id="self_demoteModalTitle">{% trans 'Self-demote' %}</h5>-->
+<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--          <span aria-hidden="true">&times;</span>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        {% trans "Are you sure you don't want to be an admin anymore?" %}-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-sm" data-dismiss="modal">-->
+<!--          {% trans 'Cancel' %}-->
+<!--        </button>-->
+<!--        <form method="POST" action="{% url 'democracy:self_demote' club.id %}" class="text-center">-->
+<!--          {% csrf_token %}-->
+<!--          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">-->
+<!--            {% trans 'Confirm' %}-->
+<!--          </button>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<!--{% endif %}-->
 <!-- END: MODAL SELF-DEMOTE -->
 
 
 <!--START: MODAL LEAVE-->
-<div class="modal fade" id="LeaveModal" tabindex="-1" role="dialog" aria-labelledby="LeaveModalTitle"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="LeaveModalTitle">{% trans 'Leave club' %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        {% trans 'Are you sure about this?' %}
-        {% if club_members|length == 1 %}
-        {% trans 'You are the only member of the club; if you leave, the club will disappear!' %}
-        {% endif %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-sm" data-dismiss="modal">
-          {% trans 'Cancel' %}
-        </button>
-        <form method="POST" action="{% url 'democracy:leave_club' club.id %}" class="text-center">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
-            {% trans 'Confirm' %}
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+<!--<div class="modal fade" id="LeaveModal" tabindex="-1" role="dialog" aria-labelledby="LeaveModalTitle"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h5 class="modal-title" id="LeaveModalTitle">{% trans 'Leave club' %}</h5>-->
+<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--          <span aria-hidden="true">&times;</span>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        {% trans 'Are you sure about this?' %}-->
+<!--        {% if club_members|length == 1 %}-->
+<!--        {% trans 'You are the only member of the club; if you leave, the club will disappear!' %}-->
+<!--        {% endif %}-->
+<!--      </div>-->
+<!--      <div class="modal-footer">-->
+<!--        <button type="button" class="btn btn-sm" data-dismiss="modal">-->
+<!--          {% trans 'Cancel' %}-->
+<!--        </button>-->
+<!--        <form method="POST" action="{% url 'democracy:leave_club' club.id %}" class="text-center">-->
+<!--          {% csrf_token %}-->
+<!--          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">-->
+<!--            {% trans 'Confirm' %}-->
+<!--          </button>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 <!--END: MODAL LEAVE-->
 
 

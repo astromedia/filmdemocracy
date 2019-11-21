@@ -20,6 +20,10 @@ class SignupForm(UserCreationForm):
         return agree_terms
 
 
+class ConfirmForm(forms.Form):
+    pass
+
+
 class AccountInfoForm(UserChangeForm):
     # TODO: profile_image validation
     updateImage = forms.BooleanField(widget=forms.HiddenInput(), required=False)

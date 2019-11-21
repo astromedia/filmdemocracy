@@ -58,6 +58,11 @@
   border: 1px solid #282828 !important;
 }
 
+.result-icon {
+  background: #282828;
+  border: 1px solid #282828 !important;
+  height: 20px;
+}
 
 /* Modal film results
 -------------------------------------------------- */
@@ -90,10 +95,7 @@
   left: -1rem;
   margin-right: -0.5rem;
   bottom: -1rem;
-  background: #fafafa;
-}
-
-.modal-results .vote .hand-icon {
+  background: #282828;
   border: 1px solid #282828 !important;
 }
 

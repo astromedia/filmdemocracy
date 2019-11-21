@@ -94,30 +94,28 @@
             <div class="col col-auto">
               {% if film_results.positive_votes|length > 0 %}
               <strong>{{ film_results.positive_votes|length }}</strong>
-              <img class="ml-1 mt-n1 rounded rounded-circle border border-secondary" style="height: 20px;"
-                   src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+              <img class="ml-1 mt-n1 result-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
               {% endif %}
             </div>
 
             <div class="col col-auto">
               {% if film_results.negative_votes|length > 0 %}
               <strong>{{ film_results.negative_votes|length }}</strong>
-              <img class="ml-1 mt-n1 rounded rounded-circle border border-secondary" style="height: 20px;"
-                   src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+              <img class="ml-1 mt-n1 result-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
               {% endif %}
             </div>
 
             <div class="col col-auto">
               {% if film_results.abstentionists|length > 0 %}
               <strong>{{ film_results.abstentionists|length }}</strong>
-              <img class="ml-1 mt-n1" style="height: 22px;" src="{% static 'democracy/svg/question.svg'%}">
+              <img class="ml-1 mt-n1 result-icon rounded-circle" src="{% static 'democracy/svg/question.svg'%}">
               {% endif %}
             </div>
 
             <div class="col col-auto">
               {% if film_results.warnings %}
               <strong>{{ film_results.warnings|length }}</strong>
-              <img class="ml-1 mt-n1" style="height: 19px;" src="{% static 'democracy/svg/alert.svg'%}">
+              <img class="ml-1 mt-n1" style="height: 20px;" src="{% static 'democracy/svg/alert.svg'%}">
               {% endif %}
             </div>
 
@@ -178,7 +176,7 @@
                src="{% static 'registration/svg/user_no_profile_image.svg' %}"
                alt="vote.user.profile_image not found">
           {% endif %}
-          <img class="vote-icon hand-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+          <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
           <div class="vote-text border rounded-lg">
             <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
               {{ vote.user.username }}</a>:
@@ -202,7 +200,7 @@
                src="{% static 'registration/svg/user_no_profile_image.svg' %}"
                alt="vote.user.profile_image not found">
           {% endif %}
-          <img class="vote-icon hand-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+          <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
           <div class="vote-text border rounded-lg">
             <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
               {{ vote.user.username }}</a>:

@@ -68,7 +68,6 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['page'] = 'club_detail'
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        context = add_club_context(context, club)
         club_meetings = Meeting.objects.filter(club=club, date__gte=timezone.now().date())
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
@@ -95,7 +94,6 @@ class ClubMemberDetailView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        context = add_club_context(context, club)
         member = get_object_or_404(User, id=self.kwargs['member_id'])
         context['member'] = member
         club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=member)
@@ -142,51 +140,100 @@ class EditClubPanelView(UserPassesTestMixin, generic.UpdateView):
         return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
 
 
-@login_required
-def leave_club(request, club_id):
-    # TODO: include notifications?
-    club = get_object_or_404(Club, id=club_id)
-    if not user_is_club_member_check(request.user, club=club):
-        return HttpResponseForbidden()
-    context = {}
-    context = add_club_context(context, club)
-    club_members = context['club_members']
-    club_admins = context['club_admins']
-    user = request.user
-    if user in club_admins:
-        if len(club_members) > 1 and len(club_admins) == 1:
-            messages.error(request, _("You must promote other club member to admin before leaving the club."))
-            return HttpResponseRedirect(reverse_lazy('democracy:club_detail', kwargs={'club_id': club.id}))
-        else:
-            club.admin_members.remove(user)
-    club.members.remove(user)
-    club.save()
-    Notification.objects.filter(club=club, recipient=user).delete()
-    club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=user)
-    club_member_info.delete()
-    messages.success(request, _("Done. You have left the club."))
-    if not club.members.filter(is_active=True):
-        club.delete()
-        Notification.objects.filter(club=club).delete()
-    return HttpResponseRedirect(reverse('core:home'))
+# @login_required
+# def leave_club(request, club_id):
+#     # TODO: include notifications?
+#     club = get_object_or_404(Club, id=club_id)
+#     if not user_is_club_member_check(request.user, club=club):
+#         return HttpResponseForbidden()
+#     context = {}
+#     context = add_club_context(context, club)
+#     club_members = context['club_members']
+#     club_admins = context['club_admins']
+#     user = request.user
+#     if user in club_admins:
+#         if len(club_members) > 1 and len(club_admins) == 1:
+#             messages.error(request, _("You must promote other club member to admin before leaving the club."))
+#             return HttpResponseRedirect(reverse_lazy('democracy:club_detail', kwargs={'club_id': club.id}))
+#         else:
+#             club.admin_members.remove(user)
+#     club.members.remove(user)
+#     club.save()
+#     Notification.objects.filter(club=club, recipient=user).delete()
+#     club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=user)
+#     club_member_info.delete()
+#     messages.success(request, _("Done. You have left the club."))
+#     if not club.members.filter(is_active=True):
+#         club.delete()
+#         Notification.objects.filter(club=club).delete()
+#     return HttpResponseRedirect(reverse('core:home'))
 
 
-@login_required
-def self_demote(request, club_id):
-    club = get_object_or_404(Club, id=club_id)
-    if not user_is_club_admin_check(request.user, club=club):
-        return HttpResponseForbidden()
-    context = add_club_context({}, club)
-    club_admins = context['club_admins']
-    user = request.user
-    if user in club_admins:
-        if len(club_admins) == 1:
-            messages.error(request, _("You must promote other club member to admin before demoting yourself."))
+@method_decorator(login_required, name='dispatch')
+class LeaveClubView(UserPassesTestMixin, generic.FormView):
+    form_class = forms.ConfirmForm
+    success = False
+
+    def test_func(self):
+        return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
+
+    def get_success_url(self):
+        if self.success:
+            return reverse_lazy('core:home')
         else:
-            club.admin_members.remove(user)
-            club.save()
-            messages.success(request, _("Done. You have demoted yourself."))
-    return HttpResponseRedirect(reverse_lazy('democracy:club_detail', kwargs={'club_id': club.id}))
+            return reverse_lazy('democracy:promote_members', kwargs={'club_id': self.kwargs['club_id']})
+
+    def form_valid(self, form):
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
+        club_members = club.members.filter(is_active=True)
+        club_admins = club.admin_members.all()
+        user = self.request.user
+        if user in club_admins:
+            if len(club_members) > 1 and len(club_admins) == 1:
+                messages.error(self.request, _("You must promote other club member to admin before leaving the club."))
+                return super().form_valid(form)
+            else:
+                club.admin_members.remove(user)
+        club.members.remove(user)
+        club.save()
+        Notification.objects.filter(club=club, recipient=user).delete()
+        club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=user)
+        club_member_info.delete()
+        messages.success(self.request, _("Done. You have left the club."))
+        if not club.members.filter(is_active=True):
+            club.delete()
+            Notification.objects.filter(club=club).delete()
+        self.success = True
+        return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class SelfDemoteView(UserPassesTestMixin, generic.FormView):
+    form_class = forms.ConfirmForm
+    success = False
+
+    def test_func(self):
+        return user_is_club_admin_check(self.request.user, club_id=self.kwargs['club_id'])
+
+    def get_success_url(self):
+        if self.success:
+            return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
+        else:
+            return reverse_lazy('democracy:promote_members', kwargs={'club_id': self.kwargs['club_id']})
+
+    def form_valid(self, form):
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
+        club_admins = club.admin_members.all()
+        user = self.request.user
+        if user in club_admins:
+            if len(club_admins) == 1:
+                messages.error(self.request, _("You must promote other club member to admin before demoting yourself."))
+            else:
+                club.admin_members.remove(user)
+                club.save()
+                messages.success(self.request, _("Done. You have demoted yourself."))
+                self.success = True
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -210,7 +257,6 @@ class KickMembersView(UserPassesTestMixin, generic.FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        context = add_club_context(context, club)
         candidate_members = club.members.filter(is_active=True).exclude(id=self.request.user.id)
         context['candidate_members'] = candidate_members
         return context
@@ -272,7 +318,6 @@ class PromoteMembersView(UserPassesTestMixin, generic.FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        context = add_club_context(context, club)
         candidate_members = club.members.filter(is_active=True).exclude(id=self.request.user.id)
         context['candidate_members'] = candidate_members
         return context
@@ -500,18 +545,16 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
             if film:
                 message_warning = '%s %s' % (_('This film is already in the candidate list:'), f'{film[0].db.title}')
                 messages.warning(self.request, message_warning)
-                return super().form_valid(form)
-
-        for filmdb in filmdbs:
-            film = Film.objects.create(
-                public_id=random_film_public_id_generator(club),
-                proposed_by=user,
-                club=club,
-                db=filmdb,
-            )
-            self.films_added_counter += 1
-            self.create_notifications(user, club, film)
-            self.new_film_public_id = film.public_id
+            else:
+                film = Film.objects.create(
+                    public_id=random_film_public_id_generator(club),
+                    proposed_by=user,
+                    club=club,
+                    db=filmdb,
+                )
+                self.films_added_counter += 1
+                self.create_notifications(user, club, film)
+                self.new_film_public_id = film.public_id
 
         if self.films_added_counter >= 1:
             if self.films_added_counter == 1:
@@ -556,7 +599,6 @@ class RankingGeneratorView(UserPassesTestMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         context['page'] = 'ranking_generator'
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        context = add_club_context(context, club)
         club_films = Film.objects.filter(club=club, seen=False)
         max_film_duration = max([film.db.duration_in_mins_int for film in club_films])
         context['range_step'] = self.range_step
@@ -642,7 +684,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberConfirmView(generic.FormView):
-    form_class = forms.InviteNewMemberConfirmForm
+    form_class = forms.ConfirmForm
     invitation = None
     valid_link = False
 

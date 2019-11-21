@@ -1,0 +1,36 @@
+{% extends "core/base_filmdemocracy.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
+{% endblock %}
+
+{% block title %}{% trans 'Delete account' %}{% endblock %}
+
+{% block pagecontent %}
+
+
+<h3 class="h3">{% trans 'Delete account' %}</h3>
+
+<div class="alert alert-danger form-message" role="alert">
+  {% trans 'Are you sure about this? All your data will be deleted permanently...' %}
+</div>
+
+
+<form class="form-standard" method="POST" novalidate>
+  {% csrf_token %}
+
+  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Confirm' %}">
+
+</form>
+
+
+<div class="text-center strong-link my-5">
+  <a href="{% url 'registration:account_info' %}">{% trans 'Cancel' %}</a>
+</div>
+
+
+{% endblock %}

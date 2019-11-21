@@ -29,9 +29,39 @@ class SignUpView(generic.CreateView):
                                     recipient=user)
 
 
-@login_required
-def account_delete(request):
+# @login_required
+# def account_delete(request):
+#
+#     def create_notifications(_user, _club):
+#         abandoned_members = _club.members.filter(is_active=True).exclude(id=_user.id)
+#         for abandoned_member in abandoned_members:
+#             Notification.objects.create(type=Notification.ABANDONED,
+#                                         activator=None,
+#                                         club=_club,
+#                                         recipient=abandoned_member)
+#
+#     user = request.user
+#     user_clubs = user.club_set.all()
+#     for club in user_clubs:
+#         club_members = club.members.filter(is_active=True)
+#         club_admins = club.admin_members.filter(is_active=True)
+#         if len(club_members) == 1:
+#             club.delete()
+#         elif user in club_admins and len(club_admins) == 1 and len(club_members) > 1:
+#             for member in club_members:
+#                 club.admin_members.add(member)
+#             club.save()
+#             create_notifications(user, club)
+#     user.delete()
+#     messages.success(request, _("Account deleted successfully."))
+#     return HttpResponseRedirect(reverse('core:home'))
 
+
+@method_decorator(login_required, name='dispatch')
+class DeleteAccountView(generic.FormView):
+    form_class = forms.ConfirmForm
+
+    @staticmethod
     def create_notifications(_user, _club):
         abandoned_members = _club.members.filter(is_active=True).exclude(id=_user.id)
         for abandoned_member in abandoned_members:
@@ -40,21 +70,25 @@ def account_delete(request):
                                         club=_club,
                                         recipient=abandoned_member)
 
-    user = request.user
-    user_clubs = user.club_set.all()
-    for club in user_clubs:
-        club_members = club.members.filter(is_active=True)
-        club_admins = club.admin_members.filter(is_active=True)
-        if len(club_members) == 1:
-            club.delete()
-        elif user in club_admins and len(club_admins) == 1 and len(club_members) > 1:
-            for member in club_members:
-                club.admin_members.add(member)
-            club.save()
-            create_notifications(user, club)
-    user.delete()
-    messages.success(request, _("Account deleted successfully."))
-    return HttpResponseRedirect(reverse('core:home'))
+    def get_success_url(self):
+        return reverse_lazy('core:home')
+
+    def form_valid(self, form):
+        user = self.request.user
+        user_clubs = user.club_set.all()
+        for club in user_clubs:
+            club_members = club.members.filter(is_active=True)
+            club_admins = club.admin_members.filter(is_active=True)
+            if len(club_members) == 1:
+                club.delete()
+            elif user in club_admins and len(club_admins) == 1 and len(club_members) > 1:
+                for member in club_members:
+                    club.admin_members.add(member)
+                club.save()
+                self.create_notifications(user, club)
+        user.delete()
+        messages.success(self.request, _("Account deleted successfully."))
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name='dispatch')

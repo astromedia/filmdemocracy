@@ -173,11 +173,9 @@
               <!--<div class="media-body text-center"><strong>{% trans 'Voted' %}</strong></div>-->
               <div class="media-body text-center"></div>
               {% if candidate.vote == 'positive' %}
-              <img class="align-self-center rounded-circle border border-white" style="height: 25px;"
-                   src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+              <img class="align-self-center vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
               {% elif candidate.vote == 'negative' %}
-              <img class="align-self-center rounded-circle border border-white" style="height: 25px;"
-                   src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+              <img class="align-self-center vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
               {% endif %}
             </div>
           </div>
