@@ -461,7 +461,7 @@ msgstr "Últimas películas vistas"
 
 #: democracy/templates/democracy/club_detail.html:527
 msgid "Check all films seen by club"
-msgstr "Ver las películas vistas por el club"
+msgstr "Ver todas las películas vistas por el club"
 
 #: democracy/templates/democracy/club_detail.html:541
 #: democracy/templates/democracy/meetings_form.html:195

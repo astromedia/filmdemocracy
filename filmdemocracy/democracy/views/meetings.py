@@ -41,7 +41,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     def create_notifications(_user, _club, _meeting):
         club_members = _club.members.filter(is_active=True).exclude(id=_user.id)
         for member in club_members:
-            Notification.objects.create(type=Notification.ORGAN_MEET,
+            Notification.objects.create(type=Notification.MEET_ORGAN,
                                         activator=_user,
                                         club=_club,
                                         object_id=_meeting.id,
@@ -106,6 +106,16 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
         context['new_meeting'] = False
         return context
 
+    @staticmethod
+    def create_notifications(_user, _club, _meeting):
+        meeting_members = _meeting.members_yes.all() | _meeting.members_maybe.all() | _meeting.members_no.all()
+        for member in meeting_members:
+            Notification.objects.create(type=Notification.MEET_EDIT,
+                                        activator=_user,
+                                        club=_club,
+                                        object_id=_meeting.id,
+                                        recipient=member)
+
     def form_valid(self, form):
         meeting = get_object_or_404(Meeting, id=self.kwargs['meeting_id'])
         meeting.name = form.cleaned_data['name']
@@ -114,9 +124,10 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
         meeting.date = form.cleaned_data['date']
         meeting.time_start = form.cleaned_data['time_start']
         meeting.save()
+        club = get_object_or_404(Club, id=self.kwargs['club_id'])
+        self.create_notifications(self.request.user, club, meeting)
         spam_option = form.cleaned_data['spam_options']
         if spam_option == 'all' or spam_option == 'interested':
-            club = get_object_or_404(Club, id=self.kwargs['club_id'])
             spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
             email_context = {
                 'organizer': self.request.user,
@@ -133,7 +144,7 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
                 spam_helper.send_emails(to_emails_list, email_context)
                 messages.success(self.request, _('Meeting edited! A notification email has been sent to club members.'))
             else:
-                spammable_members = meeting.members_yes.all() + meeting.members_maybe.all() + meeting.members_no.all()
+                spammable_members = meeting.members_yes.all() | meeting.members_maybe.all() | meeting.members_no.all()
                 to_emails_list = [member.email for member in spammable_members]
                 spam_helper.send_emails(to_emails_list, email_context)
                 messages.success(self.request, _('Meeting edited! A notification email has been sent to members interested in it.'))
@@ -182,13 +193,25 @@ def meeting_assistance(request, club_id, meeting_id):
 
 @login_required
 def delete_meeting(request, club_id, meeting_id):
+
+    def create_notifications(_user, _club, _meeting):
+        meeting_members = _meeting.members_yes.all() | _meeting.members_maybe.all() | _meeting.members_no.all()
+        for member in meeting_members:
+            Notification.objects.create(type=Notification.MEET_DEL,
+                                        activator=_user,
+                                        club=_club,
+                                        object_id=_meeting.id,
+                                        recipient=member)
+
     club = get_object_or_404(Club, id=club_id)
     organizer_check = user_is_organizer_check(request.user, club=club, meeting_id=meeting_id)
     admin_check = user_is_club_admin_check(request.user, club=club)
     if not organizer_check and not admin_check:
         return HttpResponseForbidden()
     meeting = get_object_or_404(Meeting, id=meeting_id)
-    meeting.delete()
+    meeting.active = False
+    meeting.save()
+    create_notifications(request.user, club, meeting)
     return HttpResponseRedirect(reverse('democracy:club_detail', kwargs={'club_id': club.id}))
 
 
@@ -201,6 +224,6 @@ class MeetingsListView(UserPassesTestMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        club_meetings = Meeting.objects.filter(club=club, date__gte=timezone.now().date())
+        club_meetings = Meeting.objects.filter(club=club, active=True, date__gte=timezone.now().date())
         context['club_meetings'] = club_meetings.order_by('date')
         return context

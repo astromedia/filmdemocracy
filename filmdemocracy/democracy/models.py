@@ -88,6 +88,7 @@ class Meeting(models.Model):
     place = models.CharField(_('Place'), max_length=100)
     date = models.DateField(_('Date'))
     time_start = models.TimeField(_('Time (optional)'), null=True, blank=True)
+    active = models.BooleanField(default=True)
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')
     members_no = models.ManyToManyField(User, related_name='members_no')

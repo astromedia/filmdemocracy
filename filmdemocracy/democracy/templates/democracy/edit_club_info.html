@@ -16,6 +16,15 @@
 {% block content %}
 
 
+<!--START: NO CLUB LOGO MESSAGE-->
+{% if not club.logo_image %}
+<div class="alert alert-warning text-center m-4" role="alert">
+  <strong>{% trans "Your club does not have a logo yet!" %}</strong>
+</div>
+{% endif %}
+<!--END: NO CLUB LOGO MESSAGE-->
+
+
 <!--START: EDIT CLUB FORM-->
 <h3 class="h3">{% trans 'Edit club info' %}</h3>
 

@@ -3,7 +3,6 @@ import hashlib
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
@@ -24,7 +23,7 @@ from filmdemocracy.chat.models import ChatClubInfo
 from filmdemocracy.registration.models import User
 
 from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check
-from filmdemocracy.core.utils import add_club_context, extract_options
+from filmdemocracy.core.utils import extract_options
 from filmdemocracy.core.utils import random_club_id_generator, random_film_public_id_generator
 from filmdemocracy.core.utils import RankingGenerator, SpamHelper
 
@@ -68,7 +67,7 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['page'] = 'club_detail'
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        club_meetings = Meeting.objects.filter(club=club, date__gte=timezone.now().date())
+        club_meetings = Meeting.objects.filter(club=club, active=True, date__gte=timezone.now().date())
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
             context['extra_meetings'] = len(club_meetings) > 3
@@ -138,35 +137,6 @@ class EditClubPanelView(UserPassesTestMixin, generic.UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
-
-
-# @login_required
-# def leave_club(request, club_id):
-#     # TODO: include notifications?
-#     club = get_object_or_404(Club, id=club_id)
-#     if not user_is_club_member_check(request.user, club=club):
-#         return HttpResponseForbidden()
-#     context = {}
-#     context = add_club_context(context, club)
-#     club_members = context['club_members']
-#     club_admins = context['club_admins']
-#     user = request.user
-#     if user in club_admins:
-#         if len(club_members) > 1 and len(club_admins) == 1:
-#             messages.error(request, _("You must promote other club member to admin before leaving the club."))
-#             return HttpResponseRedirect(reverse_lazy('democracy:club_detail', kwargs={'club_id': club.id}))
-#         else:
-#             club.admin_members.remove(user)
-#     club.members.remove(user)
-#     club.save()
-#     Notification.objects.filter(club=club, recipient=user).delete()
-#     club_member_info = get_object_or_404(ClubMemberInfo, club=club, member=user)
-#     club_member_info.delete()
-#     messages.success(request, _("Done. You have left the club."))
-#     if not club.members.filter(is_active=True):
-#         club.delete()
-#         Notification.objects.filter(club=club).delete()
-#     return HttpResponseRedirect(reverse('core:home'))
 
 
 @method_decorator(login_required, name='dispatch')
@@ -372,7 +342,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
             context['view_option_tag'] = _("All")
         if order_option == '&order=date_proposed':
             context['order_option_string'] = "film.created_datetime"
-            context['order_option_tag'] = _("Proposed")
+            context['order_option_tag'] = _("Proposed on")
         elif order_option == '&order=year':
             context['order_option_string'] = "film.db.year"
             context['order_option_tag'] = _("Year")

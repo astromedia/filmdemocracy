@@ -279,10 +279,22 @@
                         {{ marker_member }} marked the film {{ film }} as seen.
                       {% endblocktrans %}
 
-                    {% elif ntf.type == 'organmeet' %}
+                    {% elif ntf.type == 'meetorgan' %}
 
                       {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
                         {{ organizer }} organized a new meeting: {{ meeting }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'meetedit' %}
+
+                      {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
+                        {{ organizer }} edited the meeting: {{ meeting }}.
+                      {% endblocktrans %}
+
+                    {% elif ntf.type == 'meetdel' %}
+
+                      {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
+                        {{ organizer }} deleted the club meeting: {{ meeting }}.
                       {% endblocktrans %}
 
                     {% elif ntf.type == 'commfilm' %}
@@ -436,7 +448,7 @@
             <div class="media menu-item">
 
               <img class="align-self-center border border-secondary rounded-circle mr-2"
-                   src="{% static 'core/svg/globe_negative.svg'%}">
+                   src="{% static 'core/svg/admin_laurel.svg'%}">
 
               <div class="media-body align-self-center p-0 m-0">
                 <p class="first-line text-dark">
@@ -514,7 +526,7 @@
         {% for language in languages %}
         <form class="m-0 p-0" action="{% url 'set_language' %}" method="POST">
           {% csrf_token %}
-          <label class="list-group-item list-group-item-action pointer-cursor py-3 {% if language.code == LANGUAGE_CODE %} active {% endif %}" for="language_{{ forloop.counter }}">
+          <label class="list-group-item list-group-item-action font-weight-bold pointer-cursor py-3 {% if language.code == LANGUAGE_CODE %} active {% endif %}" for="language_{{ forloop.counter }}">
             {{ language.name_local|title }} ({{ language.code }})
           </label>
 
@@ -549,10 +561,10 @@
 
       <div class="modal-body text-center py-0 px-0">
 
-        <div class="list-group p-0 m-0">
+        <div class="list-group font-weight-bold p-0 m-0">
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:edit_club_info' club.id %}">
-            {% trans 'Edit club info' %}
+            {% trans 'Edit club info and logo' %}
           </a>
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:edit_club_panel' club.id %}">
@@ -560,11 +572,11 @@
           </a>
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:promote_members' club.id %}">
-            {% trans 'Promote to admin' %}
+            {% trans 'Promote members to admin' %}
           </a>
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:kick_members' club.id %}">
-            {% trans 'Kick members' %}
+            {% trans 'Kick members from club' %}
           </a>
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:self_demote' club.id %}">

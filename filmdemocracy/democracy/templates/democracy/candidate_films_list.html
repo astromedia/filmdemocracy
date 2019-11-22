@@ -89,7 +89,7 @@
         <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if order_option == '&order=date_proposed' %}active{% endif %}"
            href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:'&order=date_proposed'|add:display_option %}">
-          {% trans 'Proposed' %}
+          {% trans 'Proposed on' %}
         </a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item {% if order_option == '&order=year' %}active{% endif %}"
@@ -204,7 +204,7 @@
         <th scope="col" class="text-center">{% trans 'Vote' %}</th>
         <th scope="col" class="">{% trans 'Title' %}</th>
         {% if order_option == '&order=date_proposed' %}
-        <th scope="col" class="text-center">{% trans 'Proposed' %}</th>
+        <th scope="col" class="text-center">{% trans 'Proposed on' %}</th>
         {% elif order_option == '&order=year' %}
         <th scope="col" class="text-center">{% trans 'Year' %}</th>
         {% elif order_option == '&order=duration' %}

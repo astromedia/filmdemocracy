@@ -14,7 +14,9 @@ class Notification(models.Model):
     LEFT = 'left'
     ADDED_FILM = 'addedfilm'
     SEEN_FILM = 'seenfilm'
-    ORGAN_MEET = 'organmeet'
+    MEET_ORGAN = 'meetorgan'
+    MEET_EDIT = 'meetedit'
+    MEET_DEL = 'meetdel'
     COMM_FILM = 'commfilm'
     COMM_COMM = 'commcomm'
     KICKED = 'kicked'
@@ -28,7 +30,9 @@ class Notification(models.Model):
         (LEFT, "Member left the club"),
         (ADDED_FILM, 'Member added new film'),
         (SEEN_FILM, "Member marked film as seen by club"),
-        (ORGAN_MEET, "Member organized a new club meeting"),
+        (MEET_ORGAN, "Member organized a new club meeting"),
+        (MEET_EDIT, "Member edited a club meeting"),
+        (MEET_DEL, "Member deleted a club meeting"),
         (COMM_FILM, "Member commented in film proposed by user"),
         (COMM_COMM, 'Member commented in film commented by user'),
         (KICKED, 'Member kicked other member from club'),
