@@ -209,10 +209,51 @@
 <!--END: MEETING FORM-->
 
 
+{% if not new_meeting %}
+  <div class="text-center my-5">
+    <a class="text-danger text-decoration-none pointer-cursor" data-toggle="modal" data-target="#DeleteMeetingModal">
+      {% trans 'Delete meeting' %}
+    </a>
+  </div>
+{% endif %}
+
+
 <div class="text-center strong-link my-5">
   <a href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
 </div>
 
+
+<!--START: MODAL DELETE MEETING-->
+<div class="modal fade modal-delete" id="DeleteMeetingModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body">
+
+        <h5 class="h5 mb-4" >{% trans 'Delete meeting' %}</h5>
+
+        <p>{% trans 'Are you sure about this?' %}</p>
+
+        <div class="d-flex flex-row justify-content-end">
+
+          <button type="button" class="btn strong-link mx-3" data-dismiss="modal" aria-label="Close">
+            {% trans 'Cancel' %}
+          </button>
+
+          <form method="POST" action="{% url 'democracy:delete_meeting' club.id meeting.id %}" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger mx-3">
+              {% trans 'Confirm' %}
+            </button>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--END: MODAL DELETE MEETING-->
 
 
 {% endblock %}

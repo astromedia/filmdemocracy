@@ -8,7 +8,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/club_detail.css' %}">
-<link rel="stylesheet" href="{% static 'democracy/css/meetings.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/meeting_card.css' %}">
 {% endblock %}
 
 {% block title %}{{ club.name }}{% endblock %}
@@ -39,7 +39,7 @@
 <!--START: NO LOGO MESSAGE-->
 {% if user in club_admins %}
 {% if not club.logo_image %}
-<div class="alert alert-warning text-center show m-4 club-message" role="alert">
+<div class="alert alert-warning text-center show club-message" role="alert">
       <p class="m-0"><strong>{% trans "Your club doesn't have a logo yet!" %}</strong></p>
   <p class="m-0"><a class="" href="{% url 'democracy:edit_club_info' club.id %}">{% trans 'Complete club info' %}</a></p>
 </div>
@@ -51,230 +51,19 @@
 <!--START: NEXT 3 CLUB MEETINGS-->
 {% if next_meetings %}
 
-{% for meeting in next_meetings %}
-<!--START: MEETING CARD-->
-<div class="card meeting-card mx-4 shadow-sm my-4">
-  <div class="card-body mb-n3">
+  {% for meeting in next_meetings %}
 
-    <div class="row justify-content-between meeting-header">
-      <div class="col-auto">
-        <h5 class="h5">{{ meeting.name }}</h5>
-      </div>
-      <div class="col-auto">
-        <span class="text-muted">{% trans 'Organized by' %}
-          {% if meeting.organizer %}
-          <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
-            {{ meeting.organizer.username }}
-          </a>
-          {% else %}
-          {% trans 'a club ex-member' %}
-          {% endif %}
-        </span>
-      </div>
+    {% include "democracy/meeting_card.html" %}
+
+  {% endfor %}
+
+  {% if extra_meetings %}
+    <div class="text-center mt-3">
+      <a class="" href="{% url 'democracy:meetings_list' club.id %}">
+        {% trans 'Check all meetings' %}
+      </a>
     </div>
-
-    <hr>
-
-    {% if meeting.description %}
-    <p>{{ meeting.description }}</p>
-    <hr>
-    {% endif %}
-
-    <!--START: MEETING TIME DETAILS-->
-    <div class="row justify-content-start mb-2 mt-n2">
-      <div class="col-auto">
-        <div class="media">
-          <img style="min-height: 18px;" class="align-self-center mr-2" src="{% static 'democracy/svg/place.svg'%}">
-          <span class="text-muted">{{ meeting.place }}</span>
-        </div>
-      </div>
-      <div class="col-auto">
-        <div class="media">
-          <img style="min-height: 18px;" class="align-self-center mr-2" src="{% static 'democracy/svg/calendar.svg'%}">
-          <span class="text-muted">{{ meeting.created_datetime }}</span>
-        </div>
-      </div>
-      <div class="col-auto">
-        <div class="media">
-          <img style="min-height: 18px;" class="align-self-center mr-2" src="{% static 'democracy/svg/clock.svg'%}">
-          {% if meeting.time_start %}
-            <span class="text-muted">{{ meeting.time_start }}</span>
-          {% else %}
-            <span class="text-muted">{% trans 'Not defined' %}</span>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-    <!--END: MEETING TIME DETAILS-->
-
-
-    <!--START: MEETING ASSISTANCE DETAILS-->
-    {% if meeting.members_yes.all %}
-    <div>
-      <strong>{% trans 'Confirmed:' %}</strong>
-      {% for member in meeting.members_yes.all %}
-      {% if forloop.last %}
-      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
-      {% else %}
-      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
-      {% endif %}
-
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% if meeting.members_maybe.all %}
-    <div>
-      <strong>{% trans 'Interested:' %}</strong>
-      {% for member in meeting.members_maybe.all %}
-      {% if forloop.last %}
-      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
-      {% else %}
-      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
-      {% endif %}
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% if meeting.members_no.all %}
-    <div>
-      <strong>{% trans "Can't assist:" %}</strong>
-      {% for member in meeting.members_no.all %}
-      {% if forloop.last %}
-      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>
-      {% else %}
-      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>,
-      {% endif %}
-      {% endfor %}
-    </div>
-    {% endif %}
-    <!--START: MEETING ASSISTANCE DETAILS-->
-
-
-    <!--START: ASSISTANCE / EDIT BUTTONS-->
-    <div class="row mt-2">
-
-      <!--CONFIRM ASSISTANCE BUTTON-->
-      <div class="col-sm-auto mt-1 mb-n3">
-        <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
-          {% csrf_token %}
-          {% if user in meeting.members_yes.all %}
-          <label class="btn btn-sm btn-block btn-assistance-active pointer-cursor" for="yes_{{ forloop.counter }}">
-            {% trans 'Confirm assistance' %}
-          </label>
-          {% else %}
-          <label class="btn btn-sm btn-block btn-assistance pointer-cursor" for="yes_{{ forloop.counter }}">
-            {% trans 'Confirm assistance' %}
-          </label>
-          {% endif %}
-          <input type="submit" class="invisible my-n5 mx-n5" name="assist_yes" id="yes_{{ forloop.counter }}"
-                 value="assist_yes">
-        </form>
-      </div>
-
-      <!--I'M INTERESTED BUTTON-->
-      <div class="col-sm-auto mt-1 mb-n3">
-        <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
-          {% csrf_token %}
-          {% if user in meeting.members_maybe.all %}
-          <label class="btn btn-sm btn-block btn-assistance-active pointer-cursor" for="maybe_{{ forloop.counter }}">
-            {% trans "I'm interested" %}
-          </label>
-          {% else %}
-          <label class="btn btn-sm btn-block btn-assistance pointer-cursor" for="maybe_{{ forloop.counter }}">
-            {% trans "I'm interested" %}
-          </label>
-          {% endif %}
-          <input type="submit" class="invisible my-n5 mx-n5" name="assist_maybe" id="maybe_{{ forloop.counter }}"
-                 value="assist_maybe">
-        </form>
-      </div>
-
-      <!--I CAN'T ASSIST BUTTON-->
-      <div class="col-sm-auto mt-1 mb-n3">
-        <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
-          {% csrf_token %}
-          {% if user in meeting.members_no.all %}
-          <label class="btn btn-sm btn-block btn-assistance-active pointer-cursor" for="no_{{ forloop.counter }}">
-            {% trans "I can't assist" %}
-          </label>
-          {% else %}
-          <label class="btn btn-sm btn-block btn-assistance pointer-cursor" for="no_{{ forloop.counter }}">
-            {% trans "I can't assist" %}
-          </label>
-          {% endif %}
-          <input type="submit" class="invisible my-n5 mx-n5" name="assist_no" id="no_{{ forloop.counter }}"
-                 value="assist_no">
-        </form>
-      </div>
-
-      <!--DELETE BUTTON-->
-      {% if user == meeting.organizer or user in club_admins%}
-      <div class="col-sm-auto ml-auto mt-1 mb-2">
-        <button type="button" class="btn btn-sm btn-block btn-outline-danger btn-meeting-edit" data-toggle="modal"
-                data-target="#DeleteMeetingModal">
-          {% trans 'Delete' %}
-        </button>
-      </div>
-      {% endif %}
-
-      <!--EDIT BUTTON-->
-      {% if user == meeting.organizer %}
-      <div class="col-sm-auto mt-1 mb-2">
-        <form action="{% url 'democracy:meetings_edit' club.id meeting.id %}" class="text-center">
-          <button type="submit" class="btn btn-sm btn-block btn-green-to-blue btn-meeting-edit">
-            {% trans 'Edit' %}
-          </button>
-        </form>
-      </div>
-      {% endif %}
-
-    </div>
-    <!--END: ASSISTANCE / EDIT BUTTONS-->
-
-  </div>
-</div>
-<!--END: MEETING CARD-->
-
-
-<!--START: MODAL DELETE MEETING-->
-<div class="modal fade" id="DeleteMeetingModal" tabindex="-1" role="dialog" aria-labelledby="DeleteMeetingModalTitle"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="DeleteMeetingModalTitle">{% trans 'Delete meeting' %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        {% trans 'Are you sure about this?' %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-sm" data-dismiss="modal">
-          {% trans 'Cancel' %}
-        </button>
-        <form method="POST" action="{% url 'democracy:delete_meeting' club.id meeting.id %}" class="text-center">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">
-            {% trans 'Confirm' %}
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!--END: MODAL DELETE MEETING-->
-
-
-{% endfor %}
-
-{% if extra_meetings %}
-<div class="text-center mt-3">
-  <a class="small badge badge-white-to-black" href="{% url 'democracy:meetings_list' club.id %}">
-    {% trans 'Check all meetings' %}
-  </a>
-</div>
-{% endif %}
+  {% endif %}
 
 {% endif %}
 <!--END: NEXT 3 CLUB MEETINGS-->
@@ -486,7 +275,7 @@
 
   <!--START: LEAVE BUTTON-->
   <div class="text-center my-5">
-    <a class="text-danger text-decoration-none" href="{% url 'democracy:leave_club' club.id %}">
+    <a class="text-danger text-decoration-none danger-link" href="{% url 'democracy:leave_club' club.id %}">
       {% trans 'Leave club' %}
     </a>
   </div>

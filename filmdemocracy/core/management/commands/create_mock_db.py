@@ -6,6 +6,7 @@ import ntpath
 import random
 import datetime
 
+from django.utils import timezone
 from django.core.management.base import BaseCommand, CommandError
 import django.db.utils
 
@@ -15,6 +16,9 @@ from filmdemocracy.democracy import forms
 from filmdemocracy.core.models import Notification
 from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation, Meeting, FilmDb, Film, Vote, FilmComment
 from filmdemocracy.chat.models import ChatClubInfo
+
+
+LORE_100 = "Lorem ipsum dolor sit amet consectetur adipiscing elit, praesent sem sed tristique tincidunt sociis."
 
 
 USER_NAMES = [
@@ -87,6 +91,37 @@ class Command(BaseCommand):
                     )
 
     @staticmethod
+    def add_meetings_to_club(club):
+        club_members = club.members.filter(is_active=True)
+        for i, organizer in enumerate(club_members):
+            Meeting.objects.create(
+                club=club,
+                name='Test club amazing meeting',
+                description=LORE_100,
+                organizer=organizer,
+                place='My house',
+                date=datetime.date.today() + datetime.timedelta(weeks=(10+i)),
+                time_start=datetime.time(12+i, 10+i),
+            )
+
+    @staticmethod
+    def add_random_asistance_to_meetings(club):
+        club_meetings = Meeting.objects.filter(club=club, active=True, date__gte=timezone.now().date())
+        club_members = club.members.filter(is_active=True)
+        for meeting in club_meetings:
+            for member in club_members:
+                random_number = random.random()
+                if 0 < random_number < 0.2:
+                    meeting.members_yes.add(member)
+                if 0.2 <= random_number < 0.4:
+                    meeting.members_maybe.add(member)
+                if 0.4 <= random_number < 0.6:
+                    meeting.members_no.add(member)
+                if random_number >= 0.6:
+                    pass
+            meeting.save()
+
+    @staticmethod
     def mark_random_films_as_seen(club):
         club_members = club.members.filter(is_active=True)
         for film in club.film_set.all():
@@ -105,12 +140,12 @@ class Command(BaseCommand):
             User.objects.filter(email='ricardo@gmail.com')[0],
         ]
 
-        lore_100 = "Lorem ipsum dolor sit amet consectetur adipiscing elit, praesent sem sed tristique tincidunt sociis."
         for i, club_name in enumerate(CLUB_NAMES):
+            self.stdout.write(f'  Creating club: {club_name}')
             club = Club.objects.create(
                 id=random_club_id_generator(),
                 name=CLUB_NAMES[i],
-                short_description=lore_100,
+                short_description=LORE_100,
             )
             club.admin_members.add(user_creators[i])
             club.members.add(user_creators[0])
@@ -129,6 +164,10 @@ class Command(BaseCommand):
             self.create_random_votes_for_films(club)
             self.stdout.write(f'  Marking random films as seen in club: {club.name}')
             self.mark_random_films_as_seen(club)
+            self.stdout.write(f'  Adding meetings in club: {club.name}')
+            self.add_meetings_to_club(club)
+            self.stdout.write(f'  Adding random assistance to meetings in club: {club.name}')
+            self.add_random_asistance_to_meetings(club)
 
     def add_arguments(self, parser):
         pass

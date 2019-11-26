@@ -1,0 +1,65 @@
+
+/* Club meeting style
+-------------------------------------------------- */
+.meeting-card {
+  max-width: 96%;
+}
+
+.meeting-card .meeting-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.meeting-card .meeting-organizer {
+  font-size: 0.9rem;
+}
+
+.meeting-card .meeting-description {
+}
+
+.meeting-card .meeting-details {
+  font-size: 0.9rem;
+}
+
+.meeting-card .meeting-details .col {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  min-width: 200px;
+}
+
+.meeting-card .meeting-details img {
+  width: 18px;
+  max-height: 18px;
+  margin-right: 4px;
+}
+
+.meeting-card .btn-assistance {
+  font-weight: bold;
+  width: 100%;
+  margin: auto;
+  color: #282828;
+  background-color: transparent;
+  border: 1px solid rgba(40, 40, 40, 0.5);
+}
+
+.meeting-card .btn-assistance:hover {
+  color: #fff;
+  background-color: seagreen;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.meeting-card .active {
+  color: #fff;
+  background-color: seagreen;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.meeting-card .active:hover {
+  color: #282828;
+  background-color: transparent;
+  border: 1px solid rgba(40, 40, 40, 0.5);
+}
+
+.meeting-card input {
+  display: none;
+}

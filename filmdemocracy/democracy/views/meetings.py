@@ -195,13 +195,15 @@ def meeting_assistance(request, club_id, meeting_id):
 def delete_meeting(request, club_id, meeting_id):
 
     def create_notifications(_user, _club, _meeting):
-        meeting_members = _meeting.members_yes.all() | _meeting.members_maybe.all() | _meeting.members_no.all()
-        for member in meeting_members:
-            Notification.objects.create(type=Notification.MEET_DEL,
-                                        activator=_user,
-                                        club=_club,
-                                        object_id=_meeting.id,
-                                        recipient=member)
+        meeting_members_groups = [_meeting.members_yes.all(), _meeting.members_maybe.all(), _meeting.members_no.all()]
+        for member_group in meeting_members_groups:
+            for member in member_group:
+                if _user != member:
+                    Notification.objects.create(type=Notification.MEET_DEL,
+                                                activator=_user,
+                                                club=_club,
+                                                object_id=_meeting.id,
+                                                recipient=member)
 
     club = get_object_or_404(Club, id=club_id)
     organizer_check = user_is_organizer_check(request.user, club=club, meeting_id=meeting_id)

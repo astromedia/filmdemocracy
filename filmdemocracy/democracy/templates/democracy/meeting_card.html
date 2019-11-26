@@ -1,0 +1,190 @@
+{% load static %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+<!--START: MEETING CARD-->
+<div class="card meeting-card shadow-sm mx-auto my-3">
+
+  <div class="card-body">
+
+    <!--TITLE-->
+    <div class="meeting-title">{{ meeting.name }}</div>
+
+    <!--ORGANIZER-->
+    <div class="d-flex flex-row meeting-organizer">
+
+      <div class="mr-auto">
+        {% trans 'Organized by' %}
+        {% if meeting.organizer in club_members %}
+        <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id meeting.organizer.id %}">
+          {{ meeting.organizer.username }}
+        </a>
+        {% else %}
+        {% trans 'a club ex-member' %}
+        {% endif %}
+      </div>
+
+      <!--EDIT / DELETE-->
+      {% if user == meeting.organizer or user in club_admins %}
+      <div class="px-4">
+        {% if user != meeting.organizer and user in club_admins %}
+          <a class="text-danger pointer-cursor" data-toggle="modal" data-target="#DeleteMeetingModal_{{ forloop.counter }}">
+            {% trans 'Delete' %}
+          </a>
+        {% elif user == meeting.organizer %}
+          <a class="text-decoration-none" href="{% url 'democracy:meetings_edit' club.id meeting.id %}">
+            {% trans 'Edit' %}
+          </a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div>
+
+
+
+    <!--DESCRIPTION-->
+    {% if meeting.description %}
+    <div class="meeting-description my-2">{{ meeting.description }}</div>
+    {% endif %}
+
+    <!--START: MEETING PLACE & DATE & TIME-->
+    <div class="row justify-content-start meeting-details my-1">
+
+      <div class="col col-md-4">
+        <div class="media">
+          <img class="align-self-center" src="{% static 'democracy/svg/place.svg'%}">
+          <span>{{ meeting.place }}</span>
+        </div>
+      </div>
+
+      <div class="col col-md-4">
+        <div class="media">
+          <img class="align-self-center" src="{% static 'democracy/svg/calendar.svg'%}">
+          <span>{{ meeting.date }}</span>
+        </div>
+      </div>
+
+      <div class="col col-md-4">
+        <div class="media">
+          <img class="align-self-center" src="{% static 'democracy/svg/clock.svg'%}">
+          {% if meeting.time_start %}
+            <span>{{ meeting.time_start }}</span>
+          {% else %}
+            <span>{% trans 'Not defined' %}</span>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+    <!--END: MEETING PLACE & DATE & TIME-->
+
+
+    <!--START: MEETING ASSISTANCE DETAILS-->
+    <!--START: YES-->
+    {% if meeting.members_yes.all %}
+    <div>
+      <strong>{% trans 'Yes:' %}</strong>
+      {% for member in meeting.members_yes.all %}
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>{% if not forloop.last %},{% else %}{% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    <!--START: NO-->
+    {% if meeting.members_no.all %}
+    <div>
+      <strong>{% trans "No:" %}</strong>
+      {% for member in meeting.members_no.all %}
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>{% if not forloop.last %},{% else %}{% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    <!--START: MAYBE-->
+    {% if meeting.members_maybe.all %}
+    <div>
+      <strong>{% trans 'Maybe:' %}</strong>
+      {% for member in meeting.members_maybe.all %}
+      <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id member.id %}">{{ member.username }}</a>{% if not forloop.last %},{% else %}{% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    <!--START: MEETING ASSISTANCE DETAILS-->
+
+
+    <!--START: ASSISTANCE / EDIT BUTTONS-->
+    <div class="row justify-content-between mt-3 mb-0 mx-auto">
+
+      <!--YES BUTTON-->
+      <div class="col col-4 pr-2 pl-0">
+        <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
+          {% csrf_token %}
+          <label class="btn btn-assistance {% if user in meeting.members_yes.all %}active{% endif %} pointer-cursor" for="yes_{{ forloop.counter }}">
+            {% trans 'Yes' %}
+          </label>
+          <input type="submit" name="assist_yes" id="yes_{{ forloop.counter }}" value="assist_yes">
+        </form>
+      </div>
+
+      <!--NO BUTTON-->
+      <div class="col col-4 px-2">
+        <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
+          {% csrf_token %}
+          <label class="btn btn-assistance {% if user in meeting.members_no.all %}active{% endif %} pointer-cursor" for="no_{{ forloop.counter }}">
+            {% trans "No" %}
+          </label>
+          <input type="submit" name="assist_no" id="no_{{ forloop.counter }}" value="assist_no">
+        </form>
+      </div>
+
+      <!--MAYBE BUTTON-->
+      <div class="col col-4 pl-2 pr-0">
+        <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
+          {% csrf_token %}
+          <label class="btn btn-assistance {% if user in meeting.members_maybe.all %}active{% endif %} pointer-cursor" for="maybe_{{ forloop.counter }}">
+            {% trans "Maybe" %}
+          </label>
+          <input type="submit" name="assist_maybe" id="maybe_{{ forloop.counter }}" value="assist_maybe">
+        </form>
+      </div>
+
+    </div>
+    <!--END: ASSISTANCE / EDIT BUTTONS-->
+
+  </div>
+
+</div>
+<!--END: MEETING CARD-->
+
+
+<!--START: MODAL DELETE MEETING-->
+<div class="modal fade modal-delete" id="DeleteMeetingModal_{{ forloop.counter }}" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body">
+
+        <h5 class="h5 mb-4" >{% trans 'Delete meeting' %}</h5>
+
+        <p>{% trans 'Are you sure about this?' %}</p>
+
+        <div class="d-flex flex-row justify-content-end">
+
+          <button type="button" class="btn strong-link mx-3" data-dismiss="modal" aria-label="Close">
+            {% trans 'Cancel' %}
+          </button>
+
+          <form method="POST" action="{% url 'democracy:delete_meeting' club.id meeting.id %}" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger mx-3">
+              {% trans 'Confirm' %}
+            </button>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--END: MODAL DELETE MEETING-->

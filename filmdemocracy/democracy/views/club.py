@@ -570,9 +570,9 @@ class RankingGeneratorView(UserPassesTestMixin, generic.TemplateView):
         context['page'] = 'ranking_generator'
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         club_films = Film.objects.filter(club=club, seen=False)
-        max_film_duration = max([film.db.duration_in_mins_int for film in club_films])
         context['range_step'] = self.range_step
-        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10)
+        max_film_duration = max([film.db.duration_in_mins_int for film in club_films]) if club_films else None
+        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10) if max_film_duration else 990
         return context
 
 

@@ -16,5 +16,5 @@
 
 .form-description .description-text {
   max-height: 100px;
-  text-align: left;
+  text-align: left !important;
 }

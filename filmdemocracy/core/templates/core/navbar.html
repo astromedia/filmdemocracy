@@ -504,7 +504,7 @@
 
 
 <!-- START: MODAL LANGUAGES -->
-<div class="modal fade" id="languagesModal" tabindex="-1" role="dialog"
+<div class="modal fade modal-menu" id="languagesModal" tabindex="-1" role="dialog"
      aria-labelledby="languagesModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -548,9 +548,9 @@
 
 {% if club and user in club_admins %}
 <!-- START: MODAL ADMIN UTILS -->
-<div class="modal fade" id="adminUtilsModal" tabindex="-1" role="dialog"
+<div class="modal fade modal-menu" id="adminUtilsModal" tabindex="-1" role="dialog"
      aria-labelledby="adminUtilsModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered " role="document">
     <div class="modal-content">
       <div class="modal-header border-0">
         <h5 class="modal-title" id="adminUtilsModalTitle">{% trans 'Club admin utilities' %}</h5>

@@ -11,6 +11,10 @@
   color: #344a8d;
 }
 
+.danger-link {
+  font-size: 0.9rem;
+}
+
 a {
   color: #344a8d;
 }
@@ -319,6 +323,17 @@ a:hover {
 
 .orange-bg-hover:hover {
   background-color: #d7a03d;
+}
+
+
+/* Modal delete
+-------------------------------------------------- */
+
+.modal-delete .btn {
+  font-size: 1rem !important;
+  line-height: 2rem !important;
+  font-weight: bold !important;
+  width: 100px;
 }
 
 
