@@ -83,8 +83,8 @@
 
   <p class="light1-style">{% trans 'To start, log in.' %}</p>
 
-  <form action="{% url 'registration:user_login' %}">
-    <button type="submit" class="btn btn-standard btn-green-to-blue mb-5">{% trans 'Log in' %}</button>
+  <form id="formSubmit" action="{% url 'registration:user_login' %}">
+    <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue mb-5">{% trans 'Log in' %}</button>
   </form>
 
   <span class="light1-style">{% trans 'New here?' %}</span>

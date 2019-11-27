@@ -27,7 +27,7 @@
 
 
 <!--START: PROMOTE MEMBERS FORM-->
-<form class="form-standard form-select-members form-promote-members" method="POST" novalidate>
+<form id="formSubmit" class="form-standard form-select-members form-promote-members" method="POST" novalidate>
   {% csrf_token %}
 
 
@@ -70,7 +70,7 @@
 
   </div>
 
-  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Promote' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue">{% trans 'Promote' %}</button>
 
 </form>
 <!--END: PROMOTE MEMBERS FORM-->

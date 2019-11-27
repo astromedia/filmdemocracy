@@ -22,7 +22,7 @@
 
 <!--LINK TO NEW RANKING-->
 <div class="text-center mb-5">
-    <a class="green-color blue-color-hover" href="{% url 'democracy:ranking_generator' club.id %}">
+    <a class="" href="{% url 'democracy:ranking_generator' club.id %}">
     {% trans 'Generate new ranking' %}
     </a>
 </div>
@@ -127,11 +127,17 @@
     </tr>
 
     {% endfor %}
+
     </tbody>
 
   </table>
 </div>
 <!--END: VOTING RESULTS-->
+
+
+<div class="text-center strong-link my-5">
+  <a class="" href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
+</div>
 
 
 {% for film_results in ranking_results|dictsortreversed:"points" %}

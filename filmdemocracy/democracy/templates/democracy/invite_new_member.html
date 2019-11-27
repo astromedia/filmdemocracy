@@ -15,11 +15,11 @@
 {% block content %}
 
 
-<h3 class="h3">{% trans 'Invite new member to club' %}</h3>
+<h3 class="h3">{% trans 'Invite new member' %}</h3>
 
 
 <!--START: INVITE NEW MEMBER FORM-->
-<form class="form-standard form-invitation" method="POST" novalidate>
+<form id="formSubmit" class="form-standard form-invitation" method="POST" novalidate>
   {% csrf_token %}
 
 
@@ -75,7 +75,7 @@
 
   </div>
 
-  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Send invitation' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue">{% trans 'Send invitation' %}</button>
 
 </form>
 <!--END: INVITE NEW MEMBER FORM-->

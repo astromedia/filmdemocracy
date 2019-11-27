@@ -20,10 +20,10 @@
 </div>
 
 
-<form class="form-standard" method="POST" novalidate>
+<form id="formSubmit" class="form-standard" method="POST" novalidate>
   {% csrf_token %}
 
-  <input class="btn btn-standard btn-outline-danger" type="submit" value="{% trans 'Confirm' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-outline-danger">{% trans 'Confirm' %}</button>
 
 </form>
 

@@ -33,7 +33,7 @@
             {% trans 'Delete' %}
           </a>
         {% elif user == meeting.organizer %}
-          <a class="text-decoration-none" href="{% url 'democracy:meetings_edit' club.id meeting.id %}">
+          <a class="" href="{% url 'democracy:meetings_edit' club.id meeting.id %}">
             {% trans 'Edit' %}
           </a>
         {% endif %}

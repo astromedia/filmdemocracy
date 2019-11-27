@@ -70,12 +70,21 @@ class Command(BaseCommand):
         filmsdbs = FilmDb.objects.all()
         club_members = club.members.filter(is_active=True)
         for filmdb in filmsdbs:
-            Film.objects.create(
-                public_id=random_film_public_id_generator(club),
-                proposed_by=random.choice(club_members),
-                club=club,
-                db=filmdb,
-            )
+            if random.random() < 0.8:
+                random_member = random.choice(club_members)
+                film = Film.objects.create(
+                    public_id=random_film_public_id_generator(club),
+                    proposed_by=random_member,
+                    club=club,
+                    db=filmdb,
+                )
+                notif_members = club.members.filter(is_active=True).exclude(id=random_member.id)
+                for notif_member in notif_members:
+                    Notification.objects.create(type=Notification.ADDED_FILM,
+                                                activator=random_member,
+                                                club=club,
+                                                object_id=film.id,
+                                                recipient=notif_member)
 
     @staticmethod
     def create_random_votes_for_films(club):
@@ -93,16 +102,26 @@ class Command(BaseCommand):
     @staticmethod
     def add_meetings_to_club(club):
         club_members = club.members.filter(is_active=True)
+        counter = 0
         for i, organizer in enumerate(club_members):
-            Meeting.objects.create(
-                club=club,
-                name='Test club amazing meeting',
-                description=LORE_100,
-                organizer=organizer,
-                place='My house',
-                date=datetime.date.today() + datetime.timedelta(weeks=(10+i)),
-                time_start=datetime.time(12+i, 10+i),
-            )
+            if random.random() < 0.6:
+                counter += 1
+                meeting = Meeting.objects.create(
+                    club=club,
+                    name=f'Test club amazing meeting #{counter}',
+                    description=LORE_100,
+                    organizer=organizer,
+                    place=f'My house at #{counter} street',
+                    date=datetime.date.today() + datetime.timedelta(weeks=(10+i)),
+                    time_start=datetime.time(12+i, 10+i),
+                )
+                notif_members = club.members.filter(is_active=True).exclude(id=organizer.id)
+                for notif_member in notif_members:
+                    Notification.objects.create(type=Notification.ADDED_FILM,
+                                                activator=organizer,
+                                                club=club,
+                                                object_id=meeting.id,
+                                                recipient=notif_member)
 
     @staticmethod
     def add_random_asistance_to_meetings(club):
@@ -132,6 +151,14 @@ class Command(BaseCommand):
                         film.seen_by.add(member)
                 film.seen = True
                 film.save()
+                random_member = random.choice(club_members)
+                notif_members = club.members.filter(is_active=True).exclude(id=random_member.id)
+                for notif_member in notif_members:
+                    Notification.objects.create(type=Notification.SEEN_FILM,
+                                                activator=random_member,
+                                                club=club,
+                                                recipient=notif_member,
+                                                object_id=film.id)
 
     def create_clubs(self):
         self.stdout.write(f'  Creating clubs...')

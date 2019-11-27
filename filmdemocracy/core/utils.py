@@ -306,7 +306,7 @@ class NotificationsHelper:
         self.notifications = None
         self.messages = []
         self.unread_count = 0
-        self.max_notifications = 10
+        self.max_notifications = 50
 
     def check_user_is_anonymous(self):
         return self.request.user.is_anonymous

@@ -160,12 +160,14 @@
 
     <div class="col col-auto align-self-center p-0 my-2">
       <div class="card card-film">
+
           <a href="{% url 'democracy:film_detail' club.id candidate.film.public_id candidate.film.db.slug view_option|add:order_option|add:display_option %}">
             <img class="card-img" src="{{ candidate.film.db.poster_url }}" alt="film.poster not found">
             <div class="overlay">
               <div class="film-title">{{ candidate.film.db.title }}</div>
             </div>
           </a>
+
           {% if candidate.voted %}
           <div class="film-voted">
             <div class="media">
@@ -180,6 +182,7 @@
             </div>
           </div>
           {% endif %}
+
       </div>
     </div>
 
@@ -283,6 +286,11 @@
 
 
 {% endif %}
+
+
+<div class="text-center strong-link my-5">
+  <a class="green-color blue-color-hover" href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
+</div>
 
 
 <!--START: ADD NEW-->

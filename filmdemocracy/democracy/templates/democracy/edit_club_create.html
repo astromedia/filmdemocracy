@@ -39,7 +39,7 @@
 <!--START: CREATE CLUB FORM-->
 <h3 class="h3">{% trans 'Create new club' %}</h3>
 
-<form class="form-standard form-edit-club" enctype="multipart/form-data" method="POST" novalidate>
+<form id="formSubmit" class="form-standard form-edit-club" enctype="multipart/form-data" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}
@@ -112,7 +112,7 @@
 
   </div>
 
-  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Create club' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue">{% trans 'Create club' %}</button>
 
 </form>
 <!--END: CREATE CLUB FORM-->

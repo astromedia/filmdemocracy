@@ -42,7 +42,7 @@
 
 
 <!--START: FILM SEEN FORM-->
-<form class="form-standard form-select-members form-film-seen" method="POST">
+<form id="formSubmit" class="form-standard form-select-members form-film-seen" method="POST">
   {% csrf_token %}
 
   <div class="form-inputs">
@@ -106,7 +106,7 @@
 
   </div>
 
-  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Seen!' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue">{% trans 'Seen!' %}</button>
 
 </form>
 <!--END: FILM SEEN FORM-->

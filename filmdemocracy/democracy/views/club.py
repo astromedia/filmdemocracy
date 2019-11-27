@@ -392,6 +392,7 @@ class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page'] = 'seen_films'
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context['club'] = club
         seen_films = Film.objects.filter(club=club, seen=True)

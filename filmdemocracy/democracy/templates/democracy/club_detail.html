@@ -48,17 +48,24 @@
 <!--END: NO LOGO MESSAGE-->
 
 
+<!--START: CLUB PANEL-->
+<div class="markdownx-view mt-4">
+  {{ club.formatted_panel|safe }}
+</div>
+<!--END: CLUB PANEL-->
+
+
 <!--START: NEXT 3 CLUB MEETINGS-->
 {% if next_meetings %}
 
+  <p class="text-center font-weight-bold">{% trans 'Next club meetings' %}</p>
+
   {% for meeting in next_meetings %}
-
     {% include "democracy/meeting_card.html" %}
-
   {% endfor %}
 
   {% if extra_meetings %}
-    <div class="text-center mt-3">
+    <div class="text-center mt-4 mb-5">
       <a class="" href="{% url 'democracy:meetings_list' club.id %}">
         {% trans 'Check all meetings' %}
       </a>
@@ -67,13 +74,6 @@
 
 {% endif %}
 <!--END: NEXT 3 CLUB MEETINGS-->
-
-
-<!--START: CLUB PANEL-->
-<div class="markdownx-view">
-  {{ club.formatted_panel|safe }}
-</div>
-<!--END: CLUB PANEL-->
 
 
 <!--START: LAST 5 COMMENTS ON FILMS-->
@@ -129,9 +129,10 @@
 
   <!--START: LAST PROPOSED FILMS ALBUM-->
   {% if groups_last_pub %}
-  <div class="films-album">
 
-    <p class="text-center font-weight-bold">{% trans 'Last proposed films' %}</p>
+  <p class="text-center font-weight-bold">{% trans 'Last proposed films' %}</p>
+
+  <div class="films-album">
 
     <div id="carouselControls" class="carousel slide" data-ride="carousel" data-interval="4000">
       <div class="carousel-inner">
@@ -196,11 +197,23 @@
   <!--END: LAST PROPOSED FILMS ALBUM-->
 
 
+  <!--START: LINK TO PROPOSED FILMS-->
+  {% if groups_last_pub %}
+  <div class="text-center">
+    <a class="green-color blue-color-hover" href="{% url 'democracy:candidate_films' club.id %}">
+      {% trans 'Check all films proposed in club' %}
+    </a>
+  </div>
+  {% endif %}
+  <!--END: LINK TO PROPOSED FILMS-->
+
+
   <!--START: LAST SEEN FILMS ALBUM-->
   {% if films_last_seen %}
-  <div class="films-album ">
 
-    <p class="text-center font-weight-bold">{% trans 'Last seen films' %}</p>
+  <p class="text-center font-weight-bold">{% trans 'Last seen films' %}</p>
+
+  <div class="films-album ">
 
     <div class="row justify-content-center mx-1">
 
@@ -220,8 +233,6 @@
 
     </div>
 
-
-
   </div>
   {% endif %}
   <!--END: LAST SEEN FILMS ALBUM-->
@@ -229,7 +240,7 @@
 
   <!--START: LINK TO SEEN FILMS-->
   {% if films_last_seen %}
-  <div class="text-center my-5">
+  <div class="text-center">
     <a class="green-color blue-color-hover" href="{% url 'democracy:seen_films' club.id %}">
       {% trans 'Check all films seen by club' %}
     </a>
@@ -285,64 +296,77 @@
 </div>
 
 
-
 <!--START: ADD NEW-->
-<a class="pointer-cursor rounded-circle"
-   id="btn-new-options" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<a class="pointer-cursor rounded-circle" id="btn-add-new" data-toggle="modal" data-target="#addNewModal">
   <img class="" src="{% static 'democracy/svg/add.svg'%}">
 </a>
+<!--END: ADD NEW-->
 
 
-<div id="new-options-menu" class="dropdown-menu py-0" aria-labelledby="btn-new-options">
+<!-- START: MODAL ADD NEW -->
+<div class="modal fade modal-menu" id="addNewModal" tabindex="-1" role="dialog"
+     aria-labelledby="addNewModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
+    <div class="modal-content">
 
-  <!--START: NEW FILM-->
-  <a class="dropdown-item py-2 px-3" href="{% url 'democracy:add_new_film' club.id %}">
-    <div class="media">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="addNewModalTitle">{% trans 'Add to club' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
 
-      <img class="align-self-center rounded-circle mr-2"
-           src="{% static 'democracy/svg/camera.svg' %}">
+      <div class="modal-body py-0 px-0">
 
-      <div class="media-body align-self-center p-0 m-0">
-        <span>{% trans 'Propose new film' %}</span>
+        <div class="list-group font-weight-bold p-0 m-0">
+
+          <a class="list-group-item list-group-item-action pointer-cursor py-2" href="{% url 'democracy:add_new_film' club.id %}">
+            <div class="media">
+
+              <img class="align-self-center rounded-circle mr-3 p-0"
+                   src="{% static 'democracy/svg/camera.svg' %}">
+
+              <div class="media-body align-self-center p-0 m-0">
+                <span>{% trans 'Propose new film' %}</span>
+              </div>
+
+            </div>
+          </a>
+
+          <a class="list-group-item list-group-item-action pointer-cursor py-2" href="{% url 'democracy:meetings_new' club.id %}">
+            <div class="media">
+
+              <img class="align-self-center rounded-circle mr-3 p-0"
+                   src="{% static 'democracy/svg/cinema.svg' %}">
+
+              <div class="media-body align-self-center p-0 m-0">
+                <span>{% trans 'Organize new club meeting' %}</span>
+              </div>
+
+            </div>
+          </a>
+
+          <a class="list-group-item list-group-item-action pointer-cursor py-2" href="{% url 'democracy:invite_new_member' club.id %}">
+            <div class="media">
+
+              <img class="align-self-center rounded-circle mr-3 p-0"
+                   src="{% static 'democracy/svg/invite_user_image.svg' %}">
+
+              <div class="media-body align-self-center p-0 m-0">
+                <span>{% trans 'Invite someone to club' %}</span>
+              </div>
+
+            </div>
+          </a>
+
+        </div>
+
       </div>
 
     </div>
-  </a>
-
-  <div class="dropdown-divider p-0 m-0"></div>
-
-  <!--START: NEW MEETING-->
-  <a class="dropdown-item py-2 px-3" href="{% url 'democracy:meetings_new' club.id %}">
-    <div class="media">
-
-      <img class="align-self-center rounded-circle mr-2 p-0"
-           src="{% static 'democracy/svg/cinema.svg' %}">
-
-      <div class="media-body align-self-center p-0 m-0">
-        <span>{% trans 'Organize new meeting' %}</span>
-      </div>
-
-    </div>
-  </a>
-
-  <div class="dropdown-divider p-0 m-0"></div>
-
-  <!--START: INVITE NEW MEMBER-->
-  <a class="dropdown-item py-2 px-3" href="{% url 'democracy:invite_new_member' club.id %}">
-    <div class="media">
-
-      <img class="align-self-center rounded-circle mr-2"
-           src="{% static 'democracy/svg/invite_user_image.svg' %}">
-
-      <div class="media-body align-self-center p-0 m-0">
-        <span>{% trans 'Invite someone to club' %}</span>
-      </div>
-
-    </div>
-  </a>
-
+  </div>
 </div>
-<!--START: ADD NEW-->
+<!-- END: MODAL ADD NEW -->
 
 
 <!--START: MODAL LOGO-->
@@ -354,73 +378,6 @@
 </div>
 {% endif %}
 <!--END: MODAL LOGO-->
-
-
-<!-- START: MODAL SELF-DEMOTE -->
-<!--{% if user in club_admins %}-->
-<!--<div class="modal fade" id="self_demoteModal" tabindex="-1" role="dialog"-->
-<!--     aria-labelledby="self_demoteModalTitle" aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-header">-->
-<!--        <h5 class="modal-title" id="self_demoteModalTitle">{% trans 'Self-demote' %}</h5>-->
-<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--          <span aria-hidden="true">&times;</span>-->
-<!--        </button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
-<!--        {% trans "Are you sure you don't want to be an admin anymore?" %}-->
-<!--      </div>-->
-<!--      <div class="modal-footer">-->
-<!--        <button type="button" class="btn btn-sm" data-dismiss="modal">-->
-<!--          {% trans 'Cancel' %}-->
-<!--        </button>-->
-<!--        <form method="POST" action="{% url 'democracy:self_demote' club.id %}" class="text-center">-->
-<!--          {% csrf_token %}-->
-<!--          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">-->
-<!--            {% trans 'Confirm' %}-->
-<!--          </button>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-<!--{% endif %}-->
-<!-- END: MODAL SELF-DEMOTE -->
-
-
-<!--START: MODAL LEAVE-->
-<!--<div class="modal fade" id="LeaveModal" tabindex="-1" role="dialog" aria-labelledby="LeaveModalTitle"-->
-<!--     aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-header">-->
-<!--        <h5 class="modal-title" id="LeaveModalTitle">{% trans 'Leave club' %}</h5>-->
-<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--          <span aria-hidden="true">&times;</span>-->
-<!--        </button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
-<!--        {% trans 'Are you sure about this?' %}-->
-<!--        {% if club_members|length == 1 %}-->
-<!--        {% trans 'You are the only member of the club; if you leave, the club will disappear!' %}-->
-<!--        {% endif %}-->
-<!--      </div>-->
-<!--      <div class="modal-footer">-->
-<!--        <button type="button" class="btn btn-sm" data-dismiss="modal">-->
-<!--          {% trans 'Cancel' %}-->
-<!--        </button>-->
-<!--        <form method="POST" action="{% url 'democracy:leave_club' club.id %}" class="text-center">-->
-<!--          {% csrf_token %}-->
-<!--          <button type="submit" class="btn btn-sm btn-outline-danger mx-3">-->
-<!--            {% trans 'Confirm' %}-->
-<!--          </button>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-<!--END: MODAL LEAVE-->
 
 
 {% endblock %}

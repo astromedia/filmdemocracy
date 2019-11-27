@@ -29,7 +29,7 @@
 
 
 <!--START: MEETING FORM-->
-<form class="form-standard form-meeting" method="POST" novalidate>
+<form id="formSubmit" class="form-standard form-meeting" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}
@@ -203,18 +203,18 @@
 
   </div>
 
-  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Publish' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue">{% trans 'Publish' %}</button>
 
 </form>
 <!--END: MEETING FORM-->
 
 
 {% if not new_meeting %}
-  <div class="text-center my-5">
-    <a class="text-danger text-decoration-none pointer-cursor" data-toggle="modal" data-target="#DeleteMeetingModal">
-      {% trans 'Delete meeting' %}
-    </a>
-  </div>
+<div class="text-center my-5">
+  <a class="text-danger text-decoration-none pointer-cursor" data-toggle="modal" data-target="#DeleteMeetingModal">
+    {% trans 'Delete meeting' %}
+  </a>
+</div>
 {% endif %}
 
 
@@ -223,6 +223,7 @@
 </div>
 
 
+{% if not new_meeting %}
 <!--START: MODAL DELETE MEETING-->
 <div class="modal fade modal-delete" id="DeleteMeetingModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -254,6 +255,7 @@
   </div>
 </div>
 <!--END: MODAL DELETE MEETING-->
+{% endif %}
 
 
 {% endblock %}

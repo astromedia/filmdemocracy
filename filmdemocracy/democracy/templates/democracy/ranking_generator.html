@@ -21,7 +21,7 @@
 </div>
 
 
-<form class="form-standard form-ranking-generator form-select-members" action="{% url 'democracy:ranking_results' club.id %}" method="GET">
+<form id="formSubmit" class="form-standard form-ranking-generator form-select-members" action="{% url 'democracy:ranking_results' club.id %}" method="GET">
   {% csrf_token %}
 
   <div class="form-inputs">
@@ -109,15 +109,15 @@
     <!--END: RANKING OPTIONS-->
 
 
-    </div>
+  </div>
 
-  <input class="btn btn-standard btn-green-to-blue mt-4" type="submit" value="{% trans 'Generate results' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue mt-4">{% trans 'Generate results' %}</button>
 
 </form>
 
 
 <div class="text-center strong-link my-5">
-  <a href="{{ request.META.HTTP_REFERER }}">{% trans 'Cancel' %}</a>
+  <a class="" href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
 </div>
 
 

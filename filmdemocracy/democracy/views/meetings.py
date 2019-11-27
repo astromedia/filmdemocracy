@@ -227,5 +227,5 @@ class MeetingsListView(UserPassesTestMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         club_meetings = Meeting.objects.filter(club=club, active=True, date__gte=timezone.now().date())
-        context['club_meetings'] = club_meetings.order_by('date')
+        context['club_meetings'] = club_meetings.order_by('date')[0:20]
         return context

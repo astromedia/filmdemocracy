@@ -23,10 +23,10 @@
 </div>
 
 
-<form class="form-standard" method="POST" novalidate>
+<form id="formSubmit" class="form-standard" method="POST" novalidate>
   {% csrf_token %}
 
-  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Accept invitation' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue">{% trans 'Accept invitation' %}</button>
 
 </form>
 

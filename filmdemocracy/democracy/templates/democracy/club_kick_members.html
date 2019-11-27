@@ -27,7 +27,7 @@
 
 
 <!--START: KICK MEMBERS FORM-->
-<form class="form-standard form-select-members form-kick-members" method="POST" novalidate>
+<form id="formSubmit" class="form-standard form-select-members form-kick-members" method="POST" novalidate>
   {% csrf_token %}
 
   <div class="form-inputs">
@@ -65,7 +65,7 @@
 
   </div>
 
-  <input class="btn btn-standard btn-outline-danger" type="submit" value="{% trans 'Kick' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-outline-danger">{% trans 'Kick' %}</button>
 
 </form>
 <!--END: KICK MEMBERS FORM-->

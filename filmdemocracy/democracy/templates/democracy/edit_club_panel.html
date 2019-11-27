@@ -44,7 +44,7 @@
 <h3 class="h3">{% trans 'Edit club panel' %}</h3>
 
 
-<form class="form-standard" method="POST" novalidate>
+<form id="formSubmit" class="form-standard" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}
@@ -90,7 +90,7 @@
   </div>
 
 
-  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Save changes' %}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue">{% trans 'Save changes' %}</button>
 
 </form>
 <!--START: EDIT CLUB DESCRIPTION FORM-->

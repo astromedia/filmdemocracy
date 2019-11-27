@@ -63,7 +63,7 @@
 <h3 class="h3">{% trans 'Log in' %}</h3>
 
 
-<form class="form-standard" method="POST" novalidate>
+<form id="formSubmit" class="form-standard" method="POST" novalidate>
   {% csrf_token %}
 
   {% for hidden_field in form.hidden_fields %}
@@ -124,8 +124,8 @@
 
   </div>
 
-  <input class="btn btn-standard btn-green-to-blue" type="submit" value="{% trans 'Log in' %}">
   <input type="hidden" name="next" value="{{ next }}">
+  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue">{% trans 'Log in' %}</button>
 
 </form>
 <!--END: LOG IN FORM-->

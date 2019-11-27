@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="{% static 'democracy/css/base_club_banner.css' %}">
 <link rel="stylesheet" href="{% static 'democracy/css/candidate_films.css' %}">
 <link rel="stylesheet" href="{% static 'core/css/dark_background.css' %}">
+<link rel="stylesheet" href="{% static 'democracy/css/candidate_films_wide.css' %}">
 {% endblock %}
 
 {% block title %}{% trans 'Seen films' %}{% endblock %}
@@ -16,28 +17,31 @@
 {% block content %}
 
 
-<h1 class="display-4">{% trans 'Films seen in club' %}</h1>
-<p class="lead text-muted text-center">{% trans '(Hall of fame)' %}</p>
+<div class="page-title dark-title">
+  <span>{% trans 'Films seen in club' %}</span>
+</div>
 
 
 {% if seen_films %}
 
 
 <!--START: FILM PANEL-->
-<div class="album films-album mt-n5">
+<div class="album films-album p-0 m-0 mt-4">
 
-  <div class="row justify-content-center">
+  <div class="row justify-content-center m-0 p-0">
 
     {% for film in seen_films|dictsort:"seen_date" %}
 
-    <div class="col col-auto align-self-center my-3">
-      <div class="card card-film mx-auto">
+    <div class="col col-auto align-self-center p-0 my-2">
+      <div class="card card-film">
+
           <a href="{% url 'democracy:film_detail' club.id film.public_id film.db.slug %}">
             <img class="card-img" src="{{ film.db.poster_url }}" alt="film.poster not found">
             <div class="overlay">
               <div class="film-title">{{ film.db.title }}</div>
             </div>
           </a>
+
       </div>
     </div>
 
@@ -59,9 +63,9 @@
 {% endif %}
 
 
-<form class="btn-cancel" action="{% url 'democracy:club_detail' club.id %}">
-  <button type="submit" class="btn btn-sm">{% trans 'Back to club' %}</button>
-</form>
+<div class="text-center strong-link my-5">
+  <a class="green-color blue-color-hover" href="{% url 'democracy:club_detail' club.id %}">{% trans 'Go back to club' %}</a>
+</div>
 
 
 <!--END: FILM PANEL-->

@@ -83,15 +83,22 @@
   box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
 }
 
-.navbar .nav-item .dropdown-menu .active {
-  color: black;
-  background-color: #d1d1d1 !important;
-}
-
 .navbar .nav-item .dropdown-menu .dropdown-header {
   font-size: 1rem;
   line-height: 2rem;
   color: #343a40 !important;
+}
+
+.navbar .nav-item .dropdown-menu .dropdown-menu-container {
+  max-height: 30rem;
+  width: 100%;
+  overflow: auto;
+  margin: 0px 10px;
+}
+
+.navbar .nav-item .dropdown-menu .active {
+  color: black;
+  background-color: #d1d1d1 !important;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item .media {

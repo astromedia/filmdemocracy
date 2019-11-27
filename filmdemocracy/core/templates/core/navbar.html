@@ -61,38 +61,41 @@
 
           {% if user.club_set.all %}
 
-            {% for userclub in user.club_set.all %}
+            <div class="dropdown-menu-container m-0 p-0">
 
-            <div class="dropdown-divider p-0 m-0"></div>
+              {% for userclub in user.club_set.all %}
 
-            <a class="dropdown-item py-0 m-0 px-1" href="{% url 'democracy:club_detail' userclub.id %}">
-              <div class="media club-item">
+              <div class="dropdown-divider p-0 m-0"></div>
 
-                {% if userclub.logo_image %}
-                <img class="align-self-center border border-secondary rounded-circle mr-2"
-                     src="{{ userclub.logo_image.url }}" alt="club.logo_image not found">
-                {% else %}
-                <img class="align-self-center border border-secondary rounded-circle mr-2"
-                     src="{% static 'democracy/images/club_no_logo.png' %}"
-                     alt="userclub.logo_image not found">
-                {% endif %}
+              <a class="dropdown-item py-0 m-0 px-1" href="{% url 'democracy:club_detail' userclub.id %}">
+                <div class="media club-item">
 
-                <div class="media-body align-self-center p-0 m-0">
-                  <p class="first-line text-dark p-0 m-0">
-                  <span style="color: seagreen; font-size: 20px;">{% if club == userclub and page != 'chat' %} &#x25cf; {% endif %}</span>
-                  <strong>{{ userclub.name }}</strong></p>
-                  <p class="second-line text-secondary p-0 m-0">
-                    {{ userclub.members.all|length }} {% blocktrans count userclub.members.all|length as _ %}member{% plural %}members{% endblocktrans %},
-                    {{ userclub.film_set.all|length }} {% blocktrans count userclub.film_set.all|length as _ %}film{% plural %}films{% endblocktrans %},
-                    {{ userclub.vote_set.all|length }} {% blocktrans count userclub.vote_set.all|length as _ %}vote{% plural %}votes{% endblocktrans %}
-                  </p>
+                  {% if userclub.logo_image %}
+                  <img class="align-self-center border border-secondary rounded-circle mr-2"
+                       src="{{ userclub.logo_image.url }}" alt="club.logo_image not found">
+                  {% else %}
+                  <img class="align-self-center border border-secondary rounded-circle mr-2"
+                       src="{% static 'democracy/images/club_no_logo.png' %}"
+                       alt="userclub.logo_image not found">
+                  {% endif %}
+
+                  <div class="media-body align-self-center p-0 m-0">
+                    <p class="first-line text-dark p-0 m-0">
+                    <span style="color: seagreen; font-size: 20px;">{% if club == userclub and page != 'chat' %} &#x25cf; {% endif %}</span>
+                    <strong>{{ userclub.name }}</strong></p>
+                    <p class="second-line text-secondary p-0 m-0">
+                      {{ userclub.members.all|length }} {% blocktrans count userclub.members.all|length as _ %}member{% plural %}members{% endblocktrans %},
+                      {{ userclub.film_set.all|length }} {% blocktrans count userclub.film_set.all|length as _ %}film{% plural %}films{% endblocktrans %},
+                      {{ userclub.vote_set.all|length }} {% blocktrans count userclub.vote_set.all|length as _ %}vote{% plural %}votes{% endblocktrans %}
+                    </p>
+                  </div>
+
                 </div>
+              </a>
 
-              </div>
-            </a>
+              {% endfor %}
 
-            {% endfor %}
-
+            </div>
 
           {% else %}
 
@@ -194,168 +197,172 @@
 
           {% if notifications.list %}
 
+          <div class="dropdown-menu-container m-0 p-0">
+
           {% for ntf in notifications.list %}
 
-          <div class="dropdown-divider p-0 m-0"></div>
+            <div class="dropdown-divider p-0 m-0"></div>
 
-          <form method="POST" action="{% url 'core:notification_dispatcher' ntf.type ntf.club_id ntf.object_id %}">
-            {% csrf_token %}
+            <form method="POST" action="{% url 'core:notification_dispatcher' ntf.type ntf.club_id ntf.object_id %}">
+              {% csrf_token %}
 
-            <input type="hidden" name="ntf_ids" value="{{ ntf.ntf_ids }}">
+              <input type="hidden" name="ntf_ids" value="{{ ntf.ntf_ids }}">
 
-            <button class="dropdown-item py-0 m-0 px-1 {% if not ntf.read %} active {% endif %}">
+              <button class="dropdown-item py-0 m-0 px-1 {% if not ntf.read %} active {% endif %}">
 
-              <div class="media ntf-item">
+                <div class="media ntf-item">
 
-                {% if ntf.image_url %}
-                <img class="align-self-center border border-secondary rounded-circle mr-2"
-                     src="{{ ntf.image_url }}" alt="ntf.image_url not found">
-                {% endif %}
-
-                <div class="media-body align-self-center p-0 m-0">
-
-
-                  {% if ntf.club_name %}
-                  <p class="first-line">
-                    <span class="first-line-club text-muted"><strong>{{ ntf.club_name }}</strong></span>
-                    {% if ntf.time_ago %}<span class="first-line-time-ago text-secondary">{{ ntf.time_ago }}</span>{% endif %}
-                  </p>
+                  {% if ntf.image_url %}
+                  <img class="align-self-center border border-secondary rounded-circle mr-2"
+                       src="{{ ntf.image_url }}" alt="ntf.image_url not found">
                   {% endif %}
 
-                  <p class="second-line">
+                  <div class="media-body align-self-center p-0 m-0">
 
-                    {% if ntf.type == 'signup' %}
 
-                      {% blocktrans with new_member=ntf.activator.username %}
-                        Welcome to FilmDemocracy {{ new_member }}!
-                      {% endblocktrans %}
-                      <span class="text-primary">{% trans 'Click here to take a tour if this is your first time here.' %}</span>
-
-                    {% elif ntf.type == 'joined' %}
-
-                      {% blocktrans with new_member=ntf.activator.username %}
-                        {{ new_member }} joined the club.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'joined_self' %}
-
-                      {% blocktrans with club=ntf.club_name %}
-                        You joined the club "{{ club }}".
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'promoted' %}
-
-                      {% blocktrans with promoter=ntf.activator.username promoted=ntf.object_name %}
-                        {{ promoted }} was promoted to admin by {{ promoter }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'promoted_self' %}
-
-                      {% blocktrans with promoter=ntf.activator.username %}
-                        You were promoted to admin by {{ promoter }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'left' %}
-
-                      {% blocktrans with ex_member=ntf.activator.username %}
-                        {{ ex_member }} left the club.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'addedfilm' %}
-
-                      {% blocktrans with proposer=ntf.activator.username film=ntf.object_name %}
-                        {{ proposer }} added a film: {{ film }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'addedfilms' %}
-
-                      {% blocktrans with proposer=ntf.activator.username count=ntf.counter %}
-                        {{ proposer }} added {{ count }} new films.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'seenfilm' %}
-
-                      {% blocktrans with marker_member=ntf.activator.username film=ntf.object_name %}
-                        {{ marker_member }} marked the film {{ film }} as seen.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'meetorgan' %}
-
-                      {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
-                        {{ organizer }} organized a new meeting: {{ meeting }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'meetedit' %}
-
-                      {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
-                        {{ organizer }} edited the meeting: {{ meeting }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'meetdel' %}
-
-                      {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
-                        {{ organizer }} deleted the club meeting: {{ meeting }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'commfilm' %}
-
-                      {% blocktrans with commenter=ntf.activator.username film=ntf.object_name %}
-                        {{ commenter }} made a comment on your film {{ film }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'commfilms' %}
-
-                      {% blocktrans with count=ntf.counter film=ntf.object_name %}
-                        Your film {{ film }} has {{ count }} new comments.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'commcomm' %}
-
-                      {% blocktrans with commenter=ntf.activator.username film=ntf.object_name %}
-                        {{ commenter }} made a comment on the film {{ film }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'commcomms' %}
-
-                      {% blocktrans with count=ntf.counter film=ntf.object_name %}
-                        The film {{ film }} has {{ count }} new comments.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'kicked' %}
-
-                      {% blocktrans with kicker=ntf.activator.username member=ntf.object_name %}
-                        {{ member }} was kicked from the club by {{ kicker }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'kicked_self' %}
-
-                      {% blocktrans with kicker=ntf.activator.username %}
-                        You were kicked from the club by {{ kicker }}.
-                      {% endblocktrans %}
-
-                    {% elif ntf.type == 'abandoned' %}
-
-                      {% trans 'The only admin of the club left and all club members were automatically promoted to admin.' %}
-
-                    {% elif ntf.type == 'invited' %}
-
-                      {% blocktrans with club=ntf.club_name inviter=ntf.activator.username %}
-                        You were invited to join the club "{{ club }}" by {{ inviter }}.
-                      {% endblocktrans %}
-
+                    {% if ntf.club_name %}
+                    <p class="first-line">
+                      <span class="first-line-club text-muted"><strong>{{ ntf.club_name }}</strong></span>
+                      {% if ntf.time_ago %}<span class="first-line-time-ago text-secondary">{{ ntf.time_ago }}</span>{% endif %}
+                    </p>
                     {% endif %}
 
-                  </p>
+                    <p class="second-line">
+
+                      {% if ntf.type == 'signup' %}
+
+                        {% blocktrans with new_member=ntf.activator.username %}
+                          Welcome to FilmDemocracy {{ new_member }}!
+                        {% endblocktrans %}
+                        <span class="text-primary">{% trans 'Click here to take a tour if this is your first time here.' %}</span>
+
+                      {% elif ntf.type == 'joined' %}
+
+                        {% blocktrans with new_member=ntf.activator.username %}
+                          {{ new_member }} joined the club.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'joined_self' %}
+
+                        {% blocktrans with club=ntf.club_name %}
+                          You joined the club "{{ club }}".
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'promoted' %}
+
+                        {% blocktrans with promoter=ntf.activator.username promoted=ntf.object_name %}
+                          {{ promoted }} was promoted to admin by {{ promoter }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'promoted_self' %}
+
+                        {% blocktrans with promoter=ntf.activator.username %}
+                          You were promoted to admin by {{ promoter }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'left' %}
+
+                        {% blocktrans with ex_member=ntf.activator.username %}
+                          {{ ex_member }} left the club.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'addedfilm' %}
+
+                        {% blocktrans with proposer=ntf.activator.username film=ntf.object_name %}
+                          {{ proposer }} added a film: {{ film }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'addedfilms' %}
+
+                        {% blocktrans with proposer=ntf.activator.username count=ntf.counter %}
+                          {{ proposer }} added {{ count }} new films.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'seenfilm' %}
+
+                        {% blocktrans with marker_member=ntf.activator.username film=ntf.object_name %}
+                          {{ marker_member }} marked the film {{ film }} as seen.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'meetorgan' %}
+
+                        {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
+                          {{ organizer }} organized a new meeting: {{ meeting }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'meetedit' %}
+
+                        {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
+                          {{ organizer }} edited the meeting: {{ meeting }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'meetdel' %}
+
+                        {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
+                          {{ organizer }} deleted the club meeting: {{ meeting }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'commfilm' %}
+
+                        {% blocktrans with commenter=ntf.activator.username film=ntf.object_name %}
+                          {{ commenter }} made a comment on your film {{ film }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'commfilms' %}
+
+                        {% blocktrans with count=ntf.counter film=ntf.object_name %}
+                          Your film {{ film }} has {{ count }} new comments.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'commcomm' %}
+
+                        {% blocktrans with commenter=ntf.activator.username film=ntf.object_name %}
+                          {{ commenter }} made a comment on the film {{ film }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'commcomms' %}
+
+                        {% blocktrans with count=ntf.counter film=ntf.object_name %}
+                          The film {{ film }} has {{ count }} new comments.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'kicked' %}
+
+                        {% blocktrans with kicker=ntf.activator.username member=ntf.object_name %}
+                          {{ member }} was kicked from the club by {{ kicker }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'kicked_self' %}
+
+                        {% blocktrans with kicker=ntf.activator.username %}
+                          You were kicked from the club by {{ kicker }}.
+                        {% endblocktrans %}
+
+                      {% elif ntf.type == 'abandoned' %}
+
+                        {% trans 'The only admin of the club left and all club members were automatically promoted to admin.' %}
+
+                      {% elif ntf.type == 'invited' %}
+
+                        {% blocktrans with club=ntf.club_name inviter=ntf.activator.username %}
+                          You were invited to join the club "{{ club }}" by {{ inviter }}.
+                        {% endblocktrans %}
+
+                      {% endif %}
+
+                    </p>
+
+                  </div>
 
                 </div>
 
-              </div>
+              </button>
 
-            </button>
-
-          </form>
+            </form>
 
           {% endfor %}
+
+          </div>
 
           <div class="dropdown-divider p-0 m-0"></div>
 
