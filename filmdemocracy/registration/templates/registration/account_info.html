@@ -202,21 +202,24 @@
         </div>
         <div class="modal-footer">
 
-          <button type="button" class="btn btn-modal-util js-zoom-out">
+          <button type="button" class="btn btn-modal-util mr-2 js-zoom-out">
             <img class="rounded-circle" src="{% static 'registration/svg/zoom_out.svg' %}">
           </button>
 
-          <button type="button" class="btn btn-modal-util mx-3 js-zoom-in">
+          <button type="button" class="btn btn-modal-util mx-2 js-zoom-in">
             <img class="rounded-circle" src="{% static 'registration/svg/zoom_in.svg' %}">
           </button>
 
+          <button type="button" class="btn btn-modal-util mx-2 js-expand">
+            <img class="rounded-circle" src="{% static 'registration/svg/expand.svg' %}">
+          </button>
 
-          <button type="button" class="btn btn-modal-util js-reset">
+          <button type="button" class="btn btn-modal-util mx-2 js-reset">
             <img class="rounded-circle" src="{% static 'registration/svg/reset.svg' %}">
           </button>
 
           <button type="button" class="btn btn-modal btn-green-to-blue ml-auto js-crop-and-upload">
-            {% trans 'Upload and save changes' %}
+            {% trans 'Upload' %}
           </button>
 
         </div>
@@ -317,7 +320,7 @@
       var canvasData;
       $("#modalCrop").on("shown.bs.modal", function () {
         $image.cropper({
-          viewMode: 1,
+          viewMode: 2,
           dragMode: 'move',
           aspectRatio: 1/1,
           minCropBoxWidth: 100,
@@ -339,6 +342,13 @@
 
       $(".js-zoom-out").click(function () {
         $image.cropper("zoom", -0.1);
+        $image.cropper("clear");
+        $image.cropper("crop");
+      });
+
+      $(".js-expand").click(function () {
+        const expandedData = $image.cropper("getCanvasData");
+        $image.cropper("setCropBoxData", expandedData);
       });
 
       $(".js-reset").click(function () {
