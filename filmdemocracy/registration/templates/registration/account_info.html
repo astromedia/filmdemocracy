@@ -15,28 +15,6 @@
 {% block pagecontent %}
 
 
-<!--&lt;!&ndash;START ERRORS&ndash;&gt;-->
-<!--{% for hidden_field in form.hidden_fields %}-->
-<!--{% if hidden_field.errors %}-->
-<!--<ul>-->
-<!--{% for error in hidden_field.errors %}-->
-<!--<li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>-->
-<!--{% endfor %}-->
-<!--</ul>-->
-<!--{% endif %}-->
-<!--{{ hidden_field }}-->
-<!--{% endfor %}-->
-
-<!--{% if form.errors %}-->
-<!--{% for error in form.non_field_errors %}-->
-<!--<div class="alert alert-danger text-center mx-4">-->
-<!--<strong>{{ error|escape }}</strong>-->
-<!--</div>-->
-<!--{% endfor %}-->
-<!--{% endif %}-->
-<!--&lt;!&ndash;END ERRORS&ndash;&gt;-->
-
-
 <!--START: NO PROFILE IMAGE MESSAGE-->
 {% if not user.profile_image %}
 <div class="alert alert-warning text-center m-4" role="alert">
@@ -113,9 +91,7 @@
             {% if form.email.errors %}
             {% render_field form.email class="form-control is-invalid" %}
             {% for error in form.email.errors %}
-            <div class="invalid-feedback">
-              {{ error }}
-            </div>
+            <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
             {% else %}
             {% render_field form.email class="form-control is-valid" %}
@@ -259,6 +235,7 @@
 <!--START: ACCOUNT OPTIONS-->
 <form class="form-standard text-center" method="POST" action="{% url 'registration:user_logout' %}">
   {% csrf_token %}
+
   <button type="submit" class="btn btn-standard btn-white-to-gray">{% trans 'Log out' %}</button>
 </form>
 

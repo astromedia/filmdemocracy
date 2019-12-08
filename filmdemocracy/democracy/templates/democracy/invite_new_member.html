@@ -22,11 +22,6 @@
 <form id="formSubmit" class="form-standard form-invitation" method="POST" novalidate>
   {% csrf_token %}
 
-
-  {% for hidden_field in form.hidden_fields %}
-  {{ hidden_field }}
-  {% endfor %}
-
   <div class="form-inputs">
 
     <!--START: NEW MEMBER EMAIL-->
@@ -38,9 +33,7 @@
       {% if form.email.errors %}
       {% render_field form.email class="form-control is-invalid" %}
       {% for error in form.email.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
       {% else %}
       {% render_field form.email class="form-control is-valid" %}
@@ -60,9 +53,7 @@
       {% if form.invitation_text.errors %}
       {% render_field form.invitation_text class="form-control invitation-text is-invalid" %}
       {% for error in form.invitation_text.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
       {% else %}
       {% render_field form.invitation_text class="form-control invitation-text is-valid" %}

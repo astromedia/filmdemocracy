@@ -77,9 +77,7 @@
       {% render_field form.name class="form-control" %}
       {% endif %}
       {% for error in form.name.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
     </div>
 
@@ -99,9 +97,7 @@
       {% render_field form.short_description class="form-control short-description" %}
       {% endif %}
       {% for error in form.short_description.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
     </div>
 

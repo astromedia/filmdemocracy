@@ -533,6 +533,7 @@
         {% for language in languages %}
         <form class="m-0 p-0" action="{% url 'set_language' %}" method="POST">
           {% csrf_token %}
+
           <label class="list-group-item list-group-item-action font-weight-bold pointer-cursor py-3 {% if language.code == LANGUAGE_CODE %} active {% endif %}" for="language_{{ forloop.counter }}">
             {{ language.name_local|title }} ({{ language.code }})
           </label>

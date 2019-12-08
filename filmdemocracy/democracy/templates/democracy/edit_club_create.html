@@ -14,40 +14,13 @@
 {% block pagecontent %}
 
 
-<!--START: ERRORS-->
-{% for hidden_field in form.hidden_fields %}
-{% if hidden_field.errors %}
-<ul>
-  {% for error in hidden_field.errors %}
-  <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
-{{ hidden_field }}
-{% endfor %}
-
-{% if form.errors %}
-{% for error in form.non_field_errors %}
-<div class="alert alert-danger form-message">
-  {{ error|escape }}
-</div>
-{% endfor %}
-{% endif %}
-<!--END: ERRORS-->
-
-
 <!--START: CREATE CLUB FORM-->
 <h3 class="h3">{% trans 'Create new club' %}</h3>
 
 <form id="formSubmit" class="form-standard form-edit-club" enctype="multipart/form-data" method="POST" novalidate>
   {% csrf_token %}
 
-  {% for hidden_field in form.hidden_fields %}
-  {{ hidden_field }}
-  {% endfor %}
-
   <div class="form-inputs">
-
 
     <!--NAME-->
     <div class="form-input-field form-name">
@@ -64,9 +37,7 @@
       {% render_field form.name class="form-control" %}
       {% endif %}
       {% for error in form.name.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
     </div>
 
@@ -99,9 +70,7 @@
       {% render_field form.short_description class="form-control short-description" %}
       {% endif %}
       {% for error in form.short_description.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
     </div>
 

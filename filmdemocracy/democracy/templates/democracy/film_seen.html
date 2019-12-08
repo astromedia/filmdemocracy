@@ -16,22 +16,6 @@
 {% block content %}
 
 
-{% if form.errors %}
-{% for field in form %}
-{% for error in field.errors %}
-<div class="alert alert-danger text-center mx-4">
-  <strong>{{ error|escape }}</strong>
-</div>
-{% endfor %}
-{% endfor %}
-{% for error in form.non_field_errors %}
-<div class="alert alert-danger text-center mx-4">
-  <strong>{{ error|escape }}</strong>
-</div>
-{% endfor %}
-{% endif %}
-
-
 <h3 class="h3">{% trans 'Mark film as seen by club' %}</h3>
 
 
@@ -47,7 +31,6 @@
 
   <div class="form-inputs">
 
-
     <!--DATE-->
     <div class="form-input-field">
       <div class="label mb-3">
@@ -57,9 +40,7 @@
       {% if form.seen_date.errors %}
       {% render_field form.seen_date class="form-control date-field is-invalid" type="date" %}
       {% for error in form.seen_date.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
       {% else %}
       {% render_field form.seen_date class="form-control date-field is-valid" type="date" %}

@@ -118,9 +118,12 @@
 <!--START: MARK AS SEEN-->
 {% if not film.seen %}
   <form class="text-center" action="{% url 'democracy:film_seen' club.id film.public_id view_option|add:order_option|add:display_option %}">
+    {% csrf_token %}
+
     <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
       {% trans 'Mark as seen by club' %}
     </button>
+
   </form>
 {% endif %}
 <!--END: MARK AS SEEN-->
@@ -131,9 +134,11 @@
 {% if user in club_admins %}
   <form class="text-center" method="POST" action="{% url 'democracy:unsee_film' club.id film.public_id view_option|add:order_option|add:display_option %}">
     {% csrf_token %}
+
     <button type="submit" class="btn btn-sm btn-block btn-white-to-gray film-option my-2">
       {% trans 'Move back to candidate films' %}
     </button>
+
   </form>
 {% endif %}
 {% endif %}
@@ -211,8 +216,7 @@
 
 
     {% if film_voted %}
-    <form class="text-center mt-4" action="{% url 'democracy:delete_vote' club.id film.public_id view_option|add:order_option|add:display_option %}"
-          method="POST">
+    <form class="text-center mt-4" action="{% url 'democracy:delete_vote' club.id film.public_id view_option|add:order_option|add:display_option %}"  method="POST">
       {% csrf_token %}
 
       <label for="delete-vote" class="badge badge-white-to-black pointer-cursor">{% trans 'Delete vote' %}</label><br>
@@ -371,13 +375,13 @@
 
             {% if not comment.deleted %}
             {% if user == comment.user or user in club_admins %}
-            <form class=""
-                  action="{% url 'democracy:delete_film_comment' club.id film.public_id comment.id view_option|add:order_option|add:display_option %}"
-                  method="POST">
+            <form action="{% url 'democracy:delete_film_comment' club.id film.public_id comment.id view_option|add:order_option|add:display_option %}"  method="POST">
               {% csrf_token %}
+
               {{ comment.created_datetime }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
               {% trans 'Delete' %}</label>
               <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">
+
             </form>
             {% else %}
             {{ comment.created_datetime }}
@@ -413,8 +417,7 @@
                src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="user.profile_image not found">
           {% endif %}
         </div>
-        <form class="mx-auto" action="{% url 'democracy:comment_film' club.id film.public_id view_option|add:order_option|add:display_option %}"
-              method="POST">
+        <form class="mx-auto" action="{% url 'democracy:comment_film' club.id film.public_id view_option|add:order_option|add:display_option %}"  method="POST">
           {% csrf_token %}
 
           <div class="input-group mx-auto">
@@ -506,9 +509,11 @@
 
           <form method="POST" action="{% url 'democracy:delete_film' club.id film.public_id view_option|add:order_option|add:display_option %}">
             {% csrf_token %}
+
             <button type="submit" class="btn btn-outline-danger mx-3">
               {% trans 'Confirm' %}
             </button>
+
           </form>
 
         </div>
@@ -525,9 +530,9 @@
      aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' club.id film.public_id view_option|add:order_option|add:display_option %}"
-            class="text-center">
+      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' club.id film.public_id view_option|add:order_option|add:display_option %}"  class="text-center">
         {% csrf_token %}
+
         <div class="modal-header">
           <h5 class="modal-title" id="AddFaffModalCenterTitle">{% trans 'Add FilmAffinity page' %}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">

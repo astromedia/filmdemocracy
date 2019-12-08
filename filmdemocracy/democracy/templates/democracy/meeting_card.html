@@ -119,10 +119,12 @@
       <div class="col col-4 pr-2 pl-0">
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
+
           <label class="btn btn-assistance {% if user in meeting.members_yes.all %}active{% endif %} pointer-cursor" for="yes_{{ forloop.counter }}">
             {% trans 'Yes' %}
           </label>
           <input type="submit" name="assist_yes" id="yes_{{ forloop.counter }}" value="assist_yes">
+
         </form>
       </div>
 
@@ -130,10 +132,12 @@
       <div class="col col-4 px-2">
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
+
           <label class="btn btn-assistance {% if user in meeting.members_no.all %}active{% endif %} pointer-cursor" for="no_{{ forloop.counter }}">
             {% trans "No" %}
           </label>
           <input type="submit" name="assist_no" id="no_{{ forloop.counter }}" value="assist_no">
+
         </form>
       </div>
 
@@ -141,10 +145,12 @@
       <div class="col col-4 pl-2 pr-0">
         <form action="{% url 'democracy:meeting_assistance' club.id meeting.id %}" method="POST">
           {% csrf_token %}
+
           <label class="btn btn-assistance {% if user in meeting.members_maybe.all %}active{% endif %} pointer-cursor" for="maybe_{{ forloop.counter }}">
             {% trans "Maybe" %}
           </label>
           <input type="submit" name="assist_maybe" id="maybe_{{ forloop.counter }}" value="assist_maybe">
+
         </form>
       </div>
 
@@ -176,9 +182,11 @@
 
           <form method="POST" action="{% url 'democracy:delete_meeting' club.id meeting.id %}" class="text-center">
             {% csrf_token %}
+
             <button type="submit" class="btn btn-outline-danger mx-3">
               {% trans 'Confirm' %}
             </button>
+
           </form>
 
         </div>

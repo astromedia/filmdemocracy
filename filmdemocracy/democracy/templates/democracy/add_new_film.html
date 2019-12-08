@@ -23,10 +23,6 @@
 <form id="formSubmit" class="form-standard form-add-new-film" method="POST">
   {% csrf_token %}
 
-  {% for hidden_field in form.hidden_fields %}
-  {{ hidden_field }}
-  {% endfor %}
-
 <!--  <div class="form-group mt-4 mb-5 mx-auto">-->
 <!--  <input class="form-control" type="text" placeholder="IMDb film url or key" id="imdb_input" name="imdb_input" aria-describedby="IMDbWeb">-->
 <!--  <a href="https://www.imdb.com/" target="blank" id="IMDbWeb" class="form-text text-left ml-2"><small>{% trans 'Go to imdb.com' %}</small></a>-->
@@ -39,9 +35,7 @@
       {% if form.filmdbs.errors %}
       {% render_field form.filmdbs class="form-control is-invalid" %}
       {% for error in form.filmdbs.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
       {% else %}
       {% render_field form.filmdbs class="form-control is-valid" %}

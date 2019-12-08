@@ -14,27 +14,7 @@
 
 
 <!--START ERRORS-->
-{% for hidden_field in form.hidden_fields %}
-  {% if hidden_field.errors %}
-    <div class="alert alert-danger form-message-error">
-      <ul>
-        {% for error in hidden_field.errors %}
-        <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-  {{ hidden_field }}
-{% endfor %}
-
 {% if form.errors %}
-
-  {% for error in form.non_field_errors %}
-    <div class="alert alert-danger form-message-error">
-      {{ error|escape }}
-    </div>
-  {% endfor %}
-
   {% for field in form %}
     {% if field.label == 'agree_terms' %}
       {% for error in field.errors %}
@@ -44,7 +24,6 @@
       {% endfor %}
     {% endif %}
   {% endfor %}
-
 {% endif %}
 <!--END ERRORS-->
 
@@ -54,10 +33,6 @@
 
 <form id="formSubmit" class="form-standard" method="POST" novalidate>
   {% csrf_token %}
-
-  {% for hidden_field in form.hidden_fields %}
-  {{ hidden_field }}
-  {% endfor %}
 
   <div class="form-inputs">
 
@@ -69,9 +44,7 @@
       {% if form.email.errors %}
       {% render_field form.email class="form-control is-invalid" %}
       {% for error in form.email.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
       {% else %}
       {% render_field form.email class="form-control is-valid" %}
@@ -89,9 +62,7 @@
       {% if form.username.errors %}
       {% render_field form.username class="form-control is-invalid" %}
       {% for error in form.username.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
       {% else %}
       {% render_field form.username class="form-control is-valid" %}
@@ -109,12 +80,10 @@
       {% if form.password1.errors %}
       {% render_field form.password1 class="form-control is-invalid" %}
       {% for error in form.password1.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
       {% else %}
-      {% render_field form.password1 class="form-control" %}
+      {% render_field form.password1 class="form-control is-valid" %}
       {% endif %}
       {% else %}
       {% render_field form.password1 class="form-control" %}
@@ -129,12 +98,10 @@
       {% if form.password2.errors %}
       {% render_field form.password2 class="form-control is-invalid" %}
       {% for error in form.password2.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
       {% else %}
-      {% render_field form.password2 class="form-control" %}
+      {% render_field form.password2 class="form-control is-valid" %}
       {% endif %}
       {% else %}
       {% render_field form.password2 class="form-control" %}

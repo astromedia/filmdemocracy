@@ -32,10 +32,6 @@
 <form id="formSubmit" class="form-standard form-meeting" method="POST" novalidate>
   {% csrf_token %}
 
-  {% for hidden_field in form.hidden_fields %}
-  {{ hidden_field }}
-  {% endfor %}
-
   <div class="form-inputs">
 
     <!--NAME-->
@@ -53,9 +49,7 @@
       {% render_field form.name class="form-control" %}
       {% endif %}
       {% for error in form.name.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
     </div>
 
@@ -74,9 +68,7 @@
       {% render_field form.place class="form-control" %}
       {% endif %}
       {% for error in form.place.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
     </div>
 
@@ -101,9 +93,7 @@
           {% render_field form.date class="form-control date-field" type="date" %}
           {% endif %}
           {% for error in form.date.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
+          <div class="invalid-feedback">{{ error }}</div>
           {% endfor %}
         </div>
 
@@ -123,9 +113,7 @@
           {% render_field form.time_start class="form-control time-field" type="time" %}
           {% endif %}
           {% for error in form.time_start.errors %}
-          <div class="invalid-feedback">
-            {{ error }}
-          </div>
+          <div class="invalid-feedback">{{ error }}</div>
           {% endfor %}
         </div>
 
@@ -148,9 +136,7 @@
       {% render_field form.description class="form-control description-text" %}
       {% endif %}
       {% for error in form.description.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
+      <div class="invalid-feedback">{{ error }}</div>
       {% endfor %}
     </div>
 
@@ -243,9 +229,11 @@
 
           <form method="POST" action="{% url 'democracy:delete_meeting' club.id meeting.id %}" class="text-center">
             {% csrf_token %}
+
             <button type="submit" class="btn btn-outline-danger mx-3">
               {% trans 'Confirm' %}
             </button>
+
           </form>
 
         </div>
