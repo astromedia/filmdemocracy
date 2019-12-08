@@ -108,6 +108,7 @@ class FilmSeenView(UserPassesTestMixin, generic.FormView):
         for member in members:
             film.seen_by.add(member)
         film.seen = True
+        film.marked_seen_by = self.request.user
         film.save()
         self.create_notifications(self.request.user, club, film)
         messages.success(self.request, _('Film marked as seen.'))

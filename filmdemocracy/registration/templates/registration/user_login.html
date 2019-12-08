@@ -26,11 +26,11 @@
 
 <!--START: USER DOES NOT HAVE ACCESS-->
 {% if next %}
-<div class="alert alert-danger form-message" role="alert">
+<div class="alert alert-danger form-message-error" role="alert">
   {% if user.is_authenticated %}
     {% trans 'Your account does not have access to this page. To continue, log in to an account with access.' %}
   {% else %}
-    {% trans 'Sorry, you need to log in to see this page.' %}
+    {% trans 'You need to log in to see this page.' %}
   {% endif %}
 </div>
 {% endif %}
@@ -39,22 +39,34 @@
 
 <!--START ERRORS-->
 {% for hidden_field in form.hidden_fields %}
-{% if hidden_field.errors %}
-<ul>
-  {% for error in hidden_field.errors %}
-  <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
-{{ hidden_field }}
+  {% if hidden_field.errors %}
+    <div class="alert alert-danger form-message-error">
+      <ul>
+        {% for error in hidden_field.errors %}
+        <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  {{ hidden_field }}
 {% endfor %}
 
 {% if form.errors %}
-{% for error in form.non_field_errors %}
-<div class="alert alert-danger form-message">
-  {{ error|escape }}
-</div>
-{% endfor %}
+
+  {% for error in form.non_field_errors %}
+    <div class="alert alert-danger form-message-error">
+      {{ error|escape }}
+    </div>
+  {% endfor %}
+
+<!--  {% for field in form %}-->
+<!--    {% for error in field.errors %}-->
+<!--      <div class="alert alert-danger form-message-error">-->
+<!--        <strong>{{ error|escape }}</strong>-->
+<!--      </div>-->
+<!--    {% endfor %}-->
+<!--  {% endfor %}-->
+
 {% endif %}
 <!--END ERRORS-->
 
@@ -79,11 +91,11 @@
       {% if form.is_bound %}
       {% if form.username.errors %}
       {% render_field form.username class="form-control is-invalid" %}
-      {% for error in form.username.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-      {% endfor %}
+        {% for error in form.username.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
       {% else %}
       {% render_field form.username class="form-control is-valid" %}
       {% endif %}
@@ -98,15 +110,15 @@
         (<a href="{% url 'registration:password_reset' %}">{% trans 'Forgotten password?' %}</a>)
       </div>
       {% if form.is_bound %}
-      {% if field.errors %}
+      {% if form.password.errors %}
       {% render_field form.password class="form-control is-invalid" %}
-      {% for error in form.password.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-      {% endfor %}
+        {% for error in form.password.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+        {% endfor %}
       {% else %}
-      {% render_field form.password class="form-control is-valid" %}
+      {% render_field form.password class="form-control" %}
       {% endif %}
       {% else %}
       {% render_field form.password class="form-control" %}

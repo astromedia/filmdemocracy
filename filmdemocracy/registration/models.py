@@ -27,7 +27,7 @@ class User(AbstractUser):
     profile_image = models.ImageField(_('user profile image'), upload_to=get_profile_image_path, blank=True, null=True)
     # first_name = models.CharField(_('first name'), max_length=30, null=True, blank=True,)
     # last_name = models.CharField(_('last name'), max_length=150, null=True, blank=True,)
-    # date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     last_updated = models.DateField('user last update date', auto_now=True)
     comment = models.TextField('site admin comments about the user', null=True, blank=True, max_length=1000)
 

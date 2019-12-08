@@ -145,13 +145,14 @@ class Command(BaseCommand):
         club_members = club.members.filter(is_active=True)
         for film in club.film_set.all():
             if random.random() < 0.2:
+                random_member = random.choice(club_members)
                 film.seen_date = datetime.date.today()
                 for member in club_members:
                     if random.random() < 0.5:
                         film.seen_by.add(member)
                 film.seen = True
+                film.marked_seen_by = random_member
                 film.save()
-                random_member = random.choice(club_members)
                 notif_members = club.members.filter(is_active=True).exclude(id=random_member.id)
                 for notif_member in notif_members:
                     Notification.objects.create(type=Notification.SEEN_FILM,
@@ -171,6 +172,7 @@ class Command(BaseCommand):
             self.stdout.write(f'  Creating club: {club_name}')
             club = Club.objects.create(
                 id=random_club_id_generator(),
+                founder=user_creators[i],
                 name=CLUB_NAMES[i],
                 short_description=LORE_100,
             )

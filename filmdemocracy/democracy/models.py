@@ -39,6 +39,7 @@ class Club(models.Model):
         null=True,
     )
     logo_image = models.ImageField(_('club logo image'), upload_to=get_club_logo_image_path, blank=True, null=True)
+    founder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='founder')
     members = models.ManyToManyField(User)
     admin_members = models.ManyToManyField(User, related_name='admin_members')
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
@@ -179,6 +180,7 @@ class Film(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     db = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
     seen = models.BooleanField(default=False)
+    marked_seen_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='marked_seen_by')
     seen_by = models.ManyToManyField(User, related_name='seen_by')
     seen_date = models.DateField('date seen', null=True, blank=True)
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)

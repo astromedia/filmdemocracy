@@ -38,12 +38,14 @@
 .form-standard .form-inputs .form-input-field .label {
 }
 
-.form-standard .form-inputs .form-input-field .invalid-feedback{
+.form-standard .form-inputs .form-input-field .invalid-feedback {
   width: 100%;
-  padding: 5px;
   margin: auto;
-  margin-top: 0px;
-  margin-bottom: -29px;
+  padding-top: 4px;
+}
+
+.form-standard .form-inputs .form-input-field .invalid-feedback:last-of-type {
+  margin-bottom: -20px;
 }
 
 .form-standard .form-inputs .form-input-field .form-control {
@@ -65,6 +67,13 @@
 .form-message {
   padding: 15px 10px 15px 10px;
   margin: 30px 10px 25px 10px;
+  text-align: center;
+  font-weight: bold;
+ }
+
+.form-message-error {
+  padding: 15px 10px 15px 10px;
+  margin: 10px;
   text-align: center;
   font-weight: bold;
  }

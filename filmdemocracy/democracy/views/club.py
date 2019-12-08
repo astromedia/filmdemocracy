@@ -3,7 +3,7 @@ import hashlib
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -41,6 +41,7 @@ class CreateClubView(generic.FormView):
         new_club = Club.objects.create(
             id=random_club_id_generator(),
             name=form.cleaned_data['name'],
+            founder=user,
             short_description=form.cleaned_data['short_description'],
             logo_image=form.cleaned_data['logo_image'],
         )
@@ -655,6 +656,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberConfirmView(generic.FormView):
+    # template_name = 'democracy/invite_new_member_confirm.html'
     form_class = forms.ConfirmForm
     invitation = None
     valid_link = False
@@ -674,7 +676,7 @@ class InviteNewMemberConfirmView(generic.FormView):
                     self.valid_link = True
                     return super().dispatch(*args, **kwargs)
         # Display the "invitation link not valid" error page.
-        return self.render_to_response(self.get_context_data())
+        return render(self.request, self.template_name, context=self.get_context_data())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
