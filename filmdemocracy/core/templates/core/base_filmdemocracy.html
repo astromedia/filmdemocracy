@@ -47,7 +47,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 
+<!--START: NAVBAR-->
 {% include "core/navbar.html" %}
+<!--END: NAVBAR-->
 
 
 <main role="main" class="container container-base">
@@ -58,31 +60,32 @@
 </main>
 
 
+<!--START: NAVBAR-->
 {% include "core/footer.html" %}
+<!--END: NAVBAR-->
 
 
 <!--START: MODAL MESSAGES-->
 {% if messages %}
   {% for message in messages %}
 
-    <div class="modal fade" id="messagesModal{{ forloop.counter }}" tabindex="-1" role="dialog">
+    <div class="modal fade modal-message" id="messagesModal_{{ forloop.counter }}" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-          <div class="modal-body alert {{ message.tags }} text-center p-auto m-0" role="alert">
-            <div class="p-3">
-              <p><strong>{{ message }}</strong></p>
-            </div>
-            <button type="button" class="btn btn-sm btn-close-message-modal" data-dismiss="modal">
-              {% trans 'Close' %}
-            </button>
+
+          <div class="modal-body {{ message.tags }} text-center border-bottom">
+            <span>{{ message }}</span>
           </div>
+
+          <button type="button" class="btn btn-close-message-modal strong-link" data-dismiss="modal">OK</button>
+
         </div>
       </div>
     </div>
 
     <script language="javascript" type="text/javascript">
     $(document).ready(function(){
-      $("#messagesModal{{ forloop.counter }}").modal('show');
+      $("#messagesModal_{{ forloop.counter }}").modal('show');
     });
     </script>
 
@@ -91,134 +94,9 @@
 <!--END: MODAL MESSAGES-->
 
 
-
-<!--START ERRORS-->
-<!--{% for hidden_field in form.hidden_fields %}-->
-<!--  {% if hidden_field.errors %}-->
-<!--    <div class="alert alert-danger form-message-error">-->
-<!--      <ul>-->
-<!--        {% for error in hidden_field.errors %}-->
-<!--        <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>-->
-<!--        {% endfor %}-->
-<!--      </ul>-->
-<!--    </div>-->
-<!--  {% endif %}-->
-<!--  {{ hidden_field }}-->
-<!--{% endfor %}-->
-
-<!--{% if form.errors %}-->
-<!--  {% for error in form.non_field_errors %}-->
-<!--    <div class="alert alert-danger form-message-error">-->
-<!--      {{ error|escape }}-->
-<!--    </div>-->
-<!--  {% endfor %}-->
-<!--  {% for field in form %}-->
-<!--    {% for error in field.errors %}-->
-<!--      <div class="alert alert-danger form-message-error">-->
-<!--        <strong>{{ error|escape }}</strong>-->
-<!--      </div>-->
-<!--    {% endfor %}-->
-<!--  {% endfor %}-->
-<!--{% endif %}-->
-<!--END ERRORS-->
-
-
-<!--START: MODAL HIDDEN FIELD ERRORS-->
-{% if form %}
-  {% for hidden_field in form.hidden_fields %}
-    {% if hidden_field.errors %}
-
-      <div class="modal fade" id="hiddenFieldsErrorModal_{{ forloop.counter }}" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-body alert alert-danger text-center p-auto m-0" role="alert">
-              <div class="p-3">
-                <ul>
-                  {% for error in hidden_field.errors %}
-                  <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
-                  {% endfor %}
-                </ul>
-              </div>
-              <button type="button" class="btn btn-sm btn-close-message-modal" data-dismiss="modal">
-                {% trans 'Close' %}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <script language="javascript" type="text/javascript">
-      $(document).ready(function(){
-        $("#hiddenFieldsErrorModal_{{ forloop.counter }}").modal('show');
-      });
-      </script>
-
-    {% endif %}
-  {% endfor %}
-{% endif %}
-<!--END: MODAL HIDDEN FIELD ERRORS-->
-
-
-<!--START: MODAL FORM FIELD ERRORS-->
-<!--  {% for field in form %}-->
-<!--    {% for error in field.errors %}-->
-
-<!--    <div class="modal fade" id="formErrorModal{{ forloop.parentloop.counter }}{{ forloop.counter }}" tabindex="-1" role="dialog">-->
-<!--      <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--        <div class="modal-content">-->
-<!--          <div class="modal-body alert alert-danger text-center p-auto m-0" role="alert">-->
-<!--            <div class="p-3">-->
-<!--              <p><strong>({{ field.label }}) {{ error|escape }}</strong></p>-->
-<!--            </div>-->
-<!--            <button type="button" class="btn btn-sm btn-close-message-modal" data-dismiss="modal">-->
-<!--              {% trans 'Close' %}-->
-<!--            </button>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--    <script language="javascript" type="text/javascript">-->
-<!--    $(document).ready(function(){-->
-<!--      $("#formErrorModal{{ forloop.parentloop.counter }}{{ forloop.counter }}").modal('show');-->
-<!--    });-->
-<!--    </script>-->
-
-<!--    {% endfor %}-->
-<!--  {% endfor %}-->
-<!--END: MODAL FORM FIELD ERRORS-->
-
-
-<!--START: MODAL FORM NON FIELD ERRORS-->
-{% if form %}
-  {% if form.errors %}
-    {% for error in form.non_field_errors %}
-
-      <div class="modal fade" id="formNoFieldErrorModal_{{ forloop.counter }}" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-body alert alert-danger text-center p-auto m-0" role="alert">
-              <div class="p-3">
-                <p><strong>{{ error|escape }}</strong></p>
-              </div>
-              <button type="button" class="btn btn-sm btn-close-message-modal" data-dismiss="modal">
-                {% trans 'Close' %}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <script language="javascript" type="text/javascript">
-      $(document).ready(function(){
-        $("#formNoFieldErrorModal_{{ forloop.counter }}").modal('show');
-      });
-      </script>
-
-    {% endfor %}
-  {% endif %}
-{% endif %}
-<!--END: MODAL FORM NON FIELD ERRORS-->
+<!--START: FORM ERRORS-->
+{% include "core/form_errors.html" %}
+<!--END: FORM ERRORS-->
 
 
 <!--START: SPINNER BUTTON-->
@@ -235,6 +113,11 @@ $(document).ready(function() {
     });
 });
 </script>
+<!--END: SPINNER BUTTON-->
+
+
+<!--START: SPINNER BUTTON-->
+<script src="{% static 'core/js/spinner_button.js' %}"></script>
 <!--END: SPINNER BUTTON-->
 
 

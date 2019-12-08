@@ -65,7 +65,7 @@
     <!--NAME-->
     <div class="form-input-field form-name">
       <div class="label">
-        {{ form.name.label_tag }}
+        {% trans 'Club name' %}
       </div>
       {% if form.is_bound %}
       {% if form.name.errors %}
@@ -85,7 +85,7 @@
     <!--DESCRIPTION-->
     <div class="form-input-field form-short-description">
       <div class="label">
-        {{ form.short_description.label_tag }}
+        {% trans 'Short description (optional)' %}
       </div>
       {% if form.is_bound %}
       {% if form.short_description.errors %}

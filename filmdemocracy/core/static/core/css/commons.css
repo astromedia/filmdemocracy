@@ -61,35 +61,42 @@ a:hover {
   cursor: pointer;
 }
 
-.btn-cancel {
-  text-align: center;
-  margin-top: 50px;
+
+/* Modal messages
+-------------------------------------------------- */
+
+.modal-message .modal-content {
+  border: 0px;
 }
 
-.btn-cancel .btn {
-  color: #282828;
-  background-color: #fafafa;
-  border: 1px solid #6c737d;
+.modal-message .modal-body {
+  padding: 1.5rem;
+  margin: 0px;
+  border: 0px;
+  font-weight: bold;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+  background-color: white !important;
 }
 
-.btn-cancel .btn:hover {
-  color: #fff;
+.modal-message .modal-footer {
+  padding: 0;
+}
+
+.modal-message .btn-close-message-modal {
+  width: 100%;
+  font-size: 1rem !important;
+  line-height: 2rem !important;
+  padding: 1rem;
+  border: 0px;
+  border-bottom-left-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+  font-weight: bold;
+  background-color: white;
+}
+
+.modal-message .btn-close-message-modal:hover {
   text-decoration: none;
-  border: 1px solid #282828;
-  background-color: #282828;
-}
-
-.btn-close-message-modal {
-  color: #282828;
-  background-color: rgba(255, 255, 255, 0.6);
-  border: 1px solid #6c737d;
-}
-
-.btn-close-message-modal:hover {
-  color: #fff;
-  text-decoration: none;
-  border: 1px solid #282828;
-  background-color: #282828;
 }
 
 

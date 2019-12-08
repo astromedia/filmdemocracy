@@ -7,10 +7,10 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django.urls import reverse_lazy
 
-from filmdemocracy.registration.models import User
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 
+from filmdemocracy.registration.models import User
 
 CLUB_ID_N_DIGITS = 6
 FILM_ID_N_DIGITS = 6
@@ -29,16 +29,16 @@ class Club(models.Model):
     \r##### Here is a list:\r1. Item #1\r2. Item #2""")
 
     id = models.CharField(primary_key=True, unique=True, max_length=CLUB_ID_N_DIGITS)
-    name = models.CharField(_('Club name'), max_length=50)
-    short_description = models.CharField(_('Short description (optional)'), max_length=120)
+    name = models.CharField('club name', max_length=50)
+    short_description = models.CharField('short description', max_length=120)
     panel = MarkdownxField(
-        _('Club panel: description, rules, etc. (optional)'),
+        'club panel: description, rules, etc. (optional)',
         max_length=20000,
         default=DEFAULT_PANEL_STRING,
         blank=True,
         null=True,
     )
-    logo_image = models.ImageField(_('club logo image'), upload_to=get_club_logo_image_path, blank=True, null=True)
+    logo_image = models.ImageField('club logo image', upload_to=get_club_logo_image_path, blank=True, null=True)
     founder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='founder')
     members = models.ManyToManyField(User)
     admin_members = models.ManyToManyField(User, related_name='admin_members')
@@ -61,7 +61,7 @@ class Invitation(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     inviter = models.ForeignKey(User, on_delete=models.CASCADE)
     hash_invited_email = models.CharField(max_length=64)
-    invitation_text = models.CharField(_('Send message with invitation (optional)'), max_length=500)
+    invitation_text = models.CharField('invitation message (optional)', max_length=500)
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
 
     def __str__(self):
@@ -83,12 +83,12 @@ class Meeting(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    name = models.CharField(_('Name'), max_length=50)
-    description = models.CharField(_('Description (optional)'), default='', max_length=5000)
+    name = models.CharField('name', max_length=50)
+    description = models.CharField('description (optional)', default='', max_length=5000)
     organizer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    place = models.CharField(_('Place'), max_length=100)
-    date = models.DateField(_('Date'))
-    time_start = models.TimeField(_('Time (optional)'), null=True, blank=True)
+    place = models.CharField('place', max_length=100)
+    date = models.DateField('date')
+    time_start = models.TimeField('time start (optional)', null=True, blank=True)
     active = models.BooleanField(default=True)
     members_yes = models.ManyToManyField(User, related_name='members_yes')
     members_maybe = models.ManyToManyField(User, related_name='members_maybe')

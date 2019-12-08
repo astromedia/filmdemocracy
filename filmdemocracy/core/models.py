@@ -2,8 +2,8 @@ import uuid
 
 from django.db import models
 
-from filmdemocracy.democracy.models import Club
 from filmdemocracy.registration.models import User
+from filmdemocracy.democracy.models import Club
 
 
 class Notification(models.Model):

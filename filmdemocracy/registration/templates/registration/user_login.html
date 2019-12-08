@@ -48,7 +48,7 @@
 
     <div class="form-input-field">
       <div class="label">
-        {{ form.username.label_tag }}
+        {% trans 'Email' %}
       </div>
       {% if form.is_bound %}
       {% if form.username.errors %}
@@ -66,7 +66,7 @@
 
     <div class="form-input-field">
       <div class="label">
-        {{ form.password.label_tag }}
+        {% trans 'Password' %}
         (<a href="{% url 'registration:password_reset' %}">{% trans 'Forgotten password?' %}</a>)
       </div>
       {% if form.is_bound %}

@@ -38,7 +38,7 @@
 
     <div class="form-input-field">
       <div class="label">
-        {{ form.email.label_tag }}
+        {% trans 'Email' %}
       </div>
       {% if form.is_bound %}
       {% if form.email.errors %}
@@ -56,7 +56,7 @@
 
     <div class="form-input-field">
       <div class="label">
-        {{ form.username.label_tag }}
+        {% trans 'Username' %}
       </div>
       {% if form.is_bound %}
       {% if form.username.errors %}
@@ -74,7 +74,7 @@
 
     <div class="form-input-field">
       <div class="label">
-        {{ form.password1.label_tag }}
+        {% trans 'Password' %}
       </div>
       {% if form.is_bound %}
       {% if form.password1.errors %}
@@ -92,7 +92,7 @@
 
     <div class="form-input-field">
       <div class="label">
-        {{ form.password2.label_tag }}
+        {% trans 'Password (confirmation)' %}
       </div>
       {% if form.is_bound %}
       {% if form.password2.errors %}

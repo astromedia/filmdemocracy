@@ -37,7 +37,7 @@
     <!--NAME-->
     <div class="form-input-field">
       <div class="label">
-        {{ form.name.label_tag }}
+        {% trans 'Name' %}
       </div>
       {% if form.is_bound %}
       {% if form.name.errors %}
@@ -56,7 +56,7 @@
     <!--PLACE-->
     <div class="form-input-field">
       <div class="label">
-        {{ form.place.label_tag }}
+        {% trans 'Place' %}
       </div>
       {% if form.is_bound %}
       {% if form.place.errors %}
@@ -81,7 +81,7 @@
         <div class="col-6">
 
           <div class="label">
-            {{ form.date.label_tag }}
+            {% trans 'Date' %}
           </div>
           {% if form.is_bound %}
           {% if form.date.errors %}
@@ -101,7 +101,7 @@
         <div class="col-6">
 
           <div class="label">
-            {{ form.time_start.label_tag }}
+            {% trans 'Time (optional)' %}
           </div>
           {% if form.is_bound %}
           {% if form.time_start.errors %}
@@ -124,7 +124,7 @@
     <!--DESCRIPTION-->
     <div class="form-input-field form-description">
       <div class="label">
-        {{ form.description.label_tag }}
+        {% trans 'Description (optional)' %}
       </div>
       {% if form.is_bound %}
       {% if form.description.errors %}
