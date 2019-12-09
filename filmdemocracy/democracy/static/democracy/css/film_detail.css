@@ -1,13 +1,3 @@
-/* General page styles
--------------------------------------------------- */
-body {
-}
-
-#club-banner-navigation {
-  box-shadow: none;
-}
-
-
 /* Film banner
 -------------------------------------------------- */
 .container-film-banner {
@@ -35,7 +25,14 @@ body {
 
 .container-film-banner .proposed-by {
   font-size: 0.8rem;
-  margin: 0.25rem 0rem 1rem 0rem;
+  margin: 0.25rem 0rem;
+}
+
+.container-film-banner .user-vote {
+  font-weight: bold;
+  padding: 0.2rem 0.6rem;
+  margin: 0.5rem 0rem 0.75rem 0rem;
+  border-radius: 0.25rem;
 }
 
 .container-film-banner .film-data {
@@ -66,14 +63,17 @@ body {
 
 .voted-positive {
   color: #155724;
+  background-color: #d4edda;
 }
 
 .voted-neutral {
   color: #856404;
+  background-color: #fff3cd;
 }
 
 .voted-negative {
   color: #721c24;
+  background-color: #f8d7da;
 }
 
 

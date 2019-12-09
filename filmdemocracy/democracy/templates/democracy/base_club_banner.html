@@ -14,53 +14,43 @@
 
 
   <!--START: CLUB NAME-->
-  <a href="{% url 'democracy:club_detail' club.id %}">{{ club.name }}</a>
+  <span>{{ club.name }}</span>
   <!--END: CLUB NAME-->
 
 
   <!--START: CLUB LINKS-->
   <div class="club-banner-links row justify-content-between align-items-center mx-auto">
 
-    <div class="col col-6">
+    <div class="col col-4">
+
+      <form class="banner-link" action="{% url 'democracy:club_detail' club.id %}">
+        <button type="submit" class="btn btn-block">{% trans 'Club' %}</button>
+      </form>
+
+    </div>
+
+
+    <div class="col col-4">
 
       <form class="banner-link"
-            action="{% if page == 'candidate_films' %}
-                    {% url 'democracy:club_detail' club.id %}
-                    {% elif page == 'film_detail' %}
+            action="{% if page == 'film_detail' %}
                     {% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:order_option|add:display_option %}
                     {% else %}
                     {% url 'democracy:candidate_films' club_id=club.id %}
                     {% endif %}">
 
-        <button type="submit" class="btn btn-block">
-          {% if page == 'candidate_films' %}
-          {% trans 'Club' %}
-          {% else %}
-          {% trans 'Films' %}
-          {% endif %}
-        </button>
+        <button type="submit" class="btn btn-block">{% trans 'Films' %}</button>
 
       </form>
 
     </div>
 
 
-    <div class="col col-6">
+    <div class="col col-4">
 
-      <form class="banner-link"
-            action="{% if page == 'ranking_generator' or page == 'ranking_results'%}
-                    {% url 'democracy:club_detail' club.id %}
-                    {% else %}
-                    {% url 'democracy:ranking_generator' club.id %}
-                    {% endif %}">
+      <form class="banner-link" action="{% url 'democracy:ranking_generator' club.id %}">
 
-        <button type="submit" class="btn btn-block">
-          {% if page == 'ranking_generator' or page == 'ranking_results' %}
-          {% trans 'Club' %}
-          {% else %}
-          {% trans 'Ranking' %}
-          {% endif %}
-        </button>
+        <button type="submit" class="btn btn-block">{% trans 'Ranking' %}</button>
 
       </form>
 
@@ -77,33 +67,10 @@
 {% endblock %}
 
 
-<script>
-window.onscroll = function() {scrollFunction()};
+<!--START: SCROLL FUNCTION-->
+<script src="{% static 'democracy/js/scroll-function.js' %}"></script>
+<!--END: SCROLL FUNCTION-->
 
-function scrollFunction() {
-  if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
-    document.getElementById("club-banner-navigation").style.boxShadow = "0 0px 15px rgba(0, 0, 0, 0.75)";
-    document.getElementById("club-banner-navigation").style.backgroundColor = "#07080a";
-    document.getElementById("NavBar").style.boxShadow = "none";
-  } else {
-    document.getElementById("club-banner-navigation").style.boxShadow = "none";
-    document.getElementById("club-banner-navigation").style.backgroundColor = "#121317";
-    document.getElementById("NavBar").style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.85)";
-  };
-
-  if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 200) {
-    document.getElementById("btn-back-to-top").style.display = "block";
-  } else {
-    document.getElementById("btn-back-to-top").style.display = "none";
-  };
-
-}
-
-function topFunction() {
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
-</script>
 
 {% endblock %}
 

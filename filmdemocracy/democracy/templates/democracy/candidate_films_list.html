@@ -176,6 +176,8 @@
               <div class="media-body text-center"></div>
               {% if candidate.vote == 'positive' %}
               <img class="align-self-center vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+              {% elif candidate.vote == 'neutral' %}
+              <img class="align-self-center vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsneutralwhite.svg'%}">
               {% elif candidate.vote == 'negative' %}
               <img class="align-self-center vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
               {% endif %}
@@ -225,15 +227,14 @@
         <!--VOTE COLUMN-->
         <td class="text-center align-middle">
           {% if candidate.vote == 'positive' %}
-            <img class="align-self-center rounded-circle hand-icon"
-                 src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
-            {% elif candidate.vote == 'negative' %}
-            <img class="align-self-center rounded-circle hand-icon"
-                 src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
-            {% else %}
-            <img class="align-self-center rounded-circle" style="height: 29px;"
-                 src="{% static 'democracy/svg/questionwhite.svg'%}">
-            {% endif %}
+          <img class="align-self-center rounded-circle hand-icon" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+          {% elif candidate.vote == 'neutral' %}
+          <img class="align-self-center rounded-circle hand-icon" src="{% static 'democracy/svg/thumbsneutralwhite.svg'%}">
+          {% elif candidate.vote == 'negative' %}
+          <img class="align-self-center rounded-circle hand-icon" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+          {% else %}
+          <img class="align-self-center rounded-circle" style="height: 29px;" src="{% static 'democracy/svg/questionwhite.svg'%}">
+          {% endif %}
         </td>
 
         <!--TITLE COLUMN-->

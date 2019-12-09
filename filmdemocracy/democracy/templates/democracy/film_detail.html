@@ -31,6 +31,11 @@
     {% endif %}
   </div>
 
+  <!--USER VOTE-->
+  <div class="user-vote voted-{{ user_vote.vote_karma }}">
+    <span class="text-body">{% trans 'Voted:' %}</span> <span class="voted-{{ user_vote.vote_karma }}">{{ user_vote.choice_text }}</span>
+  </div>
+
   <div class="film-data">
 
     <!--START: FILM META INFO-->
@@ -65,19 +70,19 @@
 
         <!--IMDB LINK-->
         <div class="film-meta">
-          <a class="green-color blue-color-hover" href="{{ film.db.imdb_url }}" target="blank">{% trans 'IMDb' %}</a>
-          {% trans 'rating' %}: <strong>{{ film.db.imdb_rating }}</strong><small>/10</small>
+          <a class="green-color blue-color-hover" href="{{ film.db.imdb_url }}" target="blank"><strong>{% trans 'IMDb' %}</strong></a>:
+          <strong>{{ film.db.imdb_rating }}</strong><small>/10</small>
         </div>
 
         <!--METACRITIC LINK-->
         <div class="film-meta">
-          <a class="green-color blue-color-hover" href="{{ film.db.metascore_url }}" target="blank">{% trans 'Metacritic' %}</a>
-          {% trans 'rating' %}: <strong>{{ film.db.metascore }}</strong><small>/100</small>
+          <a class="green-color blue-color-hover" href="{{ film.db.metascore_url }}" target="blank"><strong>{% trans 'Metacritic' %}</strong></a>:
+          <strong>{{ film.db.metascore }}</strong><small>/100</small>
         </div>
 
-        <!--USER VOTE-->
+        <!--VOTE BUTTON-->
         {% if not film.seen %}
-        <div class="mt-3">
+        <div class="mt-3 mb-1">
 
           <button type="button" class="btn btn-standard btn-vote" data-toggle="modal" data-target="#userVoteModal">
             {% if user_vote %}
@@ -343,6 +348,8 @@
       {% endif %}
       {% if vote.vote_karma == 'positive' %}
       <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+      {% elif vote.vote_karma == 'neutral' %}
+      <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsneutralwhite.svg'%}">
       {% elif vote.vote_karma == 'negative' %}
       <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
       {% endif %}

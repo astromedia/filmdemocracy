@@ -232,8 +232,10 @@ class Vote(models.Model):
 
     @property
     def vote_karma(self):
-        if self.choice in [self.OMG, self.YES, self.SEENOK, self.MEH]:
+        if self.choice in [self.OMG, self.YES, self.SEENOK]:
             return 'positive'
+        elif self.choice == self.MEH:
+            return 'neutral'
         elif self.choice in [self.NO, self.SEENNO, self.VETO]:
             return 'negative'
 

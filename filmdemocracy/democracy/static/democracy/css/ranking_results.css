@@ -36,6 +36,14 @@
   padding: 2px;
 }
 
+.table th {
+  padding: 0.4rem;
+}
+
+.table td {
+  padding: 0.4rem;
+}
+
 .results-box {
   background: white !important;
 }
@@ -47,10 +55,13 @@
 }
 
 .results-box .row .col {
-  width: 25%;
-  min-width: 40px;
-  max-width: 100%;
-  margin: auto;
+  margin: 0px;
+  padding: 0px;
+}
+
+.results-box .row .col .media {
+  width: auto;
+  margin: 0px;
   padding: 0px;
 }
 

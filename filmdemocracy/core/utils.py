@@ -122,6 +122,7 @@ class RankingFilm:
         self.film_voters = None
         self.abstentionists = None
         self.positive_votes = None
+        self.neutral_votes = None
         self.negative_votes = None
         self.veto = False
         self.points = None
@@ -133,6 +134,7 @@ class RankingFilm:
             self.film_voters = [vote.user for vote in self.film_votes]
             self.abstentionists = self.get_abstentionists()
             self.positive_votes = self.get_positive_votes()
+            self.neutral_votes = self.get_neutral_votes()
             self.negative_votes = self.get_negative_votes()
             self.veto = self.veto_test()
             self.points = self.get_points()
@@ -151,6 +153,13 @@ class RankingFilm:
             if vote.user in self.participants and vote.vote_karma is 'positive':
                 positive_votes.append(vote)
         return positive_votes
+
+    def get_neutral_votes(self):
+        neutral_votes = []
+        for vote in self.film_votes:
+            if vote.user in self.participants and vote.vote_karma is 'neutral':
+                neutral_votes.append(vote)
+        return neutral_votes
 
     def get_negative_votes(self):
         negative_votes = []
@@ -200,7 +209,7 @@ class RankingFilm:
     def get_points(self):
         points_mapping = self.ranking_config['points_mapping']
         points = 0
-        for vote in self.positive_votes + self.negative_votes:
+        for vote in self.positive_votes + self.neutral_votes + self.negative_votes:
             points += points_mapping[vote.choice]
         return points
 
@@ -271,8 +280,9 @@ class RankingGenerator:
                 ranking_film.process_votes()
                 ranking_results.append({
                     'film': ranking_film.film,
-                    'duration': ranking_film.film.db.duration_str,
+                    'duration': str(ranking_film.film.db.duration_in_mins_int),
                     'positive_votes': ranking_film.positive_votes,
+                    'neutral_votes': ranking_film.neutral_votes,
                     'negative_votes': ranking_film.negative_votes,
                     'abstentionists': ranking_film.abstentionists,
                     'points': ranking_film.points,
