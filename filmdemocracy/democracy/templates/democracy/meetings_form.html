@@ -141,21 +141,18 @@
     </div>
 
     <!--START: SEND NOTIFICATION EMAILS-->
-    <div class="form-input-field" style="max-width: 99%">
+    <div class="form-input-field form-notifications">
 
       <!--NEW MEETING-->
       {% if new_meeting %}
 
-      <div class="row align-items-center justify-content-center">
-        <div class="col col-auto my-2">
+      <div class="d-flex flex-row justify-content-center my-2">
+        <div class="label">
           {% trans 'Send notification email to club members:' %}
         </div>
-        <div class="col col-auto my-2">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" name="send_spam" id="send_spam"
-                   value="send_spam" checked>
-            <label class="custom-control-label" for="send_spam"></label>
-          </div>
+        <div class="custom-control custom-switch ml-2">
+          <input type="checkbox" class="custom-control-input" name="send_spam" id="send_spam" value="send_spam" checked>
+          <label class="custom-control-label" for="send_spam"></label>
         </div>
       </div>
 
@@ -163,7 +160,7 @@
       {% else %}
 
       <div class="row align-items-start justify-content-center">
-        <div class="col col-auto my-2">
+        <div class="col col-auto my-2 label">
           {% trans 'Send notification email to:' %}
         </div>
         <div class="col col-auto text-left my-2">

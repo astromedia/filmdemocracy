@@ -143,6 +143,7 @@ USE_L10N = True
 USE_TZ = True
 TIME_ZONE = 'Europe/Madrid'  # TODO: use pytz
 
+# DATE_FORMAT = 'yyyy-MM-dd'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

@@ -26,9 +26,9 @@
 
     <!--START: NEW MEMBER EMAIL-->
     <div class="form-input-field">
-      <label>
+      <div class="label">
         {% trans 'Send invitation email to:' %}
-      </label>
+      </div>
       {% if form.is_bound %}
       {% if form.email.errors %}
       {% render_field form.email class="form-control is-invalid" %}
@@ -46,9 +46,9 @@
 
     <!--START: INVITATION TEXT-->
     <div class="form-input-field form-invitation-text">
-      <label>
+      <div class="label">
         {% trans 'Attach message with invitation (optional):' %}
-      </label>
+      </div>
       {% if form.is_bound %}
       {% if form.invitation_text.errors %}
       {% render_field form.invitation_text class="form-control invitation-text is-invalid" %}

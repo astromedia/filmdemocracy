@@ -63,13 +63,11 @@
     <!--USERNAME-->
     <div class="form-input-field">
 
-      <div class="row">
-        <div class="col-md-6 mb-1">
-          <div class="float-md-right">
-            <strong>{% trans 'Username:' %}</strong>
-          </div>
+      <div class="row mx-auto align-items-center">
+        <div class="col col-5 col-sm-6 p-1 text-right">
+          <strong>{% trans 'Username:' %}</strong>
         </div>
-        <div class="col-md-auto mb-1">
+        <div class="col col-7 col-sm-6 p-1 text-left">
           {{ user.username }}
         </div>
       </div>
@@ -79,25 +77,23 @@
     <!--EMAIL-->
     <div class="form-input-field">
 
-      <div class="row align-items-center">
-        <div class="col-md-6 mb-1">
-          <div class="float-md-right">
+      <div class="row mx-auto align-items-center">
+        <div class="col col-5 col-sm-6 p-1 text-right">
             <strong>{% trans 'Email:' %}</strong>
-          </div>
         </div>
-        <div class="col-md-auto mb-1">
-          <div class="form-email mx-auto">
+        <div class="col col-7 col-sm-6 p-1 text-left">
+          <div class="form-email">
             {% if form.is_bound %}
             {% if form.email.errors %}
-            {% render_field form.email class="form-control is-invalid" %}
+            {% render_field form.email class="form-control text-left is-invalid" %}
             {% for error in form.email.errors %}
             <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
             {% else %}
-            {% render_field form.email class="form-control is-valid" %}
+            {% render_field form.email class="form-control text-left is-valid" %}
             {% endif %}
             {% else %}
-            {% render_field form.email class="form-control" %}
+            {% render_field form.email class="form-control text-left" %}
             {% endif %}
           </div>
         </div>
@@ -108,13 +104,11 @@
     <!--PUBLIC EMAIL-->
     <div class="form-input-field">
 
-      <div class="row align-items-center">
-        <div class="col-6">
-          <div class="text-right">
+      <div class="row mx-auto align-items-center">
+        <div class="col col-5 col-sm-6 p-1 text-right">
             <strong>{% trans 'Public email:' %}</strong>
-          </div>
         </div>
-        <div class="col-auto">
+        <div class="col col-7 col-sm-6 p-1 text-left">
           <div class="custom-control custom-switch">
             {% if user.public_email %}
             <input type="checkbox" class="custom-control-input" name="public_email" id="public_email" value="public_email" checked>

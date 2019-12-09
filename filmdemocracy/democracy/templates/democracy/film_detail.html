@@ -181,7 +181,7 @@
 <!--START: FILM SEEN BY-->
 {% if film.seen %}
 
-<div class="seen-by-album border-top border-bottom shadow-sm">
+<div class="seen-by-album section-container border-top border-bottom shadow-sm">
 
   <div class="text-center font-weight-bold mb-3">
     <p>
@@ -223,112 +223,98 @@
 
 
 <!--START: COMMENTS-->
-<!--<p class="text-center font-weight-bold">-->
-<!--{% trans 'Comments' %} ({{ film_comments|length }})-->
-<!--</p>-->
+<div class="film-comments section-container border-top border-bottom shadow-sm">
 
+  <div class="font-weight-bold text-center mb-3">
+    {% trans 'Comments' %} ({{ film_comments|length }})
+  </div>
 
-<!--<div class="container-comments mx-auto">-->
+  <div class="container-posts" id="containerPosts">
 
-<!--  {% if film_comments %}-->
+  {% if film_comments %}
+    {% for comment in film_comments %}
 
-<!--  {% for comment in film_comments %}-->
+      <div class="media post">
 
-<!--  <div class="media post my-1 mx-2">-->
-<!--    <div class="align-self-start mr-3 user-image">-->
-<!--      {% if comment.user.profile_image %}-->
-<!--      <img class="border border-secondary rounded-circle" title="{{ comment.user.username }}"-->
-<!--           src="{{ comment.user.profile_image.url }}"-->
-<!--           alt="comment.user.profile_image not found">-->
-<!--      {% else %}-->
-<!--      <img class="border border-secondary rounded-circle" title="{{ comment.user.username }}"-->
-<!--           src="{% static 'registration/svg/user_no_profile_image.svg' %}"-->
-<!--           alt="comment.user.profile_image not found">-->
-<!--      {% endif %}-->
-<!--    </div>-->
-<!--    <div class="">-->
-<!--      <p class="my-0 post-text py-1 pl-2 pr-3 border rounded-lg">-->
-<!--        <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">-->
-<!--          {{ comment.user.username }}</a>:-->
-<!--        {% if comment.deleted %}-->
-<!--        <span class="text-muted"><em>{% trans 'Comment deleted.' %}</em></span>-->
-<!--        {% else %}-->
-<!--        <span>{{ comment.text }}</span>-->
-<!--        {% endif %}-->
-<!--      </p>-->
-<!--      <div class="small text-muted ml-1 my-0 py-0 post-footer">-->
+        {% if comment.user.profile_image %}
+        <img class="user-image rounded-circle" title="{{ comment.user.username }}" src="{{ comment.user.profile_image.url }}">
+        {% else %}
+        <img class="user-image rounded-circle" title="{{ comment.user.username }}" src="{% static 'registration/svg/user_no_profile_image.svg' %}">
+        {% endif %}
 
-<!--        {% if not comment.deleted %}-->
-<!--        {% if user == comment.user or user in club_admins %}-->
-<!--        <form action="{% url 'democracy:delete_film_comment' club.id film.public_id comment.id view_option|add:order_option|add:display_option %}"  method="POST">-->
-<!--          {% csrf_token %}-->
+        <div class="media-body post-body">
 
-<!--          {{ comment.created_datetime }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">-->
-<!--          {% trans 'Delete' %}</label>-->
-<!--          <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">-->
+          <p class="post-text">
+            <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
+              {{ comment.user.username }}</a>:
+            {% if comment.deleted %}
+            <span class="text-muted"><em>{% trans 'Comment deleted.' %}</em></span>
+            {% else %}
+            <span>{{ comment.text }}</span>
+            {% endif %}
+          </p>
 
-<!--        </form>-->
-<!--        {% else %}-->
-<!--        {{ comment.created_datetime }}-->
-<!--        {% endif %}-->
-<!--        {% elif comment.deleted %}-->
-<!--        {{ comment.created_datetime }}-->
-<!--        {% endif %}-->
-<!--      </div>-->
+          <div class="post-footer">
+            {% if not comment.deleted %}
+              {% if user == comment.user or user in club_admins %}
+                <form action="{% url 'democracy:delete_film_comment' club.id film.public_id comment.id view_option|add:order_option|add:display_option %}"  method="POST">
+                  {% csrf_token %}
+                  {{ comment.created_datetime }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
+                  {% trans 'Delete' %}</label>
+                  <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">
+                </form>
+              {% else %}
+                {{ comment.created_datetime }}
+              {% endif %}
+                {% elif comment.deleted %}
+              {{ comment.created_datetime }}
+            {% endif %}
+          </div>
 
-<!--    </div>-->
-<!--  </div>-->
+        </div>
 
-<!--  {% endfor %}-->
+      </div>
 
-<!--  {% else %}-->
+    {% endfor %}
+  {% else %}
 
-<!--  <div class="text-center my-5">cri cri...</div>-->
+    <div class="text-center my-3">cri cri...</div>
 
-<!--  {% endif %}-->
+  {% endif %}
 
-<!--</div>-->
+  </div>
 
-
-<!--&lt;!&ndash;START: POST FORM&ndash;&gt;-->
-<!--<div class="mx-4">-->
-<!--  <div class="media form-post mx-auto">-->
-<!--    <div class="align-self-center mr-3 user-image">-->
-<!--      {% if user.profile_image %}-->
-<!--      <img class="border border-secondary rounded-circle" src="{{ user.profile_image.url }}"-->
-<!--           alt="user.profile_image not found">-->
-<!--      {% else %}-->
-<!--      <img class="rounded-circle"-->
-<!--           src="{% static 'registration/svg/user_no_profile_image.svg' %}" alt="user.profile_image not found">-->
-<!--      {% endif %}-->
-<!--    </div>-->
-<!--    <form class="mx-auto" action="{% url 'democracy:comment_film' club.id film.public_id view_option|add:order_option|add:display_option %}"  method="POST">-->
-<!--      {% csrf_token %}-->
-
-<!--      <div class="input-group mx-auto">-->
-<!--  <textarea class="form-control" aria-label="With textarea" name="text"-->
-<!--            placeholder="{% trans 'Write a comment...' %}"></textarea>-->
-<!--        <div class="input-group-append">-->
-<!--          <button type="submit" class="btn btn-sm btn-green-to-blue">-->
-<!--            <img style="max-height: 18px;" class="align-self-center mr-1"-->
-<!--                 src="{% static 'democracy/svg/send.svg'%}">-->
-<!--          </button>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--    </form>-->
-<!--  </div>-->
-<!--</div>-->
-<!--END: POST FORM-->
-
-
+</div>
 <!--END: COMMENTS-->
+
+
+<!--START: COMMENTS POST FORM-->
+<div class="border-top border-bottom shadow-sm">
+
+    <!--START: POST FORM-->
+      <div class="form-post">
+
+        <form class="form-inline" action="{% url 'democracy:comment_film' club.id film.public_id view_option|add:order_option|add:display_option %}"  method="POST">
+          {% csrf_token %}
+
+          <div class="input-group">
+            <textarea class="form-control" aria-label="With textarea" name="text" id="TextArea" placeholder="{% trans 'Write a comment...' %}"></textarea>
+            <button type="submit" class="p-1 align-self-end btn btn-sm btn-green-to-blue rounded-circle">
+              <img src="{% static 'democracy/svg/send.svg'%}">
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+</div>
+<!--END: COMMENTS POST FORM-->
 
 
 <!-- START: REGISTERED VOTES -->
 {% if not film.seen %}
 
-<div class="registered-votes border-top border-bottom shadow-sm">
+<div class="registered-votes section-container border-top border-bottom shadow-sm">
 
   <div class="font-weight-bold text-center mb-3">
   {% trans 'Registered votes' %} ({{ film.vote_set.all|length }})
@@ -340,14 +326,11 @@
     <div class="media vote">
 
       {% if vote.user.profile_image %}
-      <img class="user-image rounded-circle" title="{{ vote.user.username }}"
-           src="{{ vote.user.profile_image.url }}"
-           alt="vote.user.profile_image not found">
+      <img class="user-image rounded-circle" title="{{ vote.user.username }}" src="{{ vote.user.profile_image.url }}">
       {% else %}
-      <img class="user-image rounded-circle" title="{{ vote.user.username }}"
-           src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-           alt="vote.user.profile_image not found">
+      <img class="user-image rounded-circle" title="{{ vote.user.username }}" src="{% static 'registration/svg/user_no_profile_image.svg' %}">
       {% endif %}
+
       {% if vote.vote_karma == 'positive' %}
       <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
       {% elif vote.vote_karma == 'neutral' %}
@@ -355,6 +338,7 @@
       {% elif vote.vote_karma == 'negative' %}
       <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
       {% endif %}
+
       <div class="vote-text">
         <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
           {{ vote.user.username }}</a>:
@@ -496,41 +480,49 @@
 
 
 <!--START: MODAL ADD FAFF-->
-<div class="modal fade" id="AddFaffModalCenter" tabindex="-1" role="dialog" aria-labelledby="AddFaffModalCenterTitle"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' club.id film.public_id view_option|add:order_option|add:display_option %}"  class="text-center">
-        {% csrf_token %}
+<!--<div class="modal fade" id="AddFaffModalCenter" tabindex="-1" role="dialog" aria-labelledby="AddFaffModalCenterTitle"-->
+<!--     aria-hidden="true">-->
+<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--    <div class="modal-content">-->
+<!--      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' club.id film.public_id view_option|add:order_option|add:display_option %}"  class="text-center">-->
+<!--        {% csrf_token %}-->
 
-        <div class="modal-header">
-          <h5 class="modal-title" id="AddFaffModalCenterTitle">{% trans 'Add FilmAffinity page' %}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="form-group m-4">
-          <input class="form-control" type="text" placeholder="FilmAffinity url" id="faff_url" name="faff_url"
-                 aria-describedby="FaffWeb">
-          <a href="https://www.filmaffinity.com/" target="blank" id="FaffWeb" class="form-text text-left ml-2">
-            <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>
-          </a>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-sm" data-dismiss="modal">
-            {% trans 'Cancel' %}
-          </button>
+<!--        <div class="modal-header">-->
+<!--          <h5 class="modal-title" id="AddFaffModalCenterTitle">{% trans 'Add FilmAffinity page' %}</h5>-->
+<!--          <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--            <span aria-hidden="true">&times;</span>-->
+<!--          </button>-->
+<!--        </div>-->
+<!--        <div class="form-group m-4">-->
+<!--          <input class="form-control" type="text" placeholder="FilmAffinity url" id="faff_url" name="faff_url"-->
+<!--                 aria-describedby="FaffWeb">-->
+<!--          <a href="https://www.filmaffinity.com/" target="blank" id="FaffWeb" class="form-text text-left ml-2">-->
+<!--            <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>-->
+<!--          </a>-->
+<!--        </div>-->
+<!--        <div class="modal-footer">-->
+<!--          <button type="button" class="btn btn-sm" data-dismiss="modal">-->
+<!--            {% trans 'Cancel' %}-->
+<!--          </button>-->
 
-          <button type="submit" class="btn btn-sm btn-green-to-blue mx-3">
-            {% trans 'Add' %}
-          </button>
-        </div>
-      </form>
+<!--          <button type="submit" class="btn btn-sm btn-green-to-blue mx-3">-->
+<!--            {% trans 'Add' %}-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </form>-->
 
-    </div>
-  </div>
-</div>
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 <!--END: MODAL ADD FAFF-->
+
+
+<script>
+  window.onload=function () {
+     var objDiv = document.getElementById("containerPosts");
+     objDiv.scrollTop = objDiv.scrollHeight;
+}
+</script>
 
 
 {% endblock %}

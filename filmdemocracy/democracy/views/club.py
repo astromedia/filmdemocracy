@@ -74,7 +74,7 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
             context['extra_meetings'] = len(club_meetings) > 3
         last_comments = FilmComment.objects.filter(club=club, deleted=False)
         if last_comments:
-            context['last_comments'] = last_comments.order_by('-datetime')[0:5]
+            context['last_comments'] = last_comments.order_by('-created_datetime')[0:5]
         club_films = Film.objects.filter(club=club)
         if club_films:
             films_last_pub = club_films.order_by('-created_datetime')

@@ -271,7 +271,7 @@ class MeetingsForm(forms.ModelForm):
             self.initial['name'] = meeting.name
             self.initial['description'] = meeting.description
             self.initial['place'] = meeting.place
-            self.initial['date'] = meeting.date
+            self.initial['date'] = meeting.date.strftime('%Y-%m-%d')
             self.initial['time_start'] = meeting.time_start
         except AttributeError:
             pass
