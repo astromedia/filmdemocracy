@@ -26,7 +26,7 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
             Vote.OMG: 'positive',
             Vote.YES: 'positive',
             Vote.SEENOK: 'positive',
-            Vote.MEH: 'positive',
+            Vote.MEH: 'neutral',
             Vote.NO: 'negative',
             Vote.SEENNO: 'negative',
             Vote.VETO: 'negative',
@@ -61,10 +61,10 @@ class FilmDetailView(UserPassesTestMixin, generic.TemplateView):
             }
         try:
             user_vote = Vote.objects.get(user=self.request.user, film=film)
-            context['film_voted'] = True
+            context['user_vote'] = user_vote
             choice_dict[user_vote.choice]['choice_voted'] = True
         except Vote.DoesNotExist:
-            context['film_voted'] = False
+            context['user_vote'] = None
         context['vote_choices'] = choice_dict
         return context
 

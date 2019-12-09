@@ -177,8 +177,10 @@
   color:#fff;
   text-align:center;
   position:relative;
-  font-size:17px;
-  background:rgba(0,0,0,0.65);
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.2rem;
+  background:rgba(0,0,0,0.75);
   -webkit-transform:translatey(-100px);
   -ms-transform:translatey(-100px);
   transform:translatey(-100px);

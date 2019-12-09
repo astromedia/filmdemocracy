@@ -67,6 +67,10 @@
 /* Modal film results
 -------------------------------------------------- */
 
+.modal-results-header {
+  background-color: #fafafa;
+}
+
 .modal-results {
   background-color: #fafafa;
 }
@@ -100,10 +104,9 @@
 }
 
 .modal-results .vote .vote-text {
-  background-color: white;
-  line-height: 1.1rem;
+  line-height: 1.2rem;
   max-height: 35px;
-  padding: 2px 5px;
+  padding: 2px 0px 2px 3px;
   margin-right: auto;
   margin-top: auto;
   margin-bottom: auto;

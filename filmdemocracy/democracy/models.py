@@ -104,6 +104,8 @@ class FilmDb(models.Model):
 
     imdb_id = models.CharField('IMDb id', primary_key=True, max_length=8)
     faff_id = models.CharField('FilmAffinity id', default='', max_length=6)
+    imdb_rating = models.CharField('IMDb rating', default='', max_length=3)
+    metascore = models.CharField('Metascore', default='', max_length=3)
     title = models.CharField(default='', max_length=1000)
     year = models.IntegerField(default=0)
     rated = models.CharField(default='', max_length=20)
@@ -159,6 +161,10 @@ class FilmDb(models.Model):
     @property
     def imdb_url(self):
         return f'https://www.imdb.com/title/tt{self.imdb_id}/'
+
+    @property
+    def metascore_url(self):
+        return f'https://www.imdb.com/title/tt{self.imdb_id}/criticreviews'
 
     @property
     def faff_url(self):
@@ -230,6 +236,12 @@ class Vote(models.Model):
             return 'positive'
         elif self.choice in [self.NO, self.SEENNO, self.VETO]:
             return 'negative'
+
+    @property
+    def choice_text(self):
+        for choice, choice_text in self.vote_choices:
+            if self.choice == choice:
+                return choice_text
 
     @property
     def vote_score(self):

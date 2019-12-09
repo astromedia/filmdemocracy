@@ -10,6 +10,9 @@
   padding-left: 60px;
 }
 
+.form-select-members .card label img:hover {
+}
+
 .form-select-members .card :checked + label img {
   background-color: lightseagreen !important;
   border: 5px solid lightseagreen !important;

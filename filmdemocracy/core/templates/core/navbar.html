@@ -515,6 +515,7 @@
      aria-labelledby="languagesModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
+
       <div class="modal-header border-0">
         <h5 class="modal-title" id="languagesModalTitle">{% trans 'Site language' %}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -530,18 +531,18 @@
 
         <div class="list-group p-0 m-0">
 
-        {% for language in languages %}
-        <form class="m-0 p-0" action="{% url 'set_language' %}" method="POST">
-          {% csrf_token %}
+          {% for language in languages %}
+          <form class="m-0 p-0" action="{% url 'set_language' %}" method="POST">
+            {% csrf_token %}
 
-          <label class="list-group-item list-group-item-action font-weight-bold pointer-cursor py-3 {% if language.code == LANGUAGE_CODE %} active {% endif %}" for="language_{{ forloop.counter }}">
-            {{ language.name_local|title }} ({{ language.code }})
-          </label>
+            <label class="list-group-item list-group-item-action font-weight-bold pointer-cursor py-3 {% if language.code == LANGUAGE_CODE %} active {% endif %}" for="language_{{ forloop.counter }}">
+              {{ language.name_local|title }} ({{ language.code }})
+            </label>
 
-          <input type="submit" style="display: none;" class="invisible" name="language" id="language_{{ forloop.counter }}" value="{{ language.code }}">
-          <input name="next" type="hidden" value="{{ redirect_to }}">
-        </form>
-        {% endfor %}
+            <input type="submit" style="display: none;" class="invisible" name="language" id="language_{{ forloop.counter }}" value="{{ language.code }}">
+            <input name="next" type="hidden" value="{{ redirect_to }}">
+          </form>
+          {% endfor %}
 
         </div>
 

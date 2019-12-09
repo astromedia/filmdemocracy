@@ -30,6 +30,8 @@ class Command(BaseCommand):
         if created:
             try:
                 filmdb.title = film_json['Title']
+                filmdb.imdb_rating = film_json['imdbRating']
+                filmdb.metascore = film_json['Metascore']
                 filmdb.year = int(film_json['Year'][0:4])
                 filmdb.director = film_json['Director']
                 filmdb.writer = film_json['Writer']

@@ -58,19 +58,14 @@
 <!--START: NEXT 3 CLUB MEETINGS-->
 {% if next_meetings %}
 
-  <p class="text-center font-weight-bold">{% trans 'Next club meetings' %}</p>
+  <p class="text-center">
+    <strong>{% trans 'Next club meetings' %}</strong>
+    <a class="ml-2" href="{% url 'democracy:meetings_list' club.id %}">({% trans 'check all' %})</a>
+  </p>
 
   {% for meeting in next_meetings %}
     {% include "democracy/meeting_card.html" %}
   {% endfor %}
-
-  {% if extra_meetings %}
-    <div class="text-center mt-4 mb-5">
-      <a class="" href="{% url 'democracy:meetings_list' club.id %}">
-        {% trans 'Check all meetings' %}
-      </a>
-    </div>
-  {% endif %}
 
 {% endif %}
 <!--END: NEXT 3 CLUB MEETINGS-->
@@ -130,7 +125,10 @@
   <!--START: LAST PROPOSED FILMS ALBUM-->
   {% if groups_last_pub %}
 
-  <p class="text-center font-weight-bold">{% trans 'Last proposed films' %}</p>
+  <p class="text-center">
+    <strong>{% trans 'Last proposed films' %}</strong>
+    <a class="ml-2 green-color blue-color-hover" href="{% url 'democracy:candidate_films' club.id %}">({% trans 'check all' %})</a>
+  </p>
 
   <div class="films-album">
 
@@ -197,21 +195,13 @@
   <!--END: LAST PROPOSED FILMS ALBUM-->
 
 
-  <!--START: LINK TO PROPOSED FILMS-->
-  {% if groups_last_pub %}
-  <div class="text-center">
-    <a class="green-color blue-color-hover" href="{% url 'democracy:candidate_films' club.id %}">
-      {% trans 'Check all films proposed in club' %}
-    </a>
-  </div>
-  {% endif %}
-  <!--END: LINK TO PROPOSED FILMS-->
-
-
   <!--START: LAST SEEN FILMS ALBUM-->
   {% if films_last_seen %}
 
-  <p class="text-center font-weight-bold">{% trans 'Last seen films' %}</p>
+  <p class="text-center">
+    <strong>{% trans 'Last seen films' %}</strong>
+    <a class="green-color blue-color-hover ml-2" href="{% url 'democracy:seen_films' club.id %}">({% trans 'check all' %})</a>
+  </p>
 
   <div class="films-album ">
 
@@ -236,17 +226,6 @@
   </div>
   {% endif %}
   <!--END: LAST SEEN FILMS ALBUM-->
-
-
-  <!--START: LINK TO SEEN FILMS-->
-  {% if films_last_seen %}
-  <div class="text-center">
-    <a class="green-color blue-color-hover" href="{% url 'democracy:seen_films' club.id %}">
-      {% trans 'Check all films seen by club' %}
-    </a>
-  </div>
-  {% endif %}
-  <!--END: LINK TO SEEN FILMS-->
 
 
   <!--START: CLUB MEMBERS PANEL-->

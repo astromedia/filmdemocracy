@@ -145,7 +145,7 @@
 <div class="modal fade" id="FilmResultsModal_{{ forloop.counter }}" tabindex="-1" role="dialog"
      aria-labelledby="FilmResultsModal_{{ forloop.counter }}_Title" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content modal-results">
+    <div class="modal-content">
 
       <div class="modal-header modal-results-header">
         <h5 class="modal-title" id="FilmResultsModal_{{ forloop.counter }}_Title">{{ film_results.film.db.title }}</h5>
@@ -183,7 +183,7 @@
                alt="vote.user.profile_image not found">
           {% endif %}
           <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
-          <div class="vote-text border rounded-lg">
+          <div class="vote-text">
             <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
               {{ vote.user.username }}</a>:
             <span>{{ vote.get_choice_display }}</span>
@@ -207,7 +207,7 @@
                alt="vote.user.profile_image not found">
           {% endif %}
           <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
-          <div class="vote-text border rounded-lg">
+          <div class="vote-text">
             <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id vote.user.id %}">
               {{ vote.user.username }}</a>:
             <span>{{ vote.get_choice_display }}</span>

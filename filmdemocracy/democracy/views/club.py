@@ -556,7 +556,7 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
             return FilmDb.objects.none()
         qs = FilmDb.objects.all()
         if self.q:
-            qs = qs.filter(title__istartswith=self.q)
+            qs = qs.filter(title__icontains=self.q)
         return qs
 
 
@@ -656,7 +656,6 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberConfirmView(generic.FormView):
-    # template_name = 'democracy/invite_new_member_confirm.html'
     form_class = forms.ConfirmForm
     invitation = None
     valid_link = False
