@@ -102,8 +102,7 @@
 -------------------------------------------------- */
 .container-list {
   max-width: 700px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 1rem 0.5rem;
   margin-top: 20px;
   margin-bottom: 0px;
 }
@@ -117,25 +116,31 @@
   color: #A9A9A9 !important;
 }
 
-.container-list table tbody tr:hover {
+.film-table-row:hover {
   color: white;
 }
 
-.container-list  table tbody tr .media {
-  height: 29px;
+.film-table-row {
+  height: 2.5rem;
 }
 
-.container-list  table tbody tr a {
+.film-table-row .film-table-title {
+  line-height: 1.2rem;
+  padding: 0rem 0.25rem 0rem 0.25rem;
+}
+
+.film-table-row a {
   color: #A9A9A9;
 }
 
-.container-list  table tbody tr:hover a {
+.film-table-row:hover a {
   color: white;
 }
 
 
 .container-list .hand-icon {
-  height: 26px;
+  width: 1.5rem;
+  height: 1.5rem;
   border: 1px solid white !important;
   background-color: white;
 }

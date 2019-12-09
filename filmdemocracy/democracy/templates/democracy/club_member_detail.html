@@ -16,180 +16,158 @@
 
 <h3 class="h3">{{ member.username }}</h3>
 
-<div class="text-center">
 
-  <!--PROFILE PICTURE-->
-  <div class="profile-picture">
-    {% if member.profile_image %}
-    <img class="zoom-in-cursor rounded-circle" src="{{ member.profile_image.url }}" alt="member.profile_image not found"
-         data-toggle="modal" data-target="#MemberImageModalCenter">
-    {% else %}
-    <img class="rounded-circle" src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-         alt="member.profile_image not found">
-    {% endif %}
-  </div>
-
-  <!--ADMIN-->
-  {% if member in club_admins %}
-  <div class="alert alert-success admin_member border border-secondary">
-    <strong>club admin</strong>
-  </div>
+<!--PROFILE PICTURE-->
+<div class="profile-picture">
+  {% if member.profile_image %}
+  <img class="zoom-in-cursor rounded-circle" src="{{ member.profile_image.url }}" alt="member.profile_image not found"
+       data-toggle="modal" data-target="#memberImageModal">
+  {% else %}
+  <img class="rounded-circle" src="{% static 'registration/svg/user_no_profile_image.svg' %}"
+       alt="member.profile_image not found">
   {% endif %}
-
-  <!--EMAIL-->
-  {% if member.public_email %}
-  <div class="row mx-1 align-items-center mt-2">
-    <div class="col-md-6">
-      <div class="float-md-right"><strong>{% trans 'Email:' %}</strong></div>
-    </div>
-    <div class="col-md-auto">
-      {{ member.email }}
-    </div>
-  </div>
-  {% endif %}
-
-  <!--JOINED CLUB-->
-  <div class="row mx-1 align-items-center mt-2">
-    <div class="col-md-6">
-      <div class="float-md-right"><strong>{% trans 'Joined club:' %}</strong></div>
-    </div>
-    <div class="col-md-auto">
-      {{ club_member_info.date_joined_club }}
-    </div>
-  </div>
-
-  <!--VOTED FILMS-->
-  <div class="row mx-1 align-items-center mt-2">
-    <div class="col-md-6">
-      <div class="float-md-right"><strong>{% trans 'Films voted:' %}</strong></div>
-    </div>
-    <div class="col-md-auto">
-      {{ num_of_votes }}
-    </div>
-  </div>
-
-  <!--PROPOSED FILMS-->
-  <div class="row mx-1 align-items-center mt-2">
-    <div class="col-md-6">
-      <div class="float-md-right"><strong>{% trans 'Films proposed:' %}</strong></div>
-    </div>
-    <div class="col-md-auto">
-      {{ num_of_films_proposed }}
-    </div>
-
-  </div>
-
-  <!--SEEN FILMS-->
-  <div class="row mx-1 align-items-center mt-2">
-    <div class="col-md-6">
-      <div class="float-md-right"><strong>{% trans 'Films seen:' %}</strong></div>
-    </div>
-    <div class="col-md-auto">
-      {{ num_of_films_seen }}
-    </div>
-  </div>
-
-
-  <!--START: REGISTERED VOTES-->
-  <div class="member-detail">
-    <h5 class="h5">{% trans 'Registered votes on candidate films' %}</h5>
-    <hr>
-
-    <div class="voted-films">
-      {% if member_votes %}
-
-
-      {% for vote in member_votes %}
-      <div class="row mx-1 mt-md-1 mt-2 align-items-center">
-        <div class="col-md-6">
-          <div class="float-md-right">
-            <a class="strong-link" href="{% url 'democracy:film_detail' club.id vote.film.public_id vote.film.db.slug %}">
-              <strong>{{ vote.film.db.title }}:</strong></a>
-          </div>
-        </div>
-        <div class="col-md-auto">
-          {% if vote.vote_karma == 'positive' %}
-          <span class="text-success">{{ vote.get_choice_display }}</span>
-          {% elif vote.vote_karma == 'negative' %}
-          <span class="text-danger">
-            {% if vote.choice == "veto" %}
-            <strong>{{ vote.get_choice_display }}</strong>
-            {% else %}
-            {{ vote.get_choice_display }}
-          </span>
-          {% endif %}
-          {% endif %}
-        </div>
-
-      </div>
-      {% endfor %}
-
-
-      {% else %}
-
-
-      <div class="text-center">
-        -
-      </div>
-
-
-      {% endif %}
-    </div>
-  </div>
-  <!--END: REGISTERED VOTES-->
-
-
-  <!--START: SEEN FILMS-->
-  <div class="member-detail">
-    <h5 class="h5">{% trans 'Films seen with club' %}</h5>
-    <hr>
-
-    <div class="seen-films">
-      {% if member_seen_films %}
-
-
-      {% for film in member_seen_films %}
-      <div class="text-center mt-1">
-        <a class="strong-link" href="{% url 'democracy:film_detail' club.id film.public_id film.db.slug %}">
-          <strong>{{ film.db.title }}</strong></a>
-      </div>
-      {% endfor %}
-
-
-      {% else %}
-
-
-      <div class="text-center">-</div>
-
-
-      {% endif %}
-    </div>
-  </div>
-  <!--END: SEEN FILMS-->
-
 </div>
 
-<!-- START MODAL IMAGE -->
-{% if member.profile_image %}
-<div class="modal fade" id="MemberImageModalCenter" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-body pb-5 pt-2 text-center mx-0 bg-dark">
-        <div class="text-right mb-3">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <br>
-        </div>
-        <div>
-          <img src="{{ member.profile_image.url }}" alt="member.profile_image not found">
-        </div>
-      </div>
-    </div>
+<!--CLUB ADMIN-->
+{% if member in club_admins %}
+<div class="alert-success member-ribbon">
+  <strong>{% trans 'Club Admin' %}</strong>
+</div>
+{% endif %}
+
+<!--CLUB FOUNDER-->
+{% if member == club.founder %}
+<div class="alert-danger member-ribbon">
+  <strong>{% trans 'Club Founder' %}</strong>
+</div>
+{% endif %}
+
+<!--EMAIL-->
+{% if member.public_email %}
+<div class="row mx-auto">
+  <div class="col col-5 p-1 text-right">
+    <strong>{% trans 'Email:' %}</strong>
+  </div>
+  <div class="col col-auto p-1 text-left">
+    {{ member.email }}
   </div>
 </div>
 {% endif %}
-<!-- END MODAL IMAGE -->
+
+<!--JOINED CLUB-->
+<div class="row mx-auto">
+  <div class="col col-5 p-1 text-right">
+    <strong>{% trans 'Joined club:' %}</strong>
+  </div>
+  <div class="col col-7 p-1 text-left">
+    {{ club_member_info.date_joined_club }}
+  </div>
+</div>
+
+<!--VOTED FILMS-->
+<div class="row mx-auto">
+  <div class="col col-5 p-1 text-right">
+    <strong>{% trans 'Films voted:' %}</strong>
+  </div>
+  <div class="col col-7 p-1 text-left">
+    {{ num_of_votes }}
+  </div>
+</div>
+
+<!--PROPOSED FILMS-->
+<div class="row mx-auto">
+  <div class="col col-5 p-1 text-right">
+    <strong>{% trans 'Films proposed:' %}</strong>
+  </div>
+  <div class="col col-7 p-1 text-left">
+    {{ num_of_films_proposed }}
+  </div>
+
+</div>
+
+<!--SEEN FILMS-->
+<div class="row mx-auto">
+  <div class="col col-5 p-1 text-right">
+   <strong>{% trans 'Films seen:' %}</strong>
+  </div>
+  <div class="col col-7 p-1 text-left">
+    {{ num_of_films_seen }}
+  </div>
+</div>
+
+
+<!--START: REGISTERED VOTES-->
+<div class="member-detail-container border-top border-bottom">
+
+  <p class="text-center font-weight-bold">{% trans 'Registered votes on candidate films' %}</p>
+
+  {% if member_votes %}
+
+    {% for vote in member_votes|dictsort:"film.db.title" %}
+    <div class="media media-vote my-1 p-0">
+
+      {% if vote.vote_karma == 'positive' %}
+        <img class="rounded-circle align-self-center" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
+      {% elif vote.vote_karma == 'neutral' %}
+        <img class="rounded-circle align-self-center" src="{% static 'democracy/svg/thumbsneutralwhite.svg'%}">
+      {% elif vote.vote_karma == 'negative' %}
+        <img class="rounded-circle align-self-center" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+      {% endif %}
+
+      <div class="media-body align-self-center">
+        <a class="strong-link" href="{% url 'democracy:film_detail' club.id vote.film.public_id vote.film.db.slug %}">
+          {{ vote.film.db.title }}
+        </a>
+      </div>
+
+    </div>
+    {% endfor %}
+
+
+  {% else %}
+
+
+    <div class="text-center">{% trans 'No votes yet...' %}</div>
+
+
+  {% endif %}
+</div>
+<!--END: REGISTERED VOTES-->
+
+
+<!--START: SEEN FILMS-->
+<div class="member-detail-container border-top border-bottom">
+
+  <p class="text-center font-weight-bold">{% trans 'Films seen with club' %}</p>
+
+  {% if member_seen_films %}
+
+    {% for film in member_seen_films|dictsort:"db.title" %}
+      <div class="text-center my-2">
+        <a class="strong-link" href="{% url 'democracy:film_detail' club.id film.public_id film.db.slug %}">
+          {{ film.db.title }}</a>
+      </div>
+    {% endfor %}
+
+  {% else %}
+
+    <div class="text-center">{% trans 'No films seen with the club yet...' %}</div>
+
+  {% endif %}
+
+</div>
+<!--END: SEEN FILMS-->
+
+
+<!--START: MODAL IMAGE-->
+{% if member.profile_image %}
+<div class="modal fade" id="memberImageModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <img class='rounded' src="{{ member.profile_image.url }}">
+  </div>
+</div>
+{% endif %}
+<!--END: MODAL IMAGE-->
 
 
 {% endblock %}

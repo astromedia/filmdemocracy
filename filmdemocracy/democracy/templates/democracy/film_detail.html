@@ -32,9 +32,11 @@
   </div>
 
   <!--USER VOTE-->
+  {% if user_vote %}
   <div class="user-vote voted-{{ user_vote.vote_karma }}">
     <span class="text-body">{% trans 'Voted:' %}</span> <span class="voted-{{ user_vote.vote_karma }}">{{ user_vote.choice_text }}</span>
   </div>
+  {% endif %}
 
   <div class="film-data">
 

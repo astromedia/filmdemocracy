@@ -1,8 +1,6 @@
 
 /* General page styles
 -------------------------------------------------- */
-body {
-}
 
 .container-base {
   background-color: #fafafa;
@@ -10,8 +8,7 @@ body {
 
 .h3 {
   text-align: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 1.5rem;
   font-weight: normal;
 }
 
@@ -20,7 +17,7 @@ body {
 -------------------------------------------------- */
 .profile-picture {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 1.5rem auto;
 }
 
 .profile-picture img {
@@ -31,38 +28,32 @@ body {
   background-color: rgba(0, 0, 0, 0.75);
 }
 
-.admin_member {
-  padding: 0px;
-  max-width: 100px;
+.member-ribbon {
+  padding: 0.25rem;
+  width: 100%;
   text-align: center;
-  margin: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: -0.5rem 0rem 1rem 0rem;
 }
 
-.member-detail .h5 {
-  text-align: center;
-  margin-top: 25px;
-  margin-bottom: -13px;
-  font-weight: normal;
-  font-size: 15px;
-  text-transform: uppercase;
+.member-detail-container {
+  background-color: white;
+  padding: 0.5rem 0.5rem 1rem 0.5rem;
+  margin: 1.5rem 0rem;
 }
 
-.member-detail .seen-films {
-  margin-top: 10px;
+.media-vote {
+  line-height: 1.2rem;
+  min-height: 2.3rem;
 }
 
-.member-detail .voted-films {
-  margin-top: 10px;
+.media-vote img {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0px;
+  margin-right: 0.5rem;
+  background: #282828;
+  border: 1px solid #282828 !important;
 }
 
-.member-detail .row {
-}
-
-.member-detail hr {
-  width: 350px;
-  color: gray;
-  background-color: gray;
-  margin-bottom: 13px;
+.media-vote .media-body a {
 }

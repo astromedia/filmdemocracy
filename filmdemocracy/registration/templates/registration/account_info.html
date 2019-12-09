@@ -117,11 +117,9 @@
         <div class="col-auto">
           <div class="custom-control custom-switch">
             {% if user.public_email %}
-            <input type="checkbox" class="custom-control-input" name="public_email" id="public_email"
-                   value="public_email" checked>
+            <input type="checkbox" class="custom-control-input" name="public_email" id="public_email" value="public_email" checked>
             {% elif not user.public_email %}
-            <input type="checkbox" class="custom-control-input" name="public_email" id="public_email"
-                   value="public_email">
+            <input type="checkbox" class="custom-control-input" name="public_email" id="public_email" value="public_email">
             {% endif %}
             <label class="custom-control-label" for="public_email"></label>
           </div>

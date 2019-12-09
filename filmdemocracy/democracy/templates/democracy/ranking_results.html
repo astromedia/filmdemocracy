@@ -74,7 +74,7 @@
       <!--<td class="text-center align-middle">{{ forloop.counter }}</td>-->
 
       <!--TITLE COLUMN-->
-      <td class="align-middle">
+      <td class="align-middle film-title">
         <a class="strong-link" href="{% url 'democracy:film_detail' club.id film_results.film.public_id film_results.film.db.slug %}">
           {{ film_results.film.db.title }}
         </a>
@@ -191,13 +191,9 @@
 
         <div class="media vote">
           {% if vote.user.profile_image %}
-          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
-               src="{{ vote.user.profile_image.url }}"
-               alt="vote.user.profile_image not found">
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}" src="{{ vote.user.profile_image.url }}">
           {% else %}
-          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
-               src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-               alt="vote.user.profile_image not found">
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}" src="{% static 'registration/svg/user_no_profile_image.svg' %}">
           {% endif %}
           <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
           <div class="vote-text">
@@ -215,13 +211,9 @@
 
         <div class="media vote">
           {% if vote.user.profile_image %}
-          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
-               src="{{ vote.user.profile_image.url }}"
-               alt="vote.user.profile_image not found">
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}" src="{{ vote.user.profile_image.url }}">
           {% else %}
-          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
-               src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-               alt="vote.user.profile_image not found">
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}" src="{% static 'registration/svg/user_no_profile_image.svg' %}">
           {% endif %}
           <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsneutralwhite.svg'%}">
           <div class="vote-text">
@@ -239,13 +231,9 @@
 
         <div class="media vote">
           {% if vote.user.profile_image %}
-          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
-               src="{{ vote.user.profile_image.url }}"
-               alt="vote.user.profile_image not found">
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}" src="{{ vote.user.profile_image.url }}">
           {% else %}
-          <img class="user-image rounded-circle" title="{{ vote.user.username }}"
-               src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-               alt="vote.user.profile_image not found">
+          <img class="user-image rounded-circle" title="{{ vote.user.username }}" src="{% static 'registration/svg/user_no_profile_image.svg' %}">
           {% endif %}
           <img class="vote-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
           <div class="vote-text">

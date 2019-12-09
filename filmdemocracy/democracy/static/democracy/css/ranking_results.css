@@ -44,6 +44,10 @@
   padding: 0.4rem;
 }
 
+.film-title {
+  line-height: 1.2rem;
+}
+
 .results-box {
   background: white !important;
 }

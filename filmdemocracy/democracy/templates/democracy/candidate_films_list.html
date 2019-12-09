@@ -204,25 +204,25 @@
 
   <table class="table table-borderless table-hover table-sm">
 
-    <thead class="">
-      <tr class="">
-        <th scope="col" class="text-center">{% trans 'Vote' %}</th>
-        <th scope="col" class="">{% trans 'Title' %}</th>
-        {% if order_option == '&order=date_proposed' %}
-        <th scope="col" class="text-center">{% trans 'Proposed on' %}</th>
-        {% elif order_option == '&order=year' %}
-        <th scope="col" class="text-center">{% trans 'Year' %}</th>
-        {% elif order_option == '&order=duration' %}
-        <th scope="col" class="text-center">{% trans 'Duration' %}</th>
-        {% endif %}
-      </tr>
-    </thead>
+<!--    <thead class="">-->
+<!--      <tr class="">-->
+<!--        <th scope="col" class="text-center">{% trans 'Vote' %}</th>-->
+<!--        <th scope="col" class="">{% trans 'Title' %}</th>-->
+<!--        {% if order_option == '&order=date_proposed' %}-->
+<!--        <th scope="col" class="text-center">{% trans 'Proposed on' %}</th>-->
+<!--        {% elif order_option == '&order=year' %}-->
+<!--        <th scope="col" class="text-center">{% trans 'Year' %}</th>-->
+<!--        {% elif order_option == '&order=duration' %}-->
+<!--        <th scope="col" class="text-center">{% trans 'Duration' %}</th>-->
+<!--        {% endif %}-->
+<!--      </tr>-->
+<!--    </thead>-->
 
     <tbody>
 
     {% for candidate in candidate_films|dictsort:order_option_string %}
 
-      <tr class="">
+      <tr class="film-table-row">
 
         <!--VOTE COLUMN-->
         <td class="text-center align-middle">
@@ -233,25 +233,25 @@
           {% elif candidate.vote == 'negative' %}
           <img class="align-self-center rounded-circle hand-icon" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
           {% else %}
-          <img class="align-self-center rounded-circle" style="height: 29px;" src="{% static 'democracy/svg/questionwhite.svg'%}">
+          <img class="align-self-center rounded-circle " style="width: 1.5rem;" src="{% static 'democracy/svg/questionwhite.svg'%}">
           {% endif %}
         </td>
 
         <!--TITLE COLUMN-->
-        <td class="align-middle">
+        <td class="align-middle align-self-center film-table-title">
           <a href="{% url 'democracy:film_detail' club.id candidate.film.public_id candidate.film.db.slug view_option|add:order_option|add:display_option %}">
           {{ candidate.film.db.title }}
           </a>
         </td>
 
         <!--ORDER BY COLUMN-->
-        <td class="align-middle text-center">
+        <td class="align-middle align-self-center text-center">
         {% if order_option == '&order=date_proposed' %}
           {{ candidate.film.created_datetime.date|date:"Y/m/d" }}
         {% elif order_option == '&order=year' %}
           {{ candidate.film.db.year }}
         {% elif order_option == '&order=duration' %}
-          {{ candidate.film.db.duration_str }}
+          {{ candidate.film.db.duration_in_mins_int }}
         {% endif %}
         </td>
 
