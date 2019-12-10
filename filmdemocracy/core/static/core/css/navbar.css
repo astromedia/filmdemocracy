@@ -1,7 +1,6 @@
 
 /* Navbar general styles
 -------------------------------------------------- */
-
 .navbar {
   height: 3.5rem;
   background-color: #07080a;
@@ -19,7 +18,6 @@
 
 /* Navbar icon styles
 -------------------------------------------------- */
-
 .navbar .navbar-brand img {
   max-height: 2.3rem;
 }
@@ -61,7 +59,6 @@
 
 /* Navbar dropdown menu styles
 -------------------------------------------------- */
-
 .navbar .nav-item .dropdown-toggle::after {
   display:none;
 }
@@ -110,8 +107,13 @@
   width: 3.3rem;
   height: 3.3rem;
   object-fit: cover;
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(0, 0, 0, 1);
 }
+
+.negative-background {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
 
 .navbar .nav-item .dropdown-menu .dropdown-item .media-body {
   max-width: 100%;
@@ -143,7 +145,6 @@
 
 /* Navbar chat
 -------------------------------------------------- */
-
 .navbar .nav-item .dropdown-menu .dropdown-item .chat-item .first-line {
   font-size: 16px;
   line-height: 22px;
@@ -165,7 +166,6 @@
 
 /* Navbar club
 -------------------------------------------------- */
-
 .navbar .nav-item .dropdown-menu .dropdown-item .club-item .first-line {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -183,7 +183,6 @@
 
 /* Navbar user
 -------------------------------------------------- */
-
 .navbar .nav-item .dropdown-menu .dropdown-item .user-item .first-line {
   font-weight: bold;
   font-size: 1rem;
@@ -209,7 +208,6 @@
 
 /* Navbar ntf
 -------------------------------------------------- */
-
 .badge-count {
   margim: 0px;
   margin-bottom: -17px;
@@ -253,7 +251,6 @@
 
 /* Navbar menu
 -------------------------------------------------- */
-
 .navbar .nav-item .dropdown-menu .dropdown-item .menu-item .first-line {
   font-weight: bold;
   font-size: 1rem;
@@ -269,17 +266,45 @@
   margin: 0px;
 }
 
+.list-group-item {
+  border: 0;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-top: 1px solid rgba(0, 0, 0, .125);
+}
+
+.list-group-item .media {
+  height: 4rem;
+  padding: 2px;
+}
+
+.list-group-item .media p {
+  margin: 0;
+  padding: 0;
+}
+
+.list-group-item .media img {
+  width: 3.3rem;
+  height: 3.3rem;
+  object-fit: cover;
+  background: rgba(0, 0, 0, 1);
+}
+
 .active.list-group-item {
   background-color: #f8f9fa;
   font-weight: bold;
   color: #495057;
-  border: 1px solid rgba(0, 0, 0, .125);
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, .125);
+}
+
+.list-group-item:last-of-type {
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
 }
 
 
 /* Modal menu
 -------------------------------------------------- */
-
 .modal-menu {
 }
 

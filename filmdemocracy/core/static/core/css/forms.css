@@ -1,7 +1,6 @@
 
 /* General page styles
 -------------------------------------------------- */
-
 .container-base {
   background-color: #fafafa;
 }
@@ -15,7 +14,6 @@
 
 /* Form styles
 -------------------------------------------------- */
-
 .form-standard {
   text-align: center;
   margin-top: 1rem;
@@ -36,7 +34,6 @@
 }
 
 .form-standard .form-inputs .form-input-field .label {
-  font-weight: bold;
 }
 
 .form-standard .form-inputs .form-input-field .invalid-feedback {

@@ -1,7 +1,6 @@
 
 /* General page styles
 -------------------------------------------------- */
-
 .h3 {
   text-align: center;
   margin-top: 50px;
@@ -17,7 +16,6 @@
 
 /* Film ranking
 -------------------------------------------------- */
-
 .participants-header {
   margin-bottom: 1.5rem;
 }
@@ -81,7 +79,6 @@
 
 /* Modal film results
 -------------------------------------------------- */
-
 .modal-results-header {
   background-color: #fafafa;
 }

@@ -46,5 +46,15 @@ class TourView(generic.TemplateView):
     pass
 
 
+@method_decorator(login_required, name='dispatch')
+class FAQView(generic.TemplateView):
+    pass
+
+
+@method_decorator(login_required, name='dispatch')
+class ContactUsView(generic.TemplateView):
+    pass
+
+
 class TermsAndConditionsView(generic.TemplateView):
     pass

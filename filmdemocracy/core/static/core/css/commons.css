@@ -1,7 +1,6 @@
 
 /* Link styles
 -------------------------------------------------- */
-
 .strong-link {
   font-weight: bold;
   color: #344a8d;
@@ -26,8 +25,6 @@ a:hover {
 
 /* Button styles
 -------------------------------------------------- */
-
-
 .btn-standard {
   font-size: 1rem !important;
   line-height: 2rem !important;
@@ -64,7 +61,6 @@ a:hover {
 
 /* Modal messages
 -------------------------------------------------- */
-
 .modal-message .modal-content {
   border: 0px;
 }
@@ -102,7 +98,6 @@ a:hover {
 
 /* Button colors
 -------------------------------------------------- */
-
 .btn-white-to-gray {
   color: #282828;
   background-color: white;
@@ -335,7 +330,6 @@ a:hover {
 
 /* Modal delete
 -------------------------------------------------- */
-
 .modal-delete .btn {
   font-size: 1rem !important;
   line-height: 2rem !important;
@@ -346,7 +340,6 @@ a:hover {
 
 /* General stuff
 -------------------------------------------------- */
-
 .modal img {
   max-width: 80%;
   max-height: 25rem;
