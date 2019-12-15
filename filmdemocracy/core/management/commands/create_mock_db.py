@@ -63,7 +63,7 @@ class Command(BaseCommand):
     def create_users(self):
         self.stdout.write(f'  Creating users...')
         for name in USER_NAMES:
-            User.objects.create_user(name, f'{name.lower()}@gmail.com', 'pass')
+            User.objects.create_user(name, f'{name.lower()}@fakemail.com', 'pass')
 
     @staticmethod
     def add_films_to_club(club):
@@ -164,8 +164,8 @@ class Command(BaseCommand):
     def create_clubs(self):
         self.stdout.write(f'  Creating clubs...')
         user_creators = [
-            User.objects.filter(email='pablo@gmail.com')[0],
-            User.objects.filter(email='ricardo@gmail.com')[0],
+            User.objects.filter(email='pablo@fakemail.com')[0],
+            User.objects.filter(email='ricardo@fakemail.com')[0],
         ]
 
         for i, club_name in enumerate(CLUB_NAMES):
@@ -183,7 +183,7 @@ class Command(BaseCommand):
             ClubMemberInfo.objects.create(club=club, member=user_creators[1])
             ChatClubInfo.objects.create(club=club)
             for name in random.sample(USER_NAMES[2:], 6):
-                user = User.objects.filter(email=f'{name.lower()}@gmail.com')[0]
+                user = User.objects.filter(email=f'{name.lower()}@fakemail.com')[0]
                 club.members.add(user)
                 ClubMemberInfo.objects.create(club=club, member=user)
             club.save()

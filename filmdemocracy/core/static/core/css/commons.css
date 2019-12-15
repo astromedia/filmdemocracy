@@ -70,25 +70,11 @@ a:hover {
   margin: 0px;
   border: 0px;
   font-weight: bold;
-  border-top-left-radius: 0.3rem;
-  border-top-right-radius: 0.3rem;
-  background-color: white !important;
-}
-
-.modal-message .modal-footer {
-  padding: 0;
+  border-radius: 0.35rem;
 }
 
 .modal-message .btn-close-message-modal {
-  width: 100%;
-  font-size: 1rem !important;
-  line-height: 2rem !important;
-  padding: 1rem;
-  border: 0px;
-  border-bottom-left-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
-  font-weight: bold;
-  background-color: white;
+  margin-top: 1.5rem;
 }
 
 .modal-message .btn-close-message-modal:hover {
@@ -340,7 +326,7 @@ a:hover {
 
 /* General stuff
 -------------------------------------------------- */
-.modal img {
+.zoom-img {
   max-width: 80%;
   max-height: 25rem;
   margin: auto;

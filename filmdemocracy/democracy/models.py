@@ -65,7 +65,7 @@ class Invitation(models.Model):
     created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
 
     def __str__(self):
-        return f"{str(self.id)}|{self.club.name}|{self.inviter.name}"
+        return f"{str(self.id)}|{self.club.name}|{self.inviter.username}"
 
 
 class ClubMemberInfo(models.Model):

@@ -98,22 +98,26 @@
   background-color: #d1d1d1 !important;
 }
 
+.navbar .nav-item .dropdown-menu .dropdown-item {
+  padding: 0;
+  margin: 0;
+}
+
 .navbar .nav-item .dropdown-menu .dropdown-item .media {
   height: 4rem;
-  padding: 2px;
+  padding: 2px 5px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .media img {
+.menu-icon {
   width: 3.3rem;
   height: 3.3rem;
-  object-fit: cover;
-  background: rgba(0, 0, 0, 1);
-}
-
-.negative-background {
+  margin: 0rem 0.75rem 0rem 0.25rem;
+  object-fit: fill;
   background: rgba(255, 255, 255, 1) !important;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 1000px;
 }
-
 
 .navbar .nav-item .dropdown-menu .dropdown-item .media-body {
   max-width: 100%;
@@ -145,45 +149,60 @@
 
 /* Navbar chat
 -------------------------------------------------- */
-.navbar .nav-item .dropdown-menu .dropdown-item .chat-item .first-line {
+.chat-item .first-line {
   font-size: 16px;
   line-height: 22px;
   padding: 0px;
   margin: 0px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .chat-item .second-line {
+.chat-item .second-line {
   font-size: 1rem;
   line-height: 20px;
   padding: 0px;
   margin: 0px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .club-chat-poster {
+.club-chat-poster {
   color: #344a8d;
 }
 
 
 /* Navbar club
 -------------------------------------------------- */
-.navbar .nav-item .dropdown-menu .dropdown-item .club-item .first-line {
+.club-item {
+}
+
+.club-item.active {
+  background-color: #d4edda !important;
+}
+
+.club-item .first-line {
   font-size: 1rem;
   line-height: 1.5rem;
   padding: 0px;
   margin: 0px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .club-item .second-line {
+.club-item .second-line {
   font-size: 0.9rem;
   line-height: 1.3rem;
   padding: 0px;
   margin: 0px;
 }
 
+.club-item img {
+  background-color: rgba(0, 0, 0, 1) !important;
+}
+
 
 /* Navbar user
 -------------------------------------------------- */
-.navbar .nav-item .dropdown-menu .dropdown-item .user-item .first-line {
+.user-item img {
+  background-color: rgba(0, 0, 0, 1) !important;
+}
+
+.user-item .first-line {
   font-weight: bold;
   font-size: 1rem;
   line-height: 1.5rem;
@@ -191,23 +210,20 @@
   margin: 0px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .user-item .second-line {
+.user-item .second-line {
   font-size: 0.9rem;
   line-height: 1.3rem;
   padding: 0px;
   margin: 0px;
 }
 
-.navbar .nav-item .dropdown-menu .logout-item {
-}
-
-.navbar .nav-item .dropdown-menu .logout-item:hover {
-  background-color: transparent !important;
-}
-
 
 /* Navbar ntf
 -------------------------------------------------- */
+.ntf-item img {
+  background-color: rgba(0, 0, 0, 1) !important;
+}
+
 .badge-count {
   margim: 0px;
   margin-bottom: -17px;
@@ -225,22 +241,22 @@
   border-radius: 100px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .ntf-item .first-line {
+.ntf-item .first-line {
   line-height: 1.25rem;
   padding: 0px;
   margin: 0px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .ntf-item .first-line .first-line-club {
+.ntf-item .first-line .first-line-club {
   font-size: 0.9rem;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .ntf-item .first-line .first-line-time-ago {
+.ntf-item .first-line .first-line-time-ago {
   font-size: 0.8rem;
   margin-left: 5px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .ntf-item .second-line {
+.ntf-item .second-line {
   font-size: 1rem;
   line-height: 1.25rem;
   padding: 0px;
@@ -251,7 +267,7 @@
 
 /* Navbar menu
 -------------------------------------------------- */
-.navbar .nav-item .dropdown-menu .dropdown-item .menu-item .first-line {
+.menu-item .first-line {
   font-weight: bold;
   font-size: 1rem;
   line-height: 20px;
@@ -259,7 +275,7 @@
   margin: 0px;
 }
 
-.navbar .nav-item .dropdown-menu .dropdown-item .menu-item .second-line {
+.menu-item .second-line {
   font-size: 13px;
   line-height: 15px;
   padding: 0px;
@@ -281,13 +297,6 @@
 .list-group-item .media p {
   margin: 0;
   padding: 0;
-}
-
-.list-group-item .media img {
-  width: 3.3rem;
-  height: 3.3rem;
-  object-fit: cover;
-  background: rgba(0, 0, 0, 1);
 }
 
 .active.list-group-item {

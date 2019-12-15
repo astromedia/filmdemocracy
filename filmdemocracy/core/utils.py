@@ -370,7 +370,7 @@ class NotificationsHelper:
 
     @staticmethod
     def get_website_image_url(ntf, object_id):
-        return '/static/core/svg/webname_greengray_short.svg'
+        return '/static/core/svg/web_letters.svg'
 
     @staticmethod
     def get_activator_image_url(ntf, object_id):

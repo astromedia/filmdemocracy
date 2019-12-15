@@ -246,11 +246,9 @@
 
           <a href="{% url 'democracy:club_member_detail' club.id member.id %}">
               {% if member.profile_image %}
-              <img class="card-img-top rounded-circle" src="{{ member.profile_image.url }}"
-                   alt="member.profile_image not found">
+              <img class="card-img-top rounded-circle" src="{{ member.profile_image.url }}">
               {% else %}
-              <img class="card-img-top rounded-circle" src="{% static 'registration/svg/user_no_profile_image.svg' %}"
-                   alt="member.profile_image not found">
+              <img class="card-img-top rounded-circle" src="{% static 'registration/svg/user_no_profile_image.svg' %}">
               {% endif %}
           </a>
 
@@ -279,84 +277,18 @@
 </div>
 
 
-<!--START: ADD NEW-->
+<!--START: ADD NEW BUTTON-->
 <a class="pointer-cursor rounded-circle" id="btn-add-new" data-toggle="modal" data-target="#addNewModal">
   <img class="" src="{% static 'democracy/svg/add.svg'%}">
 </a>
-<!--END: ADD NEW-->
-
-
-<!-- START: MODAL ADD NEW -->
-<div class="modal fade modal-menu" id="addNewModal" tabindex="-1" role="dialog"
-     aria-labelledby="addNewModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered " role="document">
-    <div class="modal-content">
-
-      <div class="modal-header border-0">
-        <h5 class="modal-title" id="addNewModalTitle">{% trans 'Add to club' %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <div class="modal-body py-0 px-0">
-
-        <div class="list-group font-weight-bold p-0 m-0">
-
-          <a class="list-group-item list-group-item-action pointer-cursor py-2" href="{% url 'democracy:add_new_film' club.id %}">
-            <div class="media">
-
-              <img class="align-self-center rounded-circle mr-3 p-0"
-                   src="{% static 'democracy/svg/camera.svg' %}">
-
-              <div class="media-body align-self-center p-0 m-0">
-                <span>{% trans 'Propose new film' %}</span>
-              </div>
-
-            </div>
-          </a>
-
-          <a class="list-group-item list-group-item-action pointer-cursor py-2" href="{% url 'democracy:meetings_new' club.id %}">
-            <div class="media">
-
-              <img class="align-self-center rounded-circle mr-3 p-0"
-                   src="{% static 'democracy/svg/cinema.svg' %}">
-
-              <div class="media-body align-self-center p-0 m-0">
-                <span>{% trans 'Organize new club meeting' %}</span>
-              </div>
-
-            </div>
-          </a>
-
-          <a class="list-group-item list-group-item-action pointer-cursor py-2" href="{% url 'democracy:invite_new_member' club.id %}">
-            <div class="media">
-
-              <img class="align-self-center rounded-circle mr-3 p-0"
-                   src="{% static 'democracy/svg/invite_user_image.svg' %}">
-
-              <div class="media-body align-self-center p-0 m-0">
-                <span>{% trans 'Invite someone to club' %}</span>
-              </div>
-
-            </div>
-          </a>
-
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-</div>
-<!-- END: MODAL ADD NEW -->
+<!--END: ADD NEW BUTTON-->
 
 
 <!--START: MODAL LOGO-->
 {% if club.logo_image %}
 <div class="modal fade" id="ClubLogoModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <img class='rounded' src="{{ club.logo_image.url }}" alt="club.logo_image not found">
+    <img class='rounded zoom-img' src="{{ club.logo_image.url }}" alt="club.logo_image not found">
   </div>
 </div>
 {% endif %}

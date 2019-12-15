@@ -1,3 +1,4 @@
+import hashlib
 import uuid
 
 from django.contrib.auth.decorators import login_required
@@ -7,6 +8,7 @@ from django.views import generic
 from django.utils.decorators import method_decorator
 
 from filmdemocracy.core.models import Notification
+from filmdemocracy.democracy.models import Invitation
 from filmdemocracy.core.utils import NotificationsHelper
 
 
@@ -38,15 +40,16 @@ class HomeView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['user_clubs'] = self.request.user.club_set.all()
+            hash_user_email = hashlib.sha256(self.request.user.email.encode('utf-8')).hexdigest()
+            pending_invitations = Invitation.objects.filter(hash_invited_email=hash_user_email, is_active=True)
+            context['pending_invitations'] = pending_invitations
         return context
 
 
-@method_decorator(login_required, name='dispatch')
 class TourView(generic.TemplateView):
     pass
 
 
-@method_decorator(login_required, name='dispatch')
 class FAQView(generic.TemplateView):
     pass
 

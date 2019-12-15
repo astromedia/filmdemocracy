@@ -71,13 +71,12 @@
 
     <div class="modal fade modal-message" id="messagesModal_{{ forloop.counter }}" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <div class="modal-content {{ message.tags }} text-center">
 
-          <div class="modal-body {{ message.tags }} text-center">
-            <span>{{ message }}</span>
+          <div class="modal-body {{ message.tags }} text-body">
+            <p class="">{{ message }}</p>
+            <button type="button" class="btn btn-standard btn-white-to-gray btn-close-message-modal" data-dismiss="modal">OK</button>
           </div>
-
-          <button type="button" class="btn btn-close-message-modal strong-link" data-dismiss="modal">OK</button>
 
         </div>
       </div>

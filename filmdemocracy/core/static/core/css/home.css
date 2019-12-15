@@ -1,6 +1,10 @@
 
 /* Webpage text style
 -------------------------------------------------- */
+.container-base {
+  color: #d1d1d1;
+}
+
 .webpage-logo {
   max-width: 13rem;
 }
@@ -9,26 +13,28 @@
   max-width: 65%
 }
 
-hr {
-  width: 450px;
-  color: gray;
-  background-color: gray;
-  margin-bottom: 20px;
-}
-
 .home-section-title {
   font-weight: bold !important;
   text-align: center;
-  color: darkgray;
-  text-transform: uppercase;
-  font-size: 15px;
-  margin-bottom: -13px;
-  margin-top: 45px;
+  font-size: 1.2rem;
 }
 
-.btn-block {
-  max-width: 180px;
+
+/* Pending invitations
+-------------------------------------------------- */
+.pending-invitation {
   margin: auto;
+  width: 95%;
+  max-width: 600px;
+  padding: 0.5rem 5px;
+}
+
+.pending-invitation img {
+  border: 1px solid rgba(0, 0, 0, 1) !important;
+  background-color: rgba(0, 0, 0, 1) !important;
+}
+
+a:hover {
 }
 
 
@@ -36,22 +42,29 @@ hr {
 -------------------------------------------------- */
 .club-logo {
   position: relative;
-  max-width: 250px;
-  max-height: 250px;
+  margin:0;
+  padding:0;
   float:left;
   overflow: hidden;
-  cursor: default;
-  border: 2px solid black;
-  border-radius: 6px;
+  object-fit: cover;
+  border: 3px solid black;
+  background-color: black;
+  border-radius: 1000px;
   box-shadow: 0 0px 8px rgba(0, 0, 0, 0.85);
   -webkit-transition:all .15s linear;
   transition:all .15s linear;
 }
 
+.club-logo:hover {
+  border: 3px solid lightseagreen;
+  background-color: lightseagreen;
+}
+
 .club-logo img {
-  width: 100%;
-  height: auto;
+  width: 8rem;
+  height: 8rem;
   display:block;
+  object-fit: cover;
   opacity:0.8;
   -webkit-transition:all .15s linear;
   transition:all .15s linear;
@@ -84,41 +97,11 @@ hr {
   color: darkgray;
   text-align: center;
   text-decoration: none;
-  text-transform: uppercase;
-  font-size: 20px;
+  font-size: 1rem;
   position: relative;
   top: 50%;
   -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-}
-
-
-/* New club image
--------------------------------------------------- */
-.new-club-logo {
-  max-width: 250px;
-  max-height: 250px;
-  float:left;
-  overflow: hidden;
-  cursor: default;
-  border: 2px solid black;
-  border-radius: 6px;
-  box-shadow: 0 0px 10px rgba(0, 0, 0, 0.85);
-}
-
-.new-club-logo img {
-  width: 100%;
-  height: 100%;
-  display:block;
-  position:relative;
-  opacity:0.2;
-  -webkit-transition:all .2s linear;
-  transition:all .2s linear;
-}
-
-.new-club-logo:hover img {
-  opacity:1;
 }
 
 
@@ -129,5 +112,4 @@ hr {
   padding: 20px;
   margin: auto;
   color: darkgray;
-  }
-
+}

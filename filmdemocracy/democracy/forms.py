@@ -244,7 +244,11 @@ class InviteNewMemberForm(forms.Form):
 
 
 class InviteNewMemberConfirmForm(forms.Form):
-    pass
+    response_choice = forms.ChoiceField(
+        choices=(('accept', ""), ('decline', "")),
+        label='response_choices',
+        required=False
+    )
 
 
 class MeetingsForm(forms.ModelForm):

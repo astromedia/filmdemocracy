@@ -29,49 +29,77 @@
 {% if user.is_authenticated %}
 
 
+{% if pending_invitations %}
+<!--START: PENDING INVITES-->
+<p class="home-section-title mt-5 mb-3">{% blocktrans count pending_invitations|length as count %}You have {{count}} pending club invitation!{% plural %}invitations!{% endblocktrans %}</p>
+
+
+  {% for invitation in pending_invitations %}
+
+  <div class="media pending-invitation alert alert-success">
+
+    {% if invitation.club.logo_image %}
+    <img class="align-self-center menu-icon" src="{{ invitation.club.logo_image.url }}">
+    {% else %}
+    <img class="align-self-center menu-icon" src="{% static 'democracy/images/club_no_logo.png' %}">
+    {% endif %}
+
+    <div class="media-body align-self-center">
+      <p class="m-0 p-0">
+      <strong>{{ invitation.inviter.username }}</strong>
+        {% trans 'invited you to join the club' %}
+      <strong>{{ invitation.club.name }}</strong>. <a class="strong-link" href="{% url 'democracy:invite_new_member_confirm' invitation.id %}">{% trans 'Check this invitation.' %}</a>
+      </p>
+    </div>
+
+  </div>
+
+  {% endfor %}
+
+
+<!--END: PENDING INVITES-->
+{% endif %}
+
+
 <!--START: CLUB PANEL-->
-<h4 class="lead text-muted home-section-title">{% trans 'Your clubs' %}</h4>
+<p class="home-section-title mt-5 mb-3">{% trans 'Your clubs' %}</p>
 
-<hr>
 
-<!--USER CLUBS-->
-<div class="row mx-5 justify-content-center">
+{% if user_clubs %}
+<div class="row justify-content-center mx-1">
 
   {% for club in user_clubs %}
 
-  <div class="col-sm-auto m-3 align-self-center">
+    <div class="col col-auto">
 
-    <div class="club-logo">
-      <a href="{% url 'democracy:club_detail' club.id %}">
-        {% if club.logo_image %}
-        <img src="{{ club.logo_image.url }}" alt="club.logo_image not found">
-        {% else %}
-        <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo_image not found">
-        <div class="overlay py-auto">
-          <h5 class="py-auto">{{ club.name }}</h5>
-        </div>
-        {% endif %}
-      </a>
-    </div>
+      <div class="club-logo">
+        <a href="{% url 'democracy:club_detail' club.id %}">
+          {% if club.logo_image %}
+          <img src="{{ club.logo_image.url }}" alt="club.logo_image not found">
+          {% else %}
+          <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo_image not found">
+          <div class="overlay py-auto"><h5 class="py-auto">{{ club.name }}</h5></div>
+          {% endif %}
+        </a>
+      </div>
   </div>
 
   {% endfor %}
 
 </div>
 
-<!--NEW CLUB-->
-<div class="row mx-5 justify-content-center">
+{% else %}
 
-  <div class="col-sm-auto m-3 align-self-center">
-    <div class="new-club-logo">
-      <a href="{% url 'democracy:create_club' %}">
-        <img src="{% static 'democracy/images/new_club.png' %}" alt="club.logo_image not found" class="card-img">
-      </a>
-    </div>
-  </div>
+<p class="text-center my-3 mx-1">{% trans 'You are not in any club yet... create or ask to be invited to one!' %}</p>
 
+{% endif %}
+
+
+<div class="text-center mt-3">
+  <a class="mx-1 green-color blue-color-hover" href="{% url 'democracy:create_club' %}">
+    {% trans 'Create new club' %}
+  </a>
 </div>
-
 <!--END: CLUB PANEL-->
 
 
@@ -81,13 +109,13 @@
 <!--START: LOGIN / SIGNIN-->
 <div class="text-center my-5">
 
-  <p class="light1-style">{% trans 'To start, log in.' %}</p>
+  <p class="">{% trans 'To start, log in.' %}</p>
 
   <form id="formSubmit" action="{% url 'registration:user_login' %}">
     <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue mb-5">{% trans 'Log in' %}</button>
   </form>
 
-  <span class="light1-style">{% trans 'New here?' %}</span>
+  <span class="">{% trans 'New here?' %}</span>
   <a class="mx-1 green-color blue-color-hover" href="{% url 'registration:user_signup' %}">
     {% trans 'Create an account!' %}
   </a>

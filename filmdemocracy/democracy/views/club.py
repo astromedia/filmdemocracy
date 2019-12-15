@@ -599,6 +599,7 @@ class RankingResultsView(UserPassesTestMixin, generic.TemplateView):
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
     form_class = forms.InviteNewMemberForm
+    valid_invitation = True
     subject_template = 'democracy/emails/invite_new_member_subject.txt'
     email_template = 'democracy/emails/invite_new_member_email.html'
     html_email_template = 'democracy/emails/invite_new_member_email_html.html'
@@ -629,19 +630,24 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 
     def form_valid(self, form):
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
+        club_members = club.members.filter(is_active=True)
         email = form.cleaned_data["email"]
-        invitation_text = form.cleaned_data["invitation_text"]
-        hash_invited_email = hashlib.sha256(email.encode('utf-8')).hexdigest()
-        invitation = Invitation.objects.create(club=club,
-                                               inviter=self.request.user,
-                                               hash_invited_email=hash_invited_email,
-                                               invitation_text=invitation_text)
-        self.create_notifications(self.request.user, club, email, invitation)
-        email_context = {'invitation': invitation}
-        to_emails_list = [email]
-        spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
-        spam_helper.send_emails(to_emails_list, email_context)
-        messages.success(self.request, _('An invitation email has been sent to: ') + form.cleaned_data['email'])
+        for club_member in club_members:
+            if club_member.email == email:
+                self.valid_invitation = False
+        if self.valid_invitation:
+            invitation_text = form.cleaned_data["invitation_text"]
+            hash_invited_email = hashlib.sha256(email.encode('utf-8')).hexdigest()
+            invitation = Invitation.objects.create(club=club,
+                                                   inviter=self.request.user,
+                                                   hash_invited_email=hash_invited_email,
+                                                   invitation_text=invitation_text)
+            self.create_notifications(self.request.user, club, email, invitation)
+            email_context = {'invitation': invitation}
+            to_emails_list = [email]
+            spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
+            spam_helper.send_emails(to_emails_list, email_context)
+        messages.success(self.request, _('An invitation has been sent to: ') + form.cleaned_data['email'])
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -656,8 +662,9 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
 
 @method_decorator(login_required, name='dispatch')
 class InviteNewMemberConfirmView(generic.FormView):
-    form_class = forms.ConfirmForm
+    form_class = forms.InviteNewMemberConfirmForm
     invitation = None
+    accepted = False
     valid_link = False
 
     @method_decorator(sensitive_post_parameters())
@@ -702,17 +709,26 @@ class InviteNewMemberConfirmView(generic.FormView):
         club = self.invitation.club
         # Avoid user accepting invitation link twice
         if self.invitation.is_active:
-            club.members.add(self.request.user)
-            club.save()
-            ClubMemberInfo.objects.create(club=club, member=user)
-            self.create_notifications(user, club)
-            # Deactivate all other invitations the user may have received before
-            pending_invitations = Invitation.objects.filter(club=club, hash_invited_email=self.invitation.hash_invited_email)
-            for pending_invitation in pending_invitations:
+            if form.cleaned_data['response_choice'] == 'accept':
+                self.accepted = True
+                club.members.add(self.request.user)
+                club.save()
+                ClubMemberInfo.objects.create(club=club, member=user)
+                self.create_notifications(user, club)
+                # Deactivate all other invitations the user may have received before
+                pending_invitations = Invitation.objects.filter(club=club, hash_invited_email=self.invitation.hash_invited_email)
+                for pending_invitation in pending_invitations:
+                    pending_invitation.is_active = False
+                    pending_invitation.save()
+                messages.success(self.request, _('Congratulations! You have are now a proud member of the club!'))
+            elif form.cleaned_data['response_choice'] == 'decline':
+                pending_invitation = Invitation.objects.get(id=self.invitation.id)
                 pending_invitation.is_active = False
                 pending_invitation.save()
-        messages.success(self.request, _('Congratulations! You have are now a proud member of the club!'))
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.invitation.club.id})
+        if self.accepted:
+            return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.invitation.club.id})
+        else:
+            return reverse_lazy('core:home')
