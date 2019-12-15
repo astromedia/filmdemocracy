@@ -96,6 +96,19 @@
 }
 
 
+/* Club stats
+-------------------------------------------------- */
+.container-stats {
+  background-color: white;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0rem 2.5rem 0rem;
+}
+
+.container-stats .col {
+  padding: 0rem 0.25rem;
+}
+
+
 /* Club markdown panel
 -------------------------------------------------- */
 .markdownx-view {
@@ -199,6 +212,7 @@
   margin-top: -2px;
   font-size: 13px;
 }
+
 
 /* Button new options
 -------------------------------------------------- */

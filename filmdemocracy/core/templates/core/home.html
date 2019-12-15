@@ -48,7 +48,7 @@
       <p class="m-0 p-0">
       <strong>{{ invitation.inviter.username }}</strong>
         {% trans 'invited you to join the club' %}
-      <strong>{{ invitation.club.name }}</strong>. <a class="strong-link" href="{% url 'democracy:invite_new_member_confirm' invitation.id %}">{% trans 'Check this invitation.' %}</a>
+      <strong>{{ invitation.club.name }}</strong>. <a class="strong-link" href="{% url 'democracy:invite_new_member_confirm' invitation.id %}">{% trans 'Check this invitation' %}</a>.
       </p>
     </div>
 

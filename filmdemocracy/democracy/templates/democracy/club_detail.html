@@ -123,6 +123,67 @@
 <!--END: LAST 5 COMMENTS ON FILMS-->
 
 
+<!--START: CLUB STATS-->
+<p class="text-center mt-5">
+  <strong>{% trans 'Club statistics' %}</strong>
+</p>
+
+<div class="container-stats border-top border-bottom">
+
+  <!--CREATED-->
+  <div class="row mx-auto">
+    <div class="col col-6 text-right">
+      <strong>{% trans 'Created on:' %}</strong>
+    </div>
+    <div class="col col-6 text-left">
+      {{ club.created_datetime.date }}
+    </div>
+  </div>
+
+  <!--MEMBERS-->
+  <div class="row mx-auto">
+    <div class="col col-6 text-right">
+      <strong>{% trans 'Members:' %}</strong>
+    </div>
+    <div class="col col-6 text-left">
+      {{ club.members.all|length }}
+    </div>
+  </div>
+
+  <!--CANDIDATE FILMS-->
+  <div class="row mx-auto">
+    <div class="col col-6 text-right">
+      <strong>{% trans 'Films proposed:' %}</strong>
+    </div>
+    <div class="col col-6 text-left">
+      {{ num_of_candidate_films }}
+    </div>
+  </div>
+
+  <!--SEEN FILMS-->
+  <div class="row mx-auto">
+    <div class="col col-6 text-right">
+     <strong>{% trans 'Films seen:' %}</strong>
+    </div>
+    <div class="col col-6 text-left">
+      {{ num_of_seen_films }}
+    </div>
+  </div>
+
+  <!--VOTES-->
+  <div class="row mx-auto">
+    <div class="col col-6 text-right">
+     <strong>{% trans 'Votes:' %}</strong>
+    </div>
+    <div class="col col-6 text-left">
+      {{ club.vote_set.all|length }}
+    </div>
+  </div>
+
+</div>
+<!--END: CLUB STATS-->
+
+
 <div class="album">
 
 

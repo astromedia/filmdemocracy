@@ -80,8 +80,13 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
             films_last_pub = club_films.order_by('-created_datetime')
             groups_last_pub = [films_last_pub[i:i+3] for i in [0, 3, 6, 9]]
             context['groups_last_pub'] = groups_last_pub
-            last_seen = club_films.filter(seen=True)
-            context['films_last_seen'] = last_seen.order_by('-seen_date')[0:3]
+            seen_films = club_films.filter(seen=True)
+            context['films_last_seen'] = seen_films.order_by('-seen_date')[0:3]
+            context['num_of_candidate_films'] = len(club_films)
+            context['num_of_seen_films'] = len(seen_films)
+        else:
+            context['num_of_candidate_films'] = 0
+            context['num_of_seen_films'] = 0
         return context
 
 
