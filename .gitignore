@@ -123,4 +123,5 @@ migrations/
 # Local stuff
 /local
 /filmdemocracy/secrets.py
+/filmdemocracy/static
 /secrets
