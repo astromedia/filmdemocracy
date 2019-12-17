@@ -27,7 +27,7 @@
     <!--START: NEW MEMBER EMAIL-->
     <div class="form-input-field">
       <div class="label">
-        {% trans 'Send invitation email to:' %}
+        {% trans 'Send invitation to:' %}
       </div>
       {% if form.is_bound %}
       {% if form.email.errors %}
@@ -47,7 +47,7 @@
     <!--START: INVITATION TEXT-->
     <div class="form-input-field form-invitation-text">
       <div class="label">
-        {% trans 'Attach message with invitation (optional):' %}
+        {% trans 'Include message with invitation (optional):' %}
       </div>
       {% if form.is_bound %}
       {% if form.invitation_text.errors %}

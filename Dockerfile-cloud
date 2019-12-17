@@ -1,0 +1,20 @@
+FROM python:3.8
+
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && apt-get -y install gettext
+
+RUN pip install pip --upgrade
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+
+COPY . /code
+
+ENV WEB_APP_PORT 8080
+ENV VERSION_ENV 'dev'
+ENV DEPLOY_ENV 'cloud'
+ENV GOOGLE_APPLICATION_CREDENTIALS '/code/secrets/storage-credentials.json'
+
+WORKDIR /code
+
+CMD gunicorn -b :$PORT filmdemocracy.wsgi

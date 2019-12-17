@@ -23,8 +23,10 @@
 
     <div class="col col-4">
 
-      <form class="banner-link" action="{% url 'democracy:club_detail' club.id %}">
-        <button type="submit" class="btn btn-block">{% trans 'Club' %}</button>
+      <form class="banner-link" id="formSubmitBanner1" action="{% url 'democracy:club_detail' club.id %}">
+
+        <button type="submit" id="btnSpinnerBanner1" class="btn btn-block">{% trans 'Club' %}</button>
+
       </form>
 
     </div>
@@ -32,14 +34,14 @@
 
     <div class="col col-4">
 
-      <form class="banner-link"
+      <form class="banner-link" id="formSubmitBanner2"
             action="{% if page == 'film_detail' %}
                     {% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:order_option|add:display_option %}
                     {% else %}
                     {% url 'democracy:candidate_films' club_id=club.id %}
                     {% endif %}">
 
-        <button type="submit" class="btn btn-block">{% trans 'Films' %}</button>
+        <button type="submit" id="btnSpinnerBanner2" class="btn btn-block">{% trans 'Films' %}</button>
 
       </form>
 
@@ -48,9 +50,9 @@
 
     <div class="col col-4">
 
-      <form class="banner-link" action="{% url 'democracy:ranking_generator' club.id %}">
+      <form class="banner-link" id="formSubmitBanner3" action="{% url 'democracy:ranking_generator' club.id %}">
 
-        <button type="submit" class="btn btn-block">{% trans 'Ranking' %}</button>
+        <button type="submit" id="btnSpinnerBanner3" class="btn btn-block">{% trans 'Ranking' %}</button>
 
       </form>
 

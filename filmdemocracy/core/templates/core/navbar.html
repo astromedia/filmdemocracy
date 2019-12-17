@@ -284,7 +284,7 @@
                       {% elif ntf.type == 'meetdel' %}
 
                         {% blocktrans with organizer=ntf.activator.username meeting=ntf.object_name %}
-                          {{ organizer }} deleted the club meeting: {{ meeting }}.
+                          {{ organizer }} deleted the meeting: {{ meeting }}.
                         {% endblocktrans %}
 
                       {% elif ntf.type == 'commfilm' %}
@@ -599,7 +599,7 @@
           </a>
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:promote_members' club.id %}">
-            {% trans 'Promote members to admin' %}
+            {% trans 'Promote club members to admin' %}
           </a>
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:kick_members' club.id %}">
@@ -846,7 +846,7 @@
     <div class="modal-content">
 
       <div class="modal-header border-0">
-        <h5 class="modal-title" id="languagesModalTitle">{% trans 'Site language' %}</h5>
+        <h5 class="modal-title" id="languagesModalTitle">{% trans 'Language' %}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

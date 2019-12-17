@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{% static 'core/css/forms.css' %}">
 {% endblock %}
 
-{% block title %}{% trans 'Create new account' %}{% endblock %}
+{% block title %}{% trans 'Create account' %}{% endblock %}
 
 {% block pagecontent %}
 
@@ -29,7 +29,7 @@
 
 
 <!--START: SIGN UP FORM-->
-<h3 class="h3">{% trans 'Create new account' %}</h3>
+<h3 class="h3">{% trans 'Create account' %}</h3>
 
 <form id="formSubmit" class="form-standard" method="POST" novalidate>
   {% csrf_token %}

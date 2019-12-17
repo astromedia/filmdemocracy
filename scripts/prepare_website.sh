@@ -30,12 +30,12 @@ django-admin compilemessages
 cd ${MAIN_DIR} || exit
 
 if [ ${DEPLOY_ENV} = "cloud" ]; then
-  #gsutil mb gs://filmdemocracy-static-${VERSION_ENV}
-  #gsutil defacl set public-read gs://filmdemocracy-static-${VERSION_ENV}
-  #gsutil cors set gs-bucket-cors-config.json gs://filmdemocracy-static-${VERSION_ENV}
-  #gsutil mb gs://filmdemocracy-media-${VERSION_ENV}
-  #gsutil defacl set public-read gs://filmdemocracy-media-${VERSION_ENV}
-  #gsutil cors set gs-bucket-cors-config.json gs://filmdemocracy-media-${VERSION_ENV}
+#  gsutil mb gs://filmdemocracy-static-${VERSION_ENV}
+#  gsutil defacl set public-read gs://filmdemocracy-static-${VERSION_ENV}
+#  gsutil cors set gs-bucket-cors-config.json gs://filmdemocracy-static-${VERSION_ENV}
+#  gsutil mb gs://filmdemocracy-media-${VERSION_ENV}
+#  gsutil defacl set public-read gs://filmdemocracy-media-${VERSION_ENV}
+#  gsutil cors set gs-bucket-cors-config.json gs://filmdemocracy-media-${VERSION_ENV}
   echo "python manage.py collectstatic --clear --noinput"
   python manage.py collectstatic --clear --noinput
   echo "python manage.py upload_static_files_to_gcs"
