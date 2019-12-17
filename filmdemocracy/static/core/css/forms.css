@@ -1,0 +1,77 @@
+
+/* General page styles
+-------------------------------------------------- */
+.container-base {
+  background-color: #fafafa;
+}
+
+.h3 {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-weight: normal;
+}
+
+
+/* Form styles
+-------------------------------------------------- */
+.form-standard {
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-standard .form-inputs {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-standard .form-inputs .form-input-field {
+  width: 80%;
+  max-width: 330px;
+  margin: auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-standard .form-inputs .form-input-field .label {
+}
+
+.form-standard .form-inputs .form-input-field .invalid-feedback {
+  width: 100%;
+  margin: auto;
+  padding-top: 4px;
+}
+
+.form-standard .form-inputs .form-input-field .invalid-feedback:last-of-type {
+  margin-bottom: -20px;
+}
+
+.form-standard .form-inputs .form-input-field .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.form-standard .form-inputs .form-input-field .form-control:focus {
+  z-index: 2;
+}
+
+
+/* Form message styles
+-------------------------------------------------- */
+.form-message {
+  padding: 15px 10px 15px 10px;
+  margin: 30px 10px 25px 10px;
+  text-align: center;
+  font-weight: bold;
+ }
+
+.form-message-error {
+  padding: 15px 10px 15px 10px;
+  margin: 10px;
+  text-align: center;
+  font-weight: bold;
+ }

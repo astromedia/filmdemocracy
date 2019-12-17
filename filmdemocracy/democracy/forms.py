@@ -1,9 +1,13 @@
+from io import BytesIO
+import time
 import datetime
 
 from django import forms
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.base import ContentFile
 from dal import autocomplete
 from PIL import Image
 
@@ -27,7 +31,7 @@ class EditClubForm(forms.ModelForm):
 
     class Meta:
         model = Club
-        fields = ['updateImage', 'logo_image', 'x', 'y', 'width', 'height', 'name', 'short_description']
+        fields = ['updateImage', 'x', 'y', 'width', 'height', 'logo_image', 'name', 'short_description']
         widgets = {
             'logo_image': forms.FileInput(attrs={
                 'accept': 'image/*'  # this is not an actual validation! don't rely on that!
@@ -37,25 +41,34 @@ class EditClubForm(forms.ModelForm):
     def clean_logo_image(self):
         # TODO: club logo_image validation
         update_image = self.cleaned_data.get('updateImage')
-        logo_image = self.cleaned_data['logo_image']
-        if update_image:
+        original_image = self.cleaned_data['logo_image']
+        x = self.cleaned_data.get('x')
+        y = self.cleaned_data.get('y')
+        w = self.cleaned_data.get('width')
+        h = self.cleaned_data.get('height')
+        if update_image and x is not None and y is not None and w is not None and h is not None:
+            image = Image.open(original_image)
+            cropped_image = image.crop((x, y, w + x, h + y))
+            ratio = w / h
+            resized_image = cropped_image.resize((int(516 * ratio), 516), Image.ANTIALIAS)
+            buffer = BytesIO()
+            resized_image.save(fp=buffer, format='JPEG')
+            pil_image = ContentFile(buffer.getvalue())
+            new_file_name = str(int(time.time())) + '.jpg'
+            logo_image = InMemoryUploadedFile(
+                pil_image,  # file
+                u"logo_image",  # field_name
+                new_file_name,  # file name
+                'image/jpeg',  # content_type
+                pil_image.size,  # size
+                None  # content_type_extra
+            )
             return logo_image
         else:
             return
 
     def save(self):
         club = super(EditClubForm, self).save()
-        update_image = self.cleaned_data.get('updateImage')
-        x = self.cleaned_data.get('x')
-        y = self.cleaned_data.get('y')
-        w = self.cleaned_data.get('width')
-        h = self.cleaned_data.get('height')
-        if update_image and x is not None and y is not None and w is not None and h is not None:
-            image = Image.open(club.logo_image)
-            cropped_image = image.crop((x, y, w+x, h+y))
-            ratio = w/h
-            resized_image = cropped_image.resize((int(516*ratio), 516), Image.ANTIALIAS)
-            resized_image.save(club.logo_image.path)
         return club
 
 

@@ -120,6 +120,7 @@ dmypy.json
 # Ignore migrations
 migrations/
 
-# Local stuff...
+# Local stuff
 /local
 /filmdemocracy/secrets.py
+/secrets

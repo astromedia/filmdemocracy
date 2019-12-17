@@ -1,0 +1,80 @@
+
+/* Form styles
+-------------------------------------------------- */
+.form-edit-club .form-inputs .form-name {
+  width: 85% !important;
+  max-width: 330px !important;
+}
+
+.form-edit-club .form-inputs .form-short-description {
+  width: 95% !important;
+  max-width: 500px !important;
+}
+
+.form-edit-club .form-inputs .form-short-description .short-description {
+  max-height: 80px;
+}
+
+
+/* Logo cropper styles
+-------------------------------------------------- */
+.form-edit-club .form-inputs .logo-picture {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-edit-club .form-inputs .logo-picture img {
+  max-width: 16rem;
+  max-height: 12rem;
+  border: 2px solid rgba(0, 0, 0, 0.75);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
+  margin-left: 50px;
+}
+
+.form-edit-club .form-inputs .logo-picture .change-picture-icon {
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  bottom: -15px;
+  left: -85px;
+  width: 50px !important;
+  height: 50px !important;
+  max-width: 50px !important;
+  max-height: 50px !important;
+  margin: 0px;
+  padding: 0px;
+}
+
+.form-edit-club .form-inputs .logo-picture .change-picture-icon img {
+  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  padding: 5px;
+}
+
+.form-edit-club .form-inputs .form-input-field {
+  max-width: 100%;
+}
+
+.form-edit-club .btn-modal-util {
+  text-align: center;
+  padding: 1px;
+  margin: 0px;
+  border: 2px solid #282828;
+  border-radius: 100px;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.form-edit-club .btn-modal-util img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.form-edit-club .btn-modal {
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+  font-weight: bold !important;
+}

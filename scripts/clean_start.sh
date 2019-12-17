@@ -13,8 +13,8 @@ declare -a WEB_APPS=("core" "registration" "democracy" "chat")
 # CLEAN MIGRATIONS #
 ####################
 
-WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-MAIN_DIR=${WORKDIR}/..
+SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+MAIN_DIR=${SCRIPTS_DIR}/..
 
 cd ${MAIN_DIR} || exit
 

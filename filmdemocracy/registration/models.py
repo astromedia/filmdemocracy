@@ -6,7 +6,7 @@ from django.db import models
 
 
 def get_profile_image_path(instance, filename):
-    return os.path.join('user_profile_images', str(instance.id), filename)
+    return os.path.join('profile_images', str(instance.id), filename)
 
 
 class User(AbstractUser):

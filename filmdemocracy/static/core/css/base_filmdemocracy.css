@@ -1,0 +1,38 @@
+
+/* General page structure
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+  font-size: 14px; /* 1rem = 14px*/
+}
+
+@media (min-width: 1200px) {
+  html {
+    font-size: 16px; /* 1rem = 16px*/
+  }
+}
+
+body {
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 3.5rem; /* Navbar height */
+  padding-bottom: 0rem;
+  background-color: #bababc;
+  min-height: 45rem;
+  margin-bottom: 6.5rem; /* Footer height */
+}
+
+.container-base {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  min-height: 65rem;
+  max-width: 57rem;
+  background-color: #fafafa;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.65);
+  padding-right: 0;
+  padding-left: 0;
+}

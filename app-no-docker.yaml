@@ -1,0 +1,22 @@
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT filmdemocracy.wsgi
+
+beta_settings:
+    cloud_sql_instances: smart-grin-262119:europe-west1:filmdemocracy-dev
+
+runtime_config:
+  python_version: 3
+
+manual_scaling:
+  instances: 1
+
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
+
+env_variables:
+  VERSION_ENV: 'dev'
+  DEPLOY_ENV: 'cloud'
+  GOOGLE_APPLICATION_CREDENTIALS: '/secrets/storage-credentials.json'

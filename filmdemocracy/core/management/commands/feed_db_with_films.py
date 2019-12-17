@@ -11,7 +11,7 @@ from filmdemocracy.democracy.models import FilmDb
 
 
 class Command(BaseCommand):
-    help = 'Feeds the database with the films jsons located in /local'
+    help = 'Feed the database with the films jsons located in /local'
 
     FILMS_JSONS_TEST_DIR = '/code/local/films_jsons_test'
     FILMS_JSONS_TMP_DIR = '/code/local/films_jsons_tmp'

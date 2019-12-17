@@ -1,6 +1,11 @@
+from io import BytesIO
+import time
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.utils.translation import gettext_lazy as _
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.base import ContentFile
 from PIL import Image
 
 from filmdemocracy.registration.models import User
@@ -34,7 +39,7 @@ class AccountInfoForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ['updateImage', 'profile_image', 'x', 'y', 'width', 'height', 'email', 'public_email']
+        fields = ['updateImage', 'x', 'y', 'width', 'height', 'profile_image', 'email', 'public_email']
         widgets = {
             'profile_image': forms.FileInput(attrs={
                 'accept': 'image/*'  # this is not an actual validation! don't rely on that!
@@ -44,23 +49,31 @@ class AccountInfoForm(UserChangeForm):
     def clean_profile_image(self):
         # TODO: club logo_image validation
         update_image = self.cleaned_data.get('updateImage')
-        profile_image = self.cleaned_data['profile_image']
-        if update_image:
+        original_image = self.cleaned_data['profile_image']
+        x = self.cleaned_data.get('x')
+        y = self.cleaned_data.get('y')
+        w = self.cleaned_data.get('width')
+        h = self.cleaned_data.get('height')
+        if update_image and x is not None and y is not None and w is not None and h is not None:
+            image = Image.open(original_image)
+            cropped_image = image.crop((x, y, w + x, h + y))
+            resized_image = cropped_image.resize((516, 516), Image.ANTIALIAS)
+            buffer = BytesIO()
+            resized_image.save(fp=buffer, format='JPEG')
+            pil_image = ContentFile(buffer.getvalue())
+            new_file_name = str(int(time.time())) + '.jpg'
+            profile_image = InMemoryUploadedFile(
+                pil_image,  # file
+                u"profile_image",  # field_name
+                new_file_name,  # file name
+                'image/jpeg',  # content_type
+                pil_image.size,  # size
+                None  # content_type_extra
+            )
             return profile_image
         else:
             return
 
     def save(self):
         user = super(AccountInfoForm, self).save()
-        print(self)
-        update_image = self.cleaned_data.get('updateImage')
-        x = self.cleaned_data.get('x')
-        y = self.cleaned_data.get('y')
-        w = self.cleaned_data.get('width')
-        h = self.cleaned_data.get('height')
-        if update_image and x is not None and y is not None and w is not None and h is not None:
-            image = Image.open(user.profile_image)
-            cropped_image = image.crop((x, y, w+x, h+y))
-            resized_image = cropped_image.resize((516, 516), Image.ANTIALIAS)
-            resized_image.save(user.profile_image.path)
         return user

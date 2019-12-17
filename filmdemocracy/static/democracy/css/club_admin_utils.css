@@ -1,0 +1,34 @@
+
+/* Form admin utils
+-------------------------------------------------- */
+.help-subtitle {
+  text-align: center;
+  font-weight: bold;
+  margin: 30px 0px;
+  font-size: 1rem;
+}
+
+.admin-member {
+  position: absolute !important;
+  width: 80px;
+  padding: 0px;
+  font-size: 1rem;
+  position: absolute;
+  left: calc(50% - 40px);
+  bottom: 3px;
+  text-align: center;
+}
+
+.form-kick-members .card :checked + label img {
+  background-color: red !important;
+  border: 5px solid red !important;
+}
+
+.form-promote-members .card :checked + label img {
+  background-color: seagreen !important;
+  border: 5px solid seagreen !important;
+}
+
+.not-allowed {
+  cursor: not-allowed !important;
+}

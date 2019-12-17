@@ -2,5 +2,8 @@ Django==2.2.8
 django-autocomplete-light
 django-markdownx
 django-widget-tweaks
+django-storages[google]
 psycopg2-binary
 requests
+google-cloud-storage
+gunicorn

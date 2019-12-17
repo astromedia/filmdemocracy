@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from filmdemocracy.core.models import Notification
 from filmdemocracy.democracy.models import Film, Vote, Club, Meeting, Invitation
@@ -370,14 +371,14 @@ class NotificationsHelper:
 
     @staticmethod
     def get_website_image_url(ntf, object_id):
-        return '/static/core/svg/web_letters.svg'
+        return static('core/svg/web_letters_negative.svg')
 
     @staticmethod
     def get_activator_image_url(ntf, object_id):
         if ntf.activator.profile_image:
             return ntf.activator.profile_image.url
         else:
-            return '/static/registration/svg/user_no_profile_image.svg'
+            return static('registration/svg/user_no_profile_image.svg')
 
     @staticmethod
     def get_member_image_url(ntf, object_id):
@@ -385,7 +386,7 @@ class NotificationsHelper:
         if member.profile_image:
             return member.profile_image.url
         else:
-            return '/static/registration/svg/user_no_profile_image.svg'
+            return static('registration/svg/user_no_profile_image.svg')
 
     @staticmethod
     def get_film_image_url(ntf, object_id):
@@ -400,7 +401,7 @@ class NotificationsHelper:
         if ntf.club.logo_image:
             return ntf.club.logo_image.url
         else:
-            return '/static/democracy/images/club_no_logo.png'
+            return static('democracy/images/club_no_logo.png')
 
     def get_user_notifications(self):
         return Notification.objects.filter(recipient=self.request.user)

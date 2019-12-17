@@ -15,7 +15,7 @@ import os
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 
-from filmdemocracy.secrets import SECRET_KEY, EMAIL_HOST_PASSWORD
+from filmdemocracy.secrets import CLOUD_DATABASE_PASSWORD, SECRET_KEY, EMAIL_HOST_PASSWORD
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -23,18 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
-
-# SECURITY WARNING: don't run with debug turned on in production!
-
+# TODO: See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+# TODO: SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-# TODO: This value is not safe for production usage. https://docs.djangoproject.com/en/1.11/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']  # TODO: This value is not safe for production usage. https://docs.djangoproject.com/en/1.11/ref/settings/#allowed-hosts
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'filmdemocracy.core',
     'filmdemocracy.registration',
@@ -83,27 +78,47 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'filmdemocracy.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+# Database (https://docs.djangoproject.com/en/2.1/ref/settings/#databases)
+if os.getenv('DEPLOY_ENV') == 'cloud':
+    # Run from GAE
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '/cloudsql/smart-grin-262119:europe-west1:filmdemocracy-dev',
+            'NAME': f'filmdemocracy-db-{os.getenv("VERSION_ENV")}',
+            'USER': 'filmdemocracy-admin',
+            'PASSWORD': CLOUD_DATABASE_PASSWORD,
+        }
     }
-}
+elif os.getenv('DEPLOY_ENV') == 'localcloud':
+    # Run from local with cloudsql proxy (https://cloud.google.com/sql/docs/postgres/connect-docker)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': 'cloudsql-proxy',
+            'PORT': 5432,
+            'NAME': f'filmdemocracy-db-{os.getenv("VERSION_ENV")}',
+            'USER': 'filmdemocracy-admin',
+            'PASSWORD': CLOUD_DATABASE_PASSWORD,
+        }
+    }
+elif os.getenv('DEPLOY_ENV') == 'local':
+    # Run from local with postgres docker
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'HOST': 'db',
+            'PORT': 5432,
+        }
+    }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
-
+# Password validation (https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators)
 # TODO: disable in production!!!
 AUTH_PASSWORD_VALIDATORS = []
 
@@ -124,9 +139,7 @@ AUTH_PASSWORD_VALIDATORS = []
 # ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
-
+# Internationalization (https://docs.djangoproject.com/en/2.1/topics/i18n/)
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'filmdemocracy/locale')]
 
 LANGUAGES = [
@@ -145,27 +158,29 @@ TIME_ZONE = 'Europe/Madrid'  # TODO: use pytz
 
 # DATE_FORMAT = 'yyyy-MM-dd'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+# Static files (https://docs.djangoproject.com/en/2.2/howto/static-files/)
+if os.getenv('DEPLOY_ENV') in ['cloud', 'localcloud']:
+    # Run with GCS as static files provider (https://cloud.google.com/appengine/docs/flexible/python/serving-static-files)
+    GS_STATIC_BUCKET_NAME = f'filmdemocracy-static-{os.getenv("VERSION_ENV")}'
+    STATIC_URL = f'https://storage.googleapis.com/{GS_STATIC_BUCKET_NAME}/static/'
+elif os.getenv('DEPLOY_ENV') == 'local':
+    # Run from local
+    STATIC_URL = '/static/'
 
+# This is where collectstatic collects the static files
 STATIC_ROOT = os.path.join(BASE_DIR, 'filmdemocracy/static/')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'filmdemocracy/core/static'),
-]
+# STATICFILES_DIRS = []
 
 
 # Login redirect
-
 LOGIN_URL = '/registration/login/'
 LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_REDIRECT_URL = 'core:home'
 
 
 # Dev email backend
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -175,18 +190,22 @@ EMAIL_HOST_USER = 'filmdemocracyweb'
 DEFAULT_FROM_EMAIL = 'filmdemocracyweb@gmail.com'
 
 
-# Using a custom user model when starting a project
-# https://docs.djangoproject.com/en/2.1/topics/auth/customizing/#extending-the-existing-user-model
-
+# Using a custom user model when starting a project (https://docs.djangoproject.com/en/2.1/topics/auth/customizing/#extending-the-existing-user-model)
 AUTH_USER_MODEL = 'registration.User'
 
-MEDIA_URL = '/db_media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'local/db_media')
+
+# Media files
+if os.getenv('DEPLOY_ENV') in ['cloud', 'localcloud']:
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_BUCKET_NAME = f'filmdemocracy-media-{os.getenv("VERSION_ENV")}'
+    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+elif os.getenv('DEPLOY_ENV') == 'local':
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'local/media')
 
 
 # Custom Bootstrap messages
 # https://simpleisbetterthancomplex.com/tips/2016/09/06/django-tip-14-messages-framework.html
-
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
     messages.INFO: 'alert-info',

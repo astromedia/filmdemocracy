@@ -1,0 +1,223 @@
+
+/* General page styles
+-------------------------------------------------- */
+.filter-options {
+  margin: 0;
+  padding: 0;
+}
+
+.filter-options .filter {
+  width: 30%;
+  max-width: 250px;
+  margin-left: 1%;
+  margin-right: 1%;
+  padding: 0;
+}
+
+.filter-options .filter .dropdown .btn {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 1rem;
+  color: darkgray;
+  background-color: #121317;
+  border: 1px solid #282828;
+}
+
+.filter-options .filter .dropdown .btn:hover {
+  color: white;
+  border: 1px solid #6c737d;
+}
+
+.filter-options .filter .dropdown {
+}
+
+ .filter-options .filter .dropdown .dropdown-menu {
+  width: 96%;
+  max-width: 57rem;
+  min-width: 15rem;
+  margin-left: 2%;
+  margin-right: 2%;
+  overflow: hidden;
+  border: 2px solid #282828;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
+}
+
+.filter-options .filter .dropdown .dropdown-menu .dropdown-header {
+  color: #121317;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.filter-options .filter .dropdown .dropdown-menu .dropdown-item {
+  padding: 1rem 0.8rem;
+}
+
+.filter-options .filter .dropdown .dropdown-menu .dropdown-divider {
+  padding: 0;
+  margin: 0;
+}
+
+.filter-options .filter .dropdown .dropdown-menu .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.filter-options .filter .dropdown .dropdown-menu .active {
+  color: black;
+  font-weight: bold;
+  background-color: #d1d1d1 !important;
+}
+
+.container-message {
+  max-width: 900px;
+}
+
+
+/* Candidate films album
+-------------------------------------------------- */
+.films-album {
+  background-color: transparent;
+}
+
+.films-album .col {
+  max-width: 31%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.films-album .card {
+  width: 100%;
+  max-width: 13rem;
+}
+
+.vote-icon {
+  height: 25px;
+  background: #282828;
+  border: 1px solid #282828 !important;
+  height: 25px;
+}
+
+
+/* Candidate films list
+-------------------------------------------------- */
+.container-list {
+  max-width: 700px;
+  padding: 1rem 0.5rem;
+  margin-top: 20px;
+  margin-bottom: 0px;
+}
+
+.container-list table thead {
+  color: #A9A9A9;
+  font-weight: normal;
+}
+
+.container-list table {
+  color: #A9A9A9 !important;
+}
+
+.film-table-row:hover {
+  color: white;
+}
+
+.film-table-row {
+  height: 2.5rem;
+}
+
+.film-table-row .film-table-title {
+  line-height: 1.2rem;
+  padding: 0rem 0.25rem 0rem 0.25rem;
+}
+
+.film-table-row a {
+  color: #A9A9A9;
+}
+
+.film-table-row:hover a {
+  color: white;
+}
+
+
+.container-list .hand-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid white !important;
+  background-color: white;
+}
+
+
+/* Candidate films image hover effect
+-------------------------------------------------- */
+.card-film {
+  height:100%;
+  float:left;
+  overflow:hidden;
+  position:relative;
+  text-align:center;
+  cursor:default;
+  background-color: transparent;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
+}
+
+.card-film .card-img {
+  display:block;
+  position:relative;
+  -webkit-transition:all .2s linear;
+  transition:all .2s linear;
+}
+
+.card-film .overlay {
+  width:100%;
+  height:100%;
+  position:absolute;
+  overflow:hidden;
+  top:0;
+  left:0;
+  opacity:0;
+  -webkit-transition:all .3s ease-in-out;
+  transition:all .3s ease-in-out
+}
+
+.card-film .film-title {
+  color:#fff;
+  text-align:center;
+  position:relative;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.2rem;
+  background:rgba(0,0,0,0.75);
+  -webkit-transform:translatey(-100px);
+  -ms-transform:translatey(-100px);
+  transform:translatey(-100px);
+  -webkit-transition:all .3s ease-in-out;
+  transition:all .3s ease-in-out;
+  padding:10px;
+}
+
+.card-film .film-voted {
+  color: #fff;
+  text-align: center;
+  margin-top: -33px;
+  position: relative;
+  font-size: 17px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.0);
+}
+
+.card-film:hover .card-img {
+  -ms-transform:scale(1.05);
+  -webkit-transform:scale(1.05);
+  transform:scale(1.05);
+}
+
+.card-film:hover .overlay {
+  opacity:1;
+  filter:alpha(opacity=100);
+}
+
+.card-film:hover .film-title {
+  opacity:1;
+  filter:alpha(opacity=100);
+  -ms-transform:translatey(0);
+  -webkit-transform:translatey(0);
+  transform:translatey(0);
+}

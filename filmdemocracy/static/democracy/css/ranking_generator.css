@@ -1,0 +1,25 @@
+
+/* Form participants
+-------------------------------------------------- */
+.form-ranking-generator {
+  text-align: center;
+}
+
+.form-ranking-generator .step-title {
+  font-weight: bold;
+  margin-bottom: 0px;
+  margin-top: 15px;
+}
+
+.form-ranking-generator .form-inputs .ranking-options .list-group-item {
+  padding: 0px;
+}
+
+.form-select-members .card :checked + label img {
+  background-color: lightseagreen !important;
+  border: 5px solid lightseagreen !important;
+}
+
+.custom-range {
+  width: 80%;
+}
