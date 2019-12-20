@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'filmdemocracy.wsgi.application'
 
 
 # Database (https://docs.djangoproject.com/en/2.1/ref/settings/#databases)
-if os.getenv('DEPLOY_ENV') == 'cloud':
+if os.getenv('DATABASE_ENV') == 'cloud':
     # Run from GAE
     DATABASES = {
         'default': {
@@ -93,7 +93,7 @@ if os.getenv('DEPLOY_ENV') == 'cloud':
             'PASSWORD': CLOUD_DATABASE_PASSWORD,
         }
     }
-elif os.getenv('DEPLOY_ENV') == 'localcloud':
+elif os.getenv('DATABASE_ENV') == 'cloudproxy':
     # Run from local with cloudsql proxy (https://cloud.google.com/sql/docs/postgres/connect-docker)
     DATABASES = {
         'default': {
@@ -105,7 +105,7 @@ elif os.getenv('DEPLOY_ENV') == 'localcloud':
             'PASSWORD': CLOUD_DATABASE_PASSWORD,
         }
     }
-elif os.getenv('DEPLOY_ENV') == 'local':
+elif os.getenv('DATABASE_ENV') == 'local':
     # Run from local with postgres docker
     DATABASES = {
         'default': {
@@ -160,11 +160,11 @@ TIME_ZONE = 'Europe/Madrid'  # TODO: use pytz
 
 
 # Static files (https://docs.djangoproject.com/en/2.2/howto/static-files/)
-if os.getenv('DEPLOY_ENV') in ['cloud', 'localcloud']:
+if os.getenv('STATIC_ENV') == 'cloud':
     # Run with GCS as static files provider (https://cloud.google.com/appengine/docs/flexible/python/serving-static-files)
     GS_STATIC_BUCKET_NAME = f'filmdemocracy-static-{os.getenv("VERSION_ENV")}'
     STATIC_URL = f'https://storage.googleapis.com/{GS_STATIC_BUCKET_NAME}/static/'
-elif os.getenv('DEPLOY_ENV') == 'local':
+elif os.getenv('STATIC_ENV') == 'local':
     # Run from local
     STATIC_URL = '/static/'
 
@@ -195,11 +195,11 @@ AUTH_USER_MODEL = 'registration.User'
 
 
 # Media files
-if os.getenv('DEPLOY_ENV') in ['cloud', 'localcloud']:
+if os.getenv('MEDIA_ENV') == 'cloud':
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     GS_BUCKET_NAME = f'filmdemocracy-media-{os.getenv("VERSION_ENV")}'
     MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
-elif os.getenv('DEPLOY_ENV') == 'local':
+elif os.getenv('MEDIA_ENV') == 'local':
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'local/media')
 

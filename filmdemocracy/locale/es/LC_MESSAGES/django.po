@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-18 00:24+0100\n"
+"POT-Creation-Date: 2019-12-20 00:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,7 +61,6 @@ msgid "Message"
 msgstr "Mensaje"
 
 #: core/templates/core/contact_us.html:6
-#, fuzzy
 msgid "Contact us"
 msgstr "Contacta con nosotros"
 
@@ -78,9 +77,9 @@ msgstr "Cerrar"
 #: core/templates/core/home.html:34
 #, python-format
 msgid "You have %(count)s pending club invitation!"
-msgid_plural "invitations!"
-msgstr[0] ""
-msgstr[1] ""
+msgid_plural "You have %(count)s pending club invitations!"
+msgstr[0] "¡Tienes %(count)s invitación pendiente!"
+msgstr[1] "¡Tienes %(count)s invitaciones pendientes!"
 
 #: core/templates/core/home.html:50
 msgid "invited you to join the club"
@@ -126,26 +125,22 @@ msgid "Create an account!"
 msgstr "¡Crea una cuenta!"
 
 #: core/templates/core/navbar.html:81
-#, fuzzy
-#| msgid "Remember me"
 msgid "member"
 msgid_plural "members"
-msgstr[0] "Mantener sesión iniciada"
-msgstr[1] "Mantener sesión iniciada"
+msgstr[0] "miembro"
+msgstr[1] "miembros"
 
 #: core/templates/core/navbar.html:82
 msgid "film"
 msgid_plural "films"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "película"
+msgstr[1] "películas"
 
 #: core/templates/core/navbar.html:83
-#, fuzzy
-#| msgid "My vote"
 msgid "vote"
 msgid_plural "votes"
-msgstr[0] "Mi voto"
-msgstr[1] "Mi voto"
+msgstr[0] "voto"
+msgstr[1] "votos"
 
 #: core/templates/core/navbar.html:99
 msgid "You are not in any club yet..."
@@ -773,6 +768,7 @@ msgid "You have not voted any film yet..."
 msgstr "No has votado ninguna película..."
 
 #: democracy/templates/democracy/club_detail.html:43
+#: democracy/templates/democracy/edit_club_info.html:22
 msgid "Your club doesn't have a logo yet!"
 msgstr "¡Tu club todavía no tiene logo!"
 
@@ -944,21 +940,13 @@ msgstr "Crear club"
 #: registration/templates/registration/password_reset_done.html:25
 #: registration/templates/registration/user_login.html:113
 #: registration/templates/registration/user_signup.html:136
-#, fuzzy
-#| msgid "Go to imdb.com"
 msgid "Go to home"
-msgstr "Ir a imdb.com"
+msgstr "Ir a la home"
 
 #: democracy/templates/democracy/edit_club_info.html:14
 #: democracy/templates/democracy/edit_club_info.html:29
 msgid "Edit club info"
 msgstr "Editar info del club"
-
-#: democracy/templates/democracy/edit_club_info.html:22
-#, fuzzy
-#| msgid "Your club doesn't have a logo yet!"
-msgid "Your club does not have a logo yet!"
-msgstr "¡Tu club todavía no tiene logo!"
 
 #: democracy/templates/democracy/edit_club_info.html:112
 msgid "Format club logo"
@@ -1219,11 +1207,7 @@ msgid "Move back to candidate films"
 msgstr "Devolver a películas candidatas"
 
 #: democracy/templates/democracy/film_detail.html:188
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "      Seen in session on %(filter_title)s%(date)s by:\n"
-#| "      "
+#, python-format
 msgid ""
 "\n"
 "    Seen in session on %(seen_date)s by:\n"
@@ -1367,13 +1351,8 @@ msgid "Decline invitation"
 msgstr "Rechazar invitación"
 
 #: democracy/templates/democracy/invite_new_member_confirm.html:45
-#, fuzzy
-#| msgid ""
-#| "Sorry, this invitation link is either not active anymore, or not valid "
-#| "for you."
 msgid "Sorry, this invitation is either not active or not valid anymore."
-msgstr ""
-"Lo sentimos, este link de invitación ya no está activo, o ya no es válido."
+msgstr "Lo sentimos, esta invitación ya no está activa, o ya no es válida."
 
 #: democracy/templates/democracy/leave_club.html:20
 #: democracy/templates/democracy/meeting_card.html:175
@@ -1841,12 +1820,6 @@ msgid "Email sent"
 msgstr "Email enviado"
 
 #: registration/templates/registration/password_reset_done.html:20
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "    We sent you an email with the instructions to change your password.\n"
-#| "    You should receive it shortly.\n"
-#| "    "
 msgid ""
 "We sent you an email with the instructions to change your password. You "
 "should receive it shortly."

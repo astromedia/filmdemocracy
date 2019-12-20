@@ -19,6 +19,7 @@ cd ${MAIN_DIR} || exit
 for WEB_APP in "${WEB_APPS[@]}"; do
   python manage.py makemigrations ${WEB_APP}
 done
+
 echo "python manage.py migrate"
 python manage.py migrate
 
@@ -29,7 +30,7 @@ django-admin compilemessages
 
 cd ${MAIN_DIR} || exit
 
-if [ ${DEPLOY_ENV} = "cloud" ]; then
+if [ ${STORAGE_ENV} = "cloud" ]; then
 #  gsutil mb gs://filmdemocracy-static-${VERSION_ENV}
 #  gsutil defacl set public-read gs://filmdemocracy-static-${VERSION_ENV}
 #  gsutil cors set gs-bucket-cors-config.json gs://filmdemocracy-static-${VERSION_ENV}

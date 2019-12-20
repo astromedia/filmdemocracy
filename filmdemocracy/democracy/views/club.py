@@ -643,16 +643,20 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
         if self.valid_invitation:
             invitation_text = form.cleaned_data["invitation_text"]
             hash_invited_email = hashlib.sha256(email.encode('utf-8')).hexdigest()
-            invitation = Invitation.objects.create(club=club,
-                                                   inviter=self.request.user,
-                                                   hash_invited_email=hash_invited_email,
-                                                   invitation_text=invitation_text)
-            self.create_notifications(self.request.user, club, email, invitation)
-            email_context = {'invitation': invitation}
-            to_emails_list = [email]
-            spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
-            spam_helper.send_emails(to_emails_list, email_context)
-        messages.success(self.request, _('An invitation has been sent to: ') + form.cleaned_data['email'])
+            invitation, created = Invitation.objects.get_or_create(club=club,
+                                                                   inviter=self.request.user,
+                                                                   hash_invited_email=hash_invited_email,)
+            if created:
+                invitation.invitation_text = invitation_text
+                invitation.save()
+                self.create_notifications(self.request.user, club, email, invitation)
+                email_context = {'invitation': invitation}
+                to_emails_list = [email]
+                spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
+                spam_helper.send_emails(to_emails_list, email_context)
+                messages.success(self.request, _('An invitation has been sent to: ') + form.cleaned_data['email'])
+            else:
+                messages.warning(self.request, _('You already sent an invitation to: ') + form.cleaned_data['email'])
         return super().form_valid(form)
 
     def get_success_url(self):

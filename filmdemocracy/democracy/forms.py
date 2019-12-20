@@ -182,7 +182,7 @@ class FilmAddNewForm(forms.Form):
             url='democracy:new_film_autocomplete',
             attrs={
                 'data-placeholder': _('Type here the name of the film'),
-                'data-minimum-input-length': 0,
+                'data-minimum-input-length': 3,
                 'data-html': True,
             }
         )

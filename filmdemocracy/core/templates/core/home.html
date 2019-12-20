@@ -31,12 +31,12 @@
 
 {% if pending_invitations %}
 <!--START: PENDING INVITES-->
-<p class="home-section-title mt-5 mb-3">{% blocktrans count pending_invitations|length as count %}You have {{count}} pending club invitation!{% plural %}invitations!{% endblocktrans %}</p>
+<p class="home-section-title mt-5 mb-3">{% blocktrans count pending_invitations|length as count %}You have {{count}} pending club invitation!{% plural %}You have {{count}} pending club invitations!{% endblocktrans %}</p>
 
 
   {% for invitation in pending_invitations %}
 
-  <div class="media pending-invitation alert alert-success">
+  <div class="media pending-invitation alert alert-success my-3">
 
     {% if invitation.club.logo_image %}
     <img class="align-self-center menu-icon" src="{{ invitation.club.logo_image.url }}">

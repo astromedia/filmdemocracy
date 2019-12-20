@@ -207,7 +207,7 @@
 
                     {% if ntf.club_name %}
                     <p class="first-line">
-                      <span class="first-line-club text-muted"><strong>{{ ntf.club_name }}</strong></span>
+                      <span class="first-line-club text-dark"><strong>{{ ntf.club_name }}</strong></span>
                       {% if ntf.time_ago %}<span class="first-line-time-ago text-secondary">{{ ntf.time_ago }}</span>{% endif %}
                     </p>
                     {% endif %}
@@ -817,7 +817,7 @@
 
 
           <!--START: ABOUT US-->
-          <a class="list-group-item list-group-item-action py-0 m-0 px-1 pointer-cursor">
+          <a class="list-group-item list-group-item-action py-0 m-0 px-1 pointer-cursor" data-dismiss="modal" data-toggle="modal" data-target="#aboutUsModal">
             <div class="media menu-item">
               <img class="align-self-center menu-icon" src="{% static 'core/svg/web_letters.svg'%}">
               <div class="media-body align-self-center">
@@ -847,7 +847,7 @@
 
       <div class="modal-header border-0">
         <h5 class="modal-title" id="languagesModalTitle">{% trans 'Language' %}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" data-toggle="modal" data-target="#settingsModal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -890,9 +890,9 @@
         </button>
       </div>
 
-      <div class="modal-body py-0 px-0">
+      <div class="modal-body py-5">
 
-        Work in progress
+        Work in progress...
 
       </div>
 
@@ -900,3 +900,27 @@
   </div>
 </div>
 <!-- END: MODAL SHARE-->
+
+
+<!-- START: MODAL ABOUT US-->
+<div class="modal fade modal-menu" id="aboutUsModal" tabindex="-1" role="dialog" aria-labelledby="aboutUsModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="aboutUsModalTitle">{% trans 'About FilmDemocracy' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" data-toggle="modal" data-target="#settingsModal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body py-5">
+
+        Work in progress...
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- END: MODAL ABOUT US-->

@@ -12,12 +12,15 @@ COPY . /code
 
 ENV WEB_APP_PORT 8080
 ENV VERSION_ENV 'dev'
-ENV DEPLOY_ENV 'cloud'
+ENV DATABASE_ENV 'cloudproxy'
+ENV STATIC_ENV 'local'
+ENV MEDIA_ENV 'cloud'
 ENV GOOGLE_APPLICATION_CREDENTIALS '/code/secrets/storage-credentials.json'
 
 WORKDIR /code
 
+CMD python manage.py feed_db_with_films
 #CMD ./scripts/prepare_website.sh
 #CMD python manage.py runserver 0.0.0.0:${WEB_APP_PORT}
 #CMD ./scripts/prepare_website.sh && python manage.py runserver 0.0.0.0:${WEB_APP_PORT}
-CMD gunicorn -b :$PORT filmdemocracy.wsgi
+#CMD gunicorn -b :$PORT filmdemocracy.wsgi

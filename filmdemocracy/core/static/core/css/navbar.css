@@ -95,7 +95,7 @@
 
 .navbar .nav-item .dropdown-menu .active {
   color: black;
-  background-color: #d1d1d1 !important;
+  background-color: #d4edda !important;
 }
 
 .navbar .nav-item .dropdown-menu .dropdown-item {
@@ -174,7 +174,6 @@
 }
 
 .club-item.active {
-  background-color: #d4edda !important;
 }
 
 .club-item .first-line {
@@ -258,9 +257,9 @@
 
 .ntf-item .second-line {
   font-size: 1rem;
-  line-height: 1.25rem;
+  line-height: 1.15rem;
   padding: 0px;
-  margin: 0px;
+  margin: -2px 0px 0px 0px;
   white-space: normal;
 }
 
@@ -286,7 +285,7 @@
   border: 0;
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
-  border-top: 1px solid rgba(0, 0, 0, .125);
+  border-top: 1px solid #e9ecef;
 }
 
 .list-group-item .media {
