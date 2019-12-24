@@ -151,21 +151,21 @@ class RankingFilm:
     def get_positive_votes(self):
         positive_votes = []
         for vote in self.film_votes:
-            if vote.user in self.participants and vote.vote_karma is 'positive':
+            if vote.user in self.participants and vote.vote_karma == 'positive':
                 positive_votes.append(vote)
         return positive_votes
 
     def get_neutral_votes(self):
         neutral_votes = []
         for vote in self.film_votes:
-            if vote.user in self.participants and vote.vote_karma is 'neutral':
+            if vote.user in self.participants and vote.vote_karma == 'neutral':
                 neutral_votes.append(vote)
         return neutral_votes
 
     def get_negative_votes(self):
         negative_votes = []
         for vote in self.film_votes:
-            if vote.user in self.participants and vote.vote_karma is 'negative':
+            if vote.user in self.participants and vote.vote_karma == 'negative':
                 negative_votes.append(vote)
         return negative_votes
 
@@ -499,9 +499,9 @@ class NotificationsHelper:
     def process_comments_notifications(self, notification_type):
         ntfs_group = self.notifications.filter(type=notification_type).order_by('-created_datetime')
         for i, ntfs_subgroup in enumerate([ntfs_group.filter(read=True), ntfs_group.filter(read=False)]):
-            ntf_films = set(ntf.object_film for ntf in ntfs_subgroup)
-            for ntf_film in ntf_films:
-                ntf_film_group = ntfs_subgroup.filter(object_film=ntf_film.public_id)
+            ntf_films_ids = set(ntf.object_id for ntf in ntfs_subgroup)
+            for ntf_film_id in ntf_films_ids:
+                ntf_film_group = ntfs_subgroup.filter(object_id=ntf_film_id)
                 ntf_ids = [ntf.id for ntf in ntf_film_group]
                 last_ntf = ntf_film_group.last()
                 try:
@@ -515,7 +515,7 @@ class NotificationsHelper:
                     if i == 1:
                         if not last_ntf.read:
                             self.unread_count += 1
-                    self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, object_film.public_id, object_film.db.title, counter))
+                    self.messages.append(self.build_ntf_message(last_ntf, ntf_type, ntf_ids, object_film.id, object_film.db.title, counter))
                 except Film.DoesNotExist:
                     pass
 

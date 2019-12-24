@@ -5,7 +5,7 @@ from google.cloud import storage
 
 from django.core.management.base import BaseCommand, CommandError
 
-from filmdemocracy.settings import BASE_DIR, STATIC_ROOT, GS_STATIC_BUCKET_NAME
+from filmdemocracy.settings import STATIC_ROOT, GS_STATIC_BUCKET_NAME
 
 
 class Command(BaseCommand):
@@ -28,8 +28,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write(f'Uploading static files to storage:')
-        credentials_json = os.path.join(BASE_DIR, "secrets/storage-credentials.json")
-        storage_client = storage.Client.from_service_account_json(credentials_json)
+        storage_client = storage.Client()
         storage_static_bucket = storage_client.bucket(GS_STATIC_BUCKET_NAME)
         self.upload_local_directory_to_gcs(STATIC_ROOT, storage_static_bucket, f'static/')
         self.stdout.write(f'  OK')

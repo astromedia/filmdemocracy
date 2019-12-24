@@ -104,7 +104,8 @@ class FilmDb(models.Model):
 
     imdb_id = models.CharField('IMDb id', primary_key=True, max_length=8)
     faff_id = models.CharField('FilmAffinity id', default='', max_length=6)
-    imdb_rating = models.CharField('IMDb rating', default='', max_length=3)
+    imdb_rating = models.CharField('IMDb rating', default='', max_length=4)
+    imdb_votes = models.IntegerField('IMDb votes', default=0)
     metascore = models.CharField('Metascore', default='', max_length=3)
     title = models.CharField(default='', max_length=1000)
     year = models.IntegerField(default=0)

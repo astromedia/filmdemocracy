@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-20 00:07+0100\n"
+"POT-Creation-Date: 2019-12-24 03:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -485,7 +485,7 @@ msgstr "Términos y condiciones"
 msgid "Select language"
 msgstr "Seleccionar idioma"
 
-#: core/templates/core/navbar.html:825
+#: core/templates/core/navbar.html:825 core/templates/core/navbar.html:911
 msgid "About FilmDemocracy"
 msgstr "Sobre FilmDemocracy"
 
@@ -590,31 +590,31 @@ msgid ""
 "    \r##### Here is a list:\r1. Item #1\r2. Item #2"
 msgstr ""
 
-#: democracy/models.py:216
+#: democracy/models.py:217
 msgid "I really really want to see it."
 msgstr "Tengo muchas muchas ganas de verla."
 
-#: democracy/models.py:217
+#: democracy/models.py:218
 msgid "I want to see it."
 msgstr "Quiero verla."
 
-#: democracy/models.py:218
+#: democracy/models.py:219
 msgid "I've seen it, but I wouldn't mind seeing it."
 msgstr "La he visto, pero no me importaría verla."
 
-#: democracy/models.py:219
+#: democracy/models.py:220
 msgid "Meh... I could see it."
 msgstr "Pse... podría verla."
 
-#: democracy/models.py:220
+#: democracy/models.py:221
 msgid "I don't want to see it."
 msgstr "No quiero verla."
 
-#: democracy/models.py:221
+#: democracy/models.py:222
 msgid "I've seen it, and I don't want to see it again."
 msgstr "La he visto, y no quiero volver a verla."
 
-#: democracy/models.py:222
+#: democracy/models.py:223
 msgid "Veto!"
 msgstr "¡Veto!"
 
@@ -1636,11 +1636,17 @@ msgstr "¡Nueva película añadida! ¡Vótala antes que nadie!"
 msgid "New films added!"
 msgstr "¡Nuevas películas añadidas!"
 
-#: democracy/views/club.py:655
+#: democracy/views/club.py:657
 msgid "An invitation has been sent to: "
 msgstr "Una invitación ha sido enviada a: "
 
-#: democracy/views/club.py:728
+#: democracy/views/club.py:659
+#, fuzzy
+#| msgid "Send invitation to:"
+msgid "You already sent an invitation to: "
+msgstr "Enviar invitación a:"
+
+#: democracy/views/club.py:732
 msgid "Congratulations! You have are now a proud member of the club!"
 msgstr "¡Enhorabuena! ¡Ahora eres un orgulloso miembro del club!"
 
