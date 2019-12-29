@@ -2,10 +2,12 @@
 
 #### SETTINGS ####
 
+# Variables must be set as env variables
+
+
+#### START SCRIPT ####
+
 declare -a WEB_APPS=("core" "registration" "democracy" "chat")
-
-
-#### PERFORM MIGRATIONS ####
 
 SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 MAIN_DIR="$( cd "$( dirname "${SCRIPTS_DIR}" )" >/dev/null 2>&1 && pwd )"

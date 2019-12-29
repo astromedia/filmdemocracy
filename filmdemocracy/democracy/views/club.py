@@ -77,7 +77,7 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
             context['last_comments'] = last_comments.order_by('-created_datetime')[0:5]
         club_films = Film.objects.filter(club=club)
         if club_films:
-            films_last_pub = club_films.order_by('-created_datetime')
+            films_last_pub = club_films.filter(seen=False).order_by('-created_datetime')
             groups_last_pub = [films_last_pub[i:i+3] for i in [0, 3, 6, 9]]
             context['groups_last_pub'] = groups_last_pub
             seen_films = club_films.filter(seen=True)
@@ -546,8 +546,14 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
 
     def get_result_label(self, item):
         return format_html(
-            '<p class="m-0 p-0" style="line-height: 16px"><span class="font-weight-bold">{}</span> <span class="text-muted">({})</span></p>'
-            '<p class="m-0 p-0" style="line-height: 13px"><span class="text-muted font-italic"><small>{}</small></span></p>',
+            '<div class="media">'
+            '<img class="align-self-center film-poster-mini" src="{}">'
+            '<div class="media-body align-self-start p-0 m-0">'
+            '<p class="m-0 p-0" style="line-height: 1rem"><span class="font-weight-bold">{}</span> <span style="font-size: 0.8rem" class="text-muted">({})</span></p>'
+            '<p class="m-0 p-0" style="line-height: 0.8rem; font-size: 0.8rem"><span class="text-muted font-italic">{}</span></p>'
+            '</div>'
+            '</div>',
+            item.poster_url,
             item.title,
             item.year,
             item.director,
@@ -561,7 +567,7 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
             return FilmDb.objects.none()
         qs = FilmDb.objects.all()
         if self.q:
-            qs = qs.filter(title__icontains=self.q)
+            qs = qs.filter(title__icontains=self.q).order_by('-imdb_votes')
         return qs
 
 
@@ -579,7 +585,7 @@ class RankingGeneratorView(UserPassesTestMixin, generic.TemplateView):
         club_films = Film.objects.filter(club=club, seen=False)
         context['range_step'] = self.range_step
         max_film_duration = max([film.db.duration_in_mins_int for film in club_films]) if club_films else None
-        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10) if max_film_duration else 990
+        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10) if max_film_duration > 240 else 240
         return context
 
 

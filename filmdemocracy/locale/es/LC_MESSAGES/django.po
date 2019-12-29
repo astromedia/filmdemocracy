@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-24 03:21+0100\n"
+"POT-Creation-Date: 2019-12-26 16:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1636,17 +1636,17 @@ msgstr "¡Nueva película añadida! ¡Vótala antes que nadie!"
 msgid "New films added!"
 msgstr "¡Nuevas películas añadidas!"
 
-#: democracy/views/club.py:657
+#: democracy/views/club.py:663
 msgid "An invitation has been sent to: "
 msgstr "Una invitación ha sido enviada a: "
 
-#: democracy/views/club.py:659
+#: democracy/views/club.py:665
 #, fuzzy
 #| msgid "Send invitation to:"
 msgid "You already sent an invitation to: "
 msgstr "Enviar invitación a:"
 
-#: democracy/views/club.py:732
+#: democracy/views/club.py:738
 msgid "Congratulations! You have are now a proud member of the club!"
 msgstr "¡Enhorabuena! ¡Ahora eres un orgulloso miembro del club!"
 
@@ -1897,11 +1897,11 @@ msgstr "Cuenta creada con éxito. ¡FilmDemocracy te da la bienvenida!"
 msgid "Account deleted successfully."
 msgstr "Cuenta borrada con éxito."
 
-#: settings.local.bak.py:133 settings.py:146
+#: settings.local.bak.py:133 settings.py:144
 msgid "English"
 msgstr "Inglés"
 
-#: settings.local.bak.py:134 settings.py:147
+#: settings.local.bak.py:134 settings.py:145
 msgid "Spanish"
 msgstr "Español"
 

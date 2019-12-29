@@ -93,8 +93,8 @@ if os.getenv('DATABASE_ENV') == 'cloud':
             'PASSWORD': CLOUD_DATABASE_PASSWORD,
         }
     }
-elif os.getenv('DATABASE_ENV') == 'cloudproxy':
-    # Run from local with cloudsql proxy (https://cloud.google.com/sql/docs/postgres/connect-docker)
+elif os.getenv('DATABASE_ENV') == 'sqlproxy':
+    # Run from local with cloudsql docker proxy (https://cloud.google.com/sql/docs/postgres/connect-docker)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -121,7 +121,6 @@ elif os.getenv('DATABASE_ENV') == 'local':
 # Password validation (https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators)
 # TODO: disable in production!!!
 AUTH_PASSWORD_VALIDATORS = []
-
 # TODO: uncomment in production!!!
 # AUTH_PASSWORD_VALIDATORS = [
 #     {
@@ -141,21 +140,15 @@ AUTH_PASSWORD_VALIDATORS = []
 
 # Internationalization (https://docs.djangoproject.com/en/2.1/topics/i18n/)
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'filmdemocracy/locale')]
-
 LANGUAGES = [
     ('en', _('English')),
     ('es', _('Spanish')),
 ]
-
 LANGUAGE_CODE = 'en'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 TIME_ZONE = 'Europe/Madrid'  # TODO: use pytz
-
 # DATE_FORMAT = 'yyyy-MM-dd'
 
 
@@ -167,10 +160,8 @@ if os.getenv('STATIC_ENV') == 'cloud':
 elif os.getenv('STATIC_ENV') == 'local':
     # Run from local
     STATIC_URL = '/static/'
-
 # This is where collectstatic collects the static files
 STATIC_ROOT = os.path.join(BASE_DIR, 'filmdemocracy/static/')
-
 # STATICFILES_DIRS = []
 
 

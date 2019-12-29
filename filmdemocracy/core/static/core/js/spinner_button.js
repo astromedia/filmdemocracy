@@ -1,12 +1,12 @@
 $(document).ready(function() {
-    $("#btnSpinner").click(function() {
+    $("#btnSpinner1").click(function() {
       // disable button
       $(this).prop("disabled", true);
       // add spinner to button
       $(this).html(
         `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
       );
-      $("#formSubmit").submit();
+      $("#formSubmit1").submit();
     });
     $("#btnSpinnerBanner1").click(function() {
       // disable button

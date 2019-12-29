@@ -2,10 +2,12 @@
 
 #### SETTINGS ####
 
+# No settings needed
+
+
+#### START SCRIPT ####
+
 APPS_DIR_NAME="filmdemocracy"
-
-
-#### COMPILE MESSAGES ####
 
 SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 MAIN_DIR="$( cd "$( dirname "${SCRIPTS_DIR}" )" >/dev/null 2>&1 && pwd )"

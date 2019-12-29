@@ -131,10 +131,8 @@ def vote_film(request, club_id, film_public_id, options_string):
     user_vote, tmp = Vote.objects.get_or_create(user=request.user, film=film, club=club)
     user_vote.choice = request.POST['choice']
     user_vote.save()
-    return HttpResponseRedirect(reverse('democracy:film_detail', kwargs={'club_id': club.id,
-                                                                         'film_public_id': film.public_id,
-                                                                         'film_slug': film.db.slug,
-                                                                         'options_string': options_string}))
+    return HttpResponseRedirect(reverse('democracy:candidate_films', kwargs={'club_id': club.id,
+                                                                             'options_string': options_string}))
 
 
 @login_required

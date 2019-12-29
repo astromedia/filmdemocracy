@@ -111,9 +111,9 @@ class FilmDb(models.Model):
     year = models.IntegerField(default=0)
     rated = models.CharField(default='', max_length=20)
     duration = models.CharField(default='', max_length=20)
-    director = models.CharField(default='', max_length=1000)
-    writer = models.CharField(default='', max_length=1000)
-    actors = models.CharField(default='', max_length=1000)
+    director = models.CharField(default='', max_length=2000)
+    writer = models.CharField(default='', max_length=2000)
+    actors = models.CharField(default='', max_length=2000)
     poster_url = models.URLField(default='', max_length=1000)
     country = models.CharField(default='', max_length=1000)
     language = models.CharField(default='', max_length=1000)
@@ -166,6 +166,14 @@ class FilmDb(models.Model):
     @property
     def metascore_url(self):
         return f'https://www.imdb.com/title/tt{self.imdb_id}/criticreviews'
+
+    @property
+    def clean_imdb_rating(self):
+        return self.imdb_rating if self.imdb_rating != 'N/A' else None
+
+    @property
+    def clean_metascore(self):
+        return self.metascore if self.metascore != 'N/A' else None
 
     @property
     def faff_url(self):

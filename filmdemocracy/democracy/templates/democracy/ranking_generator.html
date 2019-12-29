@@ -71,12 +71,12 @@
       <!--EXCLUDE FILMS PROPOSED BY MEMBERS NOT PRESENT-->
       <li class="list-group-item">
         <div class="row align-items-center my-2 mx-1">
-          <div class="col-8 col-md-6">
+          <div class="col-9 col-md-6">
               <div class="text-left float-md-right">
                 {% trans 'Exclude films proposed by members not present:' %}
               </div>
           </div>
-          <div class="col-4 col-md-auto">
+          <div class="col-3 col-md-auto">
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" name="exclude_not_present" id="exclude_not_present"
                      value="exclude_not_present">
@@ -89,14 +89,14 @@
       <!--MAX FILM DURATION-->
       <li class="list-group-item">
         <div class="row align-items-center my-2 mx-1">
-          <div class="col-8 col-md-6">
+          <div class="col-9 col-md-6">
             <div class="text-left float-md-right">
               {% trans 'Maximum film duration in minutes:' %}
             </div>
           </div>
-          <div class="col-4 col-md-auto">
+          <div class="col-3 col-md-auto">
             <div>
-              <output class="" name="max_duration_output" id="max_duration_output">{{ max_film_duration }} (max)</output>
+              <output class="" name="max_duration_output" id="max_duration_output">{{ max_film_duration }}</output>
             </div>
           </div>
         </div>

@@ -2,11 +2,19 @@
 
 #### SETTINGS ####
 
+export VERSION_ENV='dev'
+
+#export DATABASE_ENV='local'
+#export DATABASE_ENV='sqlproxy'
+#export DATABASE_ENV='cloud'
+
+export STATIC_ENV='cloud'
+#export MEDIA_ENV='cloud'
+
+
+#### START SCRIPT ####
+
 APPS_DIR_NAME="filmdemocracy"
-export VERSION_ENV="dev"
-
-
-#### START WEBSITE ####
 
 SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 MAIN_DIR="$( cd "$( dirname "${SCRIPTS_DIR}" )" >/dev/null 2>&1 && pwd )"
@@ -14,8 +22,6 @@ APPS_DIR="${MAIN_DIR}/${APPS_DIR_NAME}"
 
 cd "${MAIN_DIR}" || exit 1
 
-export STATIC_ENV="cloud"
-export MEDIA_ENV="cloud"
 export GOOGLE_APPLICATION_CREDENTIALS="${MAIN_DIR}/secrets/storage-credentials.json"
 
 #gsutil mb gs://filmdemocracy-static-${VERSION_ENV}

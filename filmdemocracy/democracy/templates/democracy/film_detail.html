@@ -32,7 +32,7 @@
   </div>
 
   <!--USER VOTE-->
-  {% if user_vote %}
+  {% if user_vote and not film.seen %}
   <div class="user-vote voted-{{ user_vote.vote_karma }}">
     <span class="text-body">{% trans 'Voted:' %}</span> <span class="voted-{{ user_vote.vote_karma }}">{{ user_vote.choice_text }}</span>
   </div>
@@ -71,16 +71,20 @@
 <!--        </div>-->
 
         <!--IMDB LINK-->
+        {% if film.db.clean_imdb_rating %}
         <div class="film-meta">
           <a class="green-color blue-color-hover" href="{{ film.db.imdb_url }}" target="blank"><strong>IMDb</strong></a>:
-          <strong>{{ film.db.imdb_rating }}</strong><small>/10</small>
+          <strong>{{ film.db.clean_imdb_rating }}</strong><small>/10</small>
         </div>
+        {% endif %}
 
         <!--METACRITIC LINK-->
+        {% if film.db.clean_metascore %}
         <div class="film-meta">
           <a class="green-color blue-color-hover" href="{{ film.db.metascore_url }}" target="blank"><strong>Metacritic</strong></a>:
-          <strong>{{ film.db.metascore }}</strong><small>/100</small>
+          <strong>{{ film.db.clean_metascore }}</strong><small>/100</small>
         </div>
+        {% endif %}
 
         <!--VOTE BUTTON-->
         {% if not film.seen %}

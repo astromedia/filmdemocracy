@@ -66,11 +66,11 @@
 
 
 {% if user_clubs %}
-<div class="row justify-content-center mx-1">
+<div class="row justify-content-center">
 
   {% for club in user_clubs %}
 
-    <div class="col col-auto">
+    <div class="col col-auto my-2 mx-1">
 
       <div class="club-logo">
         <a href="{% url 'democracy:club_detail' club.id %}">
@@ -78,7 +78,9 @@
           <img src="{{ club.logo_image.url }}" alt="club.logo_image not found">
           {% else %}
           <img src="{% static 'democracy/images/club_no_logo.png' %}" alt="club.logo_image not found">
-          <div class="overlay py-auto"><h5 class="py-auto">{{ club.name }}</h5></div>
+          <div class="overlay d-flex align-items-center">
+            <p class="">{{ club.name }}</p>
+          </div>
           {% endif %}
         </a>
       </div>
@@ -111,8 +113,8 @@
 
   <p class="">{% trans 'To start, log in.' %}</p>
 
-  <form id="formSubmit" action="{% url 'registration:user_login' %}">
-    <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue mb-5">{% trans 'Log in' %}</button>
+  <form id="formSubmit1" action="{% url 'registration:user_login' %}">
+    <button type="submit" id="btnSpinner1" class="btn btn-standard btn-green-to-blue mb-5">{% trans 'Log in' %}</button>
   </form>
 
   <span class="">{% trans 'New here?' %}</span>

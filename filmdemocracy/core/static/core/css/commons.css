@@ -353,3 +353,7 @@ hr {
 .dark-title {
   color: darkgray;
 }
+
+.js-crop-and-upload {
+  width: 6rem;
+}

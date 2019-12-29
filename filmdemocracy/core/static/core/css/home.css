@@ -65,7 +65,7 @@ a:hover {
   height: 8rem;
   display:block;
   object-fit: cover;
-  opacity:0.8;
+  opacity:0.7;
   -webkit-transition:all .15s linear;
   transition:all .15s linear;
 }
@@ -82,28 +82,32 @@ a:hover {
   left: 0;
   border: 2px solid black;
   border-radius: 6px;
-  background-color:rgba(0,0,0,0.85);
-  opacity:0;
-  -webkit-transition:all .2s ease-in-out;
-  transition:all .2s ease-in-out
+  background-color:rgba(0,0,0,1);
+  opacity:0.9;
+  filter:alpha(opacity=90);
+  -webkit-transition:all .15s linear;
+  transition:all .15s linear;
 }
 
 .club-logo:hover .overlay {
-  opacity:1;
-  filter:alpha(opacity=100);
+  opacity:0.8;
+  filter:alpha(opacity=80);
 }
 
-.club-logo .overlay h5 {
+.club-logo .overlay p {
+  font-weight: bold;
   color: darkgray;
   text-align: center;
   text-decoration: none;
   font-size: 1rem;
-  position: relative;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
+  opacity:0.7;
+  -webkit-transition:all .15s linear;
+  transition:all .15s linear;
 }
 
+.club-logo:hover .overlay p {
+  opacity:1 !important;
+}
 
 /* Log
 -------------------------------------------------- */
