@@ -29,7 +29,7 @@
 
 
 <div class="page-subtitle mb-2">
-  <span>{% trans 'The people have spoken:' %}</span><br>
+  <span>{% trans 'Attending club members:' %}</span><br>
 </div>
 
 
@@ -54,101 +54,97 @@
 
 
 <!--START: VOTING RESULTS-->
-<div class="container container-table">
-  <table class="table table-hover">
+<table class="table table-hover">
 
-    <thead class="thead-light">
-    <tr>
-      <!--<th scope="col" class="text-center"><span class="">#</span></th>-->
-      <th scope="col">{% trans 'Film' %}</th>
-      <th scope="col" class="text-center">{% trans 'Duration' %}</th>
-      <th scope="col" class="text-center">{% trans 'Results' %}</th>
-    </tr>
-    </thead>
+  <thead class="thead-light">
+  <tr>
+    <!--<th scope="col" class="text-center"><span class="">#</span></th>-->
+    <th scope="col">{% trans 'Film' %}</th>
+    <th scope="col" class="text-center">{% trans 'Duration' %}</th>
+    <th scope="col" class="text-center">{% trans 'Results' %}</th>
+  </tr>
+  </thead>
 
-    <tbody>
-    {% for film_results in ranking_results|dictsortreversed:"points" %}
+  <tbody>
+  {% for film_results in ranking_results|dictsortreversed:"points" %}
 
-    <tr class="">
-      <!--# COLUMN-->
-      <!--<td class="text-center align-middle">{{ forloop.counter }}</td>-->
+  <tr class="">
+    <!--# COLUMN-->
+    <!--<td class="text-center align-middle">{{ forloop.counter }}</td>-->
 
-      <!--TITLE COLUMN-->
-      <td class="align-middle film-title">
-        <a class="strong-link" href="{% url 'democracy:film_detail' club.id film_results.film.public_id film_results.film.db.slug %}">
-          {{ film_results.film.db.title }}
-        </a>
-      </td>
+    <!--TITLE COLUMN-->
+    <td class="align-middle film-title">
+        <strong>{{ film_results.film.db.title }}</strong>
+    </td>
 
-      <!--DURATION COLUMN-->
-      <td class="text-center align-middle">{{ film_results.duration }}</td>
+    <!--DURATION COLUMN-->
+    <td class="text-center align-middle">{{ film_results.duration }}</td>
 
-      <!--RESULTS COLUMN-->
-      <td class="text-center align-middle">
+    <!--RESULTS COLUMN-->
+    <td class="text-center align-middle">
 
-        <div class='results-box pointer-cursor border border-secondary rounded p-1 m-n1' data-toggle="modal"
-             data-target="#FilmResultsModal_{{ forloop.counter }}">
+      <div class='results-box pointer-cursor border border-secondary rounded p-1 m-n1' data-toggle="modal"
+           data-target="#FilmResultsModal_{{ forloop.counter }}">
 
-          <div class="row justify-content-around">
+        <div class="row justify-content-around">
 
-            <div class="col col-12 col-sm-2">
-              {% if film_results.positive_votes|length > 0 %}
-              <div class="media justify-content-center">
-                <strong>{{ film_results.positive_votes|length }}</strong>
-                <img class="ml-1 result-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
-              </div>
-              {% endif %}
+          <div class="col col-12 col-sm-2">
+            {% if film_results.positive_votes|length > 0 %}
+            <div class="media justify-content-center">
+              <strong>{{ film_results.positive_votes|length }}</strong>
+              <img class="ml-1 result-icon rounded-circle" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
             </div>
-
-            <div class="col col-12 col-sm-2">
-              {% if film_results.neutral_votes|length > 0 %}
-              <div class="media justify-content-center">
-                <strong>{{ film_results.neutral_votes|length }}</strong>
-                <img class="ml-1 result-icon rounded-circle" src="{% static 'democracy/svg/thumbsneutralwhite.svg'%}">
-              </div>
             {% endif %}
-            </div>
-
-            <div class="col col-12 col-sm-2 ">
-              {% if film_results.negative_votes|length > 0 %}
-              <div class="media justify-content-center">
-                <strong>{{ film_results.negative_votes|length }}</strong>
-                <img class="ml-1 result-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
-              </div>
-              {% endif %}
-            </div>
-
-            <div class="col col-12 col-sm-2">
-              {% if film_results.abstentionists|length > 0 %}
-              <div class="media justify-content-center">
-                <strong>{{ film_results.abstentionists|length }}</strong>
-                <img class="ml-1 result-icon rounded-circle" src="{% static 'democracy/svg/question.svg'%}">
-              </div>
-              {% endif %}
-            </div>
-
-            <div class="col col-12 col-sm-2">
-              {% if film_results.warnings %}
-              <div class="media justify-content-center">
-                <strong>{{ film_results.warnings|length }}</strong>
-                <img class="ml-1" style="height: 20px;" src="{% static 'democracy/svg/alert.svg'%}">
-              </div>
-             {% endif %}
-            </div>
-
           </div>
+
+          <div class="col col-12 col-sm-2">
+            {% if film_results.neutral_votes|length > 0 %}
+            <div class="media justify-content-center">
+              <strong>{{ film_results.neutral_votes|length }}</strong>
+              <img class="ml-1 result-icon rounded-circle" src="{% static 'democracy/svg/thumbsneutralwhite.svg'%}">
+            </div>
+          {% endif %}
+          </div>
+
+          <div class="col col-12 col-sm-2 ">
+            {% if film_results.negative_votes|length > 0 %}
+            <div class="media justify-content-center">
+              <strong>{{ film_results.negative_votes|length }}</strong>
+              <img class="ml-1 result-icon rounded-circle" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="col col-12 col-sm-2">
+            {% if film_results.abstentionists|length > 0 %}
+            <div class="media justify-content-center">
+              <strong>{{ film_results.abstentionists|length }}</strong>
+              <img class="ml-1 result-icon rounded-circle" src="{% static 'democracy/svg/question.svg'%}">
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="col col-12 col-sm-2">
+            {% if film_results.warnings %}
+            <div class="media justify-content-center">
+              <strong>{{ film_results.warnings|length }}</strong>
+              <img class="ml-1" style="height: 20px;" src="{% static 'democracy/svg/alert.svg'%}">
+            </div>
+           {% endif %}
+          </div>
+
         </div>
+      </div>
 
-      </td>
+    </td>
 
-    </tr>
+  </tr>
 
-    {% endfor %}
+  {% endfor %}
 
-    </tbody>
+  </tbody>
 
-  </table>
-</div>
+</table>
 <!--END: VOTING RESULTS-->
 
 
@@ -173,15 +169,22 @@
 
       <div class="modal-body modal-results">
 
-        <div class="mt-1 mb-3">
-          <strong>{% trans 'Film score:' %}</strong>
-          {% if film_results.points < -1000 %}
-          -∞
-          {% else %}
-          {{ film_results.points }}
-          {% endif %}
+        <div class="mt-1 mb-3 row align-items-center">
+          <div class="col-auto pr-2">
+            <strong>{% trans 'Score:' %}</strong>
+          </div>
+          <div class="col pl-2">
+            <div class="progress">
+              {% if film_results.points > 50 %}
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ film_results.points }}%">{{ film_results.points }}/100</div>
+              {% elif film_results.points == 50 %}
+                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ film_results.points }}%">{{ film_results.points }}/100</div>
+              {% elif film_results.points < 50 %}
+                <div class="progress-bar bg-danger" role="progressbar" style="width: {{ film_results.points }}%">{{ film_results.points }}/100</div>
+              {% endif %}
+            </div>
+          </div>
         </div>
-
 
         <!--START VOTES-->
         {% if film_results.positive_votes or film_results.neutral_votes or film_results.negative_votes %}
@@ -310,6 +313,13 @@
 
         {% endif %}
         <!--END WARNING-->
+
+
+        <div class="mt-4 mb-3 text-center">
+          <a class="strong-link" href="{% url 'democracy:film_detail' club.id film_results.film.public_id film_results.film.db.slug %}">
+            {% trans 'Go to film detail' %}
+          </a>
+        </div>
 
         
       </div>

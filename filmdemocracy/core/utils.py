@@ -238,9 +238,9 @@ class RankingGenerator:
     @staticmethod
     def get_points_mapping():
         points_mapping = {
-            Vote.VETO: -10000,
-            Vote.SEENNO: -50,
-            Vote.NO: -25,
+            Vote.VETO: -100,
+            Vote.SEENNO: -30,
+            Vote.NO: -15,
             Vote.MEH: 0,
             Vote.SEENOK: +5,
             Vote.YES: +10,

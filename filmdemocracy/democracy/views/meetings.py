@@ -39,8 +39,8 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
 
     @staticmethod
     def create_notifications(_user, _club, _meeting):
-        club_members = _club.members.filter(is_active=True).exclude(id=_user.id)
-        for member in club_members:
+        club_members = _club.members.filter(is_active=True)
+        for member in club_members.exclude(id=_user.id):
             Notification.objects.create(type=Notification.MEET_ORGAN,
                                         activator=_user,
                                         club=_club,
@@ -72,7 +72,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
                 'date': new_meeting.date,
                 'time_start': new_meeting.time_start,
             }
-            spammable_members = club.members.filter(is_active=True)
+            spammable_members = club.members.filter(is_active=True).exclude(id=user.id)
             to_emails_list = [member.email for member in spammable_members]
             spam_helper.send_emails(to_emails_list, email_context)
             messages.success(self.request, _('Meeting planned! A notification email has been sent to club members.'))
@@ -108,15 +108,17 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
 
     @staticmethod
     def create_notifications(_user, _club, _meeting):
-        meeting_members = _meeting.members_yes.all() | _meeting.members_maybe.all() | _meeting.members_no.all()
-        for member in meeting_members:
-            Notification.objects.create(type=Notification.MEET_EDIT,
-                                        activator=_user,
-                                        club=_club,
-                                        object_id=_meeting.id,
-                                        recipient=member)
+        meeting_members_groups = [_meeting.members_yes.all(), _meeting.members_maybe.all(), _meeting.members_no.all()]
+        for member_group in meeting_members_groups:
+            for member in member_group.exclude(id=_user.id):
+                Notification.objects.create(type=Notification.MEET_EDIT,
+                                            activator=_user,
+                                            club=_club,
+                                            object_id=_meeting.id,
+                                            recipient=member)
 
     def form_valid(self, form):
+        user = self.request.user
         meeting = get_object_or_404(Meeting, id=self.kwargs['meeting_id'])
         meeting.name = form.cleaned_data['name']
         meeting.description = form.cleaned_data['description']
@@ -125,12 +127,12 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
         meeting.time_start = form.cleaned_data['time_start']
         meeting.save()
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
-        self.create_notifications(self.request.user, club, meeting)
+        self.create_notifications(user, club, meeting)
         spam_option = form.cleaned_data['spam_options']
         if spam_option == 'all' or spam_option == 'interested':
             spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
             email_context = {
-                'organizer': self.request.user,
+                'organizer': user,
                 'club': club,
                 'name': meeting.name,
                 'description': meeting.description,
@@ -139,13 +141,16 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
                 'time_start': meeting.time_start,
             }
             if spam_option == 'all':
-                spammable_members = club.members.filter(is_active=True)
-                to_emails_list = [member.email for member in spammable_members]
+                club_members = club.members.filter(is_active=True)
+                to_emails_list = [member.email for member in club_members.exclude(id=user.id)]
                 spam_helper.send_emails(to_emails_list, email_context)
                 messages.success(self.request, _('Meeting edited! A notification email has been sent to club members.'))
             else:
-                spammable_members = meeting.members_yes.all() | meeting.members_maybe.all() | meeting.members_no.all()
-                to_emails_list = [member.email for member in spammable_members]
+                to_emails_list = []
+                meeting_members_groups = [meeting.members_yes.all(), meeting.members_maybe.all(), meeting.members_no.all()]
+                for member_group in meeting_members_groups:
+                    for member in member_group.exclude(id=user.id):
+                        to_emails_list.append(member.email)
                 spam_helper.send_emails(to_emails_list, email_context)
                 messages.success(self.request, _('Meeting edited! A notification email has been sent to members interested in it.'))
         else:
@@ -197,13 +202,12 @@ def delete_meeting(request, club_id, meeting_id):
     def create_notifications(_user, _club, _meeting):
         meeting_members_groups = [_meeting.members_yes.all(), _meeting.members_maybe.all(), _meeting.members_no.all()]
         for member_group in meeting_members_groups:
-            for member in member_group:
-                if _user != member:
-                    Notification.objects.create(type=Notification.MEET_DEL,
-                                                activator=_user,
-                                                club=_club,
-                                                object_id=_meeting.id,
-                                                recipient=member)
+            for member in member_group.exclude(id=_user.id):
+                Notification.objects.create(type=Notification.MEET_DEL,
+                                            activator=_user,
+                                            club=_club,
+                                            object_id=_meeting.id,
+                                            recipient=member)
 
     club = get_object_or_404(Club, id=club_id)
     organizer_check = user_is_organizer_check(request.user, club=club, meeting_id=meeting_id)

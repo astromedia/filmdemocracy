@@ -73,7 +73,7 @@
         <div class="row align-items-center my-2 mx-1">
           <div class="col-9 col-md-6">
               <div class="text-left float-md-right">
-                {% trans 'Exclude films proposed by members not present:' %}
+                {% trans 'Exclude films proposed by absent members:' %}
               </div>
           </div>
           <div class="col-3 col-md-auto">
@@ -91,12 +91,12 @@
         <div class="row align-items-center my-2 mx-1">
           <div class="col-9 col-md-6">
             <div class="text-left float-md-right">
-              {% trans 'Maximum film duration in minutes:' %}
+              {% trans 'Maximum film duration (minutes):' %}
             </div>
           </div>
           <div class="col-3 col-md-auto">
             <div>
-              <output class="" name="max_duration_output" id="max_duration_output">{{ max_film_duration }}</output>
+              <output class="" name="max_duration_output" id="max_duration_output">∞</output>
             </div>
           </div>
         </div>
@@ -111,7 +111,7 @@
 
   </div>
 
-  <button type="submit" id="btnSpinner" class="btn btn-standard btn-green-to-blue mt-4">{% trans 'Generate results' %}</button>
+  <button type="submit" id="btnSpinner1" class="btn btn-standard btn-green-to-blue mt-4">{% trans 'Generate results' %}</button>
 
 </form>
 

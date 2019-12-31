@@ -585,7 +585,7 @@ class RankingGeneratorView(UserPassesTestMixin, generic.TemplateView):
         club_films = Film.objects.filter(club=club, seen=False)
         context['range_step'] = self.range_step
         max_film_duration = max([film.db.duration_in_mins_int for film in club_films]) if club_films else None
-        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10) if max_film_duration > 240 else 240
+        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10)
         return context
 
 
@@ -602,6 +602,16 @@ class RankingResultsView(UserPassesTestMixin, generic.TemplateView):
         context['club'] = club
         ranking_generator = RankingGenerator(self.request, club.id)
         ranking_results, participants = ranking_generator.generate_ranking()
+        points_mapping = ranking_generator.get_points_mapping()
+        max_possible_score = points_mapping[Vote.OMG]*len(participants)
+        min_possible_score = points_mapping[Vote.VETO]*len(participants)
+        for ranking_result in ranking_results:
+            if ranking_result['points'] > 0:
+                ranking_result['points'] = int(50 + ranking_result['points']/max_possible_score*50)
+            elif ranking_result['points'] == 0:
+                ranking_result['points'] = 50
+            elif ranking_result['points'] < 0:
+                ranking_result['points'] = int(50 - ranking_result['points']/min_possible_score*50)
         context['ranking_results'] = ranking_results
         context['participants'] = participants
         return context

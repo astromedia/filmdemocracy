@@ -26,6 +26,18 @@
   opacity: 0.80;
 }
 
+.navbar .nav-item .nav-icon:active {
+  opacity: 1;
+}
+
+.navbar .nav-item .nav-icon:focus {
+  opacity: 1;
+}
+
+.navbar .nav-item .nav-icon:hover {
+  opacity: 1;
+}
+
 .navbar .nav-item .nav-icon img {
   height: 2.5rem;
   width: 2.5rem;
@@ -39,21 +51,21 @@
 }
 
 .navbar .nav-item .nav-icon-menu img {
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 5px;
   padding: 1px;
 }
 
-.navbar .nav-item .nav-icon:active {
-  opacity: 1;
+.navbar .nav-item .nav-icon-menu img:active {
+  border: 2px solid rgba(255, 255, 255, 1);
 }
 
-.navbar .nav-item .nav-icon:focus {
-  opacity: 1;
+.navbar .nav-item .nav-icon-menu img:focus {
+  border: 2px solid rgba(255, 255, 255, 1);
 }
 
-.navbar .nav-item .nav-icon:hover {
-  opacity: 1;
+.navbar .nav-item .nav-icon-menu img:hover {
+  border: 2px solid rgba(255, 255, 255, 1);
 }
 
 
