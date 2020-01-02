@@ -17,7 +17,8 @@
 /* Film ranking
 -------------------------------------------------- */
 .participants-header {
-  margin-bottom: 1.5rem;
+  background-color: white;
+  padding: 0.4rem 1rem;
 }
 
 .participants-header .col {
@@ -29,35 +30,66 @@
   background: rgba(0, 0, 0, 1) !important;
 }
 
-.container-table {
+.film-result {
+  width: 96%;
+  max-width: 500px;
+  background-color: white;
+  margin: 0.5rem auto;
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5) !important;
+  -webkit-transition:all .15s linear;
+  transition:all .15s linear;
+}
+
+.film-result:hover {
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.7) !important;
+  -webkit-transform:translatey(-2px);
+  -ms-transform:translatey(-2px);
+  transform:translatey(-2px);
+}
+
+.film-result .film-poster {
+  width: 3.5rem;
+  height: 4.5rem;
+  object-fit: fill;
+  margin: 0 0.5rem 0 0;
+}
+
+.film-result .film-poster img {
   max-width: 100%;
-  padding: 2px;
-}
-
-.table th {
-  padding: 0.4rem;
-}
-
-.table td {
-  padding: 0.4rem;
+  max-height: 100%;
+  margin: auto;
+  background: rgba(255, 255, 255, 1) !important;
+  border: 1px solid rgba(0, 0, 0, 1);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5) !important;
 }
 
 .film-title {
+  font-weight: bold;
   line-height: 1.2rem;
+  margin: 0 0 0.75rem 0;
+}
+
+.film-title span {
+  font-weight: normal;
+  font-size: 0.8rem;
+  margin-left: 0.75rem;
 }
 
 .results-box {
-  background: white !important;
 }
 
 .results-box .row {
-  max-width: 100%;
+  width: 100%;
+  max-width: 200px;
   padding: 0px;
   margin: auto;
 }
 
 .results-box .row .col {
-  margin: 0px;
+  margin: 0.15rem;
   padding: 0px;
 }
 
@@ -67,15 +99,17 @@
   padding: 0px;
 }
 
-.results-box:hover {
-  border: 1px solid #282828 !important;
+.result-icon {
+  margin-left: 2px;
+  height: 1.15rem;
 }
 
-.result-icon {
-  background: #282828;
+.result-icon-rounded {
   border: 1px solid #282828 !important;
-  height: 20px;
+  background: #282828;
+  border-radius: 100px;
 }
+
 
 /* Modal film results
 -------------------------------------------------- */

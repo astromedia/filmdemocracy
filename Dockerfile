@@ -13,11 +13,11 @@ COPY . /code
 ENV VERSION_ENV 'dev'
 
 #ENV DATABASE_ENV 'local'
-ENV DATABASE_ENV 'sqlproxy'
-#ENV DATABASE_ENV 'cloud'
+#ENV DATABASE_ENV 'sqlproxy'
+ENV DATABASE_ENV 'cloud'
 
-ENV STATIC_ENV 'local'
-#ENV STATIC_ENV 'cloud'
+#ENV STATIC_ENV 'local'
+ENV STATIC_ENV 'cloud'
 
 #ENV MEDIA_ENV 'local'
 ENV MEDIA_ENV 'cloud'
@@ -36,12 +36,13 @@ WORKDIR /code
 
 # Misc commands:
 #CMD ./scripts/collect_and_upload_static.sh
-#CMD ./scripts/perform_migrations.sh
+#CMD ./scripts/make_migrations.sh
+#CMD ./scripts/migrate.sh
 #CMD ./scripts/make_messages.sh
 #CMD ./scripts/compile_messages.sh
 #CMD ./scripts/local_clean_start.sh
-#CMD ./scripts/start_mock_server.sh
 
 # Run server commands:
-CMD python manage.py runserver 0.0.0.0:8080
-#CMD gunicorn -b :$PORT filmdemocracy.wsgi
+#CMD ./scripts/start_mock_server.sh
+#CMD python manage.py runserver 0.0.0.0:8080
+CMD gunicorn -b :$PORT filmdemocracy.wsgi

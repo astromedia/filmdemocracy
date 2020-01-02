@@ -19,9 +19,6 @@ for WEB_APP in "${WEB_APPS[@]}"; do
   python manage.py makemigrations ${WEB_APP}
 done
 
-echo "python manage.py migrate"
-python manage.py migrate
-
 echo "Done"
 
 exit 0

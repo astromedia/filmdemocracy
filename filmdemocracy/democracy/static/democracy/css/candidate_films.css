@@ -156,13 +156,19 @@
   cursor:default;
   background-color: transparent;
   box-shadow: 0 0px 5px rgba(0, 0, 0, 0.6) !important;
+  -webkit-transition:all .3s ease-in-out;
+  transition:all .3s ease-in-out
+}
+
+.card-film:hover {
+  -webkit-transform:translatey(-2px);
+  -ms-transform:translatey(-2px);
+  transform:translatey(-2px);
 }
 
 .card-film .card-img {
   display:block;
   position:relative;
-  -webkit-transition:all .2s linear;
-  transition:all .2s linear;
 }
 
 .card-film .overlay {
@@ -201,12 +207,6 @@
   font-size: 17px;
   padding: 4px;
   background: rgba(0, 0, 0, 0.0);
-}
-
-.card-film:hover .card-img {
-  -ms-transform:scale(1.05);
-  -webkit-transform:scale(1.05);
-  transform:scale(1.05);
 }
 
 .card-film:hover .overlay {

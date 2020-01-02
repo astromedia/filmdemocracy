@@ -22,10 +22,10 @@
 </div>
 
 
-<div class="text-center mb-5">
-    <a class="green-color blue-color-hover" href="{% url 'democracy:add_new_film' club.id %}">
-    {% trans 'Propose a new film' %}
-    </a>
+<div class="text-center mt-3 mb-5">
+  <form id="formSubmit1" action="{% url 'democracy:add_new_film' club.id %}">
+    <button type="submit" id="btnSpinner1" class="btn btn-standard btn-green-to-blue">{% trans 'Propose a new film' %}</button>
+  </form>
 </div>
 
 

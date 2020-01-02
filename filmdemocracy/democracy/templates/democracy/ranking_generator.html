@@ -21,7 +21,7 @@
 </div>
 
 
-<form id="formSubmit" class="form-standard form-ranking-generator form-select-members" action="{% url 'democracy:ranking_results' club.id %}" method="GET">
+<form id="formSubmit1" class="form-standard form-ranking-generator form-select-members" action="{% url 'democracy:ranking_results' club.id %}" method="GET">
   {% csrf_token %}
 
   <div class="form-inputs">
@@ -111,7 +111,7 @@
 
   </div>
 
-  <button type="submit" id="btnSpinner1" class="btn btn-standard btn-green-to-blue mt-4">{% trans 'Generate results' %}</button>
+  <button type="submit" id="btnSpinner1" class="btn btn-standard btn-green-to-blue mt-4">{% trans 'Generate ranking' %}</button>
 
 </form>
 

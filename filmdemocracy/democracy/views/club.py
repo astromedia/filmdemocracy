@@ -547,10 +547,12 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
     def get_result_label(self, item):
         return format_html(
             '<div class="media">'
-            '<img class="align-self-center film-poster-mini" src="{}">'
+            '<div class="align-self-center film-poster text-center">'
+            '<img class="" src="{}">'
+            '</div>'
             '<div class="media-body align-self-start p-0 m-0">'
-            '<p class="m-0 p-0" style="line-height: 1rem"><span class="font-weight-bold">{}</span> <span style="font-size: 0.8rem" class="text-muted">({})</span></p>'
-            '<p class="m-0 p-0" style="line-height: 0.8rem; font-size: 0.8rem"><span class="text-muted font-italic">{}</span></p>'
+            '<p class="my-1 p-0" style="line-height: 1rem"><span class="font-weight-bold">{}</span><span style="font-size: 0.8rem" class="text-muted ml-2">({})</span></p>'
+            '<p class="my-1 p-0" style="line-height: 0.8rem; font-size: 0.8rem"><span class="text-muted font-italic">{}</span></p>'
             '</div>'
             '</div>',
             item.poster_url,
@@ -585,7 +587,7 @@ class RankingGeneratorView(UserPassesTestMixin, generic.TemplateView):
         club_films = Film.objects.filter(club=club, seen=False)
         context['range_step'] = self.range_step
         max_film_duration = max([film.db.duration_in_mins_int for film in club_films]) if club_films else None
-        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10)
+        context['max_film_duration'] = max_film_duration + (self.range_step - max_film_duration % 10) if club_films else 240
         return context
 
 

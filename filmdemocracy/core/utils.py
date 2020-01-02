@@ -120,14 +120,14 @@ class RankingFilm:
         self.participants = participants
         self.ranking_config = ranking_config
         self.film_votes = None
-        self.film_voters = None
-        self.abstentionists = None
-        self.positive_votes = None
-        self.neutral_votes = None
-        self.negative_votes = None
+        self.film_voters = []
+        self.abstentionists = []
+        self.positive_votes = []
+        self.neutral_votes = []
+        self.negative_votes = []
         self.veto = False
-        self.points = None
-        self.warnings = None
+        self.points = 0
+        self.warnings = []
 
     def process_votes(self):
         self.film_votes = self.film.vote_set.all()

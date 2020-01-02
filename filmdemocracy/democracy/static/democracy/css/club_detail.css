@@ -159,6 +159,14 @@
   border-color: transparent;
   cursor:default;
   background-color: transparent;
+  -webkit-transition:all .3s ease-in-out;
+  transition:all .3s ease-in-out
+}
+
+.films-album .card:hover {
+  -webkit-transform:translatey(-2px);
+  -ms-transform:translatey(-2px);
+  transform:translatey(-2px);
 }
 
 .films-album .card img {
