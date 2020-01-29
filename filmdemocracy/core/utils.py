@@ -18,6 +18,7 @@ from filmdemocracy.chat.models import ChatUsersInfo
 from filmdemocracy.democracy.models import CLUB_ID_N_DIGITS, FILM_ID_N_DIGITS
 from filmdemocracy.registration.models import User
 from filmdemocracy.secrets import OMDB_API_KEY
+from filmdemocracy.settings import DEFAULT_FROM_EMAIL
 
 
 def user_is_club_member_check(user, club_id=None, club=None):
@@ -595,13 +596,13 @@ class NotificationsHelper:
 
 class SpamHelper:
 
-    def __init__(self, request, subject_template, email_template, html_email_template):
+    def __init__(self, request, subject_template_name, email_template_name, html_email_template_name):
         self.request = request
         self.use_https = self.request.is_secure()
-        self.from_email = 'filmdemocracyweb@gmail.com'
-        self.subject_template = subject_template
-        self.email_template = email_template
-        self.html_email_template = html_email_template
+        self.from_email = DEFAULT_FROM_EMAIL
+        self.subject_template_name = subject_template_name
+        self.email_template_name = email_template_name
+        self.html_email_template_name = html_email_template_name
         self.domain_override = None
         self.default_context = self.get_default_context()
 
@@ -619,13 +620,13 @@ class SpamHelper:
 
     def send_emails(self, to_emails_list, email_context=None):
         context = {**self.default_context, **email_context}
-        subject = loader.render_to_string(self.subject_template, context)
+        subject = loader.render_to_string(self.subject_template_name, context)
         subject = ''.join(subject.splitlines())  # http://nyphp.org/phundamentals/8_Preventing-Email-Header-Injection
-        body = loader.render_to_string(self.email_template, context)
+        body = loader.render_to_string(self.email_template_name, context)
         for to_email in to_emails_list:
             email_messages = EmailMultiAlternatives(subject, body, self.from_email, [to_email])
-            if self.html_email_template:
-                html_email = loader.render_to_string(self.html_email_template, context)
+            if self.html_email_template_name:
+                html_email = loader.render_to_string(self.html_email_template_name, context)
                 email_messages.attach_alternative(html_email, 'text/html')
             email_messages.send()
 

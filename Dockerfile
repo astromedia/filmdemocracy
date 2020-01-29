@@ -13,8 +13,8 @@ COPY . /code
 ENV VERSION_ENV 'dev'
 
 #ENV DATABASE_ENV 'local'
-#ENV DATABASE_ENV 'sqlproxy'
-ENV DATABASE_ENV 'cloud'
+ENV DATABASE_ENV 'sqlproxy'
+#ENV DATABASE_ENV 'cloud'
 
 #ENV STATIC_ENV 'local'
 ENV STATIC_ENV 'cloud'
@@ -26,13 +26,18 @@ ENV GOOGLE_APPLICATION_CREDENTIALS '/code/secrets/storage-credentials.json'
 
 WORKDIR /code
 
-# Commands to manage films in db:
-#CMD python manage.py manage_films_db --updatedb
-#CMD python manage.py manage_films_db --updatedb --overwrite
-#CMD python manage.py manage_films_db --updatedb --cleandb
-#CMD python manage.py manage_films_db --updatedb --cleandb --overwrite
-#CMD python manage.py manage_films_db --updatedb --onlycleandb
-#CMD python manage.py manage_films_db --dryrun
+# Commands to manage db films:
+#CMD python manage.py manage_db_films --updatedb
+CMD python manage.py manage_db_films --updatedb --overwrite
+#CMD python manage.py manage_db_films --updatedb --cleandb
+#CMD python manage.py manage_db_films --updatedb --cleandb --overwrite
+#CMD python manage.py manage_db_films --updatedb --onlycleandb
+#CMD python manage.py manage_db_films --dryrun
+
+# Commands to manage db translations:
+#CMD python manage.py manage_db_translations --updatedb
+#CMD python manage.py manage_db_translations --updatedb --overwrite --verbose
+#CMD python manage.py manage_db_translations --dryrun --verbose
 
 # Misc commands:
 #CMD ./scripts/collect_and_upload_static.sh
@@ -45,4 +50,4 @@ WORKDIR /code
 # Run server commands:
 #CMD ./scripts/start_mock_server.sh
 #CMD python manage.py runserver 0.0.0.0:8080
-CMD gunicorn -b :$PORT filmdemocracy.wsgi
+#CMD gunicorn -b :$PORT filmdemocracy.wsgi

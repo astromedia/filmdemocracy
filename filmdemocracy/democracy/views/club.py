@@ -18,7 +18,7 @@ from dal import autocomplete
 
 from filmdemocracy.democracy import forms
 from filmdemocracy.core.models import Notification
-from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation, Meeting, FilmDb, Film, Vote, FilmComment
+from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation, Meeting, FilmDb, FilmDbTranslation, Film, Vote, FilmComment
 from filmdemocracy.chat.models import ChatClubInfo
 from filmdemocracy.registration.models import User
 
@@ -568,8 +568,11 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
         if not self.request.user.is_authenticated:
             return FilmDb.objects.none()
         qs = FilmDb.objects.all()
+        qs_translations = FilmDbTranslation.objects.all()
         if self.q:
-            qs = qs.filter(title__icontains=self.q).order_by('-imdb_votes')
+            qs_translations = qs_translations.filter(title__icontains=self.q)
+            qs_translations_ids = qs_translations.values_list('imdb_id', flat=True)
+            qs = qs.filter(imdb_id__in=qs_translations_ids).order_by('-imdb_votes')
         return qs
 
 
@@ -623,9 +626,9 @@ class RankingResultsView(UserPassesTestMixin, generic.TemplateView):
 class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
     form_class = forms.InviteNewMemberForm
     valid_invitation = True
-    subject_template = 'democracy/emails/invite_new_member_subject.txt'
-    email_template = 'democracy/emails/invite_new_member_email.html'
-    html_email_template = 'democracy/emails/invite_new_member_email_html.html'
+    subject_template_name = 'democracy/emails_subjects/invite_new_member.txt'
+    email_template_name = 'democracy/emails_basic/invite_new_member.html'
+    html_email_template_name = 'democracy/emails_html/invite_new_member.html'
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
@@ -670,7 +673,7 @@ class InviteNewMemberView(UserPassesTestMixin, generic.FormView):
                 self.create_notifications(self.request.user, club, email, invitation)
                 email_context = {'invitation': invitation}
                 to_emails_list = [email]
-                spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
+                spam_helper = SpamHelper(self.request, self.subject_template_name, self.email_template_name, self.html_email_template_name)
                 spam_helper.send_emails(to_emails_list, email_context)
                 messages.success(self.request, _('An invitation has been sent to: ') + form.cleaned_data['email'])
             else:

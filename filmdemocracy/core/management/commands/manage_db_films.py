@@ -10,11 +10,12 @@ import time
 from django.core.management.base import BaseCommand, CommandError
 import django.db.utils
 
-from filmdemocracy.democracy.models import FilmDb
+from filmdemocracy.democracy.models import FilmDb, FilmDbTranslation
 
 
 MAX_CONNECTIONS = 32
 MIN_IMDB_VOTES = 20
+MAIN_LANGUAGE = 'en'
 
 
 class Command(BaseCommand):
@@ -77,6 +78,7 @@ class Command(BaseCommand):
             filmdb, created = FilmDb.objects.get_or_create(imdb_id=film_id)
             if created or overwrite:
                 try:
+                    FilmDbTranslation.objects.get_or_create(imdb_id=film_id, filmdb=filmdb, title=film_dict['Title'], language_code=MAIN_LANGUAGE)
                     filmdb.title = film_dict['Title']
                     filmdb.imdb_rating = film_dict['imdbRating']
                     filmdb.imdb_votes = film_dict['imdbVotes']
@@ -93,7 +95,9 @@ class Command(BaseCommand):
                     filmdb.plot = film_dict['Plot']
                     filmdb.save()
                     return None
-                except KeyError:
+                except KeyError as e:
+                    self.stdout.write(f'    ***FAILED: uploading film "{film_id}" with "KeyError" exception: {e}')
+                    self.print_film_info(film_dict)
                     filmdb.delete()
                     return film_id
                 except django.db.utils.DataError as e:
@@ -172,7 +176,8 @@ class Command(BaseCommand):
                 # self.stdout.write(f'    ***FAILED: processing film json for film "{film_id}" with exception: {e}')
                 dump_tar_dead_films.append(film_id)
         with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_CONNECTIONS) as executor:
-            future_result = (executor.submit(self.process_film_json_file, film_id, film_json, **process_options) for film_id, film_json in fs)
+            future_result = (executor.submit(self.process_film_json_file, film_id, film_json, **process_options)
+                             for film_id, film_json in fs)
             for i, future in enumerate(concurrent.futures.as_completed(future_result)):
                 film_id = future.result()
                 if film_id:

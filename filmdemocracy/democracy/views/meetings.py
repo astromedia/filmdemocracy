@@ -20,9 +20,9 @@ from filmdemocracy.core.utils import SpamHelper
 @method_decorator(login_required, name='dispatch')
 class MeetingsNewView(UserPassesTestMixin, generic.FormView):
     form_class = forms.MeetingsForm
-    subject_template = 'democracy/emails/meetings_new_subject.txt'
-    email_template = 'democracy/emails/meetings_new_email.html'
-    html_email_template = 'democracy/emails/meetings_new_email_html.html'
+    subject_template_name = 'democracy/emails_subjects/meetings_new.txt'
+    email_template_name = 'democracy/emails_basic/meetings_new.html'
+    html_email_template_name = 'democracy/emails_html/meetings_new.html'
 
     def test_func(self):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
@@ -62,7 +62,7 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
         new_meeting.save()
         self.create_notifications(user, club, new_meeting)
         if form.cleaned_data['send_spam']:
-            spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
+            spam_helper = SpamHelper(self.request, self.subject_template_name, self.email_template_name, self.html_email_template_name)
             email_context = {
                 'organizer': self.request.user,
                 'club': club,
@@ -84,9 +84,9 @@ class MeetingsNewView(UserPassesTestMixin, generic.FormView):
 @method_decorator(login_required, name='dispatch')
 class MeetingsEditView(UserPassesTestMixin, generic.FormView):
     form_class = forms.MeetingsForm
-    subject_template = 'democracy/emails/meetings_edit_subject.txt'
-    email_template = 'democracy/emails/meetings_edit_email.html'
-    html_email_template = 'democracy/emails/meetings_edit_email_html.html'
+    subject_template_name = 'democracy/emails_subjects/meetings_edit.txt'
+    email_template_name = 'democracy/emails_basic/meetings_edit.html'
+    html_email_template_name = 'democracy/emails_html/meetings_edit.html'
 
     def test_func(self):
         return user_is_organizer_check(self.request.user, club_id=self.kwargs['club_id'], meeting_id=self.kwargs['meeting_id'])
@@ -130,7 +130,7 @@ class MeetingsEditView(UserPassesTestMixin, generic.FormView):
         self.create_notifications(user, club, meeting)
         spam_option = form.cleaned_data['spam_options']
         if spam_option == 'all' or spam_option == 'interested':
-            spam_helper = SpamHelper(self.request, self.subject_template, self.email_template, self.html_email_template)
+            spam_helper = SpamHelper(self.request, self.subject_template_name, self.email_template_name, self.html_email_template_name)
             email_context = {
                 'organizer': user,
                 'club': club,

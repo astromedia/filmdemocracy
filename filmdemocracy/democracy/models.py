@@ -108,6 +108,8 @@ class FilmDb(models.Model):
     imdb_votes = models.IntegerField('IMDb votes', default=0)
     metascore = models.CharField('Metascore', default='', max_length=3)
     title = models.CharField(default='', max_length=1000)
+    original_title = models.CharField(default='', max_length=1000)
+    adult_film = models.BooleanField(default=False)
     year = models.IntegerField(default=0)
     rated = models.CharField(default='', max_length=20)
     duration = models.CharField(default='', max_length=20)
@@ -184,6 +186,14 @@ class FilmDb(models.Model):
         time_diff_created = datetime.datetime.now().date() - self.created_datetime.date()
         time_diff_updated = self.last_updated_datetime - self.created_datetime
         return time_diff_created > 2 * time_diff_updated
+
+
+class FilmDbTranslation(models.Model):
+
+    imdb_id = models.CharField('IMDb id', primary_key=True, max_length=8)
+    filmdb = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
+    title = models.CharField(default='', max_length=1000)
+    language_code = models.CharField(default='', max_length=3)
 
 
 class Film(models.Model):

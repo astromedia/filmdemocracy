@@ -1067,57 +1067,57 @@ msgstr "¿Quieres saber más?"
 msgid "Follow this link"
 msgstr "Sigue este link"
 
-#: democracy/templates/democracy/emails/invite_new_member_email.html:3
-#: democracy/templates/democracy/emails/invite_new_member_email_html.html:3
+#: democracy/templates/democracy/emails/invite_new_member.html:3
+#: democracy/templates/democracy/emails/invite_new_member.html:3
 msgid "invited you to join the FilmDemocracy club named:"
 msgstr "te ha invitado a unirte al club de FilmDemocracy llamado:"
 
-#: democracy/templates/democracy/emails/invite_new_member_email.html:7
+#: democracy/templates/democracy/emails/invite_new_member.html:7
 msgid "Follow the link below to join the club:"
 msgstr "Pincha en link de abajo para unirte al club:"
 
-#: democracy/templates/democracy/emails/meetings_edit_email.html:3
-#: democracy/templates/democracy/emails/meetings_edit_email_html.html:3
+#: democracy/templates/democracy/emails/meetings_edit.html:3
+#: democracy/templates/democracy/emails/meetings_edit.html:3
 msgid "The meeting proposed by"
 msgstr "El encuentro propuesto por"
 
-#: democracy/templates/democracy/emails/meetings_edit_email.html:3
-#: democracy/templates/democracy/emails/meetings_edit_email_html.html:3
+#: democracy/templates/democracy/emails/meetings_edit.html:3
+#: democracy/templates/democracy/emails/meetings_edit.html:3
 msgid "in your club"
 msgstr "en tu club"
 
-#: democracy/templates/democracy/emails/meetings_edit_email.html:3
-#: democracy/templates/democracy/emails/meetings_edit_email_html.html:3
+#: democracy/templates/democracy/emails/meetings_edit.html:3
+#: democracy/templates/democracy/emails/meetings_edit.html:3
 msgid "has been modified."
 msgstr "ha sido modificado."
 
-#: democracy/templates/democracy/emails/meetings_edit_email.html:5
-#: democracy/templates/democracy/emails/meetings_edit_email_html.html:5
+#: democracy/templates/democracy/emails/meetings_edit.html:5
+#: democracy/templates/democracy/emails/meetings_edit.html:5
 msgid "This is the updated meeting information:"
 msgstr "Esta es la información actualizada del encuentro:"
 
-#: democracy/templates/democracy/emails/meetings_edit_email.html:10
-#: democracy/templates/democracy/emails/meetings_edit_email_html.html:10
-#: democracy/templates/democracy/emails/meetings_new_email.html:8
-#: democracy/templates/democracy/emails/meetings_new_email_html.html:8
+#: democracy/templates/democracy/emails/meetings_edit.html:10
+#: democracy/templates/democracy/emails/meetings_edit.html:10
+#: democracy/templates/democracy/emails/meetings_new.html:8
+#: democracy/templates/democracy/emails/meetings_new.html:8
 msgid "Where:"
 msgstr "Dónde:"
 
-#: democracy/templates/democracy/emails/meetings_edit_email.html:11
-#: democracy/templates/democracy/emails/meetings_edit_email_html.html:11
-#: democracy/templates/democracy/emails/meetings_new_email.html:9
-#: democracy/templates/democracy/emails/meetings_new_email_html.html:9
+#: democracy/templates/democracy/emails/meetings_edit.html:11
+#: democracy/templates/democracy/emails/meetings_edit.html:11
+#: democracy/templates/democracy/emails/meetings_new.html:9
+#: democracy/templates/democracy/emails/meetings_new.html:9
 msgid "When:"
 msgstr "Cuándo:"
 
-#: democracy/templates/democracy/emails/meetings_edit_email.html:12
-#: democracy/templates/democracy/emails/meetings_edit_email_html.html:12
-#: democracy/templates/democracy/emails/meetings_new_email_html.html:10
+#: democracy/templates/democracy/emails/meetings_edit.html:12
+#: democracy/templates/democracy/emails/meetings_edit.html:12
+#: democracy/templates/democracy/emails/meetings_new.html:10
 msgid "Starting at: "
 msgstr "Hora de comienzo: "
 
-#: democracy/templates/democracy/emails/meetings_edit_email.html:14
-#: democracy/templates/democracy/emails/meetings_edit_email_html.html:14
+#: democracy/templates/democracy/emails/meetings_edit.html:14
+#: democracy/templates/democracy/emails/meetings_edit.html:14
 msgid ""
 "In case these changes affect you, follow this link to go to the club and "
 "modify your interest in the meeting:"
@@ -1125,13 +1125,13 @@ msgstr ""
 "En caso de que estos cambios te afecten, sigue este link para ir al club y "
 "modificar tu interés por el encuentro:"
 
-#: democracy/templates/democracy/emails/meetings_new_email.html:3
-#: democracy/templates/democracy/emails/meetings_new_email_html.html:3
+#: democracy/templates/democracy/emails/meetings_new.html:3
+#: democracy/templates/democracy/emails/meetings_new.html:3
 msgid "has proposed a new meeting for club"
 msgstr "ha propuesto un nuevo encuentro del club"
 
-#: democracy/templates/democracy/emails/meetings_new_email.html:12
-#: democracy/templates/democracy/emails/meetings_new_email_html.html:12
+#: democracy/templates/democracy/emails/meetings_new.html:12
+#: democracy/templates/democracy/emails/meetings_new.html:12
 msgid ""
 "Follow this link to go to the club and confirm assistance or say you're "
 "interested:"
@@ -1774,21 +1774,21 @@ msgstr "Borrar cuenta"
 msgid "Are you sure about this? All your data will be deleted permanently..."
 msgstr "¿Lo tienes claro? Todos tus datos se borraran para siempre..."
 
-#: registration/templates/registration/emails/password_reset_email.html:3
-#: registration/templates/registration/emails/password_reset_email_html.html:3
+#: registration/templates/registration/emails/password_reset.html:3
+#: registration/templates/registration/emails/password_reset.html:3
 msgid ""
 "Someone asked for a password reset for the FilmDemocracy account with email:"
 msgstr ""
 "Alguien ha solicitado un reseteo de contraseña de la cuenta de FilmDemocracy "
 "con email:"
 
-#: registration/templates/registration/emails/password_reset_email.html:5
-#: registration/templates/registration/emails/password_reset_email_html.html:5
+#: registration/templates/registration/emails/password_reset.html:5
+#: registration/templates/registration/emails/password_reset.html:5
 msgid "Follow the link below to reset your password:"
 msgstr "Pincha en el link de abajo para resetear tu contraseña:"
 
-#: registration/templates/registration/emails/password_reset_email.html:9
-#: registration/templates/registration/emails/password_reset_email_html.html:9
+#: registration/templates/registration/emails/password_reset.html:9
+#: registration/templates/registration/emails/password_reset.html:9
 msgid ""
 "If you have not asked for a password reset, you can ignore and delete this "
 "email"
