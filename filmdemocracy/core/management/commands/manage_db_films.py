@@ -14,7 +14,7 @@ from filmdemocracy.democracy.models import FilmDb, FilmDbTranslation
 
 
 MAX_CONNECTIONS = 32
-MIN_IMDB_VOTES = 20
+MIN_IMDB_VOTES = 100
 MAIN_LANGUAGE = 'en'
 
 
@@ -66,8 +66,7 @@ class Command(BaseCommand):
                 film_dict['Director'] == 'N/A' or
                 film_dict['Poster'] == 'N/A' or
                 film_dict['Title'] == 'N/A' or
-                (film_dict['imdbVotes'] < MIN_IMDB_VOTES and film_dict['Year'] < 2019) or
-                'X' in film_dict['Rated']):
+                (film_dict['imdbVotes'] < MIN_IMDB_VOTES and film_dict['Year'] < 2019)):
             return False
         else:
             return True

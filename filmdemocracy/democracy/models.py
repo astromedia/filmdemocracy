@@ -190,7 +190,7 @@ class FilmDb(models.Model):
 
 class FilmDbTranslation(models.Model):
 
-    imdb_id = models.CharField('IMDb id', primary_key=True, max_length=8)
+    imdb_id = models.CharField('IMDb id', default='', max_length=8)
     filmdb = models.ForeignKey(FilmDb, on_delete=models.CASCADE)
     title = models.CharField(default='', max_length=1000)
     language_code = models.CharField(default='', max_length=3)

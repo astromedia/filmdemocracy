@@ -135,5 +135,6 @@ class Command(BaseCommand):
         if not process_options['updatedb'] and process_options['overwrite']:
             self.stdout.write(f'Invalid command combination: "--overwrite" without "--updatedb"')
             raise
+        # FilmDbTranslation.objects.all().delete()
         self.process_titles_file(process_options)
         self.stdout.write(f'  OK')
