@@ -77,7 +77,6 @@ class Command(BaseCommand):
             filmdb, created = FilmDb.objects.get_or_create(imdb_id=film_id)
             if created or overwrite:
                 try:
-                    FilmDbTranslation.objects.get_or_create(imdb_id=film_id, filmdb=filmdb, title=film_dict['Title'], language_code=MAIN_LANGUAGE)
                     filmdb.title = film_dict['Title']
                     filmdb.imdb_rating = film_dict['imdbRating']
                     filmdb.imdb_votes = film_dict['imdbVotes']
@@ -93,6 +92,10 @@ class Command(BaseCommand):
                     filmdb.country = film_dict['Country']
                     filmdb.plot = film_dict['Plot']
                     filmdb.save()
+                    # Create main language translation
+                    filmdbtrans, _ = FilmDbTranslation.objects.get_or_create(imdb_id=film_id, filmdb=filmdb, language_code=MAIN_LANGUAGE)
+                    filmdbtrans.title = film_dict['Title']
+                    filmdbtrans.save()
                     return None
                 except KeyError as e:
                     self.stdout.write(f'    ***FAILED: uploading film "{film_id}" with "KeyError" exception: {e}')
@@ -227,5 +230,6 @@ class Command(BaseCommand):
         if not process_options['updatedb'] and (process_options['overwrite'] or process_options['cleandb'] or process_options['onlycleandb']):
             self.stdout.write(f'Invalid command combination: "--overwrite" and/or "--onlycleandb" and/or "--cleandb" without "--updatedb"')
             raise
+        # FilmDbTranslation.objects.all().delete()
         self.process_dump_files(process_options)
         self.stdout.write(f'  OK')

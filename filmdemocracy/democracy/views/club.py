@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django.views.decorators.csrf import csrf_protect
@@ -545,6 +546,10 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
 class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
 
     def get_result_label(self, item):
+        try:
+            film_title = FilmDbTranslation.objects.get(imdb_id=item.imdb_id, language_code=get_language()).title
+        except FilmDbTranslation.DoesNotExist:
+            film_title = item.title
         return format_html(
             '<div class="media">'
             '<div class="align-self-center film-poster text-center">'
@@ -556,7 +561,7 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
             '</div>'
             '</div>',
             item.poster_url,
-            item.title,
+            film_title,
             item.year,
             item.director,
         )

@@ -26,19 +26,19 @@ class Command(BaseCommand):
         elif updatedb:
             try:
                 filmdb = FilmDb.objects.get(imdb_id=film_id)
-                filmdbtranslation, created = FilmDbTranslation.objects.get_or_create(imdb_id=film_id, filmdb=filmdb, language_code=language)
+                filmdbtrans, created = FilmDbTranslation.objects.get_or_create(imdb_id=film_id, filmdb=filmdb, language_code=language)
                 if created or overwrite:
                     try:
-                        filmdbtranslation.title = title
-                        filmdbtranslation.save()
+                        filmdbtrans.title = title
+                        filmdbtrans.save()
                         return film_id
                     except django.db.utils.DataError as e:
                         self.stdout.write(f'    ***FAILED: uploading film translation "{film_id}" with "DataError" exception: {e}')
-                        filmdbtranslation.delete()
+                        filmdbtrans.delete()
                         return None
                     except Exception as e:
                         self.stdout.write(f'    ***FAILED: uploading film translation "{film_id}" with UNKNOWN exception: {e}')
-                        filmdbtranslation.delete()
+                        filmdbtrans.delete()
                         return None
             except FilmDb.DoesNotExist as e:
                 self.stdout.write(f'    ***FAILED: filmdb "{film_id}" DoesNotExist: {e}')
