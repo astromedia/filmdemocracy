@@ -13,8 +13,8 @@ COPY . /code
 ENV VERSION_ENV 'dev'
 
 #ENV DATABASE_ENV 'local'
-#ENV DATABASE_ENV 'sqlproxy'
-ENV DATABASE_ENV 'cloud'
+ENV DATABASE_ENV 'sqlproxy'
+#ENV DATABASE_ENV 'cloud'
 
 #ENV STATIC_ENV 'local'
 ENV STATIC_ENV 'cloud'
@@ -36,8 +36,11 @@ WORKDIR /code
 
 # Commands to manage db translations:
 #CMD python manage.py manage_db_translations --updatedb --overwrite
-#CMD python manage.py manage_db_translations --updatedb --overwrite --verbose
 #CMD python manage.py manage_db_translations --dryrun --verbose
+
+# Commands to manage db basics:
+CMD python manage.py manage_db_basics --updatedb --overwrite
+#CMD python manage.py manage_db_basics --dryrun --verbose
 
 # Misc commands:
 #CMD ./scripts/collect_and_upload_static.sh
@@ -50,4 +53,4 @@ WORKDIR /code
 # Run server commands:
 #CMD ./scripts/start_mock_server.sh
 #CMD python manage.py runserver 0.0.0.0:8080
-CMD gunicorn -b :$PORT filmdemocracy.wsgi
+#CMD gunicorn -b :$PORT filmdemocracy.wsgi
