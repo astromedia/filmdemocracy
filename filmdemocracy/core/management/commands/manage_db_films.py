@@ -118,8 +118,8 @@ class Command(BaseCommand):
 
     def delete_film_from_db(self, film_id):
         try:
-            filmdb = FilmDb.objects.get(imdb_id=film_id)
-            filmdb.delete()
+            FilmDb.objects.get(imdb_id=film_id).delete()
+            FilmDbTranslation.objects.filter(imdb_id=film_id).delete()  # Not needed because of cascade delete?
             self.stdout.write(f'    Cleaned film "{film_id}" from db')
         except FilmDb.DoesNotExist:
             pass
@@ -186,6 +186,12 @@ class Command(BaseCommand):
                     dump_tar_dead_films.append(film_id)
         return tar_films_count, dump_tar_dead_films
 
+    def get_list_of_films_in_db(self):
+        self.stdout.write(f'  Getting list of films in db...')
+        filmdbs_ids = FilmDb.objects.all().values_list('imdb_id', flat=True)
+        self.stdout.write(f'  Number of films found in db: {len(filmdbs_ids)}')
+        return filmdbs_ids
+
     def process_dump_files(self, process_options):
         films_count = 0
         dead_films = []
@@ -200,6 +206,7 @@ class Command(BaseCommand):
             time.sleep(180)
         self.stdout.write(f'  Number of films processed: {films_count}')
         self.stdout.write(f'  Number of dead films found: {len(dead_films)}')
+        self.get_list_of_films_in_db()
         with open(self.FILMS_JSONS_DEAD_FILMS_FILE, 'wb') as f:
             pickle.dump(dead_films, f)
 

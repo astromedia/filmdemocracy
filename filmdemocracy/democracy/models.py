@@ -12,6 +12,7 @@ from markdownx.utils import markdownify
 
 from filmdemocracy.registration.models import User
 
+
 CLUB_ID_N_DIGITS = 6
 FILM_ID_N_DIGITS = 6
 INVITATION_DURATION_DAYS = 30

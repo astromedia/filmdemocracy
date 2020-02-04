@@ -26,13 +26,14 @@ class Command(BaseCommand):
         elif updatedb:
             try:
                 filmdb = FilmDb.objects.get(imdb_id=imdb_id)
+                if filmdb.title != primary and verbose:
+                    self.stdout.write(f'\n    Film {imdb_id} title mismatch: title: "{filmdb.title}"')
+                    self.stdout.write(f'                                primary: "{primary}"')
+                    self.stdout.write(f'                               original: "{original}"')
                 filmdbtrans_pri, created_pri = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, filmdb=filmdb, language_code=PRIMARY_LANGUAGE)
                 filmdbtrans_ori, created_ori = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, filmdb=filmdb, language_code=ORIGINAL_LANGUAGE)
                 if created_pri or created_ori or overwrite:
                     try:
-                        if filmdb.title != primary:
-                            self.stdout.write(f'\n    Film {imdb_id} title mismatch: title: "{filmdb.title}"')
-                            self.stdout.write(f'                                primary: "{primary}"')
                         filmdb.original_title = original
                         filmdb.adult_film = True if is_adult else False
                         filmdb.save()

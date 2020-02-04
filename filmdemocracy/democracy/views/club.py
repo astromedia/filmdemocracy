@@ -550,19 +550,23 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
             film_title = FilmDbTranslation.objects.get(imdb_id=item.imdb_id, language_code=get_language()).title
         except FilmDbTranslation.DoesNotExist:
             film_title = item.title
+        film_original = item.original_title
+        original_title = f'({film_original})' if film_original and film_original.lower() != film_title.lower() else ''
         return format_html(
             '<div class="media">'
             '<div class="align-self-center film-poster text-center">'
             '<img class="" src="{}">'
             '</div>'
             '<div class="media-body align-self-start p-0 m-0">'
-            '<p class="my-1 p-0" style="line-height: 1rem"><span class="font-weight-bold">{}</span><span style="font-size: 0.8rem" class="text-muted ml-2">({})</span></p>'
-            '<p class="my-1 p-0" style="line-height: 0.8rem; font-size: 0.8rem"><span class="text-muted font-italic">{}</span></p>'
+            '<p class="my-1 p-0" style="line-height: 1rem"><span class="font-weight-bold">{}</span><span style="font-size: 0.9rem" class="text-muted ml-2">({})</span></p>'
+            '<p class="my-1 p-0" style="line-height: 0.9rem; font-size: 0.9rem"><span class="text-muted">{}</span></p>'
+            '<p class="my-1 p-0" style="line-height: 0.9rem; font-size: 0.9rem"><span class="text-muted font-italic">{}</span></p>'
             '</div>'
             '</div>',
             item.poster_url,
             film_title,
             item.year,
+            original_title if original_title else '',
             item.director,
         )
 
