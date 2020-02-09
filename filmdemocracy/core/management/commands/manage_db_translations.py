@@ -26,7 +26,7 @@ class Command(BaseCommand):
         elif updatedb:
             try:
                 filmdb = FilmDb.objects.get(imdb_id=imdb_id)
-                filmdbtrans, created = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, filmdb=filmdb, language_code=language)
+                filmdbtrans, created = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, language_code=language)
                 if created or overwrite:
                     try:
                         filmdbtrans.title = title

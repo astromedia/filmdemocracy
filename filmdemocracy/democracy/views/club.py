@@ -545,11 +545,17 @@ class AddNewFilmView(UserPassesTestMixin, generic.FormView):
 
 class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
 
-    def get_result_label(self, item):
+    @staticmethod
+    def get_film_title(item):
         try:
-            film_title = FilmDbTranslation.objects.get(imdb_id=item.imdb_id, language_code=get_language()).title
+            film_translation = FilmDbTranslation.objects.get(imdb_id=item.imdb_id, language_code=get_language())
+            film_title = film_translation.title
         except FilmDbTranslation.DoesNotExist:
             film_title = item.title
+        return film_title
+
+    def get_result_label(self, item):
+        film_title = self.get_film_title(item)
         film_original = item.original_title
         original_title = f'({film_original})' if film_original and film_original.lower() != film_title.lower() else ''
         return format_html(
@@ -566,23 +572,22 @@ class NewFilmAutocompleteView(autocomplete.Select2QuerySetView):
             item.poster_url,
             film_title,
             item.year,
-            original_title if original_title else '',
+            original_title,
             item.director,
         )
 
     def get_selected_result_label(self, item):
-        return item.title
+        return self.get_film_title(item)
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return FilmDb.objects.none()
         qs = FilmDb.objects.all()
-        qs_translations = FilmDbTranslation.objects.all()
         if self.q:
-            qs_translations = qs_translations.filter(title__icontains=self.q)
-            qs_translations_ids = qs_translations.values_list('imdb_id', flat=True)
+            qs_translations = FilmDbTranslation.objects.filter(title__icontains=self.q)
+            qs_translations_ids = qs_translations.values_list('imdb_id', flat=True).distinct()
             qs = qs.filter(imdb_id__in=qs_translations_ids).order_by('-imdb_votes')
-        return qs
+            return qs
 
 
 @method_decorator(login_required, name='dispatch')

@@ -91,6 +91,7 @@ if os.getenv('DATABASE_ENV') == 'cloud':
             'NAME': f'filmdemocracy-db-{os.getenv("VERSION_ENV")}',
             'USER': 'filmdemocracy-admin',
             'PASSWORD': CLOUD_DATABASE_PASSWORD,
+            # 'CONN_MAX_AGE': None,
         }
     }
 elif os.getenv('DATABASE_ENV') == 'sqlproxy':
@@ -103,6 +104,7 @@ elif os.getenv('DATABASE_ENV') == 'sqlproxy':
             'NAME': f'filmdemocracy-db-{os.getenv("VERSION_ENV")}',
             'USER': 'filmdemocracy-admin',
             'PASSWORD': CLOUD_DATABASE_PASSWORD,
+            # 'CONN_MAX_AGE': None,
         }
     }
 elif os.getenv('DATABASE_ENV') == 'local':
@@ -204,3 +206,6 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+
+# Misc settings

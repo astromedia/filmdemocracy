@@ -14,7 +14,7 @@ from filmdemocracy.democracy.models import FilmDb, FilmDbTranslation
 
 
 MAX_CONNECTIONS = 32
-MIN_IMDB_VOTES = 100
+MIN_IMDB_VOTES = 200
 MAIN_LANGUAGE = 'en'
 
 
@@ -93,7 +93,7 @@ class Command(BaseCommand):
                     filmdb.plot = film_dict['Plot']
                     filmdb.save()
                     # Create main language translation
-                    filmdbtrans, _ = FilmDbTranslation.objects.get_or_create(imdb_id=film_id, filmdb=filmdb, language_code=MAIN_LANGUAGE)
+                    filmdbtrans, _ = FilmDbTranslation.objects.get_or_create(imdb_id=film_id, language_code=MAIN_LANGUAGE)
                     filmdbtrans.title = film_dict['Title']
                     filmdbtrans.save()
                     return None
@@ -237,6 +237,7 @@ class Command(BaseCommand):
         if not process_options['updatedb'] and (process_options['overwrite'] or process_options['cleandb'] or process_options['onlycleandb']):
             self.stdout.write(f'Invalid command combination: "--overwrite" and/or "--onlycleandb" and/or "--cleandb" without "--updatedb"')
             raise
+        # FilmDb.objects.all().delete()
         # FilmDbTranslation.objects.all().delete()
         self.process_dump_files(process_options)
         self.stdout.write(f'  OK')

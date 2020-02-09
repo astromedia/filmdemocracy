@@ -30,8 +30,8 @@ class Command(BaseCommand):
                     self.stdout.write(f'\n    Film {imdb_id} title mismatch: title: "{filmdb.title}"')
                     self.stdout.write(f'                                primary: "{primary}"')
                     self.stdout.write(f'                               original: "{original}"')
-                filmdbtrans_pri, created_pri = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, filmdb=filmdb, language_code=PRIMARY_LANGUAGE)
-                filmdbtrans_ori, created_ori = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, filmdb=filmdb, language_code=ORIGINAL_LANGUAGE)
+                filmdbtrans_pri, created_pri = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, language_code=PRIMARY_LANGUAGE)
+                filmdbtrans_ori, created_ori = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, language_code=ORIGINAL_LANGUAGE)
                 if created_pri or created_ori or overwrite:
                     try:
                         filmdb.original_title = original
