@@ -1,6 +1,6 @@
 certifi==2019.11.28
 chardet==3.0.4
-Django==2.2.8
+Django==2.2.10
 django-autocomplete-light==3.5.0
 django-markdownx==2.0.28
 django-widget-tweaks==1.4.5
