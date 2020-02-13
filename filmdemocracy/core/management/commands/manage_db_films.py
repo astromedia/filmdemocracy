@@ -14,7 +14,7 @@ from filmdemocracy.democracy.models import FilmDb, FilmDbTranslation
 
 
 MAX_CONNECTIONS = 32
-MIN_IMDB_VOTES = 200
+MIN_IMDB_VOTES = 100
 MAIN_LANGUAGE = 'en'
 
 

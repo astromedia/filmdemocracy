@@ -27,9 +27,9 @@ class Command(BaseCommand):
             try:
                 filmdb = FilmDb.objects.get(imdb_id=imdb_id)
                 if filmdb.title != primary and verbose:
-                    self.stdout.write(f'\n    Film {imdb_id} title mismatch: title: "{filmdb.title}"')
-                    self.stdout.write(f'                                primary: "{primary}"')
-                    self.stdout.write(f'                               original: "{original}"')
+                    self.stdout.write(f'    Film "{imdb_id}" title mismatch: title: "{filmdb.title}"')
+                    self.stdout.write(f'                                   primary: "{primary}"')
+                    self.stdout.write(f'                                  original: "{original}"')
                 filmdbtrans_pri, created_pri = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, language_code=PRIMARY_LANGUAGE)
                 filmdbtrans_ori, created_ori = FilmDbTranslation.objects.get_or_create(imdb_id=imdb_id, language_code=ORIGINAL_LANGUAGE)
                 if created_pri or created_ori or overwrite:
@@ -54,7 +54,9 @@ class Command(BaseCommand):
     def get_list_of_films_in_db(self):
         self.stdout.write(f'  Getting list of films in db...')
         filmdbs_ids = FilmDb.objects.all().values_list('imdb_id', flat=True)
-        self.stdout.write(f'  Number of films found in db: {len(filmdbs_ids)}')
+        self.stdout.write(f'  Number of FilmDb objects found in db: {len(filmdbs_ids)}')
+        filmdbstrans_ids = FilmDbTranslation.objects.all().values_list('imdb_id', flat=True)
+        self.stdout.write(f'  Number of FilmDbTranslation objects found in db: {len(filmdbstrans_ids)}')
         return filmdbs_ids
 
     def process_basics_file(self, process_options):
@@ -83,7 +85,7 @@ class Command(BaseCommand):
             original = film_row['originalTitle']
             is_adult = film_row['isAdult']
             film_basics.append((imdb_id, primary, original, is_adult))
-        self.stdout.write(f'    Updating filmdb models...')
+        self.stdout.write(f'    Updating {len(film_basics)} filmdb models...')
         with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_CONNECTIONS) as executor:
             future_result = (executor.submit(self.update_film_basics_info, imdb_id, primary, original, is_adult, **process_options)
                              for imdb_id, primary, original, is_adult in film_basics)

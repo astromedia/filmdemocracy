@@ -35,11 +35,11 @@ WORKDIR /code
 #CMD python manage.py manage_db_films --dryrun
 
 # Commands to manage db translations:
-#CMD python manage.py manage_db_translations --updatedb --overwrite
+#CMD python manage.py manage_db_translations --updatedb --overwrite --verbose
 #CMD python manage.py manage_db_translations --dryrun --verbose
 
 # Commands to manage db basics:
-#CMD python manage.py manage_db_basics --updatedb --overwrite
+#CMD python manage.py manage_db_basics --updatedb --overwrite --verbose
 #CMD python manage.py manage_db_basics --dryrun --verbose
 
 # Misc commands:
