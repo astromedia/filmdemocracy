@@ -1,21 +1,38 @@
-version: '3'
+version: '3.7'
 
 services:
 
-  cloudsql-proxy:
-    container_name: cloudsql-proxy
-    image: gcr.io/cloudsql-docker/gce-proxy:1.16
-    command: /cloud_sql_proxy --dir=/cloudsql -instances=smart-grin-262119:europe-west1:filmdemocracy-dev=tcp:0.0.0.0:5432 -credential_file=./secrets/cloudsql-credentials.json
+  postgresdb:
+    image: postgres:latest
+    container_name: postgresdb
+    hostname: postgresdb
+    env_file:
+      - ./secrets/postgresdb.env
+    volumes:
+      - ./local/data/postgresdb/db:/var/lib/postgresql/data
     ports:
       - 5432:5432
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    hostname: mongodb
+    env_file:
+      - ./secrets/mongodb.env
     volumes:
-      - ./secrets/cloudsql-credentials.json:/secrets/cloudsql-credentials.json
+      - ./local/data/mongodb/backups:/backups
+      - ./local/data/mongodb/db:/data/db
+    ports:
+      - 27017:27017
 
   web:
     build: .
+    container_name: filmdemocracy
+    hostname: filmdemocracy
     volumes:
       - .:/code:z
     ports:
       - 8080:8080
     depends_on:
-      - cloudsql-proxy
+      - postgresdb
+      - mongodb

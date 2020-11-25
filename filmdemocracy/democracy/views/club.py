@@ -19,14 +19,25 @@ from dal import autocomplete
 
 from filmdemocracy.democracy import forms
 from filmdemocracy.core.models import Notification
-from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation, Meeting, FilmDb, FilmDbTranslation, Film, Vote, FilmComment
-from filmdemocracy.chat.models import ChatClubInfo
+from filmdemocracy.democracy.models import (
+    Club,
+    ClubMemberInfo,
+    Invitation,
+    Meeting,
+    FilmDb,
+    FilmDbTranslation,
+    Film,
+    Vote,
+)
 from filmdemocracy.registration.models import User
-
-from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check
-from filmdemocracy.core.utils import extract_options
-from filmdemocracy.core.utils import random_club_id_generator, random_film_public_id_generator
-from filmdemocracy.core.utils import RankingGenerator, SpamHelper
+from filmdemocracy.utils.ranking_generator import RankingGenerator
+from filmdemocracy.utils.spam_helper import SpamHelper
+from filmdemocracy.utils.utils import (
+    user_is_club_member_check,
+    user_is_club_admin_check,
+    random_club_id_generator,
+    random_film_public_id_generator
+)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -50,9 +61,8 @@ class CreateClubView(generic.FormView):
         new_club.members.add(user)
         new_club.save()
         ClubMemberInfo.objects.create(club=new_club, member=user)
-        ChatClubInfo.objects.create(club=new_club)
-        messages.success(self.request, _(f"New club created! Now you can invite people to your club, "
-                                         f"propose films, and organize meetings."))
+        messages.success(self.request, _("New club created! Now you can invite people to your club, "
+                                         "propose films, and organize meetings."))
         self.new_club = new_club
         return super().form_valid(form)
 
@@ -73,9 +83,6 @@ class ClubDetailView(UserPassesTestMixin, generic.DetailView):
         if club_meetings:
             context['next_meetings'] = club_meetings.order_by('date')[0:3]
             context['extra_meetings'] = len(club_meetings) > 3
-        last_comments = FilmComment.objects.filter(club=club, deleted=False)
-        if last_comments:
-            context['last_comments'] = last_comments.order_by('-created_datetime')[0:5]
         club_films = Film.objects.filter(club=club)
         if club_films:
             films_last_pub = club_films.filter(seen=False).order_by('-created_datetime')
@@ -131,19 +138,6 @@ class EditClubInfoView(UserPassesTestMixin, generic.UpdateView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(Club, id=self.kwargs['club_id'])
-
-
-@method_decorator(login_required, name='dispatch')
-class EditClubPanelView(UserPassesTestMixin, generic.UpdateView):
-    model = Club
-    pk_url_kwarg = 'club_id'
-    fields = ['panel']
-
-    def test_func(self):
-        return user_is_club_admin_check(self.request.user, club_id=self.kwargs['club_id'])
-
-    def get_success_url(self):
-        return reverse_lazy('democracy:club_detail', kwargs={'club_id': self.kwargs['club_id']})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -331,46 +325,50 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
         return user_is_club_member_check(self.request.user, club_id=self.kwargs['club_id'])
 
     def get_context_data(self, **kwargs):
+
+        # view_options: ['all', 'not_voted', 'only_voted']
+        # order_options: = ['title', 'date_proposed', 'year', 'duration', 'user_vote']
+
+        # TODO: Redesign the way to handle options!
+        view_option = 'all'
+        order_option = 'title'
+
         context = super().get_context_data(**kwargs)
         context['page'] = 'candidate_films'
         club = get_object_or_404(Club, id=self.kwargs['club_id'])
         context['club'] = club
         club_films = Film.objects.filter(club=club, seen=False)
-        options_string = self.kwargs['options_string'] if 'options_string' in self.kwargs and self.kwargs['options_string'] else None
-        view_option, order_option, display_option = extract_options(options_string)
         context['view_option'] = view_option
         context['order_option'] = order_option
-        context['display_option'] = display_option
-        if view_option == '&view=not_voted':
-            context['view_option_tag'] = _("Not voted")
-        elif view_option == '&view=only_voted':
-            context['view_option_tag'] = _("Voted")
-        else:
+
+        if view_option == 'all':
             context['view_option_tag'] = _("All")
-        if order_option == '&order=date_proposed':
-            context['order_option_string'] = "film.created_datetime"
-            context['order_option_tag'] = _("Proposed on")
-        elif order_option == '&order=year':
-            context['order_option_string'] = "film.db.year"
-            context['order_option_tag'] = _("Year")
-        elif order_option == '&order=duration':
-            context['order_option_string'] = "duration"
-            context['order_option_tag'] = _("Duration")
-        elif order_option == '&order=user_vote':
-            context['order_option_string'] = "vote_points"
-            context['order_option_tag'] = _("My vote")
-        else:
+        elif view_option == 'not_voted':
+            context['view_option_tag'] = _("Not voted")
+        elif view_option == 'only_voted':
+            context['view_option_tag'] = _("Voted")
+
+        if order_option == 'title':
             context['order_option_string'] = "film.db.title"
             context['order_option_tag'] = _("Title")
-        if display_option == '&display=list':
-            context['display_option_tag'] = _("List")
-        else:
-            context['display_option_tag'] = _("Posters")
+        elif order_option == 'date_proposed':
+            context['order_option_string'] = "film.created_datetime"
+            context['order_option_tag'] = _("Proposed on")
+        elif order_option == 'year':
+            context['order_option_string'] = "film.db.year"
+            context['order_option_tag'] = _("Year")
+        elif order_option == 'duration':
+            context['order_option_string'] = "duration"
+            context['order_option_tag'] = _("Duration")
+        elif order_option == 'user_vote':
+            context['order_option_string'] = "vote_points"
+            context['order_option_tag'] = _("My vote")
+
         candidate_films = []
         for film in club_films:
             film_voters = [vote.user.username for vote in film.vote_set.all()]
             if self.request.user.username in film_voters:
-                if not view_option or view_option == '&view=only_voted':
+                if view_option in ['all', 'only_voted']:
                     user_vote = get_object_or_404(Vote, user=self.request.user, film=film)
                     candidate_films.append({
                         'film': film,
@@ -379,7 +377,7 @@ class CandidateFilmsView(UserPassesTestMixin, generic.TemplateView):
                         'duration': film.db.duration_in_mins_int,
                         'vote': user_vote.vote_karma,
                     })
-            elif view_option != '&view=only_voted':
+            elif view_option != 'only_voted':
                 candidate_films.append({
                     'film': film,
                     'voted': False,
@@ -478,6 +476,7 @@ class SeenFilmsView(UserPassesTestMixin, generic.TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class AddNewFilmView(UserPassesTestMixin, generic.FormView):
+    
     form_class = forms.FilmAddNewForm
     films_added_counter = 0
     new_film_public_id = None

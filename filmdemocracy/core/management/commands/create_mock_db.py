@@ -1,21 +1,14 @@
-import json
-import glob
-import os
-from pprint import pprint
-import ntpath
 import random
 import datetime
 
 from django.utils import timezone
-from django.core.management.base import BaseCommand, CommandError
-import django.db.utils
+from django.core.management.base import BaseCommand
 
-from filmdemocracy.core.utils import random_club_id_generator, random_film_public_id_generator
+from filmdemocracy.utils.utils import random_club_id_generator, random_film_public_id_generator
 from filmdemocracy.registration.models import User
 from filmdemocracy.democracy import forms
 from filmdemocracy.core.models import Notification
 from filmdemocracy.democracy.models import Club, ClubMemberInfo, Invitation, Meeting, FilmDb, Film, Vote, FilmComment
-from filmdemocracy.chat.models import ChatClubInfo
 
 
 LORE_100 = "Lorem ipsum dolor sit amet consectetur adipiscing elit, praesent sem sed tristique tincidunt sociis."
@@ -50,10 +43,11 @@ CLUB_NAMES = [
 
 
 class Command(BaseCommand):
+    
     help = 'Create a mock db for testing'
 
     @staticmethod
-    def test_mock_exists():
+    def mock_exists_check():
         club = Club.objects.filter(name=CLUB_NAMES[0])
         if club:
             return True
@@ -61,7 +55,7 @@ class Command(BaseCommand):
             return False
 
     def create_users(self):
-        self.stdout.write(f'  Creating users...')
+        self.stdout.write('  Creating users...')
         for name in USER_NAMES:
             User.objects.create_user(name, f'{name.lower()}@fakemail.com', 'pass')
 
@@ -162,7 +156,7 @@ class Command(BaseCommand):
                                                 object_id=film.id)
 
     def create_clubs(self):
-        self.stdout.write(f'  Creating clubs...')
+        self.stdout.write('  Creating clubs...')
         user_creators = [
             User.objects.filter(email='pablo@fakemail.com')[0],
             User.objects.filter(email='ricardo@fakemail.com')[0],
@@ -181,7 +175,6 @@ class Command(BaseCommand):
             ClubMemberInfo.objects.create(club=club, member=user_creators[0])
             club.members.add(user_creators[1])
             ClubMemberInfo.objects.create(club=club, member=user_creators[1])
-            ChatClubInfo.objects.create(club=club)
             for name in random.sample(USER_NAMES[2:], 6):
                 user = User.objects.filter(email=f'{name.lower()}@fakemail.com')[0]
                 club.members.add(user)
@@ -202,8 +195,8 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        if not self.test_mock_exists():
-            self.stdout.write(f'Creating mock db...')
+        if not self.mock_exists_check():
+            self.stdout.write('Creating mock db...')
             self.create_users()
             self.create_clubs()
-            self.stdout.write(f'  OK')
+            self.stdout.write('  OK')

@@ -1,5 +1,5 @@
 {% load static %}
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 
 
@@ -592,10 +592,6 @@
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:edit_club_info' club.id %}">
             {% trans 'Edit club info and logo' %}
-          </a>
-
-          <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:edit_club_panel' club.id %}">
-            {% trans 'Edit club panel' %}
           </a>
 
           <a class="list-group-item list-group-item-action pointer-cursor py-3" href="{% url 'democracy:promote_members' club.id %}">

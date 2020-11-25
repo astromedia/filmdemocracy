@@ -17,8 +17,6 @@ class Notification(models.Model):
     MEET_ORGAN = 'meetorgan'
     MEET_EDIT = 'meetedit'
     MEET_DEL = 'meetdel'
-    COMM_FILM = 'commfilm'
-    COMM_COMM = 'commcomm'
     KICKED = 'kicked'
     ABANDONED = 'abandoned'
     INVITED = 'invited'
@@ -33,8 +31,6 @@ class Notification(models.Model):
         (MEET_ORGAN, "Member organized a new club meeting"),
         (MEET_EDIT, "Member edited a club meeting"),
         (MEET_DEL, "Member deleted a club meeting"),
-        (COMM_FILM, "Member commented in film proposed by user"),
-        (COMM_COMM, 'Member commented in film commented by user'),
         (KICKED, 'Member kicked other member from club'),
         (ABANDONED, 'Club admin deleted account'),
         (INVITED, 'User invited to join club'),

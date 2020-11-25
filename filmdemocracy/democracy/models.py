@@ -25,20 +25,9 @@ def get_club_logo_image_path(instance, filename):
 class Club(models.Model):
     # TODO: Input image validation
 
-    DEFAULT_PANEL_STRING = _("""#### A sample club panel
-    \rSome normal text, *italic text*, **strong text** and **_strong italic text_** here...
-    \r##### Here is a list:\r1. Item #1\r2. Item #2""")
-
     id = models.CharField(primary_key=True, unique=True, max_length=CLUB_ID_N_DIGITS)
     name = models.CharField('club name', max_length=50)
     short_description = models.CharField('short description', max_length=120)
-    panel = MarkdownxField(
-        'club panel: description, rules, etc. (optional)',
-        max_length=20000,
-        default=DEFAULT_PANEL_STRING,
-        blank=True,
-        null=True,
-    )
     logo_image = models.ImageField('club logo image', upload_to=get_club_logo_image_path, blank=True, null=True)
     founder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='founder')
     members = models.ManyToManyField(User)
@@ -49,10 +38,6 @@ class Club(models.Model):
 
     def __str__(self):
         return f"{self.id}|{self.name}"
-
-    @property
-    def formatted_panel(self):
-        return markdownify(str(self.panel))
 
 
 class Invitation(models.Model):
@@ -182,12 +167,6 @@ class FilmDb(models.Model):
     def faff_url(self):
         return f'https://www.filmaffinity.com/es/film{self.faff_id}.html'
 
-    @property
-    def updatable(self):
-        time_diff_created = datetime.datetime.now().date() - self.created_datetime.date()
-        time_diff_updated = self.last_updated_datetime - self.created_datetime
-        return time_diff_created > 2 * time_diff_updated
-
 
 class FilmDbTranslation(models.Model):
 
@@ -279,19 +258,3 @@ class Vote(models.Model):
 
     def __str__(self):
         return f'{self.user}|{self.film.db.title}|{self.choice}'
-
-
-class FilmComment(models.Model):
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    film = models.ForeignKey(Film, on_delete=models.CASCADE)
-    club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    edited = models.BooleanField(default=False)
-    deleted = models.BooleanField(default=False)
-    text = models.CharField(max_length=5000)
-    created_datetime = models.DateTimeField('created datetime', auto_now_add=True)
-    last_updated_datetime = models.DateTimeField('last updated datetime', auto_now=True)
-
-    def __str__(self):
-        return f'{self.user}|{self.film.db.title}|{self.text}'

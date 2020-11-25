@@ -12,9 +12,12 @@ from django.views import generic
 from filmdemocracy.democracy import forms
 from filmdemocracy.core.models import Notification
 from filmdemocracy.democracy.models import Club, Meeting
-
-from filmdemocracy.core.utils import user_is_club_member_check, user_is_club_admin_check, user_is_organizer_check
-from filmdemocracy.core.utils import SpamHelper
+from filmdemocracy.utils.spam_helper import SpamHelper
+from filmdemocracy.utils.utils import (
+    user_is_club_member_check,
+    user_is_club_admin_check,
+    user_is_organizer_check,
+)
 
 
 @method_decorator(login_required, name='dispatch')

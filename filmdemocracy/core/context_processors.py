@@ -1,4 +1,4 @@
-from filmdemocracy.core.utils import NotificationsHelper
+from filmdemocracy.utils.notifications_helper import NotificationsHelper
 from filmdemocracy.democracy.models import Club
 
 

@@ -16,7 +16,9 @@ from filmdemocracy.registration.models import User
 
 
 class EditClubForm(forms.ModelForm):
+
     # TODO: logo_image validation
+
     updateImage = forms.BooleanField(widget=forms.HiddenInput(), required=False)
     x = forms.FloatField(widget=forms.HiddenInput(), required=False)
     y = forms.FloatField(widget=forms.HiddenInput(), required=False)
@@ -39,7 +41,9 @@ class EditClubForm(forms.ModelForm):
         }
 
     def clean_logo_image(self):
+
         # TODO: club logo_image validation
+        
         update_image = self.cleaned_data.get('updateImage')
         original_image = self.cleaned_data['logo_image']
         x = self.cleaned_data.get('x')
@@ -127,53 +131,6 @@ def process_imdb_input(form):
     # TODO: do this using regexps?
 
 
-# def process_faff_url(form):
-#     """
-#     Validate that the url is a valid FAff url, and return FAff id.
-#     """
-#     try:
-#         faff_url = form.cleaned_data['faff_url']
-#         if 'filmaffinity' not in faff_url:
-#             raise ValueError
-#         elif 'm.filmaffinity' in faff_url:
-#             try:
-#                 filmaff_key = faff_url.split('id=')[1][0:6]
-#             except IndexError:
-#                 raise ValueError
-#         else:
-#             try:
-#                 filmaff_key = faff_url.split('film')[2][0:6]
-#             except IndexError:
-#                 raise ValueError
-#             if '.html' in filmaff_key:
-#                 filmaff_key = filmaff_key.replace('.html', '')
-#         if len(filmaff_key) is not 6:
-#             raise ValueError
-#         else:
-#             return filmaff_key
-#     except ValueError:
-#         raise forms.ValidationError(_("Invalid FilmAffinity url."))
-
-
-# def clean_imdb_input(self):
-#     imdb_input = self.cleaned_data['imdb_input']
-#     try:
-#         if 'imdb' in imdb_input:
-#             url_list = imdb_input.split('/')
-#             title_position = url_list.index('title')
-#             imdb_key = url_list[title_position + 1]
-#             imdb_key = imdb_key.replace('tt', '')
-#         elif 'imdb' not in imdb_input and 'tt' in imdb_input and len(imdb_input) is 9:
-#             imdb_key = imdb_input.replace('tt', '')
-#         elif 'imdb' not in imdb_input and 'tt' not in imdb_input and len(imdb_input) is 7:
-#             imdb_key = imdb_input
-#         else:
-#             raise ValueError
-#     except ValueError:
-#         return forms.ValidationError(_("The IMDb film url or key does not seem to be valid."))
-#     return imdb_key
-
-
 class FilmAddNewForm(forms.Form):
     # https://select2.org/
     filmdbs = forms.ModelMultipleChoiceField(
@@ -187,21 +144,6 @@ class FilmAddNewForm(forms.Form):
             }
         )
     )
-
-
-# class FilmAddFilmAffForm(forms.ModelForm):
-#     faff_url = forms.CharField(
-#         max_length=200,
-#         label=_('FilmAffinity url'),
-#     )
-#
-#     class Meta:
-#         model = FilmDb
-#         fields = ['faff_url']
-#
-#     def clean_faff_url(self):
-#         faff_key = process_faff_url(self)
-#         return faff_key
 
 
 class FilmSeenForm(forms.ModelForm):

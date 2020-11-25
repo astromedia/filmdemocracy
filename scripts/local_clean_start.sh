@@ -5,7 +5,7 @@
 APPS_DIR_NAME="filmdemocracy"
 LOGOS_DIR="local/media/club_logos"
 PROFILE_IMAGES_DIR="local/media/user_profile_images"
-declare -a WEB_APPS=("core" "registration" "democracy" "chat")
+declare -a WEB_APPS=("core" "registration" "democracy")
 
 
 #### CLEAN MIGRATIONS ####
@@ -20,6 +20,10 @@ done
 
 sudo rm -rf "${MAIN_DIR}/${LOGOS_DIR}/*"
 sudo rm -rf "${MAIN_DIR}/${PROFILE_IMAGES_DIR}/*"
+
+#### CLEAN POSTGRESDB ####
+
+docker volume rm $(docker volume ls -q)
 
 echo "Done"
 

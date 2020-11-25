@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 
 from filmdemocracy.core.models import Notification
 from filmdemocracy.democracy.models import Invitation
-from filmdemocracy.core.utils import NotificationsHelper
+from filmdemocracy.utils.notifications_helper import NotificationsHelper
 
 
 @login_required

@@ -1,6 +1,6 @@
 {% extends "democracy/base_club_banner.html" %}
 {% load static %}
-{% load staticfiles %}
+{% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
@@ -48,18 +48,18 @@
           <strong>{% trans 'Filter films' %}</strong>
         </p>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item {% if not view_option %} active {% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string=order_option|add:display_option %}">
+        <a class="dropdown-item {% if view_option == 'all' %}active{% endif %}"
+          href="{% url 'democracy:candidate_films' club_id=club.id %}">
           {% trans 'All' %}
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item {% if view_option == '&view=not_voted' %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string='&view=not_voted'|add:order_option|add:display_option %}">
+        <a class="dropdown-item {% if view_option == 'not_voted' %}active{% endif %}"
+           href="{% url 'democracy:candidate_films' club_id=club.id %}">
           {% trans 'Not voted' %}
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item {% if view_option == '&view=only_voted' %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string='&view=only_voted'|add:order_option|add:display_option %}">
+        <a class="dropdown-item {% if view_option == 'only_voted' %}active{% endif %}"
+           href="{% url 'democracy:candidate_films' club_id=club.id %}">
           {% trans 'Voted' %}
         </a>
 
@@ -82,58 +82,29 @@
         <p class="dropdown-header text-center">
           <strong>{% trans 'Order films by' %}</strong>
         </p>
-        <a class="dropdown-item {% if not order_option %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:display_option %}">
+        <a class="dropdown-item {% if order_option == 'title' %}active{% endif %}"
+           href="{% url 'democracy:candidate_films' club_id=club.id %}">
           {% trans 'Title' %}
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item {% if order_option == '&order=date_proposed' %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:'&order=date_proposed'|add:display_option %}">
+        <a class="dropdown-item {% if order_option == 'date_proposed' %}active{% endif %}"
+           href="{% url 'democracy:candidate_films' club_id=club.id %}">
           {% trans 'Proposed on' %}
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item {% if order_option == '&order=year' %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:'&order=year'|add:display_option %}">
+        <a class="dropdown-item {% if order_option == 'year' %}active{% endif %}"
+           href="{% url 'democracy:candidate_films' club_id=club.id %}">
           {% trans 'Year' %}
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item {% if order_option == '&order=duration' %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:'&order=duration'|add:display_option %}">
+        <a class="dropdown-item {% if order_option == 'duration' %}active{% endif %}"
+           href="{% url 'democracy:candidate_films' club_id=club.id %}">
           {% trans 'Duration' %}
         </a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item {% if order_option == '&order=user_vote' %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:'&order=user_vote'|add:display_option %}">
+        <a class="dropdown-item {% if order_option == 'user_vote' %}active{% endif %}"
+           href="{% url 'democracy:candidate_films' club_id=club.id %}">
           {% trans 'My vote' %}
-        </a>
-
-      </div>
-
-    </div>
-  </div>
-
-  <div class="col-md-auto filter">
-    <div class="dropdown">
-
-      <button class="btn btn-sm btn-block dropdown-toggle mx-auto"
-              type="button" id="dropdownMenuButtonDisplay" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-        {{ display_option_tag }}
-      </button>
-
-      <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="dropdownMenuButtonDisplay">
-
-        <p class="dropdown-header text-center">
-          <strong>{% trans 'View films as' %}</strong>
-        </p>
-        <a class="dropdown-item {% if not display_option %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:order_option %}">
-          {% trans 'Posters' %}
-        </a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item {% if display_option == '&display=list' %}active{% endif %}"
-           href="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:order_option|add:'&display=list' %}">
-          {% trans 'List' %}
         </a>
 
       </div>
@@ -148,9 +119,6 @@
 {% if candidate_films %}
 
 
-{% if display_option != '&display=list' %}
-
-
 <!--START: FILM PANEL-->
 <div class="album films-album p-0 m-0 mt-4">
 
@@ -161,7 +129,7 @@
     <div class="col col-auto align-self-center p-0 my-2">
       <div class="card card-film">
 
-          <a href="{% url 'democracy:film_detail' club.id candidate.film.public_id candidate.film.db.slug view_option|add:order_option|add:display_option %}">
+          <a href="{% url 'democracy:film_detail' club.id candidate.film.public_id candidate.film.db.slug %}">
             <img class="card-img" src="{{ candidate.film.db.poster_url }}" alt="film.poster not found">
             <div class="overlay">
               <div class="film-title">{{ candidate.film.db.title }}</div>
@@ -196,91 +164,17 @@
 <!--END: FILM PANEL-->
 
 
-{% elif display_option == '&display=list' %}
-
-
-<!--END: FILM LIST-->
-<div class="container container-list mx-auto">
-
-  <table class="table table-borderless table-hover table-sm">
-
-<!--    <thead class="">-->
-<!--      <tr class="">-->
-<!--        <th scope="col" class="text-center">{% trans 'Vote' %}</th>-->
-<!--        <th scope="col" class="">{% trans 'Title' %}</th>-->
-<!--        {% if order_option == '&order=date_proposed' %}-->
-<!--        <th scope="col" class="text-center">{% trans 'Proposed on' %}</th>-->
-<!--        {% elif order_option == '&order=year' %}-->
-<!--        <th scope="col" class="text-center">{% trans 'Year' %}</th>-->
-<!--        {% elif order_option == '&order=duration' %}-->
-<!--        <th scope="col" class="text-center">{% trans 'Duration' %}</th>-->
-<!--        {% endif %}-->
-<!--      </tr>-->
-<!--    </thead>-->
-
-    <tbody>
-
-    {% for candidate in candidate_films|dictsort:order_option_string %}
-
-      <tr class="film-table-row">
-
-        <!--VOTE COLUMN-->
-        <td class="text-center align-middle">
-          {% if candidate.vote == 'positive' %}
-          <img class="align-self-center rounded-circle hand-icon" src="{% static 'democracy/svg/thumbsupwhite.svg'%}">
-          {% elif candidate.vote == 'neutral' %}
-          <img class="align-self-center rounded-circle hand-icon" src="{% static 'democracy/svg/thumbsneutralwhite.svg'%}">
-          {% elif candidate.vote == 'negative' %}
-          <img class="align-self-center rounded-circle hand-icon" src="{% static 'democracy/svg/thumbsdownwhite.svg'%}">
-          {% else %}
-          <img class="align-self-center rounded-circle " style="width: 1.5rem;" src="{% static 'democracy/svg/questionwhite.svg'%}">
-          {% endif %}
-        </td>
-
-        <!--TITLE COLUMN-->
-        <td class="align-middle align-self-center film-table-title">
-          <a href="{% url 'democracy:film_detail' club.id candidate.film.public_id candidate.film.db.slug view_option|add:order_option|add:display_option %}">
-          {{ candidate.film.db.title }}
-          </a>
-        </td>
-
-        <!--ORDER BY COLUMN-->
-        <td class="align-middle align-self-center text-center">
-        {% if order_option == '&order=date_proposed' %}
-          {{ candidate.film.created_datetime.date|date:"Y/m/d" }}
-        {% elif order_option == '&order=year' %}
-          {{ candidate.film.db.year }}
-        {% elif order_option == '&order=duration' %}
-          {{ candidate.film.db.duration_in_mins_int }}
-        {% endif %}
-        </td>
-
-      </tr>
-    {% endfor %}
-
-
-    </tbody>
-
-  </table>
-</div>
-
-<!--END: FILM LIST-->
-
-
-{% endif %}
-
-
 {% else %}
 
 <div class="text-center text-muted mt-5">
-  {% if not view_option %}
+  {% if view_option  == 'all' %}
     <span>{% trans 'There are no candidate films...' %}</span><br>
     <a class="mx-1 green-color blue-color-hover" href="{% url 'democracy:add_new_film' club.id %}">
     {% trans 'Propose one!' %}
     </a>
-  {% elif view_option == '&view=not_voted' %}
+  {% elif view_option == 'not_voted' %}
     <span>{% trans 'Seems like you have voted all films... congratulations!' %}</span>
-  {% elif view_option == '&view=only_voted' %}
+  {% elif view_option == 'only_voted' %}
     <span>{% trans 'You have not voted any film yet...' %}</span>
   {% endif %}
 </div>

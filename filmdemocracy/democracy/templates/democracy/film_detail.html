@@ -1,6 +1,6 @@
 {% extends "democracy/base_club_banner.html" %}
 {% load static %}
-{% load staticfiles %}
+{% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
 
@@ -56,19 +56,6 @@
         <div class="film-meta"><strong>{% trans 'Duration' %}</strong>: {{ film_duration }}</div>
         <div class="film-meta"><strong>{% trans 'Country' %}</strong>: {{ film.db.country }}</div>
         <div class="film-meta"><strong>{% trans 'Rated' %}</strong>: {{ film.db.rated }}</div>
-
-        <!--FILMAFFINITY LINK-->
-<!--        <div class="film-link">-->
-<!--          {% if film.db.faff_id %}-->
-<!--            <a class="green-color blue-color-hover" href="{{ film.db.faff_url }}" target="blank">-->
-<!--              {% trans 'Link to FilmAffinity ' %}-->
-<!--            </a>-->
-<!--          {% elif not film.db.faff_id %}-->
-<!--            <a class="badge badge-green-to-blue pointer-cursor" href="{{ film.db.faff_url }}" data-toggle="modal" data-target="#AddFaffModalCenter">-->
-<!--              {% trans 'Add FilmAffinity link' %}-->
-<!--            </a>-->
-<!--          {% endif %}-->
-<!--        </div>-->
 
         <!--IMDB LINK-->
         {% if film.db.clean_imdb_rating %}
@@ -129,20 +116,9 @@
 <!--END: FILM BANNER-->
 
 
-<!--START: REPORT PROBLEM-->
-<!--<div class="col-auto">-->
-<!--<form class="" action="{% url 'democracy:candidate_films' club_id=club.id options_string=view_option|add:order_option|add:display_option %}">-->
-<!--<button type="submit" class="btn btn-sm btn-outline-primary btn-film mx-2">-->
-<!--{% trans 'Report problem with film info' %}-->
-<!--</button>-->
-<!--</form>-->
-<!--</div>-->
-<!--END: REPORT PROBLEM-->
-
-
 <!--START: MARK AS SEEN-->
 {% if not film.seen %}
-  <form class="text-center" action="{% url 'democracy:film_seen' club.id film.public_id view_option|add:order_option|add:display_option %}">
+  <form class="text-center" action="{% url 'democracy:film_seen' club.id film.public_id %}">
     {% csrf_token %}
 
     <button type="submit" class="btn btn-standard btn-white-to-gray">
@@ -155,14 +131,14 @@
 
 
 <!--<div class="text-center strong-link my-5">-->
-<!--  <a class="" href="{% url 'democracy:film_seen' club.id film.public_id view_option|add:order_option|add:display_option %}">{% trans 'Mark as seen by club' %}</a>-->
+<!--  <a class="" href="{% url 'democracy:film_seen' club.id film.public_id %}">{% trans 'Mark as seen by club' %}</a>-->
 <!--</div>-->
 
 
 <!--START: MARK AS NOT SEEN-->
 {% if film.seen %}
   {% if user in club_admins %}
-    <form class="text-center my-2" method="POST" action="{% url 'democracy:unsee_film' club.id film.public_id view_option|add:order_option|add:display_option %}">
+    <form class="text-center my-2" method="POST" action="{% url 'democracy:unsee_film' club.id film.public_id %}">
       {% csrf_token %}
 
       <button type="submit" class="btn btn-standard btn-white-to-gray">
@@ -224,95 +200,6 @@
 
 {% endif %}
 <!--END: FILM SEEN BY-->
-
-
-<!--START: COMMENTS-->
-<div class="film-comments section-container border-top border-bottom shadow-sm">
-
-  <div class="font-weight-bold text-center mb-3">
-    {% trans 'Comments' %} ({{ film_comments|length }})
-  </div>
-
-  <div class="container-posts" id="containerPosts">
-
-  {% if film_comments %}
-    {% for comment in film_comments %}
-
-      <div class="media post">
-
-        {% if comment.user.profile_image %}
-        <img class="user-image rounded-circle" title="{{ comment.user.username }}" src="{{ comment.user.profile_image.url }}">
-        {% else %}
-        <img class="user-image rounded-circle" title="{{ comment.user.username }}" src="{% static 'registration/svg/user_no_profile_image.svg' %}">
-        {% endif %}
-
-        <div class="media-body post-body">
-
-          <p class="post-text">
-            <a class="strong-link" href="{% url 'democracy:club_member_detail' club.id comment.user.id %}">
-              {{ comment.user.username }}</a>:
-            {% if comment.deleted %}
-            <span class="text-muted"><em>{% trans 'Comment deleted.' %}</em></span>
-            {% else %}
-            <span>{{ comment.text }}</span>
-            {% endif %}
-          </p>
-
-          <div class="post-footer">
-            {% if not comment.deleted %}
-              {% if user == comment.user or user in club_admins %}
-                <form action="{% url 'democracy:delete_film_comment' club.id film.public_id comment.id view_option|add:order_option|add:display_option %}"  method="POST">
-                  {% csrf_token %}
-                  {{ comment.created_datetime }} | <label for="delete-post_{{ forloop.counter }}" class="my-n2 py-n2 pointer-cursor">
-                  {% trans 'Delete' %}</label>
-                  <input type="submit" class="invisible" id="delete-post_{{ forloop.counter }}">
-                </form>
-              {% else %}
-                {{ comment.created_datetime }}
-              {% endif %}
-                {% elif comment.deleted %}
-              {{ comment.created_datetime }}
-            {% endif %}
-          </div>
-
-        </div>
-
-      </div>
-
-    {% endfor %}
-  {% else %}
-
-    <div class="text-center my-3">cri cri...</div>
-
-  {% endif %}
-
-  </div>
-
-</div>
-<!--END: COMMENTS-->
-
-
-<!--START: COMMENTS POST FORM-->
-<div class="border-top border-bottom shadow-sm">
-
-    <!--START: POST FORM-->
-      <div class="form-post">
-
-        <form class="form-inline" action="{% url 'democracy:comment_film' club.id film.public_id view_option|add:order_option|add:display_option %}"  method="POST">
-          {% csrf_token %}
-
-          <div class="input-group">
-            <textarea class="form-control" aria-label="With textarea" name="text" id="TextArea" placeholder="{% trans 'Write a comment...' %}"></textarea>
-            <button type="submit" class="p-1 align-self-end btn btn-sm btn-green-to-blue rounded-circle">
-              <img src="{% static 'democracy/svg/send.svg'%}">
-            </button>
-          </div>
-
-        </form>
-      </div>
-
-</div>
-<!--END: COMMENTS POST FORM-->
 
 
 <!-- START: REGISTERED VOTES -->
@@ -416,7 +303,7 @@
         <div class="list-group font-weight-bold p-0 m-0">
 
           {% for choice, choice_dict in vote_choices.items %}
-          <form class="m-0 p-0" method="POST" action="{% url 'democracy:vote_film' club.id film.public_id view_option|add:order_option|add:display_option %}">
+          <form class="m-0 p-0" method="POST" action="{% url 'democracy:vote_film' club.id film.public_id %}">
             {% csrf_token %}
 
             <label class="list-group-item list-group-item-action font-weight-bold pointer-cursor py-3 {{ choice_dict.choice_karma }}{% if choice_dict.choice_voted %}-active {% endif %}" for="vote_{{ forloop.counter }}">
@@ -429,7 +316,7 @@
           {% endfor %}
 
           {% if user_vote %}
-          <form class="m-0 p-0" action="{% url 'democracy:delete_vote' club.id film.public_id view_option|add:order_option|add:display_option %}"  method="POST">
+          <form class="m-0 p-0" action="{% url 'democracy:delete_vote' club.id film.public_id %}"  method="POST">
             {% csrf_token %}
 
             <label for="delete-vote" class="list-group-item list-group-item-action font-weight-bold pointer-cursor py-3">{% trans 'Delete vote' %}</label>
@@ -465,7 +352,7 @@
             {% trans 'Cancel' %}
           </button>
 
-          <form method="POST" action="{% url 'democracy:delete_film' club.id film.public_id view_option|add:order_option|add:display_option %}">
+          <form method="POST" action="{% url 'democracy:delete_film' club.id film.public_id %}">
             {% csrf_token %}
 
             <button type="submit" class="btn btn-outline-danger mx-3">
@@ -481,44 +368,6 @@
   </div>
 </div>
 <!--END: MODAL DELETE FILM-->
-
-
-<!--START: MODAL ADD FAFF-->
-<!--<div class="modal fade" id="AddFaffModalCenter" tabindex="-1" role="dialog" aria-labelledby="AddFaffModalCenterTitle"-->
-<!--     aria-hidden="true">-->
-<!--  <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <form method="POST" action="{% url 'democracy:add_filmaffinity_url' club.id film.public_id view_option|add:order_option|add:display_option %}"  class="text-center">-->
-<!--        {% csrf_token %}-->
-
-<!--        <div class="modal-header">-->
-<!--          <h5 class="modal-title" id="AddFaffModalCenterTitle">{% trans 'Add FilmAffinity page' %}</h5>-->
-<!--          <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--            <span aria-hidden="true">&times;</span>-->
-<!--          </button>-->
-<!--        </div>-->
-<!--        <div class="form-group m-4">-->
-<!--          <input class="form-control" type="text" placeholder="FilmAffinity url" id="faff_url" name="faff_url"-->
-<!--                 aria-describedby="FaffWeb">-->
-<!--          <a href="https://www.filmaffinity.com/" target="blank" id="FaffWeb" class="form-text text-left ml-2">-->
-<!--            <small>{% trans 'Open FilmAffinity.com in a new tab' %}</small>-->
-<!--          </a>-->
-<!--        </div>-->
-<!--        <div class="modal-footer">-->
-<!--          <button type="button" class="btn btn-sm" data-dismiss="modal">-->
-<!--            {% trans 'Cancel' %}-->
-<!--          </button>-->
-
-<!--          <button type="submit" class="btn btn-sm btn-green-to-blue mx-3">-->
-<!--            {% trans 'Add' %}-->
-<!--          </button>-->
-<!--        </div>-->
-<!--      </form>-->
-
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-<!--END: MODAL ADD FAFF-->
 
 
 <script>

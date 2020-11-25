@@ -1,6 +1,5 @@
 .gcloudignore
 .gitignore
 .git/
-.idea/
 venv/
 local/

@@ -5,6 +5,8 @@ from filmdemocracy.registration import views
 
 
 app_name = 'registration'
+
+
 urlpatterns = [
     path(
         'signup/',
